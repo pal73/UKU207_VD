@@ -1,0 +1,2 @@
+Dependencies for Project 'UKU206', Target 'Target 1': (DO NOT MODIFY !)
+F (.\Startup.s)(0x492A94BA)(--device DARMP -g --apcs=interwork -I "C:\Keil\ARM\INC\Philips" --list "Startup.lst" --xref -o "Startup.o")
