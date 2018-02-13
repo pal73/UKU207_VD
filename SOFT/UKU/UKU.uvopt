@@ -2793,8 +2793,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>2484</TopLine>
-      <CurrentLine>2484</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\control.c</PathWithFileName>
       <FilenameWithoutPath>control.c</FilenameWithoutPath>
@@ -3350,7 +3350,7 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\avar_hndl.h</PathWithFilename>
-    <TopLine>18</TopLine>
+    <TopLine>1</TopLine>
     <CurrentLine>28</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
@@ -3402,7 +3402,7 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\cmd.c</PathWithFilename>
-    <TopLine>3</TopLine>
+    <TopLine>1</TopLine>
     <CurrentLine>13</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
@@ -3480,7 +3480,7 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\25lc640.h</PathWithFilename>
-    <TopLine>5</TopLine>
+    <TopLine>1</TopLine>
     <CurrentLine>15</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
@@ -3800,8 +3800,8 @@
         <Doc>
           <Name>.\control.c</Name>
           <ColumnNumber>0</ColumnNumber>
-          <TopLine>2484</TopLine>
-          <CurrentLine>2484</CurrentLine>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\memo.c</Name>
@@ -3986,7 +3986,7 @@
         <Doc>
           <Name>25lc640.h</Name>
           <ColumnNumber>31</ColumnNumber>
-          <TopLine>5</TopLine>
+          <TopLine>1</TopLine>
           <CurrentLine>15</CurrentLine>
         </Doc>
         <Doc>
@@ -4022,7 +4022,7 @@
         <Doc>
           <Name>cmd.c</Name>
           <ColumnNumber>84</ColumnNumber>
-          <TopLine>3</TopLine>
+          <TopLine>1</TopLine>
           <CurrentLine>13</CurrentLine>
         </Doc>
         <Doc>
@@ -4034,7 +4034,7 @@
         <Doc>
           <Name>avar_hndl.h</Name>
           <ColumnNumber>32</ColumnNumber>
-          <TopLine>18</TopLine>
+          <TopLine>1</TopLine>
           <CurrentLine>28</CurrentLine>
         </Doc>
         <Doc>
