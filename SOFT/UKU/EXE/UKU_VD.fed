@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 4.1 [Build 644]: Last Updated: Mon Oct 02 14:10:25 2017
+;#<FEEDBACK># ARM Linker, 4.1 [Build 644]: Last Updated: Mon Feb 12 15:25:30 2018
 ;VERSION 0.2
 ;FILE 25lc640.o
 lc640_read_str <= USED 0

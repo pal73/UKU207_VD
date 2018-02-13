@@ -4710,7 +4710,7 @@ N	iBps,iBps_elteh,iS2,iSet_prl,iK_prl,iDnd,
 N	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 N	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 N	iLoad,iAVAR,
-N	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+N	iStr,iStr_VD,
 N	iVrs,iPrltst,iApv,
 N	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 N	iK_makb_sel,iK_makb,iK_out,
@@ -5196,7 +5196,7 @@ N	//1бит - авария по завышенному Uвых
 N	//2бит - авария по заниженному Uвых
 N	//3бит - авария по обрыву связи	
 N	//4бит - ресурс вентилятора выработан    
-N 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+N 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
 N    char _cnt;
 N     char _cnt_old;
 N     char _cnt_more2;
@@ -5469,6 +5469,7 @@ N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
 Nextern short bIBAT_SMKLBR;
+Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
 N//Управление низкоприоритетной нагрузкой
@@ -5541,6 +5542,10 @@ Nextern signed short outVoltContrHndlCnt;		//Счетчик, считает в плюс в случае вы
 Nextern signed short outVoltContrHndlCnt_;		//Счетчик, считает в плюс в случае отсутствия выполнения условия аварии
 Nextern char uout_av;
 N
+N//-----------------------------------------------
+N//Контроль работы вольтдобавки
+Nextern char bVDISWORK;
+Nextern char vd_is_work_cnt;
 N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
@@ -8178,114 +8183,130 @@ Nchar i;
 Nshort tempS;
 N
 N//tempS=(MODBUS_INPUT_REGS[0]);
+Nmodbus_registers[0]=(signed char)(bps[0]._Uii>>8);			//Рег1	Выходное напряжение выпрямителя №1, 0.1В
+Nmodbus_registers[1]=(signed char)(bps[0]._Uii);
+Nmodbus_registers[2]=(signed char)(bps[0]._Ii>>8);			//Рег2	Выходной ток выпрямителя №1, 0.1А
+Nmodbus_registers[3]=(signed char)(bps[0]._Ii);
+Nmodbus_registers[4]=(signed char)(bps[0]._Ti>>8);			//Рег3	Температура радиатора выпрямителя №1, 1гЦ
+Nmodbus_registers[5]=(signed char)(bps[0]._Ti);
+Nmodbus_registers[6]=(signed char)(bps[0]._av>>8);			//Рег4	Байт флагов выпрямителя №1, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[7]=(signed char)(bps[0]._av);
+Nmodbus_registers[8]=(signed char)(bps[1]._Uii>>8);			//Рег5	Выходное напряжение выпрямителя №2, 0.1В
+Nmodbus_registers[9]=(signed char)(bps[1]._Uii);
+Nmodbus_registers[10]=(signed char)(bps[1]._Ii>>8);			//Рег6	Выходной ток выпрямителя №2, 0.1А
+Nmodbus_registers[11]=(signed char)(bps[1]._Ii);
+Nmodbus_registers[12]=(signed char)(bps[1]._Ti>>8);			//Рег7	Температура радиатора выпрямителя №2, 1гЦ
+Nmodbus_registers[13]=(signed char)(bps[1]._Ti);
+Nmodbus_registers[14]=(signed char)(bps[1]._av>>8);			//Рег8	Байт флагов выпрямителя №2, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[15]=(signed char)(bps[1]._av);
+Nmodbus_registers[16]=(signed char)(bps[2]._Uii>>8);			//Рег9	Выходное напряжение выпрямителя №3, 0.1В
+Nmodbus_registers[17]=(signed char)(bps[2]._Uii);
+Nmodbus_registers[18]=(signed char)(bps[2]._Ii>>8);			//Рег10	Выходной ток выпрямителя №3, 0.1А
+Nmodbus_registers[19]=(signed char)(bps[2]._Ii);
+Nmodbus_registers[20]=(signed char)(bps[2]._Ti>>8);			//Рег11	Температура радиатора выпрямителя №3, 1гЦ
+Nmodbus_registers[21]=(signed char)(bps[2]._Ti);
+Nmodbus_registers[22]=(signed char)(bps[2]._av>>8);			//Рег12	Байт флагов выпрямителя №3, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[23]=(signed char)(bps[2]._av);
+Nmodbus_registers[24]=(signed char)(bps[3]._Uii>>8);			//Рег13	Выходное напряжение выпрямителя №4, 0.1В
+Nmodbus_registers[25]=(signed char)(bps[3]._Uii);
+Nmodbus_registers[26]=(signed char)(bps[3]._Ii>>8);			//Рег14	Выходной ток выпрямителя №4, 0.1А
+Nmodbus_registers[27]=(signed char)(bps[3]._Ii);
+Nmodbus_registers[28]=(signed char)(bps[3]._Ti>>8);			//Рег15	Температура радиатора выпрямителя №4, 1гЦ
+Nmodbus_registers[29]=(signed char)(bps[3]._Ti);
+Nmodbus_registers[30]=(signed char)(bps[3]._av>>8);			//Рег16	Байт флагов выпрямителя №4, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[31]=(signed char)(bps[3]._av);
+Nmodbus_registers[32]=(signed char)(bps[4]._Uii>>8);			//Рег17	Выходное напряжение выпрямителя №5, 0.1В
+Nmodbus_registers[33]=(signed char)(bps[4]._Uii);
+Nmodbus_registers[34]=(signed char)(bps[4]._Ii>>8);			//Рег18	Выходной ток выпрямителя №5, 0.1А
+Nmodbus_registers[35]=(signed char)(bps[4]._Ii);
+Nmodbus_registers[36]=(signed char)(bps[4]._Ti>>8);			//Рег19	Температура радиатора выпрямителя №5, 1гЦ
+Nmodbus_registers[37]=(signed char)(bps[4]._Ti);
+Nmodbus_registers[38]=(signed char)(bps[4]._av>>8);			//Рег20	Байт флагов выпрямителя №5, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[39]=(signed char)(bps[4]._av);
+Nmodbus_registers[40]=(signed char)(bps[5]._Uii>>8);			//Рег21	Выходное напряжение выпрямителя №6, 0.1В
+Nmodbus_registers[41]=(signed char)(bps[5]._Uii);
+Nmodbus_registers[42]=(signed char)(bps[5]._Ii>>8);			//Рег22	Выходной ток выпрямителя №6, 0.1А
+Nmodbus_registers[43]=(signed char)(bps[5]._Ii);
+Nmodbus_registers[44]=(signed char)(bps[5]._Ti>>8);			//Рег23	Температура радиатора выпрямителя №6, 1гЦ
+Nmodbus_registers[45]=(signed char)(bps[5]._Ti);
+Nmodbus_registers[46]=(signed char)(bps[5]._av>>8);			//Рег24	Байт флагов выпрямителя №6, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[47]=(signed char)(bps[5]._av);
+Nmodbus_registers[48]=(signed char)(bps[6]._Uii>>8);			//Рег25	Выходное напряжение выпрямителя №7, 0.1В
+Nmodbus_registers[49]=(signed char)(bps[6]._Uii);
+Nmodbus_registers[50]=(signed char)(bps[6]._Ii>>8);			//Рег26	Выходной ток выпрямителя №7, 0.1А
+Nmodbus_registers[51]=(signed char)(bps[6]._Ii);
+Nmodbus_registers[52]=(signed char)(bps[6]._Ti>>8);			//Рег27	Температура радиатора выпрямителя №7, 1гЦ
+Nmodbus_registers[53]=(signed char)(bps[6]._Ti);
+Nmodbus_registers[54]=(signed char)(bps[6]._av>>8);			//Рег28	Байт флагов выпрямителя №7, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[55]=(signed char)(bps[6]._av);
+Nmodbus_registers[56]=(signed char)(bps[7]._Uii>>8);			//Рег29	Выходное напряжение выпрямителя №8, 0.1В
+Nmodbus_registers[57]=(signed char)(bps[7]._Uii);
+Nmodbus_registers[58]=(signed char)(bps[7]._Ii>>8);			//Рег30	Выходной ток выпрямителя №8, 0.1А
+Nmodbus_registers[59]=(signed char)(bps[7]._Ii);
+Nmodbus_registers[60]=(signed char)(bps[7]._Ti>>8);			//Рег31	Температура радиатора выпрямителя №8, 1гЦ
+Nmodbus_registers[61]=(signed char)(bps[7]._Ti);
+Nmodbus_registers[62]=(signed char)(bps[7]._av>>8);			//Рег32	Байт флагов выпрямителя №8, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[63]=(signed char)(bps[7]._av);
+Nmodbus_registers[64]=(signed char)(bps[8]._Uii>>8);			//Рег33	Выходное напряжение выпрямителя №9, 0.1В
+Nmodbus_registers[65]=(signed char)(bps[8]._Uii);
+Nmodbus_registers[66]=(signed char)(bps[8]._Ii>>8);			//Рег34	Выходной ток выпрямителя №9, 0.1А
+Nmodbus_registers[67]=(signed char)(bps[8]._Ii);
+Nmodbus_registers[68]=(signed char)(bps[8]._Ti>>8);			//Рег35	Температура радиатора выпрямителя №9, 1гЦ
+Nmodbus_registers[69]=(signed char)(bps[8]._Ti);
+Nmodbus_registers[70]=(signed char)(bps[8]._av>>8);			//Рег36	Байт флагов выпрямителя №9, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[71]=(signed char)(bps[8]._av);
+Nmodbus_registers[72]=(signed char)(bps[9]._Uii>>8);			//Рег37	Выходное напряжение выпрямителя №10, 0.1В
+Nmodbus_registers[73]=(signed char)(bps[9]._Uii);
+Nmodbus_registers[74]=(signed char)(bps[9]._Ii>>8);			//Рег38	Выходной ток выпрямителя №10, 0.1А
+Nmodbus_registers[75]=(signed char)(bps[9]._Ii);
+Nmodbus_registers[76]=(signed char)(bps[9]._Ti>>8);			//Рег39	Температура радиатора выпрямителя №10, 1гЦ
+Nmodbus_registers[77]=(signed char)(bps[9]._Ti);
+Nmodbus_registers[78]=(signed char)(bps[9]._av>>8);			//Рег40	Байт флагов выпрямителя №10, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[79]=(signed char)(bps[9]._av);
+Nmodbus_registers[80]=(signed char)(bps[10]._Uii>>8);		//Рег41	Выходное напряжение выпрямителя №11, 0.1В
+Nmodbus_registers[81]=(signed char)(bps[10]._Uii);
+Nmodbus_registers[82]=(signed char)(bps[10]._Ii>>8);			//Рег42	Выходной ток выпрямителя №11, 0.1А
+Nmodbus_registers[83]=(signed char)(bps[10]._Ii);
+Nmodbus_registers[84]=(signed char)(bps[10]._Ti>>8);			//Рег43	Температура радиатора выпрямителя №11, 1гЦ
+Nmodbus_registers[85]=(signed char)(bps[10]._Ti);
+Nmodbus_registers[86]=(signed char)(bps[10]._av>>8);			//Рег44	Байт флагов выпрямителя №11, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[87]=(signed char)(bps[10]._av);
+Nmodbus_registers[88]=(signed char)(bps[11]._Uii>>8);		//Рег45	Выходное напряжение выпрямителя №12, 0.1В
+Nmodbus_registers[89]=(signed char)(bps[11]._Uii);
+Nmodbus_registers[90]=(signed char)(bps[11]._Ii>>8);			//Рег46	Выходной ток выпрямителя №12, 0.1А
+Nmodbus_registers[91]=(signed char)(bps[11]._Ii);
+Nmodbus_registers[92]=(signed char)(bps[11]._Ti>>8);			//Рег47	Температура радиатора выпрямителя №12, 1гЦ
+Nmodbus_registers[93]=(signed char)(bps[11]._Ti);
+Nmodbus_registers[94]=(signed char)(bps[11]._av>>8);			//Рег48	Байт флагов выпрямителя №12, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
+Nmodbus_registers[95]=(signed char)(bps[11]._av);
 N
-Nmodbus_registers[0]=(signed char)(out_U>>8);					//Рег1   	напряжение выходной шины, 0.1В
-Nmodbus_registers[1]=(signed char)(out_U);
-Nmodbus_registers[2]=(signed char)(bps_I>>8);					//Рег2   	ток выпрямителей, 0.1А
-Nmodbus_registers[3]=(signed char)(bps_I);
-Nmodbus_registers[4]=(signed char)(net_U>>8);					//Рег3   	напряжение сети питания, 1В
-Nmodbus_registers[5]=(signed char)(net_U);
-Nmodbus_registers[6]=(signed char)(net_F>>8);					//Рег4   	частота сети питания, 0.1Гц
-Nmodbus_registers[7]=(signed char)(net_F);
-Nmodbus_registers[8]=(signed char)(net_Ua>>8);					//Рег5	напряжение сети питания фаза A, 1В	
-Nmodbus_registers[9]=(signed char)(net_Ua);		 	
-Nmodbus_registers[10]=(signed char)(net_Ub>>8);				//Рег6	напряжение сети питания фаза B, 1В
-Nmodbus_registers[11]=(signed char)(net_Ub);
-Nmodbus_registers[12]=(signed char)(net_Uc>>8);				//Рег7	напряжение сети питания фаза C, 1В
-Nmodbus_registers[13]=(signed char)(net_Uc);
-Nmodbus_registers[14]=(signed char)(bat[0]._Ub>>8);				//Рег8	напряжение батареи №1, 0.1В
-Nmodbus_registers[15]=(signed char)(bat[0]._Ub);
-Nmodbus_registers[16]=(signed char)(bat[0]._Ib>>8);				//Рег9   	ток батареи №1, 0.01А
-Nmodbus_registers[17]=(signed char)(bat[0]._Ib);
-Nmodbus_registers[18]=(signed char)(bat[0]._Tb>>8);				//Рег10	температура батареи №1, 1Гц
-Nmodbus_registers[19]=(signed char)(bat[0]._Tb);
-Nmodbus_registers[20]=(signed char)(bat[0]._zar>>8);			//Рег11	заряд батареи №1, %
-Nmodbus_registers[21]=(signed char)(bat[0]._zar);
-Nmodbus_registers[22]=(signed char)(bat[0]._Ubm>>8);			//Рег12	напряжение средней точки батареи №1, 0.1В
-Nmodbus_registers[23]=(signed char)(bat[0]._Ubm);
-Nmodbus_registers[24]=(signed char)(bat[0]._dUbm>>8);			//Рег13	ошибка средней точки батареи №1, %
-Nmodbus_registers[25]=(signed char)(bat[0]._dUbm);
-Nmodbus_registers[26]=(signed char)(BAT_C_REAL[0]>>8);			//Рег14	Реальная емкость батареи №1, 0.1А*ч, если 0x5555 то не измерялась
-Nmodbus_registers[27]=(signed char)(BAT_C_REAL[0]);
-Nmodbus_registers[28]=(signed char)(bat[1]._Ub>>8);				//Рег15	напряжение батареи №1, 0.1В
-Nmodbus_registers[29]=(signed char)(bat[1]._Ub);
-Nmodbus_registers[30]=(signed char)(bat[1]._Ib>>8);				//Рег16   	ток батареи №1, 0.01А
-Nmodbus_registers[31]=(signed char)(bat[1]._Ib);
-Nmodbus_registers[32]=(signed char)(bat[1]._Tb>>8);				//Рег17	температура батареи №1, 1Гц
-Nmodbus_registers[33]=(signed char)(bat[1]._Tb);
-Nmodbus_registers[34]=(signed char)(bat[1]._zar>>8);			//Рег18	заряд батареи №1, %
-Nmodbus_registers[35]=(signed char)(bat[1]._zar);
-Nmodbus_registers[36]=(signed char)(bat[1]._Ubm>>8);			//Рег19	напряжение средней точки батареи №1, 0.1В
-Nmodbus_registers[37]=(signed char)(bat[1]._Ubm);
-Nmodbus_registers[38]=(signed char)(bat[1]._dUbm>>8);			//Рег20	ошибка средней точки батареи №1, %
-Nmodbus_registers[39]=(signed char)(bat[1]._dUbm);
-Nmodbus_registers[40]=(signed char)(BAT_C_REAL[1]>>8);			//Рег21	Реальная емкость батареи №1, 0.1А*ч, если 0x5555 то не измерялась
-Nmodbus_registers[41]=(signed char)(BAT_C_REAL[1]);
-Nmodbus_registers[42]=(signed char)(bps[0]._Uii>>8);			//Рег22	Выходное напряжение выпрямителя №1, 0.1В
-Nmodbus_registers[43]=(signed char)(bps[0]._Uii);
-Nmodbus_registers[44]=(signed char)(bps[0]._Ii>>8);				//Рег23	Выходной ток выпрямителя №1, 0.1А
-Nmodbus_registers[45]=(signed char)(bps[0]._Ii);
-Nmodbus_registers[46]=(signed char)(bps[0]._Ti>>8);				//Рег24	Температура радиатора выпрямителя №1, 1гЦ
-Nmodbus_registers[47]=(signed char)(bps[0]._Ti);
-Nmodbus_registers[48]=(signed char)(bps[0]._av>>8);				//Рег25	Байт флагов выпрямителя №1, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[49]=(signed char)(bps[0]._av);
-Nmodbus_registers[50]=(signed char)(bps[1]._Uii>>8);			//Рег26	Выходное напряжение выпрямителя №2, 0.1В
-Nmodbus_registers[51]=(signed char)(bps[1]._Uii);
-Nmodbus_registers[52]=(signed char)(bps[1]._Ii>>8);				//Рег27	Выходной ток выпрямителя №2, 0.1А
-Nmodbus_registers[53]=(signed char)(bps[1]._Ii);
-Nmodbus_registers[54]=(signed char)(bps[1]._Ti>>8);				//Рег28	Температура радиатора выпрямителя №2, 1гЦ
-Nmodbus_registers[55]=(signed char)(bps[1]._Ti);
-Nmodbus_registers[56]=(signed char)(bps[1]._av>>8);				//Рег29	Байт флагов выпрямителя №2, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[57]=(signed char)(bps[1]._av);
-Nmodbus_registers[58]=(signed char)(bps[2]._Uii>>8);			//Рег30	Выходное напряжение выпрямителя №3, 0.1В
-Nmodbus_registers[59]=(signed char)(bps[2]._Uii);
-Nmodbus_registers[60]=(signed char)(bps[2]._Ii>>8);				//Рег31	Выходной ток выпрямителя №3, 0.1А
-Nmodbus_registers[61]=(signed char)(bps[2]._Ii);
-Nmodbus_registers[62]=(signed char)(bps[2]._Ti>>8);				//Рег32	Температура радиатора выпрямителя №3, 1гЦ
-Nmodbus_registers[63]=(signed char)(bps[2]._Ti);
-Nmodbus_registers[64]=(signed char)(bps[2]._av>>8);				//Рег33	Байт флагов выпрямителя №3, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[65]=(signed char)(bps[2]._av);
-Nmodbus_registers[66]=(signed char)(bps[3]._Uii>>8);			//Рег34	Выходное напряжение выпрямителя №4, 0.1В
-Nmodbus_registers[67]=(signed char)(bps[3]._Uii);
-Nmodbus_registers[68]=(signed char)(bps[3]._Ii>>8);				//Рег35	Выходной ток выпрямителя №4, 0.1А
-Nmodbus_registers[69]=(signed char)(bps[3]._Ii);
-Nmodbus_registers[70]=(signed char)(bps[3]._Ti>>8);				//Рег36	Температура радиатора выпрямителя №4, 1гЦ
-Nmodbus_registers[71]=(signed char)(bps[3]._Ti);
-Nmodbus_registers[72]=(signed char)(bps[3]._av>>8);				//Рег37	Байт флагов выпрямителя №4, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[73]=(signed char)(bps[3]._av);
-Nmodbus_registers[74]=(signed char)(bps[4]._Uii>>8);			//Рег38	Выходное напряжение выпрямителя №5, 0.1В
-Nmodbus_registers[75]=(signed char)(bps[4]._Uii);
-Nmodbus_registers[76]=(signed char)(bps[4]._Ii>>8);				//Рег39	Выходной ток выпрямителя №5, 0.1А
-Nmodbus_registers[77]=(signed char)(bps[4]._Ii);
-Nmodbus_registers[78]=(signed char)(bps[4]._Ti>>8);				//Рег40	Температура радиатора выпрямителя №5, 1гЦ
-Nmodbus_registers[79]=(signed char)(bps[4]._Ti);
-Nmodbus_registers[80]=(signed char)(bps[4]._av>>8);				//Рег41	Байт флагов выпрямителя №5, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[81]=(signed char)(bps[4]._av);
-Nmodbus_registers[82]=(signed char)(bps[5]._Uii>>8);			//Рег42	Выходное напряжение выпрямителя №6, 0.1В
-Nmodbus_registers[83]=(signed char)(bps[5]._Uii);
-Nmodbus_registers[84]=(signed char)(bps[5]._Ii>>8);				//Рег43	Выходной ток выпрямителя №6, 0.1А
-Nmodbus_registers[85]=(signed char)(bps[5]._Ii);
-Nmodbus_registers[86]=(signed char)(bps[5]._Ti>>8);				//Рег44	Температура радиатора выпрямителя №6, 1гЦ
-Nmodbus_registers[87]=(signed char)(bps[5]._Ti);
-Nmodbus_registers[88]=(signed char)(bps[5]._av>>8);				//Рег45	Байт флагов выпрямителя №6, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[89]=(signed char)(bps[5]._av);
-Nmodbus_registers[90]=(signed char)(bps[6]._Uii>>8);			//Рег46	Выходное напряжение выпрямителя №7, 0.1В
-Nmodbus_registers[91]=(signed char)(bps[6]._Uii);
-Nmodbus_registers[92]=(signed char)(bps[6]._Ii>>8);				//Рег47	Выходной ток выпрямителя №7, 0.1А
-Nmodbus_registers[93]=(signed char)(bps[6]._Ii);
-Nmodbus_registers[94]=(signed char)(bps[6]._Ti>>8);				//Рег48	Температура радиатора выпрямителя №7, 1гЦ
-Nmodbus_registers[95]=(signed char)(bps[6]._Ti);
-Nmodbus_registers[96]=(signed char)(bps[6]._av>>8);				//Рег49	Байт флагов выпрямителя №7, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[97]=(signed char)(bps[6]._av);
-Nmodbus_registers[98]=(signed char)(bps[7]._Uii>>8);			//Рег50	Выходное напряжение выпрямителя №8, 0.1В
-Nmodbus_registers[99]=(signed char)(bps[7]._Uii);
-Nmodbus_registers[100]=(signed char)(bps[7]._Ii>>8);			//Рег51	Выходной ток выпрямителя №8, 0.1А
-Nmodbus_registers[101]=(signed char)(bps[7]._Ii);
-Nmodbus_registers[102]=(signed char)(bps[7]._Ti>>8);			//Рег52	Температура радиатора выпрямителя №8, 1гЦ
-Nmodbus_registers[103]=(signed char)(bps[7]._Ti);
-Nmodbus_registers[104]=(signed char)(bps[7]._av>>8);			//Рег53	Байт флагов выпрямителя №8, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-Nmodbus_registers[105]=(signed char)(bps[7]._av);
-Nmodbus_registers[106]=(signed char)(bps_U>>8);					//Рег54   	напряжение выпрямителей, 0.1В
+N															
+Nmodbus_registers[98]=(signed char)	(out_U>>8);				//Рег50 Выходное напряжение системы
+Nmodbus_registers[99]=(signed char)	(out_U);
+Nmodbus_registers[100]=(signed char)	(in_U>>8);				//Рег51	Входное напряжение системы
+Nmodbus_registers[101]=(signed char)	(in_U);
+Nmodbus_registers[102]=(signed char)	(vd_U>>8);				//Рег52	Напряжение вольтдобавки
+Nmodbus_registers[103]=(signed char)	(vd_U);
+Nmodbus_registers[104]=(signed char)	(Ib_ips_termokompensat>>8);		//Рег53	Выходной ток
+Nmodbus_registers[105]=(signed char)	(Ib_ips_termokompensat);
+N
+Nmodbus_registers[106]=(signed char)	(t_ext[0]>>8);				//Рег54	 Температура системы
+Nmodbus_registers[107]=(signed char)	(t_ext[0]);
+Nmodbus_registers[108]=(signed char)	(avar_vd_stat>>8);		//Рег55	 Флаг аварий системы
+Nmodbus_registers[109]=(signed char)	(avar_vd_stat);			// Бит 0 - авария одного из БПС
+N															// Бит 1 - перегрузка системы по току
+N															// Бит 2 - перегрев системы
+N															// Бит 3 - выходное напряжение завышено
+N															// Бит 4 - выходное напряжение занижено
+N															// Бит 5 - входное напряжение завышено
+N															// Бит 6 - входное напряжение занижено
+N															// Бит 7 - авария связи по шине KAN
+N															// Бит 8 - вольтдобавка в работе
+N
+N
+N
+N /*
+Nmodbus_registers[106]=(signed char)(bps_U>>8);				//Рег54   	напряжение выпрямителей, 0.1В
 Nmodbus_registers[107]=(signed char)(bps_U);
 NtempS=0;
 Nif(speedChIsOn) tempS=1;
@@ -8319,11 +8340,12 @@ NtempS=t_ext[2];
 Nif(ND_EXT[2])tempS=-1000;
 Nmodbus_registers[404]=(signed char)(tempS>>8);				//Рег203	Внешний датчик температуры №3
 Nmodbus_registers[405]=(signed char)(tempS);
+W "modbus.c" 1301 1 nested comment is not allowed
 N/*tempS=t_ext[3];
 Nif(ND_EXT[3])tempS=-1000;
 Nmodbus_registers[406]=(signed char)(tempS>>8);				//Рег204	Внешний датчик температуры №4
 Nmodbus_registers[407]=(signed char)(tempS);   */
-N
+N/*
 NtempS=0;
 Nif(sk_stat[0]==ssON) tempS|=0x0001;
 Nif(sk_av_stat[0]==sasON) tempS|=0x0002;
@@ -8346,7 +8368,7 @@ Nmodbus_registers[426]=(signed char)(tempS>>8);				//Рег214	Состояние  сухого ко
 Nmodbus_registers[427]=(signed char)(tempS);
 N
 N//modbus_registers[
-N
+N  */
 N
 Nif(prot==MODBUS_RTU_PROT)
 Xif(prot==0)
@@ -8376,8 +8398,9 @@ Nelse if(prot==MODBUS_TCP_PROT)
 Xelse if(prot==1)
 N	{
 N	mem_copy((signed char*)modbus_tx_buff,(signed char*)&modbus_registers[(reg_adr-1)*2],reg_quantity*2);
-W "modbus.c" 1340 20 a value of type "signed char *" cannot be assigned to an entity of type "char *"
+W "modbus.c" 1356 20 a value of type "signed char *" cannot be assigned to an entity of type "char *"
 N	modbus_tcp_out_ptr=(signed char*)modbus_tx_buff;
 N	}
+W "modbus.c" 1141 7 variable "tempS" was declared but never referenced
 N}
 N

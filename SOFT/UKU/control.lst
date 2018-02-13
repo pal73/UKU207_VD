@@ -239,7 +239,7 @@ Nvoid long2lcd_mmm(signed long in,char xy,char des);
 Nvoid long2lcdyx_mmm(signed long in,char y,char x,char des);
 Nvoid int2lcdyx(unsigned short in,char y,char x,char des);
 Nvoid int2lcd(unsigned short in,char xy,char des);
-Nvoid checkboxing(char xy,char in);
+Nvoid checkboxing(char xy,short in);
 Nvoid long2lcdhyx(unsigned long in,char y,char x);
 Nvoid char2lcdh(char in,char yx);
 Nvoid char2lcdhyx(char in,char y,char x);
@@ -2082,7 +2082,7 @@ N	iBps,iBps_elteh,iS2,iSet_prl,iK_prl,iDnd,
 N	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 N	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 N	iLoad,iAVAR,
-N	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+N	iStr,iStr_VD,
 N	iVrs,iPrltst,iApv,
 N	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 N	iK_makb_sel,iK_makb,iK_out,
@@ -2568,7 +2568,7 @@ N	//1бит - авария по завышенному Uвых
 N	//2бит - авария по заниженному Uвых
 N	//3бит - авария по обрыву связи	
 N	//4бит - ресурс вентилятора выработан    
-N 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+N 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
 N    char _cnt;
 N     char _cnt_old;
 N     char _cnt_more2;
@@ -2841,6 +2841,7 @@ N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
 Nextern short bIBAT_SMKLBR;
+Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
 N//Управление низкоприоритетной нагрузкой
@@ -2913,6 +2914,10 @@ Nextern signed short outVoltContrHndlCnt;		//Счетчик, считает в плюс в случае вы
 Nextern signed short outVoltContrHndlCnt_;		//Счетчик, считает в плюс в случае отсутствия выполнения условия аварии
 Nextern char uout_av;
 N
+N//-----------------------------------------------
+N//Контроль работы вольтдобавки
+Nextern char bVDISWORK;
+Nextern char vd_is_work_cnt;
 N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
@@ -8196,7 +8201,9 @@ N     	bps[i]._Uin=0;
 N     	bps[i]._Ti=0;
 N     	bps[i]._flags_tm=0; 
 N	     //bps[i]._rotor=0;
-N		bps[i]._Uisum=0;    
+N		bps[i]._Uisum=0; 
+N		bps[i].debug_info_to_uku0=bps[i]._buff[12]+(bps[i]._buff[13]*256); 
+N		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256);    
 N     	}
 N     
 N     }
@@ -9223,6 +9230,7 @@ N
 N				if(bps[i]._x_<-50)bps[i]._x_=-50;
 N				if(bps[i]._x_>50)bps[i]._x_=50;	
 N				}
+N			else bps[i]._avg=0;
 N			}		
 N		}			
 N	}   	 
@@ -9230,7 +9238,7 @@ N
 N
 Navg_hndl_end:
 N__nop();  
-W "control.c" 2425 1 label "avg_hndl_end" was declared but never referenced
+W "control.c" 2428 1 label "avg_hndl_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9257,7 +9265,7 @@ N	//if(UOUT_>UOUT)UOUT_=UOUT;
 N	UOUT_--;
 N	if(UOUT_<(UOUT-50))UOUT_=UOUT-50;
 N	}
-W "control.c" 2432 6 variable "i" was declared but never referenced
+W "control.c" 2435 6 variable "i" was declared but never referenced
 N}
 N
 N/*//-----------------------------------------------
@@ -9282,8 +9290,8 @@ Ni2=0;
 N
 Nfor(i=0;i<NUMIST;i++)
 N	{
-N	if(bps[i]._av&0x0f)i1=1;
-N	if(bps[i]._av&0x10)i2=1;
+N	if(bps[i]._av&0x07)i1=1;
+N	if(bps[i]._av&0x08)i2=1;
 N	}
 N
 Nif(i1)					avar_vd_stat|=(1<<0);
@@ -9304,6 +9312,8 @@ N
 Nif(i2)					avar_vd_stat|=(1<<7);
 Nelse 					avar_vd_stat&=~(1<<7);
 N
+Nif(bVDISWORK)			avar_vd_stat|=(1<<8);
+Nelse 					avar_vd_stat&=~(1<<8);
 N
 Nfor (i=0;i<4;i++)
 N	{
@@ -9593,7 +9603,7 @@ N		}
 N
 N     for(i=0;i<=NUMIST;i++)
 N		{
-N	    if(bps[i]._flags_tu==1) 	bps[i]._x_=-50;
+N	    //if(bps[i]._flags_tu==1) 	bps[i]._x_=-50;
 N	   	}	
 N		 
 N  	}
@@ -10888,7 +10898,7 @@ N		{
 N		overloadHndlCnt++;
 N		if(overloadHndlCnt==(TZAS*10))
 N			{
-W "control.c" 4033 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 4038 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(1);
 N			}
 N		}
@@ -10900,7 +10910,7 @@ N		{
 N		overloadHndlCnt--;
 N		if(overloadHndlCnt==0)
 N			{
-W "control.c" 4044 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 4049 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(0);
 N			}
 N		}
@@ -10921,7 +10931,7 @@ N		{
 N		uAvarHndlOutUMaxCnt++;
 N		if(uAvarHndlOutUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4064 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4069 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(1,out_U);
 N			}
 N		}
@@ -10934,7 +10944,7 @@ N		{
 N		uAvarHndlOutUMaxCnt--;
 N		if(uAvarHndlOutUMaxCnt==0)
 N			{
-W "control.c" 4076 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4081 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10948,7 +10958,7 @@ N		{
 N		uAvarHndlOutUMinCnt++;
 N		if(uAvarHndlOutUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4089 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4094 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(2,out_U);
 N			}
 N		}
@@ -10961,7 +10971,7 @@ N		{
 N		uAvarHndlOutUMinCnt--;
 N		if(uAvarHndlOutUMinCnt==0)
 N			{
-W "control.c" 4101 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4106 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10975,7 +10985,7 @@ N		{
 N		uAvarHndlInUMaxCnt++;
 N		if(uAvarHndlInUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4114 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4119 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(1,in_U);
 N			}
 N		}
@@ -10988,7 +10998,7 @@ N		{
 N		uAvarHndlInUMaxCnt--;
 N		if(uAvarHndlInUMaxCnt==0)
 N			{
-W "control.c" 4126 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4131 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11002,7 +11012,7 @@ N		{
 N		uAvarHndlInUMinCnt++;
 N		if(uAvarHndlInUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4139 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4144 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(2,in_U);
 N			}
 N		}
@@ -11015,7 +11025,7 @@ N		{
 N		uAvarHndlInUMinCnt--;
 N		if(uAvarHndlInUMinCnt==0)
 N			{
-W "control.c" 4151 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4156 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11036,7 +11046,7 @@ N		{
 N		sysTAvarHndlCnt++;
 N		if(sysTAvarHndlCnt>=(10*TZAS))
 N			{
-W "control.c" 4171 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4176 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(1,sys_T);
 N			}
 N		}
@@ -11049,7 +11059,7 @@ N		{
 N		sysTAvarHndlCnt--;
 N		if(sysTAvarHndlCnt==0)
 N			{
-W "control.c" 4183 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4188 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(0,sys_T);
 N			}
 N		}
@@ -12448,4 +12458,21 @@ N	}
 Nelse vent_stat=1;
 N}
 N
+N//-----------------------------------------------
+Nvoid vd_is_work_hndl(void)
+N{
+Nif(vd_U>20)
+N	{
+N	if(vd_is_work_cnt<5)vd_is_work_cnt++;
+N	else vd_is_work_cnt=5;
+N	}
+Nelse
+N	{
+N	if(vd_is_work_cnt>0)vd_is_work_cnt--;
+N	else vd_is_work_cnt=0;
+N	}
+N
+Nif(vd_is_work_cnt==5) bVDISWORK=1;
+Nelse if(vd_is_work_cnt==0) bVDISWORK=0;
+N}
 N

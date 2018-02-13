@@ -5117,7 +5117,7 @@ N	iBps,iBps_elteh,iS2,iSet_prl,iK_prl,iDnd,
 N	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 N	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 N	iLoad,iAVAR,
-N	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+N	iStr,iStr_VD,
 N	iVrs,iPrltst,iApv,
 N	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 N	iK_makb_sel,iK_makb,iK_out,
@@ -5603,7 +5603,7 @@ N	//1бит - авария по завышенному Uвых
 N	//2бит - авария по заниженному Uвых
 N	//3бит - авария по обрыву связи	
 N	//4бит - ресурс вентилятора выработан    
-N 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+N 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
 N    char _cnt;
 N     char _cnt_old;
 N     char _cnt_more2;
@@ -5876,6 +5876,7 @@ N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
 Nextern short bIBAT_SMKLBR;
+Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
 N//Управление низкоприоритетной нагрузкой
@@ -5948,6 +5949,10 @@ Nextern signed short outVoltContrHndlCnt;		//Счетчик, считает в плюс в случае вы
 Nextern signed short outVoltContrHndlCnt_;		//Счетчик, считает в плюс в случае отсутствия выполнения условия аварии
 Nextern char uout_av;
 N
+N//-----------------------------------------------
+N//Контроль работы вольтдобавки
+Nextern char bVDISWORK;
+Nextern char vd_is_work_cnt;
 N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;

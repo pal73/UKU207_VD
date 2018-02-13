@@ -2712,7 +2712,7 @@ typedef enum {
 	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 	iLoad,iAVAR,
-	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+	iStr,iStr_VD,
 	iVrs,iPrltst,iApv,
 	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 	iK_makb_sel,iK_makb,iK_out,
@@ -3197,7 +3197,7 @@ typedef struct
 	
 	
 	
- 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+ 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
     char _cnt;
      char _cnt_old;
      char _cnt_more2;
@@ -3440,6 +3440,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 extern signed long ibat_metr_buff_[2];
 extern short bIBAT_SMKLBR;
+extern char ibat_metr_cnt;
 
 
 
@@ -3465,7 +3466,7 @@ extern short can_plazma;
 
 
 
-#line 1536 "main.h"
+#line 1537 "main.h"
 
 
 
@@ -3502,6 +3503,10 @@ extern signed short outVoltContrHndlCnt;
 extern signed short outVoltContrHndlCnt_;		
 extern char uout_av;
 
+
+
+extern char bVDISWORK;
+extern char vd_is_work_cnt;
 
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
@@ -5642,175 +5647,191 @@ char i;
 short tempS;
 
 
+modbus_registers[0]=(signed char)(bps[0]._Uii>>8);			
+modbus_registers[1]=(signed char)(bps[0]._Uii);
+modbus_registers[2]=(signed char)(bps[0]._Ii>>8);			
+modbus_registers[3]=(signed char)(bps[0]._Ii);
+modbus_registers[4]=(signed char)(bps[0]._Ti>>8);			
+modbus_registers[5]=(signed char)(bps[0]._Ti);
+modbus_registers[6]=(signed char)(bps[0]._av>>8);			
+modbus_registers[7]=(signed char)(bps[0]._av);
+modbus_registers[8]=(signed char)(bps[1]._Uii>>8);			
+modbus_registers[9]=(signed char)(bps[1]._Uii);
+modbus_registers[10]=(signed char)(bps[1]._Ii>>8);			
+modbus_registers[11]=(signed char)(bps[1]._Ii);
+modbus_registers[12]=(signed char)(bps[1]._Ti>>8);			
+modbus_registers[13]=(signed char)(bps[1]._Ti);
+modbus_registers[14]=(signed char)(bps[1]._av>>8);			
+modbus_registers[15]=(signed char)(bps[1]._av);
+modbus_registers[16]=(signed char)(bps[2]._Uii>>8);			
+modbus_registers[17]=(signed char)(bps[2]._Uii);
+modbus_registers[18]=(signed char)(bps[2]._Ii>>8);			
+modbus_registers[19]=(signed char)(bps[2]._Ii);
+modbus_registers[20]=(signed char)(bps[2]._Ti>>8);			
+modbus_registers[21]=(signed char)(bps[2]._Ti);
+modbus_registers[22]=(signed char)(bps[2]._av>>8);			
+modbus_registers[23]=(signed char)(bps[2]._av);
+modbus_registers[24]=(signed char)(bps[3]._Uii>>8);			
+modbus_registers[25]=(signed char)(bps[3]._Uii);
+modbus_registers[26]=(signed char)(bps[3]._Ii>>8);			
+modbus_registers[27]=(signed char)(bps[3]._Ii);
+modbus_registers[28]=(signed char)(bps[3]._Ti>>8);			
+modbus_registers[29]=(signed char)(bps[3]._Ti);
+modbus_registers[30]=(signed char)(bps[3]._av>>8);			
+modbus_registers[31]=(signed char)(bps[3]._av);
+modbus_registers[32]=(signed char)(bps[4]._Uii>>8);			
+modbus_registers[33]=(signed char)(bps[4]._Uii);
+modbus_registers[34]=(signed char)(bps[4]._Ii>>8);			
+modbus_registers[35]=(signed char)(bps[4]._Ii);
+modbus_registers[36]=(signed char)(bps[4]._Ti>>8);			
+modbus_registers[37]=(signed char)(bps[4]._Ti);
+modbus_registers[38]=(signed char)(bps[4]._av>>8);			
+modbus_registers[39]=(signed char)(bps[4]._av);
+modbus_registers[40]=(signed char)(bps[5]._Uii>>8);			
+modbus_registers[41]=(signed char)(bps[5]._Uii);
+modbus_registers[42]=(signed char)(bps[5]._Ii>>8);			
+modbus_registers[43]=(signed char)(bps[5]._Ii);
+modbus_registers[44]=(signed char)(bps[5]._Ti>>8);			
+modbus_registers[45]=(signed char)(bps[5]._Ti);
+modbus_registers[46]=(signed char)(bps[5]._av>>8);			
+modbus_registers[47]=(signed char)(bps[5]._av);
+modbus_registers[48]=(signed char)(bps[6]._Uii>>8);			
+modbus_registers[49]=(signed char)(bps[6]._Uii);
+modbus_registers[50]=(signed char)(bps[6]._Ii>>8);			
+modbus_registers[51]=(signed char)(bps[6]._Ii);
+modbus_registers[52]=(signed char)(bps[6]._Ti>>8);			
+modbus_registers[53]=(signed char)(bps[6]._Ti);
+modbus_registers[54]=(signed char)(bps[6]._av>>8);			
+modbus_registers[55]=(signed char)(bps[6]._av);
+modbus_registers[56]=(signed char)(bps[7]._Uii>>8);			
+modbus_registers[57]=(signed char)(bps[7]._Uii);
+modbus_registers[58]=(signed char)(bps[7]._Ii>>8);			
+modbus_registers[59]=(signed char)(bps[7]._Ii);
+modbus_registers[60]=(signed char)(bps[7]._Ti>>8);			
+modbus_registers[61]=(signed char)(bps[7]._Ti);
+modbus_registers[62]=(signed char)(bps[7]._av>>8);			
+modbus_registers[63]=(signed char)(bps[7]._av);
+modbus_registers[64]=(signed char)(bps[8]._Uii>>8);			
+modbus_registers[65]=(signed char)(bps[8]._Uii);
+modbus_registers[66]=(signed char)(bps[8]._Ii>>8);			
+modbus_registers[67]=(signed char)(bps[8]._Ii);
+modbus_registers[68]=(signed char)(bps[8]._Ti>>8);			
+modbus_registers[69]=(signed char)(bps[8]._Ti);
+modbus_registers[70]=(signed char)(bps[8]._av>>8);			
+modbus_registers[71]=(signed char)(bps[8]._av);
+modbus_registers[72]=(signed char)(bps[9]._Uii>>8);			
+modbus_registers[73]=(signed char)(bps[9]._Uii);
+modbus_registers[74]=(signed char)(bps[9]._Ii>>8);			
+modbus_registers[75]=(signed char)(bps[9]._Ii);
+modbus_registers[76]=(signed char)(bps[9]._Ti>>8);			
+modbus_registers[77]=(signed char)(bps[9]._Ti);
+modbus_registers[78]=(signed char)(bps[9]._av>>8);			
+modbus_registers[79]=(signed char)(bps[9]._av);
+modbus_registers[80]=(signed char)(bps[10]._Uii>>8);		
+modbus_registers[81]=(signed char)(bps[10]._Uii);
+modbus_registers[82]=(signed char)(bps[10]._Ii>>8);			
+modbus_registers[83]=(signed char)(bps[10]._Ii);
+modbus_registers[84]=(signed char)(bps[10]._Ti>>8);			
+modbus_registers[85]=(signed char)(bps[10]._Ti);
+modbus_registers[86]=(signed char)(bps[10]._av>>8);			
+modbus_registers[87]=(signed char)(bps[10]._av);
+modbus_registers[88]=(signed char)(bps[11]._Uii>>8);		
+modbus_registers[89]=(signed char)(bps[11]._Uii);
+modbus_registers[90]=(signed char)(bps[11]._Ii>>8);			
+modbus_registers[91]=(signed char)(bps[11]._Ii);
+modbus_registers[92]=(signed char)(bps[11]._Ti>>8);			
+modbus_registers[93]=(signed char)(bps[11]._Ti);
+modbus_registers[94]=(signed char)(bps[11]._av>>8);			
+modbus_registers[95]=(signed char)(bps[11]._av);
 
-modbus_registers[0]=(signed char)(out_U>>8);					
-modbus_registers[1]=(signed char)(out_U);
-modbus_registers[2]=(signed char)(bps_I>>8);					
-modbus_registers[3]=(signed char)(bps_I);
-modbus_registers[4]=(signed char)(net_U>>8);					
-modbus_registers[5]=(signed char)(net_U);
-modbus_registers[6]=(signed char)(net_F>>8);					
-modbus_registers[7]=(signed char)(net_F);
-modbus_registers[8]=(signed char)(net_Ua>>8);					
-modbus_registers[9]=(signed char)(net_Ua);		 	
-modbus_registers[10]=(signed char)(net_Ub>>8);				
-modbus_registers[11]=(signed char)(net_Ub);
-modbus_registers[12]=(signed char)(net_Uc>>8);				
-modbus_registers[13]=(signed char)(net_Uc);
-modbus_registers[14]=(signed char)(bat[0]._Ub>>8);				
-modbus_registers[15]=(signed char)(bat[0]._Ub);
-modbus_registers[16]=(signed char)(bat[0]._Ib>>8);				
-modbus_registers[17]=(signed char)(bat[0]._Ib);
-modbus_registers[18]=(signed char)(bat[0]._Tb>>8);				
-modbus_registers[19]=(signed char)(bat[0]._Tb);
-modbus_registers[20]=(signed char)(bat[0]._zar>>8);			
-modbus_registers[21]=(signed char)(bat[0]._zar);
-modbus_registers[22]=(signed char)(bat[0]._Ubm>>8);			
-modbus_registers[23]=(signed char)(bat[0]._Ubm);
-modbus_registers[24]=(signed char)(bat[0]._dUbm>>8);			
-modbus_registers[25]=(signed char)(bat[0]._dUbm);
-modbus_registers[26]=(signed char)(BAT_C_REAL[0]>>8);			
-modbus_registers[27]=(signed char)(BAT_C_REAL[0]);
-modbus_registers[28]=(signed char)(bat[1]._Ub>>8);				
-modbus_registers[29]=(signed char)(bat[1]._Ub);
-modbus_registers[30]=(signed char)(bat[1]._Ib>>8);				
-modbus_registers[31]=(signed char)(bat[1]._Ib);
-modbus_registers[32]=(signed char)(bat[1]._Tb>>8);				
-modbus_registers[33]=(signed char)(bat[1]._Tb);
-modbus_registers[34]=(signed char)(bat[1]._zar>>8);			
-modbus_registers[35]=(signed char)(bat[1]._zar);
-modbus_registers[36]=(signed char)(bat[1]._Ubm>>8);			
-modbus_registers[37]=(signed char)(bat[1]._Ubm);
-modbus_registers[38]=(signed char)(bat[1]._dUbm>>8);			
-modbus_registers[39]=(signed char)(bat[1]._dUbm);
-modbus_registers[40]=(signed char)(BAT_C_REAL[1]>>8);			
-modbus_registers[41]=(signed char)(BAT_C_REAL[1]);
-modbus_registers[42]=(signed char)(bps[0]._Uii>>8);			
-modbus_registers[43]=(signed char)(bps[0]._Uii);
-modbus_registers[44]=(signed char)(bps[0]._Ii>>8);				
-modbus_registers[45]=(signed char)(bps[0]._Ii);
-modbus_registers[46]=(signed char)(bps[0]._Ti>>8);				
-modbus_registers[47]=(signed char)(bps[0]._Ti);
-modbus_registers[48]=(signed char)(bps[0]._av>>8);				
-modbus_registers[49]=(signed char)(bps[0]._av);
-modbus_registers[50]=(signed char)(bps[1]._Uii>>8);			
-modbus_registers[51]=(signed char)(bps[1]._Uii);
-modbus_registers[52]=(signed char)(bps[1]._Ii>>8);				
-modbus_registers[53]=(signed char)(bps[1]._Ii);
-modbus_registers[54]=(signed char)(bps[1]._Ti>>8);				
-modbus_registers[55]=(signed char)(bps[1]._Ti);
-modbus_registers[56]=(signed char)(bps[1]._av>>8);				
-modbus_registers[57]=(signed char)(bps[1]._av);
-modbus_registers[58]=(signed char)(bps[2]._Uii>>8);			
-modbus_registers[59]=(signed char)(bps[2]._Uii);
-modbus_registers[60]=(signed char)(bps[2]._Ii>>8);				
-modbus_registers[61]=(signed char)(bps[2]._Ii);
-modbus_registers[62]=(signed char)(bps[2]._Ti>>8);				
-modbus_registers[63]=(signed char)(bps[2]._Ti);
-modbus_registers[64]=(signed char)(bps[2]._av>>8);				
-modbus_registers[65]=(signed char)(bps[2]._av);
-modbus_registers[66]=(signed char)(bps[3]._Uii>>8);			
-modbus_registers[67]=(signed char)(bps[3]._Uii);
-modbus_registers[68]=(signed char)(bps[3]._Ii>>8);				
-modbus_registers[69]=(signed char)(bps[3]._Ii);
-modbus_registers[70]=(signed char)(bps[3]._Ti>>8);				
-modbus_registers[71]=(signed char)(bps[3]._Ti);
-modbus_registers[72]=(signed char)(bps[3]._av>>8);				
-modbus_registers[73]=(signed char)(bps[3]._av);
-modbus_registers[74]=(signed char)(bps[4]._Uii>>8);			
-modbus_registers[75]=(signed char)(bps[4]._Uii);
-modbus_registers[76]=(signed char)(bps[4]._Ii>>8);				
-modbus_registers[77]=(signed char)(bps[4]._Ii);
-modbus_registers[78]=(signed char)(bps[4]._Ti>>8);				
-modbus_registers[79]=(signed char)(bps[4]._Ti);
-modbus_registers[80]=(signed char)(bps[4]._av>>8);				
-modbus_registers[81]=(signed char)(bps[4]._av);
-modbus_registers[82]=(signed char)(bps[5]._Uii>>8);			
-modbus_registers[83]=(signed char)(bps[5]._Uii);
-modbus_registers[84]=(signed char)(bps[5]._Ii>>8);				
-modbus_registers[85]=(signed char)(bps[5]._Ii);
-modbus_registers[86]=(signed char)(bps[5]._Ti>>8);				
-modbus_registers[87]=(signed char)(bps[5]._Ti);
-modbus_registers[88]=(signed char)(bps[5]._av>>8);				
-modbus_registers[89]=(signed char)(bps[5]._av);
-modbus_registers[90]=(signed char)(bps[6]._Uii>>8);			
-modbus_registers[91]=(signed char)(bps[6]._Uii);
-modbus_registers[92]=(signed char)(bps[6]._Ii>>8);				
-modbus_registers[93]=(signed char)(bps[6]._Ii);
-modbus_registers[94]=(signed char)(bps[6]._Ti>>8);				
-modbus_registers[95]=(signed char)(bps[6]._Ti);
-modbus_registers[96]=(signed char)(bps[6]._av>>8);				
-modbus_registers[97]=(signed char)(bps[6]._av);
-modbus_registers[98]=(signed char)(bps[7]._Uii>>8);			
-modbus_registers[99]=(signed char)(bps[7]._Uii);
-modbus_registers[100]=(signed char)(bps[7]._Ii>>8);			
-modbus_registers[101]=(signed char)(bps[7]._Ii);
-modbus_registers[102]=(signed char)(bps[7]._Ti>>8);			
-modbus_registers[103]=(signed char)(bps[7]._Ti);
-modbus_registers[104]=(signed char)(bps[7]._av>>8);			
-modbus_registers[105]=(signed char)(bps[7]._av);
-modbus_registers[106]=(signed char)(bps_U>>8);					
-modbus_registers[107]=(signed char)(bps_U);
-tempS=0;
-if(speedChIsOn) tempS=1;
-modbus_registers[108]=(signed char)(tempS>>8);					
-modbus_registers[109]=(signed char)(tempS);
-tempS=0;
-if(spc_stat==spcVZ) tempS=1;
-modbus_registers[110]=(signed char)(tempS>>8);					
-modbus_registers[111]=(signed char)(tempS);
-modbus_registers[112]=(signed char)(uout_av>>8);					
-modbus_registers[113]=(signed char)(uout_av);
+															
+modbus_registers[98]=(signed char)	(out_U>>8);				
+modbus_registers[99]=(signed char)	(out_U);
+modbus_registers[100]=(signed char)	(in_U>>8);				
+modbus_registers[101]=(signed char)	(in_U);
+modbus_registers[102]=(signed char)	(vd_U>>8);				
+modbus_registers[103]=(signed char)	(vd_U);
+modbus_registers[104]=(signed char)	(Ib_ips_termokompensat>>8);		
+modbus_registers[105]=(signed char)	(Ib_ips_termokompensat);
 
-tempS=0;													 
-if(bat_ips._av)			tempS|=(1<<0);						 
-if(avar_stat&0x0001)   	tempS|=(1<<1);						 
-if(avar_stat&(1<<(3+0)))tempS|=(1<<2);						 
-if(avar_stat&(1<<(3+1)))tempS|=(1<<3);						 
-if(avar_stat&(1<<(3+2)))tempS|=(1<<4);						 
-modbus_registers[118]=(signed char)(tempS>>8);
-modbus_registers[119]=(signed char)(tempS);
-
-tempS=t_ext[0];
-if(ND_EXT[0])tempS=-1000;
-modbus_registers[400]=(signed char)(tempS>>8);				
-modbus_registers[401]=(signed char)(tempS);
-tempS=t_ext[1];
-if(ND_EXT[1])tempS=-1000;
-modbus_registers[402]=(signed char)(tempS>>8);				
-modbus_registers[403]=(signed char)(tempS);
-tempS=t_ext[2];
-if(ND_EXT[2])tempS=-1000;
-modbus_registers[404]=(signed char)(tempS>>8);				
-modbus_registers[405]=(signed char)(tempS);
+modbus_registers[106]=(signed char)	(t_ext[0]>>8);				
+modbus_registers[107]=(signed char)	(t_ext[0]);
+modbus_registers[108]=(signed char)	(avar_vd_stat>>8);		
+modbus_registers[109]=(signed char)	(avar_vd_stat);			
+															
+															
+															
+															
+															
+															
+															
+															
 
 
 
  
 
-tempS=0;
-if(sk_stat[0]==ssON) tempS|=0x0001;
-if(sk_av_stat[0]==sasON) tempS|=0x0002;
-modbus_registers[420]=(signed char)(tempS>>8);				
-modbus_registers[421]=(signed char)(tempS);
-tempS=0;
-if(sk_stat[1]==ssON) tempS|=0x0001;
-if(sk_av_stat[1]==sasON) tempS|=0x0002;
-modbus_registers[422]=(signed char)(tempS>>8);				
-modbus_registers[423]=(signed char)(tempS);
-tempS=0;
-if(sk_stat[2]==ssON) tempS|=0x0001;
-if(sk_av_stat[2]==sasON) tempS|=0x0002;
-modbus_registers[424]=(signed char)(tempS>>8);				
-modbus_registers[425]=(signed char)(tempS);
-tempS=0;
-if(sk_stat[3]==ssON) tempS|=0x0001;
-if(sk_av_stat[3]==sasON) tempS|=0x0002;
-modbus_registers[426]=(signed char)(tempS>>8);				
-modbus_registers[427]=(signed char)(tempS);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 if(prot==0)
 	{

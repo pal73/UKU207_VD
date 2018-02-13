@@ -1427,7 +1427,9 @@ for(i=0;i<NUMIST;i++)
      	bps[i]._Ti=0;
      	bps[i]._flags_tm=0; 
 	     //bps[i]._rotor=0;
-		bps[i]._Uisum=0;    
+		bps[i]._Uisum=0; 
+		bps[i].debug_info_to_uku0=bps[i]._buff[12]+(bps[i]._buff[13]*256); 
+		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256);    
      	}
      
      }
@@ -2417,6 +2419,7 @@ else
 				if(bps[i]._x_<-50)bps[i]._x_=-50;
 				if(bps[i]._x_>50)bps[i]._x_=50;	
 				}
+			else bps[i]._avg=0;
 			}		
 		}			
 	}   	 
@@ -2474,8 +2477,8 @@ i2=0;
 
 for(i=0;i<NUMIST;i++)
 	{
-	if(bps[i]._av&0x0f)i1=1;
-	if(bps[i]._av&0x10)i2=1;
+	if(bps[i]._av&0x07)i1=1;
+	if(bps[i]._av&0x08)i2=1;
 	}
 
 if(i1)					avar_vd_stat|=(1<<0);
@@ -2496,6 +2499,8 @@ else if(uInAvar==2)		avar_vd_stat|=(1<<5);
 if(i2)					avar_vd_stat|=(1<<7);
 else 					avar_vd_stat&=~(1<<7);
 
+if(bVDISWORK)			avar_vd_stat|=(1<<8);
+else 					avar_vd_stat&=~(1<<8);
 
 for (i=0;i<4;i++)
 	{
@@ -2753,7 +2758,7 @@ else if(b1Hz_sh)
 
      for(i=0;i<=NUMIST;i++)
 		{
-	    if(bps[i]._flags_tu==1) 	bps[i]._x_=-50;
+	    //if(bps[i]._flags_tu==1) 	bps[i]._x_=-50;
 	   	}	
 		 
   	}
@@ -5561,4 +5566,21 @@ else if(RELEVENTSIGN==rvsEXT)
 else vent_stat=1;
 }
 
+//-----------------------------------------------
+void vd_is_work_hndl(void)
+{
+if(vd_U>20)
+	{
+	if(vd_is_work_cnt<5)vd_is_work_cnt++;
+	else vd_is_work_cnt=5;
+	}
+else
+	{
+	if(vd_is_work_cnt>0)vd_is_work_cnt--;
+	else vd_is_work_cnt=0;
+	}
+
+if(vd_is_work_cnt==5) bVDISWORK=1;
+else if(vd_is_work_cnt==0) bVDISWORK=0;
+}
 

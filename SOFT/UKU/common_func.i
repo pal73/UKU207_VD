@@ -16,7 +16,7 @@ void long2lcd_mmm(signed long in,char xy,char des);
 void long2lcdyx_mmm(signed long in,char y,char x,char des);
 void int2lcdyx(unsigned short in,char y,char x,char des);
 void int2lcd(unsigned short in,char xy,char des);
-void checkboxing(char xy,char in);
+void checkboxing(char xy,short in);
 void long2lcdhyx(unsigned long in,char y,char x);
 void char2lcdh(char in,char yx);
 void char2lcdhyx(char in,char y,char x);
@@ -935,7 +935,7 @@ typedef enum {
 	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 	iLoad,iAVAR,
-	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+	iStr,iStr_VD,
 	iVrs,iPrltst,iApv,
 	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 	iK_makb_sel,iK_makb,iK_out,
@@ -1420,7 +1420,7 @@ typedef struct
 	
 	
 	
- 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+ 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
     char _cnt;
      char _cnt_old;
      char _cnt_more2;
@@ -1663,6 +1663,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 extern signed long ibat_metr_buff_[2];
 extern short bIBAT_SMKLBR;
+extern char ibat_metr_cnt;
 
 
 
@@ -1688,7 +1689,7 @@ extern short can_plazma;
 
 
 
-#line 1536 "main.h"
+#line 1537 "main.h"
 
 
 
@@ -1725,6 +1726,10 @@ extern signed short outVoltContrHndlCnt;
 extern signed short outVoltContrHndlCnt_;		
 extern char uout_av;
 
+
+
+extern char bVDISWORK;
+extern char vd_is_work_cnt;
 
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
@@ -4674,7 +4679,7 @@ else
 }
 
 
-void checkboxing(char xy,char in)
+void checkboxing(char xy,short in)
 {
 char i;
 i=find(xy);

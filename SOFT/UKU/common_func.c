@@ -864,7 +864,7 @@ else
 }
 
 //-----------------------------------------------
-void checkboxing(char xy,char in)
+void checkboxing(char xy,short in)
 {
 char i;
 i=find(xy);

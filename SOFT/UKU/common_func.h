@@ -14,7 +14,7 @@ void long2lcd_mmm(signed long in,char xy,char des);
 void long2lcdyx_mmm(signed long in,char y,char x,char des);
 void int2lcdyx(unsigned short in,char y,char x,char des);
 void int2lcd(unsigned short in,char xy,char des);
-void checkboxing(char xy,char in);
+void checkboxing(char xy,short in);
 void long2lcdhyx(unsigned long in,char y,char x);
 void char2lcdh(char in,char yx);
 void char2lcdhyx(char in,char y,char x);

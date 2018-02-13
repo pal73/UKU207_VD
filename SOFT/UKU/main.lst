@@ -1653,7 +1653,7 @@ N	iBps,iBps_elteh,iS2,iSet_prl,iK_prl,iDnd,
 N	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 N	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 N	iLoad,iAVAR,
-N	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+N	iStr,iStr_VD,
 N	iVrs,iPrltst,iApv,
 N	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 N	iK_makb_sel,iK_makb,iK_out,
@@ -2139,7 +2139,7 @@ N	//1бит - авария по завышенному Uвых
 N	//2бит - авария по заниженному Uвых
 N	//3бит - авария по обрыву связи	
 N	//4бит - ресурс вентилятора выработан    
-N 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+N 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
 N    char _cnt;
 N     char _cnt_old;
 N     char _cnt_more2;
@@ -2412,6 +2412,7 @@ N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
 Nextern short bIBAT_SMKLBR;
+Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
 N//Управление низкоприоритетной нагрузкой
@@ -2484,6 +2485,10 @@ Nextern signed short outVoltContrHndlCnt;		//Счетчик, считает в плюс в случае вы
 Nextern signed short outVoltContrHndlCnt_;		//Счетчик, считает в плюс в случае отсутствия выполнения условия аварии
 Nextern char uout_av;
 N
+N//-----------------------------------------------
+N//Контроль работы вольтдобавки
+Nextern char bVDISWORK;
+Nextern char vd_is_work_cnt;
 N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
@@ -3599,7 +3604,7 @@ Nvoid long2lcd_mmm(signed long in,char xy,char des);
 Nvoid long2lcdyx_mmm(signed long in,char y,char x,char des);
 Nvoid int2lcdyx(unsigned short in,char y,char x,char des);
 Nvoid int2lcd(unsigned short in,char xy,char des);
-Nvoid checkboxing(char xy,char in);
+Nvoid checkboxing(char xy,short in);
 Nvoid long2lcdhyx(unsigned long in,char y,char x);
 Nvoid char2lcdh(char in,char yx);
 Nvoid char2lcdhyx(char in,char y,char x);
@@ -8818,6 +8823,7 @@ N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nsigned long ibat_metr_buff_[2];
 Nshort bIBAT_SMKLBR;
+Nchar ibat_metr_cnt=0;
 N
 N
 N//-----------------------------------------------
@@ -8883,6 +8889,10 @@ Nsigned short outVoltContrHndlCnt;		//Счетчик, считает в плюс в случае выполнени
 Nsigned short outVoltContrHndlCnt_;		//Счетчик, считает в плюс в случае отсутствия выполнения условия аварии
 Nchar uout_av;
 N
+N//-----------------------------------------------
+N//Контроль работы вольтдобавки
+Nchar bVDISWORK;
+Nchar vd_is_work_cnt;
 N
 Nshort plazma_numOfCells;
 Nshort plazma_numOfTemperCells;
@@ -8939,14 +8949,15 @@ N//***********************************************
 N//Состояния аварий для реле
 Nshort rele_av_flags;
 Nshort avar_vd_stat;
-N//0 - Авария модуля
-N//1 - Пергрузка системы	по току
-N//2 - Перегрев системы
-N//3 - Uвых. занижено
-N//4 - Uвых. завышено
-N//5 - Uвх. занижено
-N//6 - Uвх. завышено
-N//7 - Ресурс вентилятора израсходован
+N// Бит 0 - авария одного из БПС
+N// Бит 1 - перегрузка системы по току
+N// Бит 2 - перегрев системы
+N// Бит 3 - выходное напряжение завышено
+N// Бит 4 - выходное напряжение занижено
+N// Бит 5 - входное напряжение завышено
+N// Бит 6 - входное напряжение занижено
+N// Бит 7 - авария связи по шине KAN
+N// Бит 8 - вольтдобавка в работе
 N
 N//-----------------------------------------------
 Nvoid rtc_init (void) 
@@ -9575,7 +9586,7 @@ Nelse if(cnt_net_drv==-3)
 N	{                 
 N	if(!bCAN_OFF) can1_out(GETTM_IBATMETER,GETTM_IBATMETER,0,0,0,0,0,0);
 X	if(!bCAN_OFF) mcp2515_transmit(0x1d,0x1d,0,0,0,0,0,0);
-N	//plazma1809++;
+N	ibat_metr_cnt++;
 N	}
 N	
 N	
@@ -9735,11 +9746,11 @@ N			lcd_bitmap[ptr_bitmap++]=caracter[((unsigned)lcd_buffer[x]*6)+5];
 N			} 
 N		}
 N	}	
-W "main.c" 1361 13 variable "ptr_cnt" was declared but never referenced
-W "main.c" 1361 21 variable "ptr_cnt1" was declared but never referenced
-W "main.c" 1361 30 variable "ptr_cnt2" was declared but never referenced
-W "main.c" 1361 39 variable "ptr_cnt3" was declared but never referenced
-W "main.c" 1361 48 variable "ptr_cnt4" was declared but never referenced
+W "main.c" 1367 13 variable "ptr_cnt" was declared but never referenced
+W "main.c" 1367 21 variable "ptr_cnt1" was declared but never referenced
+W "main.c" 1367 30 variable "ptr_cnt2" was declared but never referenced
+W "main.c" 1367 39 variable "ptr_cnt3" was declared but never referenced
+W "main.c" 1367 48 variable "ptr_cnt4" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9831,6 +9842,26 @@ N	}
 Nif(avar_stat&(1<<(3+7)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №8    ";
+N	sub_cnt_max++;	
+N	}
+Nif(avar_stat&(1<<(3+8)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №9    ";
+N	sub_cnt_max++;	
+N	}
+Nif(avar_stat&(1<<(3+9)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №10   ";
+N	sub_cnt_max++;	
+N	}
+Nif(avar_stat&(1<<(3+10)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №11   ";
+N	sub_cnt_max++;	
+N	}
+Nif(avar_stat&(1<<(3+11)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №12   ";
 N	sub_cnt_max++;	
 N	}
 N
@@ -9984,7 +10015,7 @@ N		{
 N	//if((ii_!=139)&&(/*(src_state[0]==ssWRK)||(src_state[1]==ssWRK)||(src_state[2]==ssWRK))*/num_of_wrks_bps!=0))
 N//		{
 N		
-N		if((sub_cnt<5)&&(num_of_wrks_bps!=0))int2lcdyx(num_of_wrks_bps,0,14,0);
+N		if((sub_cnt<5)/*&&(num_of_wrks_bps!=0)*/)int2lcdyx(num_of_wrks_bps,0,14,0);
 N
 N          //}
 N     	}
@@ -10071,8 +10102,8 @@ N	int2lcd(out_U/10,'#',0);
 N	int2lcd(sys_T,'#',0);
 N	int2lcd(vd_U/10,'@',0);
 N	int2lcd(in_U/10,']',0);
-N	int2lcd(vz_cnt_s_/60,'x',0);
-N	int2lcd(vz_cnt_h_,'X',0); 
+N	//int2lcd(vz_cnt_s_/60,'x',0);
+N	//int2lcd(vz_cnt_h_,'X',0); 
 N
 N	//int2lcdyx(UOUT,0,3,0);
 N
@@ -10083,7 +10114,7 @@ N	//int2lcdyx((short)ibat_metr_buff_[0],0,4,0);
 N	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 N	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
 N//	int2lcdyx(bat[0]._sign_temper_cnt,0,19,0);
-N//	int2lcdyx(bat[0]._temper_stat,0,16,0);
+N	//int2lcdyx(uAvarHndlOutUMaxCnt,0,16,0);
 N	}
 N
 N#ifndef _DEBUG_
@@ -10349,7 +10380,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 1919 16 unrecognized character escape sequence
+W "main.c" 1945 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -10385,8 +10416,7 @@ N
 N    // char2lcdhxy(bps[sub_ind1].Uin,0x04);
 N    
 N   	//int2lcdyx(sub_ind,0,2,0);
-N	int2lcdyx(bps[sub_ind1]._av,0,4,0);
-X	int2lcdyx(bps[a_ind . s_i1]._av,0,4,0);
+N	//int2lcdyx(bps[sub_ind1]._av,0,4,0);
 N	//int2lcdyx(u_necc,0,4,0);
 N	//int2lcdyx(avg,0,19,0);
 N	
@@ -10847,14 +10877,14 @@ X		if(a_ind . i_s==0) {
 N		
 N		bgnd_par(	"    Перезагрузка    ",
 N				"   или включение    ",
-N				"        ИБЭП        ",
+N				"       системы      ",
 N				"  0%(  0^ 0@:0#:0$  ");
 N		} else if(index_set==1) {
 X		} else if(a_ind . i_s==1) {
 N
 N		bgnd_par(	"    Перезагрузка    ",
 N				"   или включение    ",
-N				"        ИБЭП        ",
+N				"       системы      ",
 N				"  код источника  [  ");		
 N		
 N		} else if(index_set==2) {
@@ -10862,7 +10892,7 @@ X		} else if(a_ind . i_s==2) {
 N
 N		bgnd_par(	"    Перезагрузка    ",
 N				"   или включение    ",
-N				"        ИБЭП        ",
+N				"       системы      ",
 N				"                 ]  ");		
 N		
 N		}					
@@ -11231,7 +11261,7 @@ N		{
 N		av_j_si_max=4;  
 N		ptrs[0]=" Авария выходного   ";
 N		ptrs[1]=" напряжения (заниж.)";
-W "main.c" 2705 6 subscript out of range
+W "main.c" 2731 6 subscript out of range
 N		if(av_head_int[2]==1)ptrs[1]=" напряжения (завыш.)";
 N		ptrs[2]="   Начало           ";
 N		ptrs[3]="  0%[  0^ 0@:0#:0$  ";
@@ -11739,13 +11769,17 @@ N    ptrs[15]=		" Uвх.авар.max =   ^В";
 N    ptrs[16]=		" Uвх.авар.min =   &В";
 N    ptrs[17]=		" Uвых.авар.max =  jВ";
 N    ptrs[18]=		" Uвых.авар.min =  JВ";
-N	ptrs[19]=		" Tз.ав.сигн. =    <с";
+N	ptrs[19]=		" Tз.ав.сигн. =    }с";
 N    ptrs[20]=		" Порог ресурса      ";
 N    ptrs[21]=		" вентилятора      ]ч";
 N	ptrs[22]=		" Реле               ";
-N    ptrs[23]=		" Выход              ";
-N    ptrs[24]=		" Калибровки         "; 
-N    ptrs[25]=		"                    ";        
+N	ptrs[23]=		" Ethernet           ";
+N	ptrs[24]=		" MODBUS ADRESS     <";
+N	ptrs[25]=		" MODBUS BAUDRATE    ";
+N	ptrs[26]=		"                  >0";
+N    ptrs[27]=		" Выход              ";
+N    ptrs[28]=		" Калибровки         "; 
+N    ptrs[29]=		"                    ";        
 N	
 N	if((sub_ind-index_set)>2)index_set=sub_ind-2;
 X	if((a_ind . s_i-a_ind . i_s)>2)a_ind . i_s=a_ind . s_i-2;
@@ -11774,7 +11808,7 @@ N	    int2lcd(UINMAX/10,'^',0);
 N	    int2lcd(UINMIN/10,'&',0);
 N		int2lcd(UOUTMAX/10,'j',0);	
 N		int2lcd(UOUTMIN/10,'J',0);
-N		int2lcd(TZAS,'<',0);
+N		int2lcd(TZAS,'}',0);
 N		int2lcd(TVENTMAX*10,']',0);
 N
 N		if(TBAT==0)sub_bgnd("выкл.",'q',0);	
@@ -11827,6 +11861,9 @@ N	else if(REG_SPEED==3)	sub_bgnd("стандарт/3",'&',0);
 N	else if(REG_SPEED==4)	sub_bgnd("стандарт/4",'&',0);
 N	else if(REG_SPEED==5)	sub_bgnd("стандарт/5",'&',0);
 N	else 				sub_bgnd("стандарт",'&',0);
+N
+N	int2lcd(MODBUS_ADRESS,'<',0);
+N	int2lcd(MODBUS_BAUDRATE,'>',0);
 N
 N	}
 N
@@ -11932,14 +11969,14 @@ N	int2lcd(NUMDT,'#',0);
 N	int2lcd(NUMSK,'$',0);
 N	}    
 N
-Nelse if(ind==iStr_220_IPS_TERMOKOMPENSAT)
-Xelse if(a_ind . i==iStr_220_IPS_TERMOKOMPENSAT)
+Nelse if(ind==iStr_VD)
+Xelse if(a_ind . i==iStr_VD)
 N	{
 N	ptrs[0]=" Источников        !";
 N	ptrs[1]=" Датчиков темпер.  #";
-N	ptrs[2]=" Мониторов АКБ     %";
-N	ptrs[3]=" Сухих контактов   $";
-N	ptrs[4]=" Выход              ";
+N//	ptrs[2]=" Мониторов АКБ     %";
+N//	ptrs[3]=" Сухих контактов   $";
+N	ptrs[2]=" Выход              ";
 N	
 N	if(sub_ind<index_set) index_set=sub_ind;
 X	if(a_ind . s_i<a_ind . i_s) a_ind . i_s=a_ind . s_i;
@@ -12164,7 +12201,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3499 7 variable "sss" was declared but never referenced
+W "main.c" 3532 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -12643,8 +12680,8 @@ N
 N	if((sub_ind==0)||(sub_ind==3))mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
 X	if((a_ind . s_i==0)||(a_ind . s_i==3))mess_send(225,229,1000,10);
 N	
-N	int2lcdyx(adc_buff_[6],0,4,0);
-N	int2lcdyx(Ktext[0],0,9,0);	 
+N	//int2lcdyx(adc_buff_[6],0,4,0);
+N	//int2lcdyx(Ktext[0],0,9,0);	 
 N	}   
 N
 N
@@ -13180,7 +13217,7 @@ N
 N	ptrs[0]=" Uист =    @В       ";
 N    ptrs[1]=" откалибруйте Uист  ";
 N	ptrs[2]="  нажатием љ или њ  "; 
-N	ptrs[3]=" Uнагр =   #В       ";
+N	ptrs[3]=" Uшины =   #В       ";
 N    ptrs[4]=" откалибруйте Uнагр ";
 N    ptrs[5]="  нажатием љ или њ  ";
 N	ptrs[6]=" Uавтон =   $В      ";
@@ -13376,9 +13413,10 @@ N	ptrs[6]=	" Uвх. занижено     [";
 N	ptrs[7]=	" Uвх. завышено     ]";
 N	ptrs[8]=	" Ресурс вентилятора ";
 N	ptrs[9]=	"  израсходован     {";
-N    ptrs[10]=	sm_exit;
-N    ptrs[11]=	sm_;
-N    ptrs[12]=	sm_;     	     	    
+N	ptrs[10]=	" Uв.д. > 2В        }";
+N    ptrs[11]=	sm_exit;
+N    ptrs[12]=	sm_;
+N    ptrs[13]=	sm_;     	     	    
 N	
 N
 N	if((sub_ind-index_set)>2)index_set=sub_ind-2;
@@ -13414,13 +13452,12 @@ N 	checkboxing(']',RELE_SET_MASK[sub_ind1]&(1<<6));
 X 	checkboxing(']',RELE_SET_MASK[a_ind . s_i1]&(1<<6));
 N	checkboxing('{',RELE_SET_MASK[sub_ind1]&(1<<7));
 X	checkboxing('{',RELE_SET_MASK[a_ind . s_i1]&(1<<7));
+N	checkboxing('}',RELE_SET_MASK[sub_ind1]&(1<<8));
+X	checkboxing('}',RELE_SET_MASK[a_ind . s_i1]&(1<<8));
 N	
-N	int2lcdyx(lc640_read_int(ADR_EE_RELE_SET_MASK[sub_ind1]),0,19,0);
-X	int2lcdyx(lc640_read_int(ADR_EE_RELE_SET_MASK[a_ind . s_i1]),0,19,0);
-N	int2lcdyx(RELE_SET_MASK[sub_ind1],0,12,0);
-X	int2lcdyx(RELE_SET_MASK[a_ind . s_i1],0,12,0);
-N	int2lcdyx(sub_ind1,0,2,0);  
-X	int2lcdyx(a_ind . s_i1,0,2,0);  
+N	//int2lcdyx(lc640_read_int(ADR_EE_RELE_SET_MASK[sub_ind1]),0,19,0);
+N	//int2lcdyx(RELE_SET_MASK[sub_ind1],0,12,0);
+N	//int2lcdyx(sub_ind1,0,2,0);  
 N	}
 N
 N
@@ -14493,8 +14530,8 @@ N
 N	/*int2lcdyx(sub_ind,0,19,0);
 N	int2lcdyx(index_set,0,17,0);
 N	int2lcdyx(tst_state[5],0,3,0); */
-N	int2lcdyx(tst_state[6],0,1,0); 
-N	int2lcdyx(cntrl_stat,0,5,0); 
+N	//int2lcdyx(tst_state[6],0,1,0); 
+N	//int2lcdyx(cntrl_stat,0,5,0); 
 N
 N	int2lcd(sub_ind1+1,'!',0);
 X	int2lcd(a_ind . s_i1+1,'!',0);
@@ -14896,8 +14933,8 @@ N	int2lcd(bps[sub_ind1]._cnt,'@',0);
 X	int2lcd(bps[a_ind . s_i1]._cnt,'@',0);
 N	int2lcd(bps[sub_ind1+1]._cnt,'@',0);
 X	int2lcd(bps[a_ind . s_i1+1]._cnt,'@',0);
-N	if(sub_ind1==NUMIST-2)int2lcd(bps[8]._cnt,'@',0);
-X	if(a_ind . s_i1==NUMIST-2)int2lcd(bps[8]._cnt,'@',0);
+N	if(sub_ind1==NUMIST-2)int2lcd(ibat_metr_cnt,'@',0);
+X	if(a_ind . s_i1==NUMIST-2)int2lcd(ibat_metr_cnt,'@',0);
 N	else int2lcd(bps[sub_ind1+2]._cnt,'@',0);		
 X	else int2lcd(bps[a_ind . s_i1+2]._cnt,'@',0);		
 N		
@@ -14915,7 +14952,7 @@ N	int2lcd(bps[sub_ind1+1]._Ii,'$',1);
 X	int2lcd(bps[a_ind . s_i1+1]._Ii,'$',1); 
 N	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._Ii,'$',1); 
 X	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._Ii,'$',1); 
-N	else int2lcd_mmm(Ib_ips_termokompensat,'$',2);
+N	else int2lcd_mmm(Ib_ips_termokompensat,'$',0);
 N
 N	int2lcd(bps[sub_ind1]._Uin/10,'%',0);
 X	int2lcd(bps[a_ind . s_i1]._Uin/10,'%',0);
@@ -15213,8 +15250,8 @@ Nint2lcdyx(retcntsec,0,7,0);	*/
 N//int2lcdyx(bps[0]._vol_i,0,15,0);
 N//int2lcdyx(cntrl_stat,0,19,0); 
 N//int2lcdyx(bps[0]._Uin,0,4,0);
-W "main.c" 1394 6 variable "ii_" was declared but never referenced
-W "main.c" 1395 20 variable "cnt_ind_bat" was declared but never referenced
+W "main.c" 1400 6 variable "ii_" was declared but never referenced
+W "main.c" 1401 20 variable "cnt_ind_bat" was declared but never referenced
 N}							    
 N
 N
@@ -15679,7 +15716,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6504 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6539 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -15805,10 +15842,8 @@ N		}
 N	else if (but==butR)
 X	else if (but==239)
 N		{      
-N		bps[sub_ind1]._x_++;
-X		bps[a_ind . s_i1]._x_++;
-N		gran(&bps[sub_ind1]._x_,-50,50);
-X		gran(&bps[a_ind . s_i1]._x_,-50,50);
+N		//bps[sub_ind1]._x_++;
+N		//gran(&bps[sub_ind1]._x_,-50,50);
 N		}
 N		
 N/*	else if (but==butL)
@@ -15824,8 +15859,8 @@ N		can1_out(sub_ind1,sub_ind1,CMND,ALRM_RES,0,0,0,0);
 X		mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0x16,0x63,0,0,0,0);
 N		}
 N				
-N	else if(((but==butE)&&(sub_ind==8))/*||(but)*/)
-X	else if(((but==254)&&(a_ind . s_i==8)) )
+N	else if(((but==butE)&&(sub_ind==8))||(but==butL))
+X	else if(((but==254)&&(a_ind . s_i==8))||(but==247))
 N		{
 N	     tree_down(0,0);
 N	     ret(0);
@@ -16249,7 +16284,8 @@ N	     	if(tempU==PAROL_KALIBR)
 X	     	if(tempU==873) 
 N				{
 N				tree_down(0,0);
-N				tree_up(iK_VD,0,0,0);				
+N				tree_up(iK_VD,0,0,0);
+N				ret(100);				
 N				}
 N			else 
 N				{
@@ -17327,9 +17363,23 @@ N			sub_ind=22;
 X			a_ind . s_i=22;
 N            index_set=19;
 X            a_ind . i_s=19;
-N            }																
-N		gran_char(&sub_ind,0,24);
-X		gran_char(&a_ind . s_i,0,24);
+N            }
+N		if(sub_ind==25)
+X		if(a_ind . s_i==25)
+N        	{
+N			//sub_ind=27;
+N            index_set=24;
+X            a_ind . i_s=24;
+N            }
+N		if(sub_ind==26)
+X		if(a_ind . s_i==26)
+N        	{
+N			sub_ind=27;
+X			a_ind . s_i=27;
+N            //index_set=19;
+N            }																			
+N		gran_char(&sub_ind,0,28);
+X		gran_char(&a_ind . s_i,0,28);
 N		}
 N	else if(but==butU)
 X	else if(but==253)
@@ -17348,14 +17398,21 @@ N			{
 N			sub_ind=20;
 X			a_ind . s_i=20;
 N			}
-N		gran_char(&sub_ind,0,24);
-X		gran_char(&a_ind . s_i,0,24);
+N		if(sub_ind==26)
+X		if(a_ind . s_i==26)
+N        	{
+N			sub_ind=25;
+X			a_ind . s_i=25;
+N            //index_set=19;
+N            }
+N		gran_char(&sub_ind,0,28);
+X		gran_char(&a_ind . s_i,0,28);
 N		}
 N	else if(but==butD_)
 X	else if(but==123)
 N		{
-N		sub_ind=23;
-X		a_ind . s_i=23;
+N		sub_ind=27;
+X		a_ind . s_i=27;
 N		}
 N
 N	else if(but==butLR_)
@@ -17384,12 +17441,54 @@ X	else if(a_ind . s_i==0)
 N	     {
 N	     if(but==butE)
 X	     if(but==254)
-N	          {
-N	          tree_up(iDef_220_IPS_TERMOKOMPENSAT,0,0,0);
-N	          ret(1000);
-N	          default_temp=10;
-N	          }
-N	     }	
+N	        {
+N	          //tree_up(iDef_220_IPS_TERMOKOMPENSAT,0,0,0);
+N	          //ret(1000);
+N	          //default_temp=10;
+N
+N			lc640_write_int(EE_ZV_ON,1);
+X			lc640_write_int(0x10+100+18,1);
+N			lc640_write_int(EE_AV_OFF_AVT,1);
+X			lc640_write_int(0x10+100+12,1);
+N			lc640_write_int(EE_APV_ON1,apvON);
+X			lc640_write_int(0x10+100+44,apvON);
+N			lc640_write_int(EE_APV_ON2,apvON);
+X			lc640_write_int(0x10+100+46,apvON);
+N			lc640_write_int(EE_APV_ON2_TIME,1);
+X			lc640_write_int(0x10+100+48,1);
+N			lc640_write_int(EE_UOUT,2300);
+X			lc640_write_int(0x10+100+6,2300);
+N			lc640_write_int(EE_UAVT,2300);
+X			lc640_write_int(0x10+100+8,2300);
+N			lc640_write_int(EE_TSIGN,70);
+X			lc640_write_int(0x10+100+82,70);
+N			lc640_write_int(EE_TMAX,80);
+X			lc640_write_int(0x10+100+10,80);
+N			lc640_write_int(EE_TSYSMAX,50);
+X			lc640_write_int(0x10+100+106,50);
+N			lc640_write_int(EE_DU,200);
+X			lc640_write_int(0x10+100+84,200);
+N			lc640_write_int(EE_UMAX,700);
+X			lc640_write_int(0x10+100+4,700);
+N			lc640_write_int(EE_UINMAX,2500);
+X			lc640_write_int(0x10+100+144,2500);
+N			lc640_write_int(EE_UINMIN,1700);
+X			lc640_write_int(0x10+100+146,1700);
+N			lc640_write_int(EE_UOUTMAX,2500);
+X			lc640_write_int(0x10+100+148,2500);
+N			lc640_write_int(EE_UOUTMIN,2200);
+X			lc640_write_int(0x10+100+150,2200);
+N			lc640_write_int(EE_TZAS,5);
+X			lc640_write_int(0x10+100+34,5);
+N			lc640_write_int(EE_TVENTMAX,6000);
+X			lc640_write_int(0x10+350+2,6000);
+N			lc640_write_int(ADR_EE_RELE_SET_MASK[0],0x01);
+N			lc640_write_int(ADR_EE_RELE_SET_MASK[1],0x78);
+N			lc640_write_int(ADR_EE_RELE_SET_MASK[2],0x02);
+N			lc640_write_int(ADR_EE_RELE_SET_MASK[3],0x84);
+N
+N	        }
+N		}	
 N	
 N     else if(sub_ind==1)
 X     else if(a_ind . s_i==1)
@@ -17409,7 +17508,7 @@ N		{
 N		if(but==butE)
 X		if(but==254)
 N		     {
-N		     tree_up(iStr_220_IPS_TERMOKOMPENSAT,0,0,0);
+N		     tree_up(iStr_VD,0,0,0);
 N		     ret(1000);
 N		     index_set=0;
 X		     a_ind . i_s=0;
@@ -17678,9 +17777,80 @@ N			tree_up(iRele_set,0,0,0);
 N			ret(500);
 N			}						
 N		}
+N  	else if(sub_ind==23)
+X  	else if(a_ind . s_i==23)
+N		{
+N		if(but==butE) 
+X		if(but==254) 
+N		     {
+N		     tree_up(iLan_set,0,0,0);
+N		     ret(1000);
+N		     }
+N		}
+N  	else if(sub_ind==24)
+X  	else if(a_ind . s_i==24)
+N	    {
+N	     if((but==butR)||(but==butR_))
+X	     if((but==239)||(but==111))
+N	     	{
+N	     	MODBUS_ADRESS++;
+N	     	gran(&MODBUS_ADRESS,1,100);
+N	     	lc640_write_int(EE_MODBUS_ADRESS,MODBUS_ADRESS);
+X	     	lc640_write_int(0x10+500+200+72,MODBUS_ADRESS);
+N			speed=1;
+N	     	}
+N	     
+N	     else if((but==butL)||(but==butL_))
+X	     else if((but==247)||(but==119))
+N	     	{
+N	     	MODBUS_ADRESS--;
+N	     	gran(&MODBUS_ADRESS,1,100);
+N	     	lc640_write_int(EE_MODBUS_ADRESS,MODBUS_ADRESS);
+X	     	lc640_write_int(0x10+500+200+72,MODBUS_ADRESS);
+N			speed=1;
+N	     	}
+N          }
 N
-N    else if((sub_ind==23) || (sub_ind==3))
-X    else if((a_ind . s_i==23) || (a_ind . s_i==3))
+N     else if(sub_ind==25)
+X     else if(a_ind . s_i==25)
+N	     {
+N	     if((but==butR)||(but==butR_))
+X	     if((but==239)||(but==111))
+N	     	{
+N			if(MODBUS_BAUDRATE==120)MODBUS_BAUDRATE=240;
+N			else if(MODBUS_BAUDRATE==240)MODBUS_BAUDRATE=480;
+N	     	else if(MODBUS_BAUDRATE==480)MODBUS_BAUDRATE=960;
+N			else if(MODBUS_BAUDRATE==960)MODBUS_BAUDRATE=1920;
+N			else if(MODBUS_BAUDRATE==1920)MODBUS_BAUDRATE=3840;
+N			else if(MODBUS_BAUDRATE==3840)MODBUS_BAUDRATE=5760;
+N			//else if(MODBUS_BAUDRATE==3840)MODBUS_BAUDRATE=5760;
+N			else if(MODBUS_BAUDRATE==5760)MODBUS_BAUDRATE=11520;
+N			else MODBUS_BAUDRATE=120;
+N	     	gran(&MODBUS_BAUDRATE,120,11520);
+N	     	lc640_write_int(EE_MODBUS_BAUDRATE,MODBUS_BAUDRATE);
+X	     	lc640_write_int(0x10+500+200+74,MODBUS_BAUDRATE);
+N	     	}
+N	     
+N	     else if((but==butL)||(but==butL_))
+X	     else if((but==247)||(but==119))
+N	     	{
+N			if(MODBUS_BAUDRATE==120)MODBUS_BAUDRATE=11520;
+N			else if(MODBUS_BAUDRATE==240)MODBUS_BAUDRATE=120;
+N	     	else if(MODBUS_BAUDRATE==480)MODBUS_BAUDRATE=240;
+N			else if(MODBUS_BAUDRATE==960)MODBUS_BAUDRATE=480;
+N			else if(MODBUS_BAUDRATE==1920)MODBUS_BAUDRATE=960;
+N			else if(MODBUS_BAUDRATE==3840)MODBUS_BAUDRATE=1920;
+N			//else if(MODBUS_BAUDRATE==3840)MODBUS_BAUDRATE=3840;
+N			else if(MODBUS_BAUDRATE==5760)MODBUS_BAUDRATE=3840;
+N			else MODBUS_BAUDRATE=11520;
+N	     	gran(&MODBUS_BAUDRATE,120,11520);
+N	     	lc640_write_int(EE_MODBUS_BAUDRATE,MODBUS_BAUDRATE);
+X	     	lc640_write_int(0x10+500+200+74,MODBUS_BAUDRATE);
+N	     	}
+N          }
+N
+N    else if((sub_ind==27) || (sub_ind==3))
+X    else if((a_ind . s_i==27) || (a_ind . s_i==3))
 N		{
 N		if(but==butE)
 X		if(but==254)
@@ -17690,8 +17860,8 @@ N		     ret(0);
 N		     }
 N		}
 N				
-N	else if(sub_ind==24)
-X	else if(a_ind . s_i==24)
+N	else if(sub_ind==28)
+X	else if(a_ind . s_i==28)
 N		{
 N		if(but==butE)
 X		if(but==254)
@@ -18183,8 +18353,8 @@ N	          }
 N          }	          
 N	}
 N
-Nelse if(ind==iStr_220_IPS_TERMOKOMPENSAT)
-Xelse if(a_ind . i==iStr_220_IPS_TERMOKOMPENSAT)
+Nelse if(ind==iStr_VD)
+Xelse if(a_ind . i==iStr_VD)
 N	{
 N	ret(1000);
 N	if(but==butD)
@@ -18192,16 +18362,16 @@ X	if(but==251)
 N		{
 N		sub_ind++;
 X		a_ind . s_i++;
-N		gran_char(&sub_ind,0,4);
-X		gran_char(&a_ind . s_i,0,4);
+N		gran_char(&sub_ind,0,2);
+X		gran_char(&a_ind . s_i,0,2);
 N		}
 N	else if(but==butU)
 X	else if(but==253)
 N		{
 N		sub_ind--;
 X		a_ind . s_i--;
-N		gran_char(&sub_ind,0,4);
-X		gran_char(&a_ind . s_i,0,4);
+N		gran_char(&sub_ind,0,2);
+X		gran_char(&a_ind . s_i,0,2);
 N		}
 N	else if(but==butD_)
 X	else if(but==123)
@@ -18255,54 +18425,44 @@ X	     	lc640_write_int(0x10+500+90,NUMDT);
 N	     	}
 N          }	
 N
-N     else if(sub_ind==2)
-X     else if(a_ind . s_i==2)
+N /*    else if(sub_ind==2)
 N	     {
 N	     if((but==butR)||(but==butR_))
-X	     if((but==239)||(but==111))
 N	     	{
 N	     	NUMMAKB++;
 N			if(NUMMAKB==1)NUMMAKB++;
 N			if(NUMMAKB==3)NUMMAKB++;
 N	     	gran(&NUMMAKB,0,4);
 N	     	lc640_write_int(EE_NUMMAKB,NUMMAKB);
-X	     	lc640_write_int(0x10+500+100,NUMMAKB);
 N	     	}
 N	     
 N	     else if((but==butL)||(but==butL_))
-X	     else if((but==247)||(but==119))
 N	     	{
 N	     	NUMMAKB--;
 N			if(NUMMAKB==1)NUMMAKB--;
 N			if(NUMMAKB==3)NUMMAKB--;
 N	     	gran(&NUMMAKB,0,4);
 N	     	lc640_write_int(EE_NUMMAKB,NUMMAKB);
-X	     	lc640_write_int(0x10+500+100,NUMMAKB);
 N	     	}
 N          }
 N    else if(sub_ind==3)
-X    else if(a_ind . s_i==3)
 N	     {
 N	     if((but==butR)||(but==butR_))
-X	     if((but==239)||(but==111))
 N	     	{
 N	     	NUMSK++;
 N	     	gran(&NUMSK,0,4);
 N	     	lc640_write_int(EE_NUMSK,NUMSK);
-X	     	lc640_write_int(0x10+500+88,NUMSK);
 N	     	}
 N	     
 N	     else if((but==butL)||(but==butL_))
-X	     else if((but==247)||(but==119))
 N	     	{
 N	     	NUMSK--;
 N	     	gran(&NUMSK,0,4);
 N	     	lc640_write_int(EE_NUMSK,NUMSK);
-X	     	lc640_write_int(0x10+500+88,NUMSK);
 N	     	}
-N		}			  			                 
-N    else if(sub_ind==4)
-X    else if(a_ind . s_i==4)
+N		}*/			  			                 
+N    else if(sub_ind==2)
+X    else if(a_ind . s_i==2)
 N	     {
 N	     if(but==butE)
 X	     if(but==254)
@@ -21977,8 +22137,8 @@ N			{
 N			sub_ind=10;
 X			a_ind . s_i=10;
 N			}
-N		gran_char(&sub_ind,0,10);
-X		gran_char(&a_ind . s_i,0,10);
+N		gran_char(&sub_ind,0,11);
+X		gran_char(&a_ind . s_i,0,11);
 N		}
 N	else if(but==butU)
 X	else if(but==253)
@@ -21989,14 +22149,14 @@ N		if(sub_ind==2)sub_ind=1;
 X		if(a_ind . s_i==2)a_ind . s_i=1;
 N		else if(sub_ind==9)sub_ind=8;
 X		else if(a_ind . s_i==9)a_ind . s_i=8;
-N		gran_char(&sub_ind,0,10);		
-X		gran_char(&a_ind . s_i,0,10);		
+N		gran_char(&sub_ind,0,11);		
+X		gran_char(&a_ind . s_i,0,11);		
 N		}
 N	else if(but==butD_)
 X	else if(but==123)
 N		{
-N		sub_ind=10;
-X		a_ind . s_i=10;
+N		sub_ind=11;
+X		a_ind . s_i=11;
 N		}
 N	else if (sub_ind == 0)
 X	else if (a_ind . s_i == 0)
@@ -22084,9 +22244,19 @@ N    	else if(but==butL) RELE_SET_MASK[sub_ind1]&=~(1<<7);
 X    	else if(but==247) RELE_SET_MASK[a_ind . s_i1]&=~(1<<7);
 N		}
 N
+N	else if (sub_ind == 10)
+X	else if (a_ind . s_i == 10)
+N		{
+N		if(but==butE) RELE_SET_MASK[sub_ind1]^=(1<<8);
+X		if(but==254) RELE_SET_MASK[a_ind . s_i1]^=(1<<8);
+N	    else if(but==butR) RELE_SET_MASK[sub_ind1]|=(1<<8);
+X	    else if(but==239) RELE_SET_MASK[a_ind . s_i1]|=(1<<8);
+N    	else if(but==butL) RELE_SET_MASK[sub_ind1]&=~(1<<8);
+X    	else if(but==247) RELE_SET_MASK[a_ind . s_i1]&=~(1<<8);
+N		}
 N
-N	else if(sub_ind==10)
-X	else if(a_ind . s_i==10)
+N	else if(sub_ind==11)
+X	else if(a_ind . s_i==11)
 N		{
 N		if(but==butE)
 X		if(but==254)
@@ -24825,15 +24995,19 @@ N
 N	else if(but==butR)
 X	else if(but==239)
 N		{
-N		sub_ind=1;
-X		a_ind . s_i=1;
+N		sub_ind++;
+X		a_ind . s_i++;
+N		gran_char(&sub_ind,0,3);
+X		gran_char(&a_ind . s_i,0,3);
 N		}
 N				
 N	else if(but==butL)
 X	else if(but==247)
 N		{
-N		sub_ind=0;
-X		a_ind . s_i=0;
+N		sub_ind--;
+X		a_ind . s_i--;
+N		gran_char(&sub_ind,0,3);
+X		gran_char(&a_ind . s_i,0,3);
 N		}
 N	else if(but==butE)
 X	else if(but==254)
@@ -25345,7 +25519,7 @@ N
 N		
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 13864 1 label "but_an_end" was declared but never referenced
+W "main.c" 14006 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -25762,7 +25936,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14249 15 pointless comparison of unsigned integer with zero
+W "main.c" 14391 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -25822,7 +25996,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 14307 1 function "sc16is700_init" declared implicitly
+W "main.c" 14449 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -25851,7 +26025,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 14334 3 function "can_in_an1" declared implicitly
+W "main.c" 14476 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -25859,7 +26033,7 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 14341 3 function "modbus_in" declared implicitly
+W "main.c" 14483 3 function "modbus_in" declared implicitly
 N		modbus_in();
 N		}
 N
@@ -25910,7 +26084,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 14391 3 function "sc16is700_uart_hndl" declared implicitly
+W "main.c" 14533 3 function "sc16is700_uart_hndl" declared implicitly
 N		sc16is700_uart_hndl();
 N		#endif		
 N		}
@@ -25983,11 +26157,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 14462 3 function "u_avar_hndl" declared implicitly
+W "main.c" 14604 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 14463 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 14605 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 14464 3 function "overload_hndl" declared implicitly
+W "main.c" 14606 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26007,7 +26181,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 14482 3 function "rele_av_hndl" declared implicitly
+W "main.c" 14624 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26045,7 +26219,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 14519 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 14661 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26073,7 +26247,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 14546 3 function "npn_hndl" declared implicitly
+W "main.c" 14688 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26089,7 +26263,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 14561 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 14703 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26099,6 +26273,8 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
+W "main.c" 14712 3 function "vd_is_work_hndl" declared implicitly
+N		vd_is_work_hndl();
 N		}
 N	if(b1min)
 N		{
@@ -26114,10 +26290,10 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 14585 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 14728 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N
 N	}
 N}
-W "main.c" 782 13 function "timer_poll" was declared but never referenced
+W "main.c" 788 13 function "timer_poll" was declared but never referenced

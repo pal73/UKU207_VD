@@ -1346,7 +1346,7 @@ plazma1809++;
 	bIBAT_SMKLBR=((signed short)RXBUFF[6])+(((signed short)RXBUFF[7])<<8);
 
 
-	can_reset_cnt=0;
+	ibat_metr_cnt=0;
    	}
 
 if((RXBUFF[1]==PUTTM_NET)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))

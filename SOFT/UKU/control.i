@@ -234,7 +234,7 @@ void long2lcd_mmm(signed long in,char xy,char des);
 void long2lcdyx_mmm(signed long in,char y,char x,char des);
 void int2lcdyx(unsigned short in,char y,char x,char des);
 void int2lcd(unsigned short in,char xy,char des);
-void checkboxing(char xy,char in);
+void checkboxing(char xy,short in);
 void long2lcdhyx(unsigned long in,char y,char x);
 void char2lcdh(char in,char yx);
 void char2lcdhyx(char in,char y,char x);
@@ -1129,7 +1129,7 @@ typedef enum {
 	iK, iK_220_IPS_TERMOKOMPENSAT,iK_220_IPS_TERMOKOMPENSAT_IB,iK_TELECORE,iK_VD,
 	iSpcprl,iSpc,k,Crash_0,Crash_1,iKednd,iAv_view_avt,iAKE,iSpc_termocompensat,
 	iLoad,iAVAR,
-	iStr,iStr_220_IPS_TERMOKOMPENSAT,
+	iStr,iStr_VD,
 	iVrs,iPrltst,iApv,
 	iK_bps,iK_bps_sel,iK_bat_ips_termokompensat_ib,iK_bat_TELECORE,iK_bat_sel,iK_bat_sel_TELECORE,iK_load,iK_net,iK_net3,
 	iK_makb_sel,iK_makb,iK_out,
@@ -1614,7 +1614,7 @@ typedef struct
 	
 	
 	
- 	enum {bsAPV,bsWRK,bsRDY,bsBL,bsAV,bsOFF_AV_NET}_state;
+ 	enum {bsOFF_AV_NET,bsAPV,bsWRK,bsRDY,bsBL,bsAV}_state;
     char _cnt;
      char _cnt_old;
      char _cnt_more2;
@@ -1857,6 +1857,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 extern signed long ibat_metr_buff_[2];
 extern short bIBAT_SMKLBR;
+extern char ibat_metr_cnt;
 
 
 
@@ -1882,7 +1883,7 @@ extern short can_plazma;
 
 
 
-#line 1536 "main.h"
+#line 1537 "main.h"
 
 
 
@@ -1919,6 +1920,10 @@ extern signed short outVoltContrHndlCnt;
 extern signed short outVoltContrHndlCnt_;		
 extern char uout_av;
 
+
+
+extern char bVDISWORK;
+extern char vd_is_work_cnt;
 
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
@@ -5408,13 +5413,15 @@ for(i=0;i<NUMIST;i++)
      	bps[i]._Ti=0;
      	bps[i]._flags_tm=0; 
 	     
-		bps[i]._Uisum=0;    
+		bps[i]._Uisum=0; 
+		bps[i].debug_info_to_uku0=bps[i]._buff[12]+(bps[i]._buff[13]*256); 
+		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256);    
      	}
      
      }
 
 load_I=0;
-#line 1446 "control.c"
+#line 1448 "control.c"
 load_I=-(bat[0]._Ib/10)-(bat[1]._Ib/10);
 
 Isumm=0;
@@ -5444,7 +5451,7 @@ if(load_I<0)load_I=0;
 
 
 
-#line 1504 "control.c"
+#line 1506 "control.c"
 
 
 if (NUMINV)
@@ -5489,7 +5496,7 @@ if (NUMINV)
    	}
 
 
-#line 1567 "control.c"
+#line 1569 "control.c"
 
 
 
@@ -5508,9 +5515,9 @@ if (NUMINV)
 
  
 
-#line 1800 "control.c"
+#line 1802 "control.c"
 
-#line 1855 "control.c"
+#line 1857 "control.c"
 
 
 
@@ -5633,7 +5640,7 @@ if(adc_ch_net)
 		}
 	if((adc_net_buff_cnt&0x03ff)==0)
 		{
-#line 1983 "control.c"
+#line 1985 "control.c"
 		net_buff_=(short)((main_power_buffer[adc_net_buff_cnt>>10])>>8);
 
 
@@ -6071,6 +6078,7 @@ else
 				if(bps[i]._x_<-50)bps[i]._x_=-50;
 				if(bps[i]._x_>50)bps[i]._x_=50;	
 				}
+			else bps[i]._avg=0;
 			}		
 		}			
 	}   	 
@@ -6128,8 +6136,8 @@ i2=0;
 
 for(i=0;i<NUMIST;i++)
 	{
-	if(bps[i]._av&0x0f)i1=1;
-	if(bps[i]._av&0x10)i2=1;
+	if(bps[i]._av&0x07)i1=1;
+	if(bps[i]._av&0x08)i2=1;
 	}
 
 if(i1)					avar_vd_stat|=(1<<0);
@@ -6150,6 +6158,8 @@ else if(uInAvar==2)		avar_vd_stat|=(1<<5);
 if(i2)					avar_vd_stat|=(1<<7);
 else 					avar_vd_stat&=~(1<<7);
 
+if(bVDISWORK)			avar_vd_stat|=(1<<8);
+else 					avar_vd_stat&=~(1<<8);
 
 for (i=0;i<4;i++)
 	{
@@ -6407,7 +6417,7 @@ else if(b1Hz_sh)
 
      for(i=0;i<=NUMIST;i++)
 		{
-	    if(bps[i]._flags_tu==1) 	bps[i]._x_=-50;
+	    
 	   	}	
 		 
   	}
@@ -7033,9 +7043,9 @@ else
  
 }
 
-#line 3569 "control.c"
+#line 3574 "control.c"
 
-#line 3742 "control.c"
+#line 3747 "control.c"
 
 
 
@@ -7105,7 +7115,7 @@ if(main_vent_pos<=1)mixer_vent_stat=mvsON;
 else mixer_vent_stat=mvsOFF;
 
 
-#line 3828 "control.c"
+#line 3833 "control.c"
 
 if((TBATDISABLE>=50) && (TBATDISABLE<=90))
 	{
@@ -7162,7 +7172,7 @@ else
 }
 
 
-#line 4017 "control.c"
+#line 4022 "control.c"
 
 
 
@@ -7397,7 +7407,7 @@ if(ICA_EN)u_necc+=ica_u_necc;
 
 
 
-#line 4624 "control.c"
+#line 4629 "control.c"
 
 temp_L=(signed long) u_necc;
 temp_L*=98L;
@@ -7684,9 +7694,9 @@ char i;
 
 for(i=0;i<NUMSK;i++)
 	{
-#line 4935 "control.c"
+#line 4940 "control.c"
 	if(adc_buff_[sk_buff_220[i]]<2000)
-#line 4943 "control.c"
+#line 4948 "control.c"
 		{
 		if(sk_cnt[i]<10)
 			{
@@ -7789,7 +7799,7 @@ for(i=0;i<NUMSK;i++)
 	 	}
 
 
-#line 5065 "control.c"
+#line 5070 "control.c"
 	sk_av_stat_old[i]=sk_av_stat[i];
 	}
 }
@@ -8289,4 +8299,21 @@ else if(RELEVENTSIGN==rvsEXT)
 else vent_stat=1;
 }
 
+
+void vd_is_work_hndl(void)
+{
+if(vd_U>20)
+	{
+	if(vd_is_work_cnt<5)vd_is_work_cnt++;
+	else vd_is_work_cnt=5;
+	}
+else
+	{
+	if(vd_is_work_cnt>0)vd_is_work_cnt--;
+	else vd_is_work_cnt=0;
+	}
+
+if(vd_is_work_cnt==5) bVDISWORK=1;
+else if(vd_is_work_cnt==0) bVDISWORK=0;
+}
 

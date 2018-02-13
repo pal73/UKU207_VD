@@ -2649,7 +2649,7 @@
 
                   checkboxing PROC
 ;;;866    //-----------------------------------------------
-;;;867    void checkboxing(char xy,char in)
+;;;867    void checkboxing(char xy,short in)
 001390  b510              PUSH     {r4,lr}
 ;;;868    {
 001392  460c              MOV      r4,r1

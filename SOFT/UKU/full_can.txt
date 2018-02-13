@@ -1921,7 +1921,7 @@
 000c9c  e024              B        |L1.3304|
                   |L1.3230|
 000c9e  f8990002          LDRB     r0,[r9,#2]            ;764  ; bps
-000ca2  2801              CMP      r0,#1                 ;764
+000ca2  2802              CMP      r0,#2                 ;764
 000ca4  d007              BEQ      |L1.3254|
 000ca6  f8990001          LDRB     r0,[r9,#1]            ;765  ; bps
 000caa  0701              LSLS     r1,r0,#28             ;765
@@ -2048,7 +2048,7 @@
 000d74  e024              B        |L1.3520|
                   |L1.3446|
 000d76  f899006a          LDRB     r0,[r9,#0x6a]         ;799  ; bps
-000d7a  2801              CMP      r0,#1                 ;799
+000d7a  2802              CMP      r0,#2                 ;799
 000d7c  d007              BEQ      |L1.3470|
 000d7e  f8990069          LDRB     r0,[r9,#0x69]         ;800  ; bps
 000d82  0701              LSLS     r1,r0,#28             ;800
@@ -2174,7 +2174,7 @@
 000e50  e024              B        |L1.3740|
                   |L1.3666|
 000e52  f89900d2          LDRB     r0,[r9,#0xd2]         ;836  ; bps
-000e56  2801              CMP      r0,#1                 ;836
+000e56  2802              CMP      r0,#2                 ;836
 000e58  d007              BEQ      |L1.3690|
 000e5a  f89900d1          LDRB     r0,[r9,#0xd1]         ;837  ; bps
 000e5e  0701              LSLS     r1,r0,#28             ;837
@@ -2300,7 +2300,7 @@
 000f2c  e024              B        |L1.3960|
                   |L1.3886|
 000f2e  f899013a          LDRB     r0,[r9,#0x13a]        ;872  ; bps
-000f32  2801              CMP      r0,#1                 ;872
+000f32  2802              CMP      r0,#2                 ;872
 000f34  d007              BEQ      |L1.3910|
 000f36  f8990139          LDRB     r0,[r9,#0x139]        ;873  ; bps
 000f3a  0701              LSLS     r1,r0,#28             ;873
@@ -2990,20 +2990,20 @@
 ;;;1111   
 ;;;1112   //can_debug_plazma[1][2]++;
 ;;;1113   can_rotor[1]++;
-0013ba  4935              LDR      r1,|L1.5264|
-0013bc  3128              ADDS     r1,r1,#0x28
-0013be  7848              LDRB     r0,[r1,#1]  ; can_rotor
-0013c0  f1000001          ADD      r0,r0,#1
-0013c4  7048              STRB     r0,[r1,#1]
+0013ba  4835              LDR      r0,|L1.5264|
+0013bc  3028              ADDS     r0,r0,#0x28
+0013be  7841              LDRB     r1,[r0,#1]  ; can_rotor
+0013c0  f1010101          ADD      r1,r1,#1
+0013c4  7041              STRB     r1,[r0,#1]
 ;;;1114   
 ;;;1115   if((RXBUFF[0]==sub_ind1)&&(RXBUFF[1]==PUTID)&&(RXBUFF[2]==0xdd)&&(RXBUFF[3]==0xdd)/*&&(sub_ind==6)*/)
-0013c6  f1a10b50          SUB      r11,r1,#0x50
-0013ca  4933              LDR      r1,|L1.5272|
-0013cc  f89b0000          LDRB     r0,[r11,#0]  ; RXBUFF
+0013c6  4934              LDR      r1,|L1.5272|
+0013c8  f1a00b50          SUB      r11,r0,#0x50
 ;;;1116   	{
 ;;;1117   	mess_send(MESS2IND_HNDL,PARAM_U_AVT_GOOD,0,10);
 ;;;1118   	can_reset_cnt=0;
-0013d0  4e32              LDR      r6,|L1.5276|
+0013cc  4e33              LDR      r6,|L1.5276|
+0013ce  f89b0000          LDRB     r0,[r11,#0]           ;1115  ; RXBUFF
 0013d2  f9911002          LDRSB    r1,[r1,#2]            ;1115  ; a_ind
 0013d6  f04f0400          MOV      r4,#0                 ;1117
 0013da  4288              CMP      r0,r1                 ;1115
@@ -3586,15 +3586,15 @@
 ;;;1341   if((RXBUFF[0]==PUTTM_IBATMETER)&&(RXBUFF[1]==PUTTM_IBATMETER))
 001796  f89a3000          LDRB     r3,[r10,#0]  ; RXBUFF
 00179a  2bd1              CMP      r3,#0xd1
-00179c  d11e              BNE      |L1.6108|
+00179c  d11f              BNE      |L1.6110|
 00179e  2ad1              CMP      r2,#0xd1
-0017a0  d11c              BNE      |L1.6108|
+0017a0  d11d              BNE      |L1.6110|
 ;;;1342    	{
 ;;;1343   plazma1809++;
-0017a2  487e              LDR      r0,|L1.6556|
-0017a4  7801              LDRB     r1,[r0,#0]  ; plazma1809
-0017a6  f1010101          ADD      r1,r1,#1
-0017aa  7001              STRB     r1,[r0,#0]
+0017a2  497e              LDR      r1,|L1.6556|
+0017a4  7808              LDRB     r0,[r1,#0]  ; plazma1809
+0017a6  f1000001          ADD      r0,r0,#1
+0017aa  7008              STRB     r0,[r1,#0]
 ;;;1344   	ibat_metr_buff_[0]=((signed long)RXBUFF[2])+(((signed long)RXBUFF[3])<<8);
 0017ac  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
 0017b0  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
@@ -3614,9 +3614,10 @@
 0017d8  8008              STRH     r0,[r1,#0]
 ;;;1347   
 ;;;1348   
-;;;1349   	can_reset_cnt=0;
-0017da  70b4              STRB     r4,[r6,#2]
-                  |L1.6108|
+;;;1349   	ibat_metr_cnt=0;
+0017da  4873              LDR      r0,|L1.6568|
+0017dc  7004              STRB     r4,[r0,#0]
+                  |L1.6110|
 ;;;1350      	}
 ;;;1351   
 ;;;1352   if((RXBUFF[1]==PUTTM_NET)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
@@ -3624,35 +3625,35 @@
 ;;;1354       slave_num=RXBUFF[0]&0x1f;  
 ;;;1355   
 ;;;1356       bps[slave_num]._device=dNET_METR;
-0017dc  f04f0907          MOV      r9,#7
-0017e0  2aea              CMP      r2,#0xea              ;1352
-0017e2  d121              BNE      |L1.6184|
-0017e4  f003001f          AND      r0,r3,#0x1f           ;1352
-0017e8  280c              CMP      r0,#0xc               ;1352
-0017ea  d21d              BCS      |L1.6184|
-0017ec  eb000180          ADD      r1,r0,r0,LSL #2
-0017f0  eb0100c0          ADD      r0,r1,r0,LSL #3
-0017f4  f8059030          STRB     r9,[r5,r0,LSL #3]
+0017de  f04f0907          MOV      r9,#7
+0017e2  2aea              CMP      r2,#0xea              ;1352
+0017e4  d121              BNE      |L1.6186|
+0017e6  f003001f          AND      r0,r3,#0x1f           ;1352
+0017ea  280c              CMP      r0,#0xc               ;1352
+0017ec  d21d              BCS      |L1.6186|
+0017ee  eb000180          ADD      r1,r0,r0,LSL #2
+0017f2  eb0100c0          ADD      r0,r1,r0,LSL #3
+0017f6  f8059030          STRB     r9,[r5,r0,LSL #3]
 ;;;1357            
 ;;;1358   	bps[slave_num]._buff[0]=RXBUFF[2]; 
-0017f8  eb0500c0          ADD      r0,r5,r0,LSL #3
-0017fc  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001800  7181              STRB     r1,[r0,#6]
+0017fa  eb0500c0          ADD      r0,r5,r0,LSL #3
+0017fe  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001802  7181              STRB     r1,[r0,#6]
 ;;;1359   	bps[slave_num]._buff[1]=RXBUFF[3];
-001802  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-001806  71c1              STRB     r1,[r0,#7]
+001804  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001808  71c1              STRB     r1,[r0,#7]
 ;;;1360   	bps[slave_num]._buff[2]=RXBUFF[4];
-001808  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-00180c  7201              STRB     r1,[r0,#8]
+00180a  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+00180e  7201              STRB     r1,[r0,#8]
 ;;;1361   	bps[slave_num]._buff[3]=RXBUFF[5];
-00180e  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001812  7241              STRB     r1,[r0,#9]
+001810  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001814  7241              STRB     r1,[r0,#9]
 ;;;1362   	bps[slave_num]._buff[4]=RXBUFF[6];
-001814  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001818  7281              STRB     r1,[r0,#0xa]
+001816  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+00181a  7281              STRB     r1,[r0,#0xa]
 ;;;1363   	bps[slave_num]._buff[5]=RXBUFF[7];	
-00181a  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-00181e  72c1              STRB     r1,[r0,#0xb]
+00181c  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001820  72c1              STRB     r1,[r0,#0xb]
 ;;;1364   
 ;;;1365   
 ;;;1366   /*	can_slot[slave_num,8]=RXBUFF[0];
@@ -3665,197 +3666,197 @@
 ;;;1373   	can_slot[slave_num,15]=RXBUFF[7]; */
 ;;;1374   	
 ;;;1375   	bps[slave_num]._cnt=0;
-001820  70c4              STRB     r4,[r0,#3]
+001822  70c4              STRB     r4,[r0,#3]
 ;;;1376   	bps[slave_num]._is_on_cnt=10; 
-001822  f880703c          STRB     r7,[r0,#0x3c]
+001824  f880703c          STRB     r7,[r0,#0x3c]
 ;;;1377   
 ;;;1378      	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_num,3,0); 
 ;;;1379   	can_reset_cnt=0;
-001826  70b4              STRB     r4,[r6,#2]
-                  |L1.6184|
+001828  70b4              STRB     r4,[r6,#2]
+                  |L1.6186|
 ;;;1380      	}
 ;;;1381   
 ;;;1382   
 ;;;1383   if((RXBUFF[1]==PUTTM_NET1)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-001828  2aeb              CMP      r2,#0xeb
-00182a  d115              BNE      |L1.6232|
-00182c  f003001f          AND      r0,r3,#0x1f
-001830  280c              CMP      r0,#0xc
-001832  d211              BCS      |L1.6232|
+00182a  2aeb              CMP      r2,#0xeb
+00182c  d115              BNE      |L1.6234|
+00182e  f003001f          AND      r0,r3,#0x1f
+001832  280c              CMP      r0,#0xc
+001834  d211              BCS      |L1.6234|
 ;;;1384    	{
 ;;;1385       slave_num=RXBUFF[0]&0x1f;  
 ;;;1386   
 ;;;1387       bps[slave_num]._device=dNET_METR;
-001834  eb000180          ADD      r1,r0,r0,LSL #2
-001838  eb0100c0          ADD      r0,r1,r0,LSL #3
-00183c  f8059030          STRB     r9,[r5,r0,LSL #3]
+001836  eb000180          ADD      r1,r0,r0,LSL #2
+00183a  eb0100c0          ADD      r0,r1,r0,LSL #3
+00183e  f8059030          STRB     r9,[r5,r0,LSL #3]
 ;;;1388            
 ;;;1389   	bps[slave_num]._buff[6]=RXBUFF[2]; 
-001840  eb0500c0          ADD      r0,r5,r0,LSL #3
-001844  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001848  7301              STRB     r1,[r0,#0xc]
+001842  eb0500c0          ADD      r0,r5,r0,LSL #3
+001846  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+00184a  7301              STRB     r1,[r0,#0xc]
 ;;;1390   	bps[slave_num]._buff[7]=RXBUFF[3];
-00184a  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-00184e  7341              STRB     r1,[r0,#0xd]
+00184c  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001850  7341              STRB     r1,[r0,#0xd]
 ;;;1391   	
 ;;;1392   	//net_F= RXBUFF[2]+ (RXBUFF[3]*256);
 ;;;1393   
 ;;;1394   	bps[slave_num]._cnt=0;
-001850  70c4              STRB     r4,[r0,#3]
+001852  70c4              STRB     r4,[r0,#3]
 ;;;1395   	bps[slave_num]._is_on_cnt=10; 
-001852  f880703c          STRB     r7,[r0,#0x3c]
+001854  f880703c          STRB     r7,[r0,#0x3c]
 ;;;1396   
 ;;;1397      	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_num,3,0); 
 ;;;1398   	can_reset_cnt=0;
-001856  70b4              STRB     r4,[r6,#2]
-                  |L1.6232|
+001858  70b4              STRB     r4,[r6,#2]
+                  |L1.6234|
 ;;;1399      	}
 ;;;1400   
 ;;;1401   if( (RXBUFF[0]==MEM_KF)&&(RXBUFF[1]==1)&&(RXBUFF[2]==1))
-001858  2b62              CMP      r3,#0x62
-00185a  d10e              BNE      |L1.6266|
-00185c  2a01              CMP      r2,#1
-00185e  d10c              BNE      |L1.6266|
-001860  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
-001864  2801              CMP      r0,#1
-001866  d108              BNE      |L1.6266|
+00185a  2b62              CMP      r3,#0x62
+00185c  d10e              BNE      |L1.6268|
+00185e  2a01              CMP      r2,#1
+001860  d10c              BNE      |L1.6268|
+001862  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
+001866  2801              CMP      r0,#1
+001868  d108              BNE      |L1.6268|
 ;;;1402        {
 ;;;1403        power_summary_tempo=*((signed short*)&RXBUFF[3]);
-001868  494f              LDR      r1,|L1.6568|
-00186a  f9ba0003          LDRSH    r0,[r10,#3]  ; RXBUFF
-00186e  6008              STR      r0,[r1,#0]  ; power_summary_tempo
+00186a  4950              LDR      r1,|L1.6572|
+00186c  f9ba0003          LDRSH    r0,[r10,#3]  ; RXBUFF
+001870  6008              STR      r0,[r1,#0]  ; power_summary_tempo
 ;;;1404        power_current_tempo=*((signed short*)&RXBUFF[5]);
-001870  494e              LDR      r1,|L1.6572|
-001872  f8ba0005          LDRH     r0,[r10,#5]  ; RXBUFF
-001876  8008              STRH     r0,[r1,#0]
+001872  494f              LDR      r1,|L1.6576|
+001874  f8ba0005          LDRH     r0,[r10,#5]  ; RXBUFF
+001878  8008              STRH     r0,[r1,#0]
 ;;;1405   	//ext_can_cnt++;
 ;;;1406   	can_reset_cnt=0;
-001878  70b4              STRB     r4,[r6,#2]
-                  |L1.6266|
+00187a  70b4              STRB     r4,[r6,#2]
+                  |L1.6268|
 ;;;1407        }
 ;;;1408   
 ;;;1409   
 ;;;1410   if( ((RXBUFF[0]&0x1f)==8)&&((RXBUFF[1])==PUTTM) )
-00187a  f003001f          AND      r0,r3,#0x1f
-00187e  2808              CMP      r0,#8
-001880  d116              BNE      |L1.6320|
-001882  2ade              CMP      r2,#0xde
-001884  d114              BNE      |L1.6320|
+00187c  f003001f          AND      r0,r3,#0x1f
+001880  2808              CMP      r0,#8
+001882  d116              BNE      |L1.6322|
+001884  2ade              CMP      r2,#0xde
+001886  d114              BNE      |L1.6322|
 ;;;1411        {
 ;;;1412        adc_buff_ext_[0]=*((short*)&RXBUFF[2]);
-001886  4d4a              LDR      r5,|L1.6576|
-001888  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
-00188c  8029              STRH     r1,[r5,#0]
+001888  4d4a              LDR      r5,|L1.6580|
+00188a  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
+00188e  8029              STRH     r1,[r5,#0]
 ;;;1413        adc_buff_ext_[1]=*((short*)&RXBUFF[4]);
-00188e  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
-001892  8069              STRH     r1,[r5,#2]
+001890  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
+001894  8069              STRH     r1,[r5,#2]
 ;;;1414        adc_buff_ext_[2]=*((short*)&RXBUFF[6]);
-001894  f8ba1006          LDRH     r1,[r10,#6]  ; RXBUFF
-001898  80a9              STRH     r1,[r5,#4]
+001896  f8ba1006          LDRH     r1,[r10,#6]  ; RXBUFF
+00189a  80a9              STRH     r1,[r5,#4]
 ;;;1415   	if((adc_buff_ext_[2]>=-50) && (adc_buff_ext_[2]<=100))
-00189a  3132              ADDS     r1,r1,#0x32
+00189c  3132              ADDS     r1,r1,#0x32
 ;;;1416   		{
 ;;;1417   		t_ext_can=adc_buff_ext_[2];
-00189c  4f45              LDR      r7,|L1.6580|
-00189e  2996              CMP      r1,#0x96              ;1415
-0018a0  d803              BHI      |L1.6314|
-0018a2  88a9              LDRH     r1,[r5,#4]  ; adc_buff_ext_
-0018a4  8039              STRH     r1,[r7,#0]
+00189e  4f46              LDR      r7,|L1.6584|
+0018a0  2996              CMP      r1,#0x96              ;1415
+0018a2  d803              BHI      |L1.6316|
+0018a4  88a9              LDRH     r1,[r5,#4]  ; adc_buff_ext_
+0018a6  8039              STRH     r1,[r7,#0]
 ;;;1418   		t_ext_can_nd=0;
-0018a6  4944              LDR      r1,|L1.6584|
-0018a8  700c              STRB     r4,[r1,#0]
-                  |L1.6314|
+0018a8  4944              LDR      r1,|L1.6588|
+0018aa  700c              STRB     r4,[r1,#0]
+                  |L1.6316|
 ;;;1419   		}
 ;;;1420   		t_ext_can=adc_buff_ext_[2];
-0018aa  88a9              LDRH     r1,[r5,#4]  ; adc_buff_ext_
-0018ac  8039              STRH     r1,[r7,#0]
+0018ac  88a9              LDRH     r1,[r5,#4]  ; adc_buff_ext_
+0018ae  8039              STRH     r1,[r7,#0]
 ;;;1421   	//ext_can_cnt++;
 ;;;1422   	can_reset_cnt=0;
-0018ae  70b4              STRB     r4,[r6,#2]
-                  |L1.6320|
+0018b0  70b4              STRB     r4,[r6,#2]
+                  |L1.6322|
 ;;;1423        }
 ;;;1424   
 ;;;1425   if( ((RXBUFF[0]&0x1f)==9)&&((RXBUFF[1])==PUTTM) )
-0018b0  2809              CMP      r0,#9
-0018b2  d10e              BNE      |L1.6354|
-0018b4  2ade              CMP      r2,#0xde
-0018b6  d10c              BNE      |L1.6354|
+0018b2  2809              CMP      r0,#9
+0018b4  d10e              BNE      |L1.6356|
+0018b6  2ade              CMP      r2,#0xde
+0018b8  d10c              BNE      |L1.6356|
 ;;;1426        {
 ;;;1427        vvod_pos=RXBUFF[2];
-0018b8  4d40              LDR      r5,|L1.6588|
-0018ba  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-0018be  8029              STRH     r1,[r5,#0]
+0018ba  4d41              LDR      r5,|L1.6592|
+0018bc  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+0018c0  8029              STRH     r1,[r5,#0]
 ;;;1428   	ext_can_cnt=RXBUFF[3];
-0018c0  4d3f              LDR      r5,|L1.6592|
-0018c2  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-0018c6  7029              STRB     r1,[r5,#0]
+0018c2  4d40              LDR      r5,|L1.6596|
+0018c4  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+0018c8  7029              STRB     r1,[r5,#0]
 ;;;1429   	if(ext_can_cnt<10)bRESET_EXT=0;
-0018c8  290a              CMP      r1,#0xa
-0018ca  d201              BCS      |L1.6352|
-0018cc  493d              LDR      r1,|L1.6596|
-0018ce  700c              STRB     r4,[r1,#0]
-                  |L1.6352|
-;;;1430   	can_reset_cnt=0;
-0018d0  70b4              STRB     r4,[r6,#2]
+0018ca  290a              CMP      r1,#0xa
+0018cc  d201              BCS      |L1.6354|
+0018ce  493e              LDR      r1,|L1.6600|
+0018d0  700c              STRB     r4,[r1,#0]
                   |L1.6354|
+;;;1430   	can_reset_cnt=0;
+0018d2  70b4              STRB     r4,[r6,#2]
+                  |L1.6356|
 ;;;1431        }
 ;;;1432   
 ;;;1433   if( ((RXBUFF[0]&0x1f)==10)&&((RXBUFF[1])==PUTTM) )
 ;;;1434        {
 ;;;1435        power_current=*((signed short*)&RXBUFF[2]);
-0018d2  4d3d              LDR      r5,|L1.6600|
+0018d4  4d3d              LDR      r5,|L1.6604|
 ;;;1436        power_summary=*((signed long*)&RXBUFF[4]);
-0018d4  4f3d              LDR      r7,|L1.6604|
-0018d6  280a              CMP      r0,#0xa               ;1433
-0018d8  d108              BNE      |L1.6380|
-0018da  2ade              CMP      r2,#0xde              ;1433
-0018dc  d106              BNE      |L1.6380|
-0018de  f8ba1002          LDRH     r1,[r10,#2]           ;1435  ; RXBUFF
-0018e2  8029              STRH     r1,[r5,#0]            ;1435
-0018e4  f8da1004          LDR      r1,[r10,#4]  ; RXBUFF
-0018e8  6039              STR      r1,[r7,#0]  ; power_summary
+0018d6  4f3e              LDR      r7,|L1.6608|
+0018d8  280a              CMP      r0,#0xa               ;1433
+0018da  d108              BNE      |L1.6382|
+0018dc  2ade              CMP      r2,#0xde              ;1433
+0018de  d106              BNE      |L1.6382|
+0018e0  f8ba1002          LDRH     r1,[r10,#2]           ;1435  ; RXBUFF
+0018e4  8029              STRH     r1,[r5,#0]            ;1435
+0018e6  f8da1004          LDR      r1,[r10,#4]  ; RXBUFF
+0018ea  6039              STR      r1,[r7,#0]  ; power_summary
 ;;;1437   	//ext_can_cnt++;
 ;;;1438   	can_reset_cnt=0;
-0018ea  70b4              STRB     r4,[r6,#2]
-                  |L1.6380|
+0018ec  70b4              STRB     r4,[r6,#2]
+                  |L1.6382|
 ;;;1439        }
 ;;;1440   
 ;;;1441   
 ;;;1442   if( ((RXBUFF[0]&0x1f)==20)&&((RXBUFF[1])==PUTTM) )
 ;;;1443        {
 ;;;1444        eb2_data[0]=RXBUFF[2];
-0018ec  4938              LDR      r1,|L1.6608|
-0018ee  2814              CMP      r0,#0x14              ;1442
-0018f0  d121              BNE      |L1.6454|
-0018f2  2ade              CMP      r2,#0xde              ;1442
-0018f4  d11f              BNE      |L1.6454|
-0018f6  f89ac002          LDRB     r12,[r10,#2]  ; RXBUFF
-0018fa  f881c000          STRB     r12,[r1,#0]
+0018ee  4939              LDR      r1,|L1.6612|
+0018f0  2814              CMP      r0,#0x14              ;1442
+0018f2  d121              BNE      |L1.6456|
+0018f4  2ade              CMP      r2,#0xde              ;1442
+0018f6  d11f              BNE      |L1.6456|
+0018f8  f89ac002          LDRB     r12,[r10,#2]  ; RXBUFF
+0018fc  f881c000          STRB     r12,[r1,#0]
 ;;;1445   	eb2_data[1]=RXBUFF[3];
-0018fe  f89ac003          LDRB     r12,[r10,#3]  ; RXBUFF
-001902  f881c001          STRB     r12,[r1,#1]
+001900  f89ac003          LDRB     r12,[r10,#3]  ; RXBUFF
+001904  f881c001          STRB     r12,[r1,#1]
 ;;;1446        eb2_data[2]=RXBUFF[4];
-001906  f89ac004          LDRB     r12,[r10,#4]  ; RXBUFF
-00190a  f881c002          STRB     r12,[r1,#2]
+001908  f89ac004          LDRB     r12,[r10,#4]  ; RXBUFF
+00190c  f881c002          STRB     r12,[r1,#2]
 ;;;1447   	eb2_data[3]=RXBUFF[5];
-00190e  f89ac005          LDRB     r12,[r10,#5]  ; RXBUFF
-001912  f881c003          STRB     r12,[r1,#3]
+001910  f89ac005          LDRB     r12,[r10,#5]  ; RXBUFF
+001914  f881c003          STRB     r12,[r1,#3]
 ;;;1448   	eb2_data[4]=RXBUFF[6];
-001916  f89ac006          LDRB     r12,[r10,#6]  ; RXBUFF
-00191a  f881c004          STRB     r12,[r1,#4]
+001918  f89ac006          LDRB     r12,[r10,#6]  ; RXBUFF
+00191c  f881c004          STRB     r12,[r1,#4]
 ;;;1449   	eb2_data[5]=RXBUFF[7];
-00191e  f89ac007          LDRB     r12,[r10,#7]  ; RXBUFF
-001922  f881c005          STRB     r12,[r1,#5]
+001920  f89ac007          LDRB     r12,[r10,#7]  ; RXBUFF
+001924  f881c005          STRB     r12,[r1,#5]
 ;;;1450        power_current=*((signed short*)&RXBUFF[2]);
-001926  f8bac002          LDRH     r12,[r10,#2]  ; RXBUFF
-00192a  f8a5c000          STRH     r12,[r5,#0]
+001928  f8bac002          LDRH     r12,[r10,#2]  ; RXBUFF
+00192c  f8a5c000          STRH     r12,[r5,#0]
 ;;;1451        power_summary=*((signed long*)&RXBUFF[4]);
-00192e  f8da5004          LDR      r5,[r10,#4]  ; RXBUFF
-001932  603d              STR      r5,[r7,#0]  ; power_summary
+001930  f8da5004          LDR      r5,[r10,#4]  ; RXBUFF
+001934  603d              STR      r5,[r7,#0]  ; power_summary
 ;;;1452   
 ;;;1453   	 can_reset_cnt=0;
-001934  70b4              STRB     r4,[r6,#2]
-                  |L1.6454|
+001936  70b4              STRB     r4,[r6,#2]
+                  |L1.6456|
 ;;;1454        }
 ;;;1455   
 ;;;1456   if( ((RXBUFF[0]&0x1f)==21)&&((RXBUFF[1])==PUTTM) )
@@ -3867,51 +3868,49 @@
 ;;;1462   	eb2_data[10]=RXBUFF[6];
 ;;;1463   	eb2_data[11]=RXBUFF[7];
 ;;;1464   	eb2_data_short[6]=*((short*)&eb2_data[6]);
-001936  4d27              LDR      r5,|L1.6612|
-001938  2815              CMP      r0,#0x15              ;1456
-00193a  d116              BNE      |L1.6506|
-00193c  2ade              CMP      r2,#0xde              ;1456
-00193e  d114              BNE      |L1.6506|
-001940  f89a7002          LDRB     r7,[r10,#2]           ;1458  ; RXBUFF
-001944  718f              STRB     r7,[r1,#6]            ;1458
-001946  f89a7003          LDRB     r7,[r10,#3]           ;1459  ; RXBUFF
-00194a  71cf              STRB     r7,[r1,#7]            ;1459
-00194c  f89a7004          LDRB     r7,[r10,#4]           ;1460  ; RXBUFF
-001950  720f              STRB     r7,[r1,#8]            ;1460
-001952  f89a7005          LDRB     r7,[r10,#5]           ;1461  ; RXBUFF
-001956  724f              STRB     r7,[r1,#9]            ;1461
-001958  f89a7006          LDRB     r7,[r10,#6]           ;1462  ; RXBUFF
-00195c  728f              STRB     r7,[r1,#0xa]          ;1462
-00195e  f89a7007          LDRB     r7,[r10,#7]           ;1463  ; RXBUFF
-001962  72cf              STRB     r7,[r1,#0xb]          ;1463
-001964  88cf              LDRH     r7,[r1,#6]  ; eb2_data
-001966  81af              STRH     r7,[r5,#0xc]
+001938  4d27              LDR      r5,|L1.6616|
+00193a  2815              CMP      r0,#0x15              ;1456
+00193c  d116              BNE      |L1.6508|
+00193e  2ade              CMP      r2,#0xde              ;1456
+001940  d114              BNE      |L1.6508|
+001942  f89a7002          LDRB     r7,[r10,#2]           ;1458  ; RXBUFF
+001946  718f              STRB     r7,[r1,#6]            ;1458
+001948  f89a7003          LDRB     r7,[r10,#3]           ;1459  ; RXBUFF
+00194c  71cf              STRB     r7,[r1,#7]            ;1459
+00194e  f89a7004          LDRB     r7,[r10,#4]           ;1460  ; RXBUFF
+001952  720f              STRB     r7,[r1,#8]            ;1460
+001954  f89a7005          LDRB     r7,[r10,#5]           ;1461  ; RXBUFF
+001958  724f              STRB     r7,[r1,#9]            ;1461
+00195a  f89a7006          LDRB     r7,[r10,#6]           ;1462  ; RXBUFF
+00195e  728f              STRB     r7,[r1,#0xa]          ;1462
+001960  f89a7007          LDRB     r7,[r10,#7]           ;1463  ; RXBUFF
+001964  72cf              STRB     r7,[r1,#0xb]          ;1463
+001966  88cf              LDRH     r7,[r1,#6]  ; eb2_data
+001968  81af              STRH     r7,[r5,#0xc]
 ;;;1465   
 ;;;1466   	can_reset_cnt=0;
-001968  70b4              STRB     r4,[r6,#2]
-                  |L1.6506|
+00196a  70b4              STRB     r4,[r6,#2]
+                  |L1.6508|
 ;;;1467        }
 ;;;1468   
 ;;;1469   if( ((RXBUFF[0]&0x1f)==22)&&((RXBUFF[1])==PUTTM) )
-00196a  2816              CMP      r0,#0x16
-00196c  d141              BNE      |L1.6642|
-00196e  2ade              CMP      r2,#0xde
-001970  d13f              BNE      |L1.6642|
+00196c  2816              CMP      r0,#0x16
+00196e  d143              BNE      |L1.6648|
+001970  2ade              CMP      r2,#0xde
+001972  d141              BNE      |L1.6648|
 ;;;1470        {
 ;;;1471        eb2_data[12]=RXBUFF[2];
-001972  f89a7002          LDRB     r7,[r10,#2]  ; RXBUFF
-001976  730f              STRB     r7,[r1,#0xc]
+001974  f89a7002          LDRB     r7,[r10,#2]  ; RXBUFF
+001978  730f              STRB     r7,[r1,#0xc]
 ;;;1472   	eb2_data[13]=RXBUFF[3];
-001978  f89a7003          LDRB     r7,[r10,#3]  ; RXBUFF
-00197c  734f              STRB     r7,[r1,#0xd]
+00197a  f89a7003          LDRB     r7,[r10,#3]  ; RXBUFF
+00197e  734f              STRB     r7,[r1,#0xd]
 ;;;1473        eb2_data[14]=RXBUFF[4];
-00197e  f89a7004          LDRB     r7,[r10,#4]  ; RXBUFF
-001982  738f              STRB     r7,[r1,#0xe]
+001980  f89a7004          LDRB     r7,[r10,#4]  ; RXBUFF
+001984  738f              STRB     r7,[r1,#0xe]
 ;;;1474   	eb2_data[15]=RXBUFF[5];
-001984  f89a7005          LDRB     r7,[r10,#5]  ; RXBUFF
-001988  73cf              STRB     r7,[r1,#0xf]
-;;;1475   	eb2_data[16]=RXBUFF[6];
-00198a  e025              B        |L1.6616|
+001986  f89a7005          LDRB     r7,[r10,#5]  ; RXBUFF
+00198a  e027              B        |L1.6620|
                   |L1.6540|
                           DCD      plazma_can_inv
                   |L1.6544|
@@ -3927,258 +3926,262 @@
                   |L1.6564|
                           DCD      bIBAT_SMKLBR
                   |L1.6568|
-                          DCD      power_summary_tempo
+                          DCD      ibat_metr_cnt
                   |L1.6572|
-                          DCD      power_current_tempo
+                          DCD      power_summary_tempo
                   |L1.6576|
-                          DCD      adc_buff_ext_
+                          DCD      power_current_tempo
                   |L1.6580|
-                          DCD      t_ext_can
+                          DCD      adc_buff_ext_
                   |L1.6584|
-                          DCD      t_ext_can_nd
+                          DCD      t_ext_can
                   |L1.6588|
-                          DCD      vvod_pos
+                          DCD      t_ext_can_nd
                   |L1.6592|
-                          DCD      ext_can_cnt
+                          DCD      vvod_pos
                   |L1.6596|
-                          DCD      bRESET_EXT
+                          DCD      ext_can_cnt
                   |L1.6600|
-                          DCD      power_current
+                          DCD      bRESET_EXT
                   |L1.6604|
-                          DCD      power_summary
+                          DCD      power_current
                   |L1.6608|
-                          DCD      eb2_data
+                          DCD      power_summary
                   |L1.6612|
-                          DCD      eb2_data_short
+                          DCD      eb2_data
                   |L1.6616|
-0019d8  f89a7006          LDRB     r7,[r10,#6]  ; RXBUFF
-0019dc  740f              STRB     r7,[r1,#0x10]
+                          DCD      eb2_data_short
+                  |L1.6620|
+0019dc  73cf              STRB     r7,[r1,#0xf]
+;;;1475   	eb2_data[16]=RXBUFF[6];
+0019de  f89a7006          LDRB     r7,[r10,#6]  ; RXBUFF
+0019e2  740f              STRB     r7,[r1,#0x10]
 ;;;1476   	eb2_data[17]=RXBUFF[7];
-0019de  f89a7007          LDRB     r7,[r10,#7]  ; RXBUFF
-0019e2  744f              STRB     r7,[r1,#0x11]
+0019e4  f89a7007          LDRB     r7,[r10,#7]  ; RXBUFF
+0019e8  744f              STRB     r7,[r1,#0x11]
 ;;;1477   	eb2_data_short[0]=*((short*)&eb2_data[12]);
-0019e4  898f              LDRH     r7,[r1,#0xc]  ; eb2_data
-0019e6  802f              STRH     r7,[r5,#0]
+0019ea  898f              LDRH     r7,[r1,#0xc]  ; eb2_data
+0019ec  802f              STRH     r7,[r5,#0]
 ;;;1478   	eb2_data_short[1]=*((short*)&eb2_data[14]);
-0019e8  89cf              LDRH     r7,[r1,#0xe]  ; eb2_data
-0019ea  806f              STRH     r7,[r5,#2]
+0019ee  89cf              LDRH     r7,[r1,#0xe]  ; eb2_data
+0019f0  806f              STRH     r7,[r5,#2]
 ;;;1479   	eb2_data_short[2]=*((short*)&eb2_data[16]);
-0019ec  8a0f              LDRH     r7,[r1,#0x10]  ; eb2_data
-0019ee  80af              STRH     r7,[r5,#4]
+0019f2  8a0f              LDRH     r7,[r1,#0x10]  ; eb2_data
+0019f4  80af              STRH     r7,[r5,#4]
 ;;;1480   
 ;;;1481   	can_reset_cnt=0;
-0019f0  70b4              STRB     r4,[r6,#2]
-                  |L1.6642|
+0019f6  70b4              STRB     r4,[r6,#2]
+                  |L1.6648|
 ;;;1482        }
 ;;;1483   
 ;;;1484   if( ((RXBUFF[0]&0x1f)==23)&&((RXBUFF[1])==PUTTM) )
-0019f2  2817              CMP      r0,#0x17
-0019f4  d11a              BNE      |L1.6700|
-0019f6  2ade              CMP      r2,#0xde
-0019f8  d118              BNE      |L1.6700|
+0019f8  2817              CMP      r0,#0x17
+0019fa  d11a              BNE      |L1.6706|
+0019fc  2ade              CMP      r2,#0xde
+0019fe  d118              BNE      |L1.6706|
 ;;;1485        {
 ;;;1486        eb2_data[18]=RXBUFF[2];
-0019fa  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
-0019fe  7488              STRB     r0,[r1,#0x12]
+001a00  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
+001a04  7488              STRB     r0,[r1,#0x12]
 ;;;1487   	eb2_data[19]=RXBUFF[3];
-001a00  f89a0003          LDRB     r0,[r10,#3]  ; RXBUFF
-001a04  74c8              STRB     r0,[r1,#0x13]
+001a06  f89a0003          LDRB     r0,[r10,#3]  ; RXBUFF
+001a0a  74c8              STRB     r0,[r1,#0x13]
 ;;;1488        eb2_data[20]=RXBUFF[4];
-001a06  f89a0004          LDRB     r0,[r10,#4]  ; RXBUFF
-001a0a  7508              STRB     r0,[r1,#0x14]
+001a0c  f89a0004          LDRB     r0,[r10,#4]  ; RXBUFF
+001a10  7508              STRB     r0,[r1,#0x14]
 ;;;1489   	eb2_data[21]=RXBUFF[5];
-001a0c  f89a0005          LDRB     r0,[r10,#5]  ; RXBUFF
-001a10  7548              STRB     r0,[r1,#0x15]
+001a12  f89a0005          LDRB     r0,[r10,#5]  ; RXBUFF
+001a16  7548              STRB     r0,[r1,#0x15]
 ;;;1490   	eb2_data[22]=RXBUFF[6];
-001a12  f89a0006          LDRB     r0,[r10,#6]  ; RXBUFF
-001a16  7588              STRB     r0,[r1,#0x16]
+001a18  f89a0006          LDRB     r0,[r10,#6]  ; RXBUFF
+001a1c  7588              STRB     r0,[r1,#0x16]
 ;;;1491   	eb2_data[23]=RXBUFF[7];
-001a18  f89a0007          LDRB     r0,[r10,#7]  ; RXBUFF
-001a1c  75c8              STRB     r0,[r1,#0x17]
+001a1e  f89a0007          LDRB     r0,[r10,#7]  ; RXBUFF
+001a22  75c8              STRB     r0,[r1,#0x17]
 ;;;1492   	eb2_data_short[3]=*((short*)&eb2_data[18]);
-001a1e  8a48              LDRH     r0,[r1,#0x12]  ; eb2_data
-001a20  80e8              STRH     r0,[r5,#6]
+001a24  8a48              LDRH     r0,[r1,#0x12]  ; eb2_data
+001a26  80e8              STRH     r0,[r5,#6]
 ;;;1493   	eb2_data_short[4]=*((short*)&eb2_data[20]);
-001a22  8a88              LDRH     r0,[r1,#0x14]  ; eb2_data
-001a24  8128              STRH     r0,[r5,#8]
+001a28  8a88              LDRH     r0,[r1,#0x14]  ; eb2_data
+001a2a  8128              STRH     r0,[r5,#8]
 ;;;1494   	eb2_data_short[5]=*((short*)&eb2_data[22]);
-001a26  8ac8              LDRH     r0,[r1,#0x16]  ; eb2_data
-001a28  8168              STRH     r0,[r5,#0xa]
+001a2c  8ac8              LDRH     r0,[r1,#0x16]  ; eb2_data
+001a2e  8168              STRH     r0,[r5,#0xa]
 ;;;1495   
 ;;;1496   	can_reset_cnt=0;
-001a2a  70b4              STRB     r4,[r6,#2]
-                  |L1.6700|
+001a30  70b4              STRB     r4,[r6,#2]
+                  |L1.6706|
 ;;;1497        }
 ;;;1498   
 ;;;1499   if( (RXBUFF[1]==PUTTM_MAKB1)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
 ;;;1500        {
 ;;;1501   	makb[RXBUFF[0]]._U[0]=*((short*)&RXBUFF[2]);
-001a2c  4dff              LDR      r5,|L1.7724|
-001a2e  2ae2              CMP      r2,#0xe2              ;1499
-001a30  d12a              BNE      |L1.6792|
-001a32  2b03              CMP      r3,#3                 ;1499
-001a34  d828              BHI      |L1.6792|
-001a36  ebc300c3          RSB      r0,r3,r3,LSL #3
-001a3a  eb000040          ADD      r0,r0,r0,LSL #1
-001a3e  f9bac002          LDRSH    r12,[r10,#2]  ; RXBUFF
-001a42  4657              MOV      r7,r10
-001a44  f825c010          STRH     r12,[r5,r0,LSL #1]
+001a32  4dff              LDR      r5,|L1.7728|
+001a34  2ae2              CMP      r2,#0xe2              ;1499
+001a36  d12a              BNE      |L1.6798|
+001a38  2b03              CMP      r3,#3                 ;1499
+001a3a  d828              BHI      |L1.6798|
+001a3c  ebc300c3          RSB      r0,r3,r3,LSL #3
+001a40  eb000040          ADD      r0,r0,r0,LSL #1
+001a44  f9bac002          LDRSH    r12,[r10,#2]  ; RXBUFF
+001a48  4657              MOV      r7,r10
+001a4a  f825c010          STRH     r12,[r5,r0,LSL #1]
 ;;;1502   	makb[RXBUFF[0]]._U[1]=*((short*)&RXBUFF[4]);
-001a48  eb050040          ADD      r0,r5,r0,LSL #1
-001a4c  f9b71004          LDRSH    r1,[r7,#4]  ; RXBUFF
-001a50  8041              STRH     r1,[r0,#2]
+001a4e  eb050040          ADD      r0,r5,r0,LSL #1
+001a52  f9b71004          LDRSH    r1,[r7,#4]  ; RXBUFF
+001a56  8041              STRH     r1,[r0,#2]
 ;;;1503   	makb[RXBUFF[0]]._U[2]=*((short*)&RXBUFF[6]);
-001a52  f9b77006          LDRSH    r7,[r7,#6]  ; RXBUFF
-001a56  8087              STRH     r7,[r0,#4]
+001a58  f9b77006          LDRSH    r7,[r7,#6]  ; RXBUFF
+001a5c  8087              STRH     r7,[r0,#4]
 ;;;1504   
 ;;;1505   	makb[RXBUFF[0]]._Ub[0]=makb[RXBUFF[0]]._U[0];
-001a58  f8a0c00a          STRH     r12,[r0,#0xa]
+001a5e  f8a0c00a          STRH     r12,[r0,#0xa]
 ;;;1506   	if(makb[RXBUFF[0]]._Ub[0]<0)makb[RXBUFF[0]]._Ub[0]=0;
-001a5c  f1bc0f00          CMP      r12,#0
-001a60  da00              BGE      |L1.6756|
-001a62  8144              STRH     r4,[r0,#0xa]
-                  |L1.6756|
+001a62  f1bc0f00          CMP      r12,#0
+001a66  da00              BGE      |L1.6762|
+001a68  8144              STRH     r4,[r0,#0xa]
+                  |L1.6762|
 ;;;1507   	makb[RXBUFF[0]]._Ub[1]=makb[RXBUFF[0]]._U[1]-makb[RXBUFF[0]]._U[0];
-001a64  eba10c0c          SUB      r12,r1,r12
-001a68  fa0ffc8c          SXTH     r12,r12
-001a6c  f8a0c00c          STRH     r12,[r0,#0xc]
+001a6a  eba10c0c          SUB      r12,r1,r12
+001a6e  fa0ffc8c          SXTH     r12,r12
+001a72  f8a0c00c          STRH     r12,[r0,#0xc]
 ;;;1508   	if(makb[RXBUFF[0]]._Ub[1]<0)makb[RXBUFF[0]]._Ub[1]=0;
-001a70  f1bc0f00          CMP      r12,#0
-001a74  da00              BGE      |L1.6776|
-001a76  8184              STRH     r4,[r0,#0xc]
-                  |L1.6776|
+001a76  f1bc0f00          CMP      r12,#0
+001a7a  da00              BGE      |L1.6782|
+001a7c  8184              STRH     r4,[r0,#0xc]
+                  |L1.6782|
 ;;;1509   	makb[RXBUFF[0]]._Ub[2]=makb[RXBUFF[0]]._U[2]-makb[RXBUFF[0]]._U[1];
-001a78  eba70101          SUB      r1,r7,r1
-001a7c  b209              SXTH     r1,r1
-001a7e  81c1              STRH     r1,[r0,#0xe]
+001a7e  eba70101          SUB      r1,r7,r1
+001a82  b209              SXTH     r1,r1
+001a84  81c1              STRH     r1,[r0,#0xe]
 ;;;1510   	if(makb[RXBUFF[0]]._Ub[2]<0)makb[RXBUFF[0]]._Ub[2]=0;
-001a80  2900              CMP      r1,#0
-001a82  da00              BGE      |L1.6790|
-001a84  81c4              STRH     r4,[r0,#0xe]
-                  |L1.6790|
+001a86  2900              CMP      r1,#0
+001a88  da00              BGE      |L1.6796|
+001a8a  81c4              STRH     r4,[r0,#0xe]
+                  |L1.6796|
 ;;;1511   
 ;;;1512   	makb[RXBUFF[0]]._cnt=0;
-001a86  8504              STRH     r4,[r0,#0x28]
-                  |L1.6792|
+001a8c  8504              STRH     r4,[r0,#0x28]
+                  |L1.6798|
 ;;;1513        }
 ;;;1514   
 ;;;1515   if( (RXBUFF[1]==PUTTM_MAKB2)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-001a88  2ae3              CMP      r2,#0xe3
-001a8a  d129              BNE      |L1.6880|
-001a8c  2b03              CMP      r3,#3
-001a8e  d827              BHI      |L1.6880|
+001a8e  2ae3              CMP      r2,#0xe3
+001a90  d129              BNE      |L1.6886|
+001a92  2b03              CMP      r3,#3
+001a94  d827              BHI      |L1.6886|
 ;;;1516        {
 ;;;1517   	makb[RXBUFF[0]]._U[3]=*((short*)&RXBUFF[2]);
-001a90  ebc300c3          RSB      r0,r3,r3,LSL #3
-001a94  eb000040          ADD      r0,r0,r0,LSL #1
-001a98  eb050040          ADD      r0,r5,r0,LSL #1
-001a9c  f9ba1002          LDRSH    r1,[r10,#2]  ; RXBUFF
-001aa0  80c1              STRH     r1,[r0,#6]
+001a96  ebc300c3          RSB      r0,r3,r3,LSL #3
+001a9a  eb000040          ADD      r0,r0,r0,LSL #1
+001a9e  eb050040          ADD      r0,r5,r0,LSL #1
+001aa2  f9ba1002          LDRSH    r1,[r10,#2]  ; RXBUFF
+001aa6  80c1              STRH     r1,[r0,#6]
 ;;;1518   	makb[RXBUFF[0]]._U[4]=*((short*)&RXBUFF[4]);
-001aa2  f9ba7004          LDRSH    r7,[r10,#4]  ; RXBUFF
-001aa6  8107              STRH     r7,[r0,#8]
+001aa8  f9ba7004          LDRSH    r7,[r10,#4]  ; RXBUFF
+001aac  8107              STRH     r7,[r0,#8]
 ;;;1519   	makb[RXBUFF[0]]._T[0]=(signed short)(*((signed char*)&RXBUFF[6]));
-001aa8  f99ac006          LDRSB    r12,[r10,#6]  ; RXBUFF
-001aac  f8a0c014          STRH     r12,[r0,#0x14]
+001aae  f99ac006          LDRSB    r12,[r10,#6]  ; RXBUFF
+001ab2  f8a0c014          STRH     r12,[r0,#0x14]
 ;;;1520   	makb[RXBUFF[0]]._T[1]=(signed short)(*((signed char*)&RXBUFF[7]));
-001ab0  f99ac007          LDRSB    r12,[r10,#7]  ; RXBUFF
-001ab4  f8a0c016          STRH     r12,[r0,#0x16]
+001ab6  f99ac007          LDRSB    r12,[r10,#7]  ; RXBUFF
+001aba  f8a0c016          STRH     r12,[r0,#0x16]
 ;;;1521   
 ;;;1522   	makb[RXBUFF[0]]._Ub[3]=makb[RXBUFF[0]]._U[3]-makb[RXBUFF[0]]._U[2];
-001ab8  f8b0c004          LDRH     r12,[r0,#4]
-001abc  eba10c0c          SUB      r12,r1,r12
-001ac0  fa0ffc8c          SXTH     r12,r12
-001ac4  f8a0c010          STRH     r12,[r0,#0x10]
+001abe  f8b0c004          LDRH     r12,[r0,#4]
+001ac2  eba10c0c          SUB      r12,r1,r12
+001ac6  fa0ffc8c          SXTH     r12,r12
+001aca  f8a0c010          STRH     r12,[r0,#0x10]
 ;;;1523   	if(makb[RXBUFF[0]]._Ub[3]<0)makb[RXBUFF[0]]._Ub[3]=0;
-001ac8  f1bc0f00          CMP      r12,#0
-001acc  da00              BGE      |L1.6864|
-001ace  8204              STRH     r4,[r0,#0x10]
-                  |L1.6864|
+001ace  f1bc0f00          CMP      r12,#0
+001ad2  da00              BGE      |L1.6870|
+001ad4  8204              STRH     r4,[r0,#0x10]
+                  |L1.6870|
 ;;;1524   	makb[RXBUFF[0]]._Ub[4]=makb[RXBUFF[0]]._U[4]-makb[RXBUFF[0]]._U[3];
-001ad0  eba70101          SUB      r1,r7,r1
-001ad4  b209              SXTH     r1,r1
-001ad6  8241              STRH     r1,[r0,#0x12]
+001ad6  eba70101          SUB      r1,r7,r1
+001ada  b209              SXTH     r1,r1
+001adc  8241              STRH     r1,[r0,#0x12]
 ;;;1525   	if(makb[RXBUFF[0]]._Ub[4]<0)makb[RXBUFF[0]]._Ub[4]=0;
-001ad8  2900              CMP      r1,#0
-001ada  da00              BGE      |L1.6878|
-001adc  8244              STRH     r4,[r0,#0x12]
-                  |L1.6878|
+001ade  2900              CMP      r1,#0
+001ae0  da00              BGE      |L1.6884|
+001ae2  8244              STRH     r4,[r0,#0x12]
+                  |L1.6884|
 ;;;1526   
 ;;;1527   	makb[RXBUFF[0]]._cnt=0;
-001ade  8504              STRH     r4,[r0,#0x28]
-                  |L1.6880|
+001ae4  8504              STRH     r4,[r0,#0x28]
+                  |L1.6886|
 ;;;1528        }
 ;;;1529   
 ;;;1530   if( (RXBUFF[1]==PUTTM_MAKB3)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-001ae0  2ae4              CMP      r2,#0xe4
-001ae2  d12e              BNE      |L1.6978|
-001ae4  2b03              CMP      r3,#3
-001ae6  d82c              BHI      |L1.6978|
+001ae6  2ae4              CMP      r2,#0xe4
+001ae8  d12e              BNE      |L1.6984|
+001aea  2b03              CMP      r3,#3
+001aec  d82c              BHI      |L1.6984|
 ;;;1531        {
 ;;;1532   	makb[RXBUFF[0]]._T[2]=(signed short)(*((signed char*)&RXBUFF[2]));
-001ae8  ebc300c3          RSB      r0,r3,r3,LSL #3
-001aec  eb000040          ADD      r0,r0,r0,LSL #1
-001af0  eb050040          ADD      r0,r5,r0,LSL #1
-001af4  f99a1002          LDRSB    r1,[r10,#2]  ; RXBUFF
-001af8  8301              STRH     r1,[r0,#0x18]
+001aee  ebc300c3          RSB      r0,r3,r3,LSL #3
+001af2  eb000040          ADD      r0,r0,r0,LSL #1
+001af6  eb050040          ADD      r0,r5,r0,LSL #1
+001afa  f99a1002          LDRSB    r1,[r10,#2]  ; RXBUFF
+001afe  8301              STRH     r1,[r0,#0x18]
 ;;;1533   	makb[RXBUFF[0]]._T[3]=(signed short)(*((signed char*)&RXBUFF[3]));
-001afa  f99a1003          LDRSB    r1,[r10,#3]  ; RXBUFF
-001afe  8341              STRH     r1,[r0,#0x1a]
+001b00  f99a1003          LDRSB    r1,[r10,#3]  ; RXBUFF
+001b04  8341              STRH     r1,[r0,#0x1a]
 ;;;1534   	makb[RXBUFF[0]]._T[4]=(signed short)(*((signed char*)&RXBUFF[4]));
-001b00  f99a1004          LDRSB    r1,[r10,#4]  ; RXBUFF
-001b04  8381              STRH     r1,[r0,#0x1c]
+001b06  f99a1004          LDRSB    r1,[r10,#4]  ; RXBUFF
+001b0a  8381              STRH     r1,[r0,#0x1c]
 ;;;1535   
 ;;;1536   	if(RXBUFF[5]&0x01)makb[RXBUFF[0]]._T_nd[0]=1;
-001b06  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001b0a  f04f0501          MOV      r5,#1                 ;1115
-001b0e  07cf              LSLS     r7,r1,#31
-001b10  d001              BEQ      |L1.6934|
-001b12  83c5              STRH     r5,[r0,#0x1e]
-001b14  e000              B        |L1.6936|
-                  |L1.6934|
+001b0c  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001b10  f04f0501          MOV      r5,#1                 ;1115
+001b14  07cf              LSLS     r7,r1,#31
+001b16  d001              BEQ      |L1.6940|
+001b18  83c5              STRH     r5,[r0,#0x1e]
+001b1a  e000              B        |L1.6942|
+                  |L1.6940|
 ;;;1537   	else makb[RXBUFF[0]]._T_nd[0]=0;
-001b16  83c4              STRH     r4,[r0,#0x1e]
-                  |L1.6936|
+001b1c  83c4              STRH     r4,[r0,#0x1e]
+                  |L1.6942|
 ;;;1538   	if(RXBUFF[5]&0x02)makb[RXBUFF[0]]._T_nd[1]=1;
-001b18  078f              LSLS     r7,r1,#30
-001b1a  d501              BPL      |L1.6944|
-001b1c  8405              STRH     r5,[r0,#0x20]
-001b1e  e000              B        |L1.6946|
-                  |L1.6944|
+001b1e  078f              LSLS     r7,r1,#30
+001b20  d501              BPL      |L1.6950|
+001b22  8405              STRH     r5,[r0,#0x20]
+001b24  e000              B        |L1.6952|
+                  |L1.6950|
 ;;;1539   	else makb[RXBUFF[0]]._T_nd[1]=0;
-001b20  8404              STRH     r4,[r0,#0x20]
-                  |L1.6946|
+001b26  8404              STRH     r4,[r0,#0x20]
+                  |L1.6952|
 ;;;1540   	if(RXBUFF[5]&0x04)makb[RXBUFF[0]]._T_nd[2]=1;
-001b22  074f              LSLS     r7,r1,#29
-001b24  d501              BPL      |L1.6954|
-001b26  8445              STRH     r5,[r0,#0x22]
-001b28  e000              B        |L1.6956|
-                  |L1.6954|
+001b28  074f              LSLS     r7,r1,#29
+001b2a  d501              BPL      |L1.6960|
+001b2c  8445              STRH     r5,[r0,#0x22]
+001b2e  e000              B        |L1.6962|
+                  |L1.6960|
 ;;;1541   	else makb[RXBUFF[0]]._T_nd[2]=0;
-001b2a  8444              STRH     r4,[r0,#0x22]
-                  |L1.6956|
+001b30  8444              STRH     r4,[r0,#0x22]
+                  |L1.6962|
 ;;;1542   	if(RXBUFF[5]&0x08)makb[RXBUFF[0]]._T_nd[3]=1;
-001b2c  070f              LSLS     r7,r1,#28
-001b2e  d501              BPL      |L1.6964|
-001b30  8485              STRH     r5,[r0,#0x24]
-001b32  e000              B        |L1.6966|
-                  |L1.6964|
+001b32  070f              LSLS     r7,r1,#28
+001b34  d501              BPL      |L1.6970|
+001b36  8485              STRH     r5,[r0,#0x24]
+001b38  e000              B        |L1.6972|
+                  |L1.6970|
 ;;;1543   	else makb[RXBUFF[0]]._T_nd[3]=0;
-001b34  8484              STRH     r4,[r0,#0x24]
-                  |L1.6966|
+001b3a  8484              STRH     r4,[r0,#0x24]
+                  |L1.6972|
 ;;;1544   	if(RXBUFF[5]&0x10)makb[RXBUFF[0]]._T_nd[4]=1;
-001b36  06c9              LSLS     r1,r1,#27
-001b38  d501              BPL      |L1.6974|
-001b3a  84c5              STRH     r5,[r0,#0x26]
-001b3c  e000              B        |L1.6976|
-                  |L1.6974|
+001b3c  06c9              LSLS     r1,r1,#27
+001b3e  d501              BPL      |L1.6980|
+001b40  84c5              STRH     r5,[r0,#0x26]
+001b42  e000              B        |L1.6982|
+                  |L1.6980|
 ;;;1545   	else makb[RXBUFF[0]]._T_nd[4]=0;
-001b3e  84c4              STRH     r4,[r0,#0x26]
-                  |L1.6976|
+001b44  84c4              STRH     r4,[r0,#0x26]
+                  |L1.6982|
 ;;;1546   
 ;;;1547   	makb[RXBUFF[0]]._cnt=0;
-001b40  8504              STRH     r4,[r0,#0x28]
-                  |L1.6978|
+001b46  8504              STRH     r4,[r0,#0x28]
+                  |L1.6984|
 ;;;1548        }
 ;;;1549   
 ;;;1550   /*if(RXBUFF[0]==PUT_LB_TM1)
@@ -4226,222 +4229,222 @@
 ;;;1592   	if(temp==0) //у нас только одна батарея
 ;;;1593   		{	
 ;;;1594   		lakb_damp[temp][0]=RXBUFF[0];
-001b42  4dbb              LDR      r5,|L1.7728|
+001b48  4dba              LDR      r5,|L1.7732|
 ;;;1595   		mem_copy(&lakb_damp[temp][1],&RXBUFF[2],6);
 ;;;1596   	
 ;;;1597   		ccc_plazma[0]++;
-001b44  4fbb              LDR      r7,|L1.7732|
+001b4a  4fbb              LDR      r7,|L1.7736|
 ;;;1598   		ccc_plazma[7]=temp;
 ;;;1599   		li_bat._canErrorCnt=0;
-001b46  f8dfb2f0          LDR      r11,|L1.7736|
-001b4a  ebb80fd2          CMP      r8,r2,LSR #3          ;1587
-001b4e  d115              BNE      |L1.7036|
-001b50  4651              MOV      r1,r10                ;1590
-001b52  f0020007          AND      r0,r2,#7              ;1590
-001b56  b988              CBNZ     r0,|L1.7036|
-001b58  702b              STRB     r3,[r5,#0]            ;1594
-001b5a  f1050001          ADD      r0,r5,#1              ;1594
-001b5e  f04f0206          MOV      r2,#6                 ;1595
-001b62  f1010102          ADD      r1,r1,#2              ;1595
-001b66  f7fffffe          BL       mem_copy
-001b6a  7838              LDRB     r0,[r7,#0]            ;1597  ; ccc_plazma
-001b6c  f1000001          ADD      r0,r0,#1              ;1597
-001b70  7038              STRB     r0,[r7,#0]            ;1597
-001b72  71fc              STRB     r4,[r7,#7]            ;1598
-001b74  f8ab4012          STRH     r4,[r11,#0x12]
+001b4c  f8dfb2ec          LDR      r11,|L1.7740|
+001b50  ebb80fd2          CMP      r8,r2,LSR #3          ;1587
+001b54  d115              BNE      |L1.7042|
+001b56  4651              MOV      r1,r10                ;1590
+001b58  f0020007          AND      r0,r2,#7              ;1590
+001b5c  b988              CBNZ     r0,|L1.7042|
+001b5e  702b              STRB     r3,[r5,#0]            ;1594
+001b60  f1050001          ADD      r0,r5,#1              ;1594
+001b64  f04f0206          MOV      r2,#6                 ;1595
+001b68  f1010102          ADD      r1,r1,#2              ;1595
+001b6c  f7fffffe          BL       mem_copy
+001b70  7838              LDRB     r0,[r7,#0]            ;1597  ; ccc_plazma
+001b72  f1000001          ADD      r0,r0,#1              ;1597
+001b76  7038              STRB     r0,[r7,#0]            ;1597
+001b78  71fc              STRB     r4,[r7,#7]            ;1598
+001b7a  f8ab4012          STRH     r4,[r11,#0x12]
 ;;;1600   		li_bat._canError=0;
-001b78  f88b4014          STRB     r4,[r11,#0x14]
-                  |L1.7036|
+001b7e  f88b4014          STRB     r4,[r11,#0x14]
+                  |L1.7042|
 ;;;1601   		}
 ;;;1602   	}	
 ;;;1603   
 ;;;1604   if((RXBUFF[1]&0xf8)==PUT_LB_TM2)
-001b7c  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
-001b80  210f              MOVS     r1,#0xf
-001b82  ebb10fd0          CMP      r1,r0,LSR #3
-001b86  d116              BNE      |L1.7094|
+001b82  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
+001b86  210f              MOVS     r1,#0xf
+001b88  ebb10fd0          CMP      r1,r0,LSR #3
+001b8c  d116              BNE      |L1.7100|
 ;;;1605        {
 ;;;1606   	char temp;
 ;;;1607   	temp=RXBUFF[1]&0x07;
-001b88  4651              MOV      r1,r10
-001b8a  f0000007          AND      r0,r0,#7
+001b8e  4651              MOV      r1,r10
+001b90  f0000007          AND      r0,r0,#7
 ;;;1608   	
 ;;;1609   	if(temp==0) //у нас только одна батарея
-001b8e  b990              CBNZ     r0,|L1.7094|
+001b94  b990              CBNZ     r0,|L1.7100|
 ;;;1610   		{		
 ;;;1611   		lakb_damp[temp][7]=RXBUFF[0];
-001b90  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
-001b94  4628              MOV      r0,r5
-001b96  71ea              STRB     r2,[r5,#7]
+001b96  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
+001b9a  4628              MOV      r0,r5
+001b9c  71ea              STRB     r2,[r5,#7]
 ;;;1612   		mem_copy(&lakb_damp[temp][8],&RXBUFF[2],6);
-001b98  f1000008          ADD      r0,r0,#8
-001b9c  f04f0206          MOV      r2,#6
-001ba0  f7fffffe          BL       mem_copy
+001b9e  f1000008          ADD      r0,r0,#8
+001ba2  f04f0206          MOV      r2,#6
+001ba6  f7fffffe          BL       mem_copy
 ;;;1613   		
 ;;;1614   		ccc_plazma[1]++;
-001ba4  7878              LDRB     r0,[r7,#1]  ; ccc_plazma
-001ba6  f1000001          ADD      r0,r0,#1
-001baa  7078              STRB     r0,[r7,#1]
+001baa  7878              LDRB     r0,[r7,#1]  ; ccc_plazma
+001bac  f1000001          ADD      r0,r0,#1
+001bb0  7078              STRB     r0,[r7,#1]
 ;;;1615   		ccc_plazma[8]=temp;
-001bac  723c              STRB     r4,[r7,#8]
+001bb2  723c              STRB     r4,[r7,#8]
 ;;;1616   		li_bat._canErrorCnt=0;
-001bae  f8ab4012          STRH     r4,[r11,#0x12]
+001bb4  f8ab4012          STRH     r4,[r11,#0x12]
 ;;;1617   		li_bat._canError=0;
-001bb2  f88b4014          STRB     r4,[r11,#0x14]
-                  |L1.7094|
+001bb8  f88b4014          STRB     r4,[r11,#0x14]
+                  |L1.7100|
 ;;;1618   		}
 ;;;1619   	}
 ;;;1620   
 ;;;1621   if((RXBUFF[1]&0xf8)==PUT_LB_TM3)
-001bb6  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
-001bba  ebb90fd0          CMP      r9,r0,LSR #3
-001bbe  d116              BNE      |L1.7150|
+001bbc  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
+001bc0  ebb90fd0          CMP      r9,r0,LSR #3
+001bc4  d116              BNE      |L1.7156|
 ;;;1622        {
 ;;;1623   	char temp;
 ;;;1624   	temp=RXBUFF[1]&0x07;
-001bc0  4651              MOV      r1,r10
-001bc2  f0000007          AND      r0,r0,#7
+001bc6  4651              MOV      r1,r10
+001bc8  f0000007          AND      r0,r0,#7
 ;;;1625   
 ;;;1626   	if(temp==0) //у нас только одна батарея
-001bc6  b990              CBNZ     r0,|L1.7150|
+001bcc  b990              CBNZ     r0,|L1.7156|
 ;;;1627   		{
 ;;;1628   		lakb_damp[temp][14]=RXBUFF[0];
-001bc8  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
-001bcc  4628              MOV      r0,r5
-001bce  73aa              STRB     r2,[r5,#0xe]
+001bce  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
+001bd2  4628              MOV      r0,r5
+001bd4  73aa              STRB     r2,[r5,#0xe]
 ;;;1629   		mem_copy(&lakb_damp[temp][15],&RXBUFF[2],6);
-001bd0  f100000f          ADD      r0,r0,#0xf
-001bd4  f04f0206          MOV      r2,#6
-001bd8  f7fffffe          BL       mem_copy
+001bd6  f100000f          ADD      r0,r0,#0xf
+001bda  f04f0206          MOV      r2,#6
+001bde  f7fffffe          BL       mem_copy
 ;;;1630   		
 ;;;1631   		ccc_plazma[2]++;
-001bdc  78b8              LDRB     r0,[r7,#2]  ; ccc_plazma
-001bde  f1000001          ADD      r0,r0,#1
-001be2  70b8              STRB     r0,[r7,#2]
+001be2  78b8              LDRB     r0,[r7,#2]  ; ccc_plazma
+001be4  f1000001          ADD      r0,r0,#1
+001be8  70b8              STRB     r0,[r7,#2]
 ;;;1632   		ccc_plazma[9]=temp;
-001be4  727c              STRB     r4,[r7,#9]
+001bea  727c              STRB     r4,[r7,#9]
 ;;;1633   		li_bat._canErrorCnt=0;
-001be6  f8ab4012          STRH     r4,[r11,#0x12]
+001bec  f8ab4012          STRH     r4,[r11,#0x12]
 ;;;1634   		li_bat._canError=0;
-001bea  f88b4014          STRB     r4,[r11,#0x14]
-                  |L1.7150|
+001bf0  f88b4014          STRB     r4,[r11,#0x14]
+                  |L1.7156|
 ;;;1635   		}
 ;;;1636   	}	
 ;;;1637   
 ;;;1638   if((RXBUFF[1]&0xf8)==PUT_LB_TM4)
-001bee  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
-001bf2  2109              MOVS     r1,#9
-001bf4  ebb10fd0          CMP      r1,r0,LSR #3
-001bf8  d116              BNE      |L1.7208|
+001bf4  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
+001bf8  2109              MOVS     r1,#9
+001bfa  ebb10fd0          CMP      r1,r0,LSR #3
+001bfe  d116              BNE      |L1.7214|
 ;;;1639        {
 ;;;1640   	char temp;
 ;;;1641   	temp=RXBUFF[1]&0x07;
-001bfa  4651              MOV      r1,r10
-001bfc  f0000007          AND      r0,r0,#7
+001c00  4651              MOV      r1,r10
+001c02  f0000007          AND      r0,r0,#7
 ;;;1642   	
 ;;;1643   	if(temp==0) //у нас только одна батарея
-001c00  b990              CBNZ     r0,|L1.7208|
+001c06  b990              CBNZ     r0,|L1.7214|
 ;;;1644   		{
 ;;;1645   		lakb_damp[temp][21]=RXBUFF[0];
-001c02  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
-001c06  4628              MOV      r0,r5
-001c08  756a              STRB     r2,[r5,#0x15]
+001c08  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
+001c0c  4628              MOV      r0,r5
+001c0e  756a              STRB     r2,[r5,#0x15]
 ;;;1646   		mem_copy(&lakb_damp[temp][22],&RXBUFF[2],6);
-001c0a  f1000016          ADD      r0,r0,#0x16
-001c0e  f04f0206          MOV      r2,#6
-001c12  f7fffffe          BL       mem_copy
+001c10  f1000016          ADD      r0,r0,#0x16
+001c14  f04f0206          MOV      r2,#6
+001c18  f7fffffe          BL       mem_copy
 ;;;1647   		
 ;;;1648   		ccc_plazma[3]++;
-001c16  78f8              LDRB     r0,[r7,#3]  ; ccc_plazma
-001c18  f1000001          ADD      r0,r0,#1
-001c1c  70f8              STRB     r0,[r7,#3]
+001c1c  78f8              LDRB     r0,[r7,#3]  ; ccc_plazma
+001c1e  f1000001          ADD      r0,r0,#1
+001c22  70f8              STRB     r0,[r7,#3]
 ;;;1649   		ccc_plazma[10]=temp;
-001c1e  72bc              STRB     r4,[r7,#0xa]
+001c24  72bc              STRB     r4,[r7,#0xa]
 ;;;1650   		li_bat._canErrorCnt=0;
-001c20  f8ab4012          STRH     r4,[r11,#0x12]
+001c26  f8ab4012          STRH     r4,[r11,#0x12]
 ;;;1651   		li_bat._canError=0;
-001c24  f88b4014          STRB     r4,[r11,#0x14]
-                  |L1.7208|
+001c2a  f88b4014          STRB     r4,[r11,#0x14]
+                  |L1.7214|
 ;;;1652   		}
 ;;;1653   	}
 ;;;1654   
 ;;;1655   if((RXBUFF[1]&0xf8)==PUT_LB_TM5)
-001c28  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
-001c2c  210b              MOVS     r1,#0xb
-001c2e  ebb10fd0          CMP      r1,r0,LSR #3
-001c32  d116              BNE      |L1.7266|
+001c2e  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
+001c32  210b              MOVS     r1,#0xb
+001c34  ebb10fd0          CMP      r1,r0,LSR #3
+001c38  d116              BNE      |L1.7272|
 ;;;1656        {
 ;;;1657   	char temp;
 ;;;1658   	temp=RXBUFF[1]&0x07;
-001c34  4651              MOV      r1,r10
-001c36  f0000007          AND      r0,r0,#7
+001c3a  4651              MOV      r1,r10
+001c3c  f0000007          AND      r0,r0,#7
 ;;;1659   
 ;;;1660   	if(temp==0) //у нас только одна батарея
-001c3a  b990              CBNZ     r0,|L1.7266|
+001c40  b990              CBNZ     r0,|L1.7272|
 ;;;1661   		{		
 ;;;1662   		lakb_damp[temp][28]=RXBUFF[0];
-001c3c  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
-001c40  4628              MOV      r0,r5
-001c42  772a              STRB     r2,[r5,#0x1c]
+001c42  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
+001c46  4628              MOV      r0,r5
+001c48  772a              STRB     r2,[r5,#0x1c]
 ;;;1663   		mem_copy(&lakb_damp[temp][29],&RXBUFF[2],6);
-001c44  f100001d          ADD      r0,r0,#0x1d
-001c48  f04f0206          MOV      r2,#6
-001c4c  f7fffffe          BL       mem_copy
+001c4a  f100001d          ADD      r0,r0,#0x1d
+001c4e  f04f0206          MOV      r2,#6
+001c52  f7fffffe          BL       mem_copy
 ;;;1664   
 ;;;1665   		ccc_plazma[4]++;
-001c50  7938              LDRB     r0,[r7,#4]  ; ccc_plazma
-001c52  f1000001          ADD      r0,r0,#1
-001c56  7138              STRB     r0,[r7,#4]
+001c56  7938              LDRB     r0,[r7,#4]  ; ccc_plazma
+001c58  f1000001          ADD      r0,r0,#1
+001c5c  7138              STRB     r0,[r7,#4]
 ;;;1666   		ccc_plazma[11]=temp;
-001c58  72fc              STRB     r4,[r7,#0xb]
+001c5e  72fc              STRB     r4,[r7,#0xb]
 ;;;1667   		li_bat._canErrorCnt=0;
-001c5a  f8ab4012          STRH     r4,[r11,#0x12]
+001c60  f8ab4012          STRH     r4,[r11,#0x12]
 ;;;1668   		li_bat._canError=0;
-001c5e  f88b4014          STRB     r4,[r11,#0x14]
-                  |L1.7266|
+001c64  f88b4014          STRB     r4,[r11,#0x14]
+                  |L1.7272|
 ;;;1669   		}
 ;;;1670   	}
 ;;;1671   
 ;;;1672   if((RXBUFF[1]&0xf8)==PUT_LB_TM6)
-001c62  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
-001c66  210d              MOVS     r1,#0xd
-001c68  ebb10fd0          CMP      r1,r0,LSR #3
-001c6c  d117              BNE      |L1.7326|
+001c68  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
+001c6c  210d              MOVS     r1,#0xd
+001c6e  ebb10fd0          CMP      r1,r0,LSR #3
+001c72  d117              BNE      |L1.7332|
 ;;;1673        {
 ;;;1674   	char temp;
 ;;;1675   	temp=RXBUFF[1]&0x07;
-001c6e  4651              MOV      r1,r10
-001c70  f0000007          AND      r0,r0,#7
+001c74  4651              MOV      r1,r10
+001c76  f0000007          AND      r0,r0,#7
 ;;;1676   		
 ;;;1677   	if(temp==0) //у нас только одна батарея
-001c74  b998              CBNZ     r0,|L1.7326|
+001c7a  b998              CBNZ     r0,|L1.7332|
 ;;;1678   		{
 ;;;1679   		lakb_damp[temp][35]=RXBUFF[0];
-001c76  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
-001c7a  4628              MOV      r0,r5
-001c7c  f8852023          STRB     r2,[r5,#0x23]
+001c7c  f8112b02          LDRB     r2,[r1],#2  ; RXBUFF
+001c80  4628              MOV      r0,r5
+001c82  f8852023          STRB     r2,[r5,#0x23]
 ;;;1680   		mem_copy(&lakb_damp[temp][36],&RXBUFF[2],6);
-001c80  f1000024          ADD      r0,r0,#0x24
-001c84  f04f0206          MOV      r2,#6
-001c88  f7fffffe          BL       mem_copy
+001c86  f1000024          ADD      r0,r0,#0x24
+001c8a  f04f0206          MOV      r2,#6
+001c8e  f7fffffe          BL       mem_copy
 ;;;1681   		
 ;;;1682   		ccc_plazma[5]++;
-001c8c  7978              LDRB     r0,[r7,#5]  ; ccc_plazma
-001c8e  f1000001          ADD      r0,r0,#1
-001c92  7178              STRB     r0,[r7,#5]
+001c92  7978              LDRB     r0,[r7,#5]  ; ccc_plazma
+001c94  f1000001          ADD      r0,r0,#1
+001c98  7178              STRB     r0,[r7,#5]
 ;;;1683   		ccc_plazma[12]=temp;
-001c94  733c              STRB     r4,[r7,#0xc]
+001c9a  733c              STRB     r4,[r7,#0xc]
 ;;;1684   		li_bat._canErrorCnt=0;
-001c96  f8ab4012          STRH     r4,[r11,#0x12]
+001c9c  f8ab4012          STRH     r4,[r11,#0x12]
 ;;;1685   		li_bat._canError=0;	
-001c9a  f88b4014          STRB     r4,[r11,#0x14]
-                  |L1.7326|
+001ca0  f88b4014          STRB     r4,[r11,#0x14]
+                  |L1.7332|
 ;;;1686   		}
 ;;;1687   	}
 ;;;1688   
 ;;;1689   
 ;;;1690   if(RXBUFF[1]==PUT_ZTT_TM1)
-001c9e  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
+001ca4  f89a0001          LDRB     r0,[r10,#1]  ; RXBUFF
 ;;;1691       {
 ;;;1692   	lakb[0]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
 ;;;1693   	lakb[0]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
@@ -4452,345 +4455,346 @@
 ;;;1698   	//lakb[0]._cell_temp_1=37;
 ;;;1699   	//lakb[0]._cell_temp_2=38;
 ;;;1700   	plazma_ztt[0]++;
-001ca2  4966              LDR      r1,|L1.7740|
-001ca4  4a66              LDR      r2,|L1.7744|
-001ca6  28c1              CMP      r0,#0xc1              ;1690
-001ca8  d114              BNE      |L1.7380|
-001caa  f99a3000          LDRSB    r3,[r10,#0]           ;1692  ; RXBUFF
-001cae  8413              STRH     r3,[r2,#0x20]         ;1692
-001cb0  f8ba3002          LDRH     r3,[r10,#2]           ;1693  ; RXBUFF
-001cb4  8153              STRH     r3,[r2,#0xa]          ;1693
-001cb6  f8ba3004          LDRH     r3,[r10,#4]           ;1694  ; RXBUFF
-001cba  8113              STRH     r3,[r2,#8]            ;1694
-001cbc  f89a3006          LDRB     r3,[r10,#6]           ;1695  ; RXBUFF
-001cc0  f882303a          STRB     r3,[r2,#0x3a]         ;1695
-001cc4  f89a3007          LDRB     r3,[r10,#7]           ;1696  ; RXBUFF
-001cc8  f882303b          STRB     r3,[r2,#0x3b]         ;1696
-001ccc  780b              LDRB     r3,[r1,#0]  ; plazma_ztt
-001cce  f1030301          ADD      r3,r3,#1
-001cd2  700b              STRB     r3,[r1,#0]
-                  |L1.7380|
+001ca8  4965              LDR      r1,|L1.7744|
+001caa  4a66              LDR      r2,|L1.7748|
+001cac  28c1              CMP      r0,#0xc1              ;1690
+001cae  d114              BNE      |L1.7386|
+001cb0  f99a3000          LDRSB    r3,[r10,#0]           ;1692  ; RXBUFF
+001cb4  8413              STRH     r3,[r2,#0x20]         ;1692
+001cb6  f8ba3002          LDRH     r3,[r10,#2]           ;1693  ; RXBUFF
+001cba  8153              STRH     r3,[r2,#0xa]          ;1693
+001cbc  f8ba3004          LDRH     r3,[r10,#4]           ;1694  ; RXBUFF
+001cc0  8113              STRH     r3,[r2,#8]            ;1694
+001cc2  f89a3006          LDRB     r3,[r10,#6]           ;1695  ; RXBUFF
+001cc6  f882303a          STRB     r3,[r2,#0x3a]         ;1695
+001cca  f89a3007          LDRB     r3,[r10,#7]           ;1696  ; RXBUFF
+001cce  f882303b          STRB     r3,[r2,#0x3b]         ;1696
+001cd2  780b              LDRB     r3,[r1,#0]  ; plazma_ztt
+001cd4  f1030301          ADD      r3,r3,#1
+001cd8  700b              STRB     r3,[r1,#0]
+                  |L1.7386|
 ;;;1701   
 ;;;1702   	}
 ;;;1703   
 ;;;1704   if(RXBUFF[1]==PUT_ZTT_TM2)
-001cd4  28c2              CMP      r0,#0xc2
-001cd6  d114              BNE      |L1.7426|
+001cda  28c2              CMP      r0,#0xc2
+001cdc  d114              BNE      |L1.7432|
 ;;;1705       {
 ;;;1706   	lakb[0]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-001cd8  f99a3000          LDRSB    r3,[r10,#0]  ; RXBUFF
-001cdc  83d3              STRH     r3,[r2,#0x1e]
+001cde  f99a3000          LDRSB    r3,[r10,#0]  ; RXBUFF
+001ce2  83d3              STRH     r3,[r2,#0x1e]
 ;;;1707   	lakb[0]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-001cde  f8ba3002          LDRH     r3,[r10,#2]  ; RXBUFF
-001ce2  8253              STRH     r3,[r2,#0x12]
+001ce4  f8ba3002          LDRH     r3,[r10,#2]  ; RXBUFF
+001ce8  8253              STRH     r3,[r2,#0x12]
 ;;;1708   	lakb[0]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-001ce4  f8ba3004          LDRH     r3,[r10,#4]  ; RXBUFF
-001ce8  8213              STRH     r3,[r2,#0x10]
+001cea  f8ba3004          LDRH     r3,[r10,#4]  ; RXBUFF
+001cee  8213              STRH     r3,[r2,#0x10]
 ;;;1709   	lakb[0]._cell_temp_3=(signed char)(RXBUFF[6]);
-001cea  f89a3006          LDRB     r3,[r10,#6]  ; RXBUFF
-001cee  f882303c          STRB     r3,[r2,#0x3c]
+001cf0  f89a3006          LDRB     r3,[r10,#6]  ; RXBUFF
+001cf4  f882303c          STRB     r3,[r2,#0x3c]
 ;;;1710   	lakb[0]._cell_temp_4=(signed char)(RXBUFF[7]);
-001cf2  f89a3007          LDRB     r3,[r10,#7]  ; RXBUFF
-001cf6  f882303d          STRB     r3,[r2,#0x3d]
+001cf8  f89a3007          LDRB     r3,[r10,#7]  ; RXBUFF
+001cfc  f882303d          STRB     r3,[r2,#0x3d]
 ;;;1711   	//lakb[0]._cell_temp_3=39;
 ;;;1712   	//lakb[0]._cell_temp_4=40;
 ;;;1713   	
 ;;;1714   	plazma_ztt[1]++;
-001cfa  784b              LDRB     r3,[r1,#1]  ; plazma_ztt
-001cfc  f1030301          ADD      r3,r3,#1
-001d00  704b              STRB     r3,[r1,#1]
-                  |L1.7426|
+001d00  784b              LDRB     r3,[r1,#1]  ; plazma_ztt
+001d02  f1030301          ADD      r3,r3,#1
+001d06  704b              STRB     r3,[r1,#1]
+                  |L1.7432|
 ;;;1715   	}		
 ;;;1716   
 ;;;1717   if(RXBUFF[1]==PUT_ZTT_TM3)
-001d02  28c3              CMP      r0,#0xc3
-001d04  d113              BNE      |L1.7470|
+001d08  28c3              CMP      r0,#0xc3
+001d0a  d113              BNE      |L1.7476|
 ;;;1718       {
 ;;;1719   	lakb[1]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-001d06  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
-001d0a  f8221f6c          STRH     r1,[r2,#0x6c]!
+001d0c  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
+001d10  f8221f6c          STRH     r1,[r2,#0x6c]!
 ;;;1720   	lakb[1]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-001d0e  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
-001d12  f8221c16          STRH     r1,[r2,#-0x16]
+001d14  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
+001d18  f8221c16          STRH     r1,[r2,#-0x16]
 ;;;1721   	lakb[1]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-001d16  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
-001d1a  f8221c18          STRH     r1,[r2,#-0x18]
+001d1c  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
+001d20  f8221c18          STRH     r1,[r2,#-0x18]
 ;;;1722   	lakb[1]._cell_temp_1=(signed char)(RXBUFF[6]);
-001d1e  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001d22  7691              STRB     r1,[r2,#0x1a]
+001d24  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001d28  7691              STRB     r1,[r2,#0x1a]
 ;;;1723   	lakb[1]._cell_temp_2=(signed char)(RXBUFF[7]);
-001d24  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001d28  76d1              STRB     r1,[r2,#0x1b]
-001d2a  f1a2026c          SUB      r2,r2,#0x6c
-                  |L1.7470|
+001d2a  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001d2e  76d1              STRB     r1,[r2,#0x1b]
+001d30  f1a2026c          SUB      r2,r2,#0x6c
+                  |L1.7476|
 ;;;1724   	
 ;;;1725   	}
 ;;;1726   
 ;;;1727   if(RXBUFF[1]==PUT_ZTT_TM4)
-001d2e  28c4              CMP      r0,#0xc4
-001d30  d113              BNE      |L1.7514|
+001d34  28c4              CMP      r0,#0xc4
+001d36  d113              BNE      |L1.7520|
 ;;;1728       {
 ;;;1729   	lakb[1]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-001d32  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
-001d36  f8221f6a          STRH     r1,[r2,#0x6a]!
+001d38  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
+001d3c  f8221f6a          STRH     r1,[r2,#0x6a]!
 ;;;1730   	lakb[1]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-001d3a  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
-001d3e  f8221c0c          STRH     r1,[r2,#-0xc]
+001d40  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
+001d44  f8221c0c          STRH     r1,[r2,#-0xc]
 ;;;1731   	lakb[1]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-001d42  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
-001d46  f8221c0e          STRH     r1,[r2,#-0xe]
+001d48  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
+001d4c  f8221c0e          STRH     r1,[r2,#-0xe]
 ;;;1732   	lakb[1]._cell_temp_3=(signed char)(RXBUFF[6]);
-001d4a  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001d4e  7791              STRB     r1,[r2,#0x1e]
+001d50  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001d54  7791              STRB     r1,[r2,#0x1e]
 ;;;1733   	lakb[1]._cell_temp_4=(signed char)(RXBUFF[7]);
-001d50  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001d54  77d1              STRB     r1,[r2,#0x1f]
-001d56  f1a2026a          SUB      r2,r2,#0x6a
-                  |L1.7514|
+001d56  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001d5a  77d1              STRB     r1,[r2,#0x1f]
+001d5c  f1a2026a          SUB      r2,r2,#0x6a
+                  |L1.7520|
 ;;;1734   	
 ;;;1735   	}	
 ;;;1736   
 ;;;1737   if(RXBUFF[1]==PUT_ZTT_TM5)
-001d5a  28c5              CMP      r0,#0xc5
-001d5c  d113              BNE      |L1.7558|
+001d60  28c5              CMP      r0,#0xc5
+001d62  d113              BNE      |L1.7564|
 ;;;1738       {
 ;;;1739   	lakb[2]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-001d5e  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
-001d62  f8221fb8          STRH     r1,[r2,#0xb8]!
+001d64  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
+001d68  f8221fb8          STRH     r1,[r2,#0xb8]!
 ;;;1740   	lakb[2]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-001d66  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
-001d6a  f8221c16          STRH     r1,[r2,#-0x16]
+001d6c  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
+001d70  f8221c16          STRH     r1,[r2,#-0x16]
 ;;;1741   	lakb[2]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-001d6e  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
-001d72  f8221c18          STRH     r1,[r2,#-0x18]
+001d74  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
+001d78  f8221c18          STRH     r1,[r2,#-0x18]
 ;;;1742   	lakb[2]._cell_temp_1=(signed char)(RXBUFF[6]);
-001d76  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001d7a  7691              STRB     r1,[r2,#0x1a]
+001d7c  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001d80  7691              STRB     r1,[r2,#0x1a]
 ;;;1743   	lakb[2]._cell_temp_2=(signed char)(RXBUFF[7]);
-001d7c  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001d80  76d1              STRB     r1,[r2,#0x1b]
-001d82  f1a202b8          SUB      r2,r2,#0xb8
-                  |L1.7558|
+001d82  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001d86  76d1              STRB     r1,[r2,#0x1b]
+001d88  f1a202b8          SUB      r2,r2,#0xb8
+                  |L1.7564|
 ;;;1744   	
 ;;;1745   	}
 ;;;1746   
 ;;;1747   if(RXBUFF[1]==PUT_ZTT_TM6)
-001d86  28c6              CMP      r0,#0xc6
-001d88  d110              BNE      |L1.7596|
+001d8c  28c6              CMP      r0,#0xc6
+001d8e  d110              BNE      |L1.7602|
 ;;;1748       {
 ;;;1749   	lakb[2]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-001d8a  f10202a8          ADD      r2,r2,#0xa8
-001d8e  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
-001d92  81d1              STRH     r1,[r2,#0xe]
+001d90  f10202a8          ADD      r2,r2,#0xa8
+001d94  f99a1000          LDRSB    r1,[r10,#0]  ; RXBUFF
+001d98  81d1              STRH     r1,[r2,#0xe]
 ;;;1750   	lakb[2]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-001d94  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
-001d98  8051              STRH     r1,[r2,#2]
+001d9a  f8ba1002          LDRH     r1,[r10,#2]  ; RXBUFF
+001d9e  8051              STRH     r1,[r2,#2]
 ;;;1751   	lakb[2]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-001d9a  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
-001d9e  8011              STRH     r1,[r2,#0]
+001da0  f8ba1004          LDRH     r1,[r10,#4]  ; RXBUFF
+001da4  8011              STRH     r1,[r2,#0]
 ;;;1752   	lakb[2]._cell_temp_3=(signed char)(RXBUFF[6]);
 ;;;1753   	lakb[2]._cell_temp_3=(signed char)(RXBUFF[7]);	
-001da0  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001da4  f882102c          STRB     r1,[r2,#0x2c]
-001da8  f1a202a8          SUB      r2,r2,#0xa8
-                  |L1.7596|
+001da6  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001daa  f882102c          STRB     r1,[r2,#0x2c]
+001dae  f1a202a8          SUB      r2,r2,#0xa8
+                  |L1.7602|
 ;;;1754   	}	
 ;;;1755   
 ;;;1756   if(RXBUFF[1]==PUT_ZTT_TM7)
-001dac  28c7              CMP      r0,#0xc7
-001dae  d117              BNE      |L1.7648|
+001db2  28c7              CMP      r0,#0xc7
+001db4  d117              BNE      |L1.7654|
 ;;;1757       {
 ;;;1758   	lakb[0]._cell_temp_ambient=(signed char)(RXBUFF[0]);
-001db0  f89a1000          LDRB     r1,[r10,#0]  ; RXBUFF
-001db4  f882103e          STRB     r1,[r2,#0x3e]
+001db6  f89a1000          LDRB     r1,[r10,#0]  ; RXBUFF
+001dba  f882103e          STRB     r1,[r2,#0x3e]
 ;;;1759   	lakb[0]._cell_temp_power=(signed char)(RXBUFF[2]);
-001db8  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001dbc  f882103f          STRB     r1,[r2,#0x3f]
+001dbe  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001dc2  f882103f          STRB     r1,[r2,#0x3f]
 ;;;1760   	lakb[1]._cell_temp_ambient=(signed char)(RXBUFF[3]);
-001dc0  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-001dc4  f882108a          STRB     r1,[r2,#0x8a]
+001dc6  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001dca  f882108a          STRB     r1,[r2,#0x8a]
 ;;;1761   	lakb[1]._cell_temp_power=(signed char)(RXBUFF[4]);
-001dc8  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-001dcc  f882108b          STRB     r1,[r2,#0x8b]
+001dce  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+001dd2  f882108b          STRB     r1,[r2,#0x8b]
 ;;;1762   	lakb[2]._cell_temp_ambient=(signed char)(RXBUFF[5]);
-001dd0  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001dd4  f88210d6          STRB     r1,[r2,#0xd6]
+001dd6  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001dda  f88210d6          STRB     r1,[r2,#0xd6]
 ;;;1763   	lakb[2]._cell_temp_power=(signed char)(RXBUFF[6]);	
-001dd8  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001ddc  f88210d7          STRB     r1,[r2,#0xd7]
-                  |L1.7648|
+001dde  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001de2  f88210d7          STRB     r1,[r2,#0xd7]
+                  |L1.7654|
 ;;;1764   	//lakb[0]._cell_temp_ambient=41;
 ;;;1765   	//lakb[0]._cell_temp_power=42;
 ;;;1766   	}	
 ;;;1767   
 ;;;1768   if(RXBUFF[1]==PUT_ZTT_TM8)
-001de0  28c8              CMP      r0,#0xc8
-001de2  d17e              BNE      |L1.7906|
+001de6  28c8              CMP      r0,#0xc8
+001de8  d17d              BNE      |L1.7910|
 ;;;1769       {
 ;;;1770   	if(RXBUFF[0]==0)
-001de4  f89a0000          LDRB     r0,[r10,#0]  ; RXBUFF
-001de8  b9b8              CBNZ     r0,|L1.7706|
+001dea  f89a0000          LDRB     r0,[r10,#0]  ; RXBUFF
+001dee  b9b8              CBNZ     r0,|L1.7712|
 ;;;1771   		{
 ;;;1772   		lakb[0]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[2]);
-001dea  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001dee  f8821040          STRB     r1,[r2,#0x40]
+001df0  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001df4  f8821040          STRB     r1,[r2,#0x40]
 ;;;1773   		lakb[0]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[3]);
-001df2  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-001df6  f8821041          STRB     r1,[r2,#0x41]
+001df8  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001dfc  f8821041          STRB     r1,[r2,#0x41]
 ;;;1774   		lakb[1]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[4]);
-001dfa  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-001dfe  f882108c          STRB     r1,[r2,#0x8c]
+001e00  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+001e04  f882108c          STRB     r1,[r2,#0x8c]
 ;;;1775   		lakb[1]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[5]);
-001e02  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001e06  f882108d          STRB     r1,[r2,#0x8d]
+001e08  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001e0c  f882108d          STRB     r1,[r2,#0x8d]
 ;;;1776   		lakb[2]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[6]);
-001e0a  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001e0e  f88210d8          STRB     r1,[r2,#0xd8]
+001e10  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001e14  f88210d8          STRB     r1,[r2,#0xd8]
 ;;;1777   		lakb[2]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[7]);
-001e12  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001e16  f88210d9          STRB     r1,[r2,#0xd9]
-                  |L1.7706|
+001e18  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001e1c  f88210d9          STRB     r1,[r2,#0xd9]
+                  |L1.7712|
 ;;;1778   		}
 ;;;1779   	if(RXBUFF[0]==1)
-001e1a  2801              CMP      r0,#1
-001e1c  d124              BNE      |L1.7784|
+001e20  2801              CMP      r0,#1
+001e22  d125              BNE      |L1.7792|
 ;;;1780   		{
 ;;;1781   		lakb[0]._custom_alarm_quantity=(signed char)(RXBUFF[2]);
-001e1e  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001e22  f8821042          STRB     r1,[r2,#0x42]
+001e24  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001e28  f8821042          STRB     r1,[r2,#0x42]
 ;;;1782   		lakb[0]._balanced_event_code=(signed char)(RXBUFF[3]);
-001e26  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-001e2a  e00b              B        |L1.7748|
-                  |L1.7724|
-                          DCD      makb
+001e2c  e00c              B        |L1.7752|
+001e2e  0000              DCW      0x0000
                   |L1.7728|
-                          DCD      lakb_damp
+                          DCD      makb
                   |L1.7732|
-                          DCD      ||.bss||+0x1a6
+                          DCD      lakb_damp
                   |L1.7736|
-                          DCD      li_bat
+                          DCD      ||.bss||+0x1a6
                   |L1.7740|
-                          DCD      plazma_ztt
+                          DCD      li_bat
                   |L1.7744|
-                          DCD      lakb
+                          DCD      plazma_ztt
                   |L1.7748|
-001e44  f8821043          STRB     r1,[r2,#0x43]
+                          DCD      lakb
+                  |L1.7752|
+001e48  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001e4c  f8821043          STRB     r1,[r2,#0x43]
 ;;;1783   		lakb[1]._custom_alarm_quantity=(signed char)(RXBUFF[4]);
-001e48  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-001e4c  f882108e          STRB     r1,[r2,#0x8e]
+001e50  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+001e54  f882108e          STRB     r1,[r2,#0x8e]
 ;;;1784   		lakb[1]._balanced_event_code=(signed char)(RXBUFF[5]);
-001e50  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001e54  f882108f          STRB     r1,[r2,#0x8f]
+001e58  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001e5c  f882108f          STRB     r1,[r2,#0x8f]
 ;;;1785   		lakb[2]._custom_alarm_quantity=(signed char)(RXBUFF[6]);
-001e58  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001e5c  f88210da          STRB     r1,[r2,#0xda]
+001e60  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001e64  f88210da          STRB     r1,[r2,#0xda]
 ;;;1786   		lakb[2]._balanced_event_code=(signed char)(RXBUFF[7]);
-001e60  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001e64  f88210db          STRB     r1,[r2,#0xdb]
-                  |L1.7784|
+001e68  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001e6c  f88210db          STRB     r1,[r2,#0xdb]
+                  |L1.7792|
 ;;;1787   		}
 ;;;1788   	if(RXBUFF[0]==2)
-001e68  2802              CMP      r0,#2
-001e6a  d117              BNE      |L1.7836|
+001e70  2802              CMP      r0,#2
+001e72  d117              BNE      |L1.7844|
 ;;;1789   		{
 ;;;1790   		lakb[0]._voltage_event_code=(signed char)(RXBUFF[2]);
-001e6c  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001e70  f8821044          STRB     r1,[r2,#0x44]
+001e74  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001e78  f8821044          STRB     r1,[r2,#0x44]
 ;;;1791   		lakb[0]._temperature_event_code=(signed char)(RXBUFF[3]);
-001e74  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-001e78  f8821045          STRB     r1,[r2,#0x45]
+001e7c  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001e80  f8821045          STRB     r1,[r2,#0x45]
 ;;;1792   		lakb[1]._voltage_event_code=(signed char)(RXBUFF[4]);
-001e7c  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-001e80  f8821090          STRB     r1,[r2,#0x90]
+001e84  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+001e88  f8821090          STRB     r1,[r2,#0x90]
 ;;;1793   		lakb[1]._temperature_event_code=(signed char)(RXBUFF[5]);
-001e84  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001e88  f8821091          STRB     r1,[r2,#0x91]
+001e8c  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001e90  f8821091          STRB     r1,[r2,#0x91]
 ;;;1794   		lakb[2]._voltage_event_code=(signed char)(RXBUFF[6]);
-001e8c  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001e90  f88210dc          STRB     r1,[r2,#0xdc]
+001e94  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001e98  f88210dc          STRB     r1,[r2,#0xdc]
 ;;;1795   		lakb[2]._temperature_event_code=(signed char)(RXBUFF[7]);
-001e94  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001e98  f88210dd          STRB     r1,[r2,#0xdd]
-                  |L1.7836|
+001e9c  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001ea0  f88210dd          STRB     r1,[r2,#0xdd]
+                  |L1.7844|
 ;;;1796   		}
 ;;;1797   	if(RXBUFF[0]==3)
-001e9c  2803              CMP      r0,#3
-001e9e  d117              BNE      |L1.7888|
+001ea4  2803              CMP      r0,#3
+001ea6  d117              BNE      |L1.7896|
 ;;;1798   		{
 ;;;1799   		lakb[0]._current_event_code=(signed char)(RXBUFF[2]);
-001ea0  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001ea4  f8821046          STRB     r1,[r2,#0x46]
+001ea8  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001eac  f8821046          STRB     r1,[r2,#0x46]
 ;;;1800   		lakb[0]._fet_status_code=(signed char)(RXBUFF[3]);
-001ea8  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
-001eac  f8821047          STRB     r1,[r2,#0x47]
+001eb0  f89a1003          LDRB     r1,[r10,#3]  ; RXBUFF
+001eb4  f8821047          STRB     r1,[r2,#0x47]
 ;;;1801   		lakb[1]._current_event_code=(signed char)(RXBUFF[4]);
-001eb0  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-001eb4  f8821092          STRB     r1,[r2,#0x92]
+001eb8  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+001ebc  f8821092          STRB     r1,[r2,#0x92]
 ;;;1802   		lakb[1]._fet_status_code=(signed char)(RXBUFF[5]);
-001eb8  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
-001ebc  f8821093          STRB     r1,[r2,#0x93]
+001ec0  f89a1005          LDRB     r1,[r10,#5]  ; RXBUFF
+001ec4  f8821093          STRB     r1,[r2,#0x93]
 ;;;1803   		lakb[2]._current_event_code=(signed char)(RXBUFF[6]);
-001ec0  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001ec4  f88210de          STRB     r1,[r2,#0xde]
+001ec8  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001ecc  f88210de          STRB     r1,[r2,#0xde]
 ;;;1804   		lakb[2]._fet_status_code=(signed char)(RXBUFF[7]);
-001ec8  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
-001ecc  f88210df          STRB     r1,[r2,#0xdf]
-                  |L1.7888|
+001ed0  f89a1007          LDRB     r1,[r10,#7]  ; RXBUFF
+001ed4  f88210df          STRB     r1,[r2,#0xdf]
+                  |L1.7896|
 ;;;1805   		}
 ;;;1806   	if(RXBUFF[0]==4)
-001ed0  2804              CMP      r0,#4
-001ed2  d119              BNE      |L1.7944|
+001ed8  2804              CMP      r0,#4
+001eda  d119              BNE      |L1.7952|
 ;;;1807   		{
 ;;;1808   		lakb[0]._balanced_status_code=(signed short)(RXBUFF[2])+(((signed char)(RXBUFF[3]))<<8);
-001ed4  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
-001ed8  f89a3003          LDRB     r3,[r10,#3]  ; RXBUFF
-001edc  eb012103          ADD      r1,r1,r3,LSL #8
-001ee0  e000              B        |L1.7908|
-                  |L1.7906|
-001ee2  e01f              B        |L1.7972|
-                  |L1.7908|
-001ee4  f8a21048          STRH     r1,[r2,#0x48]
+001edc  f89a1002          LDRB     r1,[r10,#2]  ; RXBUFF
+001ee0  f89a3003          LDRB     r3,[r10,#3]  ; RXBUFF
+001ee4  e000              B        |L1.7912|
+                  |L1.7910|
+001ee6  e021              B        |L1.7980|
+                  |L1.7912|
+001ee8  eb012103          ADD      r1,r1,r3,LSL #8
+001eec  f8a21048          STRH     r1,[r2,#0x48]
 ;;;1809   		lakb[1]._balanced_status_code=(signed short)(RXBUFF[4])+(((signed char)(RXBUFF[5]))<<8);
-001ee8  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
-001eec  f89a3005          LDRB     r3,[r10,#5]  ; RXBUFF
-001ef0  eb012103          ADD      r1,r1,r3,LSL #8
-001ef4  f8a21094          STRH     r1,[r2,#0x94]
+001ef0  f89a1004          LDRB     r1,[r10,#4]  ; RXBUFF
+001ef4  f89a3005          LDRB     r3,[r10,#5]  ; RXBUFF
+001ef8  eb012103          ADD      r1,r1,r3,LSL #8
+001efc  f8a21094          STRH     r1,[r2,#0x94]
 ;;;1810   		lakb[2]._balanced_status_code=(signed short)(RXBUFF[6])+(((signed char)(RXBUFF[7]))<<8);
-001ef8  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
-001efc  f89a3007          LDRB     r3,[r10,#7]  ; RXBUFF
-001f00  eb012103          ADD      r1,r1,r3,LSL #8
-001f04  f8a210e0          STRH     r1,[r2,#0xe0]
-                  |L1.7944|
+001f00  f89a1006          LDRB     r1,[r10,#6]  ; RXBUFF
+001f04  f89a3007          LDRB     r3,[r10,#7]  ; RXBUFF
+001f08  eb012103          ADD      r1,r1,r3,LSL #8
+001f0c  f8a210e0          STRH     r1,[r2,#0xe0]
+                  |L1.7952|
 ;;;1811   		}
 ;;;1812   	if(RXBUFF[0]==5)
-001f08  2805              CMP      r0,#5
-001f0a  d10b              BNE      |L1.7972|
+001f10  2805              CMP      r0,#5
+001f12  d10b              BNE      |L1.7980|
 ;;;1813   		{
 ;;;1814   		lakb[0]._system_status_code=(signed char)(RXBUFF[2]);
-001f0c  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
-001f10  f882004a          STRB     r0,[r2,#0x4a]
+001f14  f89a0002          LDRB     r0,[r10,#2]  ; RXBUFF
+001f18  f882004a          STRB     r0,[r2,#0x4a]
 ;;;1815   		lakb[1]._system_status_code=(signed char)(RXBUFF[4]);
-001f14  f89a0004          LDRB     r0,[r10,#4]  ; RXBUFF
-001f18  f8820096          STRB     r0,[r2,#0x96]
+001f1c  f89a0004          LDRB     r0,[r10,#4]  ; RXBUFF
+001f20  f8820096          STRB     r0,[r2,#0x96]
 ;;;1816   		lakb[2]._system_status_code=(signed char)(RXBUFF[6]);
-001f1c  f89a0006          LDRB     r0,[r10,#6]  ; RXBUFF
-001f20  f88200e2          STRB     r0,[r2,#0xe2]
-                  |L1.7972|
+001f24  f89a0006          LDRB     r0,[r10,#6]  ; RXBUFF
+001f28  f88200e2          STRB     r0,[r2,#0xe2]
+                  |L1.7980|
 ;;;1817   		}
 ;;;1818   	}	
 ;;;1819   	
 ;;;1820   CAN_IN_AN1_end:
 ;;;1821   bIN2=0;
-001f24  7274              STRB     r4,[r6,#9]
+001f2c  7274              STRB     r4,[r6,#9]
 ;;;1822   }
-001f26  e8bd9ff0          POP      {r4-r12,pc}
+001f2e  e8bd9ff0          POP      {r4-r12,pc}
 ;;;1823   
                           ENDP
 
                   CAN_ISR_Rx1 PROC
 ;;;1834   ***************************************************************************/ 
 ;;;1835   void CAN_ISR_Rx1( void )
-001f2a  b570              PUSH     {r4-r6,lr}
+001f32  b570              PUSH     {r4-r6,lr}
 ;;;1836   {
 ;;;1837   unsigned int buf;
 ;;;1838   unsigned int *pDest;
@@ -4799,123 +4803,123 @@
 ;;;1841   //can_cnt++;
 ;;;1842   
 ;;;1843   rotor_can[0]++;
-001f2c  48d6              LDR      r0,|L1.8840|
-001f2e  8801              LDRH     r1,[r0,#0]  ; rotor_can
-001f30  f1010101          ADD      r1,r1,#1
-001f34  8001              STRH     r1,[r0,#0]
+001f34  48d6              LDR      r0,|L1.8848|
+001f36  8801              LDRH     r1,[r0,#0]  ; rotor_can
+001f38  f1010101          ADD      r1,r1,#1
+001f3c  8001              STRH     r1,[r0,#0]
 ;;;1844   
 ;;;1845     if (!(LPC_CAN1->RFS & 0xC0000400L))
-001f36  4cd5              LDR      r4,|L1.8844|
-001f38  6a21              LDR      r1,[r4,#0x20]
-001f3a  4ad5              LDR      r2,|L1.8848|
-001f3c  4211              TST      r1,r2
-001f3e  d140              BNE      |L1.8130|
+001f3e  4cd5              LDR      r4,|L1.8852|
+001f40  6a21              LDR      r1,[r4,#0x20]
+001f42  4ad5              LDR      r2,|L1.8856|
+001f44  4211              TST      r1,r2
+001f46  d140              BNE      |L1.8138|
 ;;;1846     { // 11-bit ID, no RTR, matched a filter
 ;;;1847   
 ;;;1848   rotor_can[1]++;
-001f40  8841              LDRH     r1,[r0,#2]  ; rotor_can
-001f42  f1010101          ADD      r1,r1,#1
-001f46  8041              STRH     r1,[r0,#2]
+001f48  8841              LDRH     r1,[r0,#2]  ; rotor_can
+001f4a  f1010101          ADD      r1,r1,#1
+001f4e  8041              STRH     r1,[r0,#2]
 ;;;1849       // initialize destination pointer
 ;;;1850       // filter number is in lower 10 bits of C1RFS
 ;;;1851       pDest = (unsigned int *) &(gFullCANList[(LPC_CAN1->RFS & 0x000003FFL)].Dat1);
-001f48  6a20              LDR      r0,[r4,#0x20]
-001f4a  49cf              LDR      r1,|L1.8840|
-001f4c  f3c00009          UBFX     r0,r0,#0,#10
-001f50  eb000040          ADD      r0,r0,r0,LSL #1
-001f54  f101010c          ADD      r1,r1,#0xc
-001f58  eb010080          ADD      r0,r1,r0,LSL #2
+001f50  6a20              LDR      r0,[r4,#0x20]
+001f52  49cf              LDR      r1,|L1.8848|
+001f54  f3c00009          UBFX     r0,r0,#0,#10
+001f58  eb000040          ADD      r0,r0,r0,LSL #1
+001f5c  f101010c          ADD      r1,r1,#0xc
+001f60  eb010080          ADD      r0,r1,r0,LSL #2
 ;;;1852       
 ;;;1853       // calculate contents for first entry into FullCAN list
 ;;;1854       buf = LPC_CAN1->RFS & 0xC00F0000L; // mask FF, RTR and DLC
-001f5c  6a22              LDR      r2,[r4,#0x20]
-001f5e  4bcd              LDR      r3,|L1.8852|
-001f60  ea020203          AND      r2,r2,r3
+001f64  6a22              LDR      r2,[r4,#0x20]
+001f66  4bcd              LDR      r3,|L1.8860|
+001f68  ea020203          AND      r2,r2,r3
 ;;;1855       buf |= 0x01002000L; // set semaphore to 01b and CAN port to 1
-001f64  4bcc              LDR      r3,|L1.8856|
-001f66  ea420203          ORR      r2,r2,r3
+001f6c  4bcc              LDR      r3,|L1.8864|
+001f6e  ea420203          ORR      r2,r2,r3
 ;;;1856       buf |= LPC_CAN1->RID & 0x000007FFL; // get CAN message ID
-001f6a  6a63              LDR      r3,[r4,#0x24]
-001f6c  f3c3030a          UBFX     r3,r3,#0,#11
-001f70  ea430302          ORR      r3,r3,r2
+001f72  6a63              LDR      r3,[r4,#0x24]
+001f74  f3c3030a          UBFX     r3,r3,#0,#11
+001f78  ea430302          ORR      r3,r3,r2
 ;;;1857   
 ;;;1858       // now copy entire message to FullCAN list
 ;;;1859       *pDest = buf; 
 ;;;1860       pDest++; // set to gFullCANList[(C1RFS & 0x000003FFL)].DatA
 ;;;1861       *pDest = LPC_CAN1->RDA; 
-001f74  6aa2              LDR      r2,[r4,#0x28]
-001f76  6042              STR      r2,[r0,#4]
+001f7c  6aa2              LDR      r2,[r4,#0x28]
+001f7e  6042              STR      r2,[r0,#4]
 ;;;1862       pDest++; // set to gFullCANList[(C1RFS & 0x000003FFL)].DatB
 ;;;1863       *pDest = LPC_CAN1->RDB; 
-001f78  6ae2              LDR      r2,[r4,#0x2c]
-001f7a  6082              STR      r2,[r0,#8]
+001f80  6ae2              LDR      r2,[r4,#0x2c]
+001f82  6082              STR      r2,[r0,#8]
 ;;;1864   
 ;;;1865       // now set the sempahore to complete
 ;;;1866       buf |= 0x03000000L; // set semaphore to 11b
-001f7c  f0437240          ORR      r2,r3,#0x3000000
+001f84  f0437240          ORR      r2,r3,#0x3000000
 ;;;1867       pDest -= 2; // set to gFullCANList[(C1RFS & 0x000003FFL)].Dat1
 ;;;1868       *pDest = buf; 
-001f80  6002              STR      r2,[r0,#0]
+001f88  6002              STR      r2,[r0,#0]
 ;;;1869       
 ;;;1870   	temp=(char)gFullCANList[0].DatA;
-001f82  6848              LDR      r0,[r1,#4]  ; gFullCANList
-001f84  b2c0              UXTB     r0,r0
+001f8a  6848              LDR      r0,[r1,#4]  ; gFullCANList
+001f8c  b2c0              UXTB     r0,r0
 ;;;1871   	if(temp==0x30) bR=0;
-001f86  4ac5              LDR      r2,|L1.8860|
-001f88  2830              CMP      r0,#0x30
-001f8a  d00c              BEQ      |L1.8102|
+001f8e  4ac5              LDR      r2,|L1.8868|
+001f90  2830              CMP      r0,#0x30
+001f92  d00c              BEQ      |L1.8110|
 ;;;1872   	else bR++;
-001f8c  79d0              LDRB     r0,[r2,#7]  ; bR
-001f8e  f1000001          ADD      r0,r0,#1
-001f92  71d0              STRB     r0,[r2,#7]
-                  |L1.8084|
+001f94  79d0              LDRB     r0,[r2,#7]  ; bR
+001f96  f1000001          ADD      r0,r0,#1
+001f9a  71d0              STRB     r0,[r2,#7]
+                  |L1.8092|
 ;;;1873   	
 ;;;1874   	temp=(char)(((gFullCANList[0].Dat1)>>16)&0x0f); 
-001f94  c901              LDM      r1!,{r0}  ; gFullCANList
-001f96  f3c04203          UBFX     r2,r0,#16,#4
+001f9c  c901              LDM      r1!,{r0}  ; gFullCANList
+001f9e  f3c04203          UBFX     r2,r0,#16,#4
 ;;;1875        
 ;;;1876        ptr=(char*)(&gFullCANList[0].DatA);
 ;;;1877   	
 ;;;1878   	for(j=0;j<temp;j++)
-001f9a  f04f0000          MOV      r0,#0
+001fa2  f04f0000          MOV      r0,#0
 ;;;1879   		{
 ;;;1880   		RXBUFF[j]=*ptr;
-001f9e  4bba              LDR      r3,|L1.8840|
-001fa0  f1030324          ADD      r3,r3,#0x24
-001fa4  e009              B        |L1.8122|
-                  |L1.8102|
-001fa6  f04f0000          MOV      r0,#0                 ;1871
-001faa  71d0              STRB     r0,[r2,#7]            ;1871
-001fac  e7f2              B        |L1.8084|
+001fa6  4bba              LDR      r3,|L1.8848|
+001fa8  f1030324          ADD      r3,r3,#0x24
+001fac  e009              B        |L1.8130|
                   |L1.8110|
-001fae  f8115b01          LDRB     r5,[r1],#1
-001fb2  541d              STRB     r5,[r3,r0]
-001fb4  f1000001          ADD      r0,r0,#1              ;1878
-001fb8  b2c0              UXTB     r0,r0                 ;1878
-                  |L1.8122|
-001fba  4290              CMP      r0,r2                 ;1878
-001fbc  d3f7              BCC      |L1.8110|
+001fae  f04f0000          MOV      r0,#0                 ;1871
+001fb2  71d0              STRB     r0,[r2,#7]            ;1871
+001fb4  e7f2              B        |L1.8092|
+                  |L1.8118|
+001fb6  f8115b01          LDRB     r5,[r1],#1
+001fba  541d              STRB     r5,[r3,r0]
+001fbc  f1000001          ADD      r0,r0,#1              ;1878
+001fc0  b2c0              UXTB     r0,r0                 ;1878
+                  |L1.8130|
+001fc2  4290              CMP      r0,r2                 ;1878
+001fc4  d3f7              BCC      |L1.8118|
 ;;;1881   		ptr++;
 ;;;1882   		}
 ;;;1883   	can_in_an1();
-001fbe  f7fffffe          BL       can_in_an1
-                  |L1.8130|
+001fc6  f7fffffe          BL       can_in_an1
+                  |L1.8138|
 ;;;1884   	    
 ;;;1885       
 ;;;1886     }
 ;;;1887   
 ;;;1888     LPC_CAN1->CMR = 0x04; // release receive buffer
-001fc2  f04f0004          MOV      r0,#4
-001fc6  6060              STR      r0,[r4,#4]
+001fca  f04f0004          MOV      r0,#4
+001fce  6060              STR      r0,[r4,#4]
 ;;;1889   }
-001fc8  bd70              POP      {r4-r6,pc}
+001fd0  bd70              POP      {r4-r6,pc}
 ;;;1890   
                           ENDP
 
                   CAN_ISR_Rx2 PROC
 ;;;1898   ***************************************************************************/ 
 ;;;1899   void CAN_ISR_Rx2( void ) 
-001fca  e92d41f0          PUSH     {r4-r8,lr}
+001fd2  e92d41f0          PUSH     {r4-r8,lr}
 ;;;1900   {
 ;;;1901   unsigned int buf;
 ;;;1902   unsigned int *pDest;
@@ -4929,11 +4933,11 @@
 ;;;1910   //	{
 ;;;1911   //	can_debug_plazma[0][0]++;
 ;;;1912   	if (!(LPC_CAN2->RFS & 0xC0000400L))
-001fce  4cb4              LDR      r4,|L1.8864|
-001fd0  6a20              LDR      r0,[r4,#0x20]
-001fd2  49af              LDR      r1,|L1.8848|
-001fd4  4208              TST      r0,r1
-001fd6  d17e              BNE      |L1.8406|
+001fd6  4cb4              LDR      r4,|L1.8872|
+001fd8  6a20              LDR      r0,[r4,#0x20]
+001fda  49af              LDR      r1,|L1.8856|
+001fdc  4208              TST      r0,r1
+001fde  d17e              BNE      |L1.8414|
 ;;;1913       		{ // 11-bit ID, no RTR, matched a filter
 ;;;1914   			
 ;;;1915       		//rotor_can[1]++;
@@ -4941,119 +4945,119 @@
 ;;;1917       		// filter number is in lower 10 bits of C1RFS
 ;;;1918   			//plazma_can4=(char)((LPC_CAN2->RFS>>16) & 0x000000FFL);
 ;;;1919       		pDest = (unsigned int *) &(gFullCANList[(LPC_CAN2->RFS & 0x000003FFL)].Dat1);
-001fd8  6a20              LDR      r0,[r4,#0x20]
-001fda  49ab              LDR      r1,|L1.8840|
-001fdc  f3c00009          UBFX     r0,r0,#0,#10
-001fe0  eb000040          ADD      r0,r0,r0,LSL #1
-001fe4  f101010c          ADD      r1,r1,#0xc
-001fe8  eb010180          ADD      r1,r1,r0,LSL #2
+001fe0  6a20              LDR      r0,[r4,#0x20]
+001fe2  49ab              LDR      r1,|L1.8848|
+001fe4  f3c00009          UBFX     r0,r0,#0,#10
+001fe8  eb000040          ADD      r0,r0,r0,LSL #1
+001fec  f101010c          ADD      r1,r1,#0xc
+001ff0  eb010180          ADD      r1,r1,r0,LSL #2
 ;;;1920       
 ;;;1921   			plazma_can_pal[plazma_can_pal_index]=(char)(LPC_CAN2->RDA);
-001fec  6aa3              LDR      r3,[r4,#0x28]
-001fee  4eab              LDR      r6,|L1.8860|
-001ff0  48a5              LDR      r0,|L1.8840|
-001ff2  7b72              LDRB     r2,[r6,#0xd]  ; plazma_can_pal_index
-001ff4  f1000092          ADD      r0,r0,#0x92
-001ff8  5483              STRB     r3,[r0,r2]
+001ff4  6aa3              LDR      r3,[r4,#0x28]
+001ff6  4eab              LDR      r6,|L1.8868|
+001ff8  48a5              LDR      r0,|L1.8848|
+001ffa  7b72              LDRB     r2,[r6,#0xd]  ; plazma_can_pal_index
+001ffc  f1000092          ADD      r0,r0,#0x92
+002000  5483              STRB     r3,[r0,r2]
 ;;;1922   			plazma_can_pal_index++;
-001ffa  f1020201          ADD      r2,r2,#1
-001ffe  b2d2              UXTB     r2,r2
+002002  f1020201          ADD      r2,r2,#1
+002006  b2d2              UXTB     r2,r2
 ;;;1923   			plazma_can_pal[plazma_can_pal_index]=(char)((LPC_CAN2->RDA)>>8);
-002000  6aa3              LDR      r3,[r4,#0x28]
-002002  ea4f2313          LSR      r3,r3,#8
-002006  5483              STRB     r3,[r0,r2]
+002008  6aa3              LDR      r3,[r4,#0x28]
+00200a  ea4f2313          LSR      r3,r3,#8
+00200e  5483              STRB     r3,[r0,r2]
 ;;;1924   			plazma_can_pal_index++;
-002008  f1020201          ADD      r2,r2,#1
-00200c  b2d2              UXTB     r2,r2
+002010  f1020201          ADD      r2,r2,#1
+002014  b2d2              UXTB     r2,r2
 ;;;1925   			plazma_can_pal[plazma_can_pal_index]=(char)((LPC_CAN2->RDA)>>16);
-00200e  6aa3              LDR      r3,[r4,#0x28]
-002010  ea4f4313          LSR      r3,r3,#16
-002014  5483              STRB     r3,[r0,r2]
+002016  6aa3              LDR      r3,[r4,#0x28]
+002018  ea4f4313          LSR      r3,r3,#16
+00201c  5483              STRB     r3,[r0,r2]
 ;;;1926   			plazma_can_pal_index++;
-002016  f1020201          ADD      r2,r2,#1
-00201a  b2d2              UXTB     r2,r2
+00201e  f1020201          ADD      r2,r2,#1
+002022  b2d2              UXTB     r2,r2
 ;;;1927   			plazma_can_pal[plazma_can_pal_index]=(char)((LPC_CAN2->RDA)>>24);
-00201c  6aa3              LDR      r3,[r4,#0x28]
-00201e  ea4f6313          LSR      r3,r3,#24
-002022  5483              STRB     r3,[r0,r2]
+002024  6aa3              LDR      r3,[r4,#0x28]
+002026  ea4f6313          LSR      r3,r3,#24
+00202a  5483              STRB     r3,[r0,r2]
 ;;;1928   			plazma_can_pal_index++;
-002024  f1020201          ADD      r2,r2,#1
-002028  b2d2              UXTB     r2,r2
+00202c  f1020201          ADD      r2,r2,#1
+002030  b2d2              UXTB     r2,r2
 ;;;1929   			plazma_can_pal[plazma_can_pal_index]=(char)(LPC_CAN2->RDB);
-00202a  6ae3              LDR      r3,[r4,#0x2c]
-00202c  5483              STRB     r3,[r0,r2]
+002032  6ae3              LDR      r3,[r4,#0x2c]
+002034  5483              STRB     r3,[r0,r2]
 ;;;1930   			plazma_can_pal_index++;
-00202e  f1020201          ADD      r2,r2,#1
-002032  b2d2              UXTB     r2,r2
+002036  f1020201          ADD      r2,r2,#1
+00203a  b2d2              UXTB     r2,r2
 ;;;1931   			plazma_can_pal[plazma_can_pal_index]=(char)((LPC_CAN2->RDB)>>8);
-002034  6ae3              LDR      r3,[r4,#0x2c]
-002036  ea4f2313          LSR      r3,r3,#8
-00203a  5483              STRB     r3,[r0,r2]
+00203c  6ae3              LDR      r3,[r4,#0x2c]
+00203e  ea4f2313          LSR      r3,r3,#8
+002042  5483              STRB     r3,[r0,r2]
 ;;;1932   			plazma_can_pal_index++;
-00203c  f1020201          ADD      r2,r2,#1
-002040  b2d2              UXTB     r2,r2
+002044  f1020201          ADD      r2,r2,#1
+002048  b2d2              UXTB     r2,r2
 ;;;1933   			plazma_can_pal[plazma_can_pal_index]=(char)((LPC_CAN2->RDB)>>16);
-002042  6ae3              LDR      r3,[r4,#0x2c]
-002044  ea4f4313          LSR      r3,r3,#16
-002048  5483              STRB     r3,[r0,r2]
+00204a  6ae3              LDR      r3,[r4,#0x2c]
+00204c  ea4f4313          LSR      r3,r3,#16
+002050  5483              STRB     r3,[r0,r2]
 ;;;1934   			plazma_can_pal_index++;
-00204a  f1020201          ADD      r2,r2,#1
-00204e  b2d2              UXTB     r2,r2
+002052  f1020201          ADD      r2,r2,#1
+002056  b2d2              UXTB     r2,r2
 ;;;1935   			plazma_can_pal[plazma_can_pal_index]=(char)((LPC_CAN2->RDB)>>24);
-002050  6ae3              LDR      r3,[r4,#0x2c]
-002052  ea4f6313          LSR      r3,r3,#24
-002056  5483              STRB     r3,[r0,r2]
+002058  6ae3              LDR      r3,[r4,#0x2c]
+00205a  ea4f6313          LSR      r3,r3,#24
+00205e  5483              STRB     r3,[r0,r2]
 ;;;1936   			plazma_can_pal_index++;
-002058  f1020201          ADD      r2,r2,#1
-00205c  7372              STRB     r2,[r6,#0xd]
+002060  f1020201          ADD      r2,r2,#1
+002064  7372              STRB     r2,[r6,#0xd]
 ;;;1937   
 ;;;1938       		// calculate contents for first entry into FullCAN list
 ;;;1939       		buf = LPC_CAN2->RFS & 0xC00F0000L; // mask FF, RTR and DLC
-00205e  6a20              LDR      r0,[r4,#0x20]
-002060  4a8c              LDR      r2,|L1.8852|
-002062  ea000002          AND      r0,r0,r2
+002066  6a20              LDR      r0,[r4,#0x20]
+002068  4a8c              LDR      r2,|L1.8860|
+00206a  ea000002          AND      r0,r0,r2
 ;;;1940       		buf |= 0x01002000L; // set semaphore to 01b and CAN port to 1
-002066  4a8c              LDR      r2,|L1.8856|
-002068  ea400002          ORR      r0,r0,r2
+00206e  4a8c              LDR      r2,|L1.8864|
+002070  ea400002          ORR      r0,r0,r2
 ;;;1941       		buf |= LPC_CAN2->RID & 0x000007FFL; // get CAN message ID
-00206c  6a62              LDR      r2,[r4,#0x24]
-00206e  f3c2020a          UBFX     r2,r2,#0,#11
-002072  ea420200          ORR      r2,r2,r0
+002074  6a62              LDR      r2,[r4,#0x24]
+002076  f3c2020a          UBFX     r2,r2,#0,#11
+00207a  ea420200          ORR      r2,r2,r0
 ;;;1942   
 ;;;1943       		// now copy entire message to FullCAN list
 ;;;1944       		*pDest = buf; 
 ;;;1945       		pDest++; // set to gFullCANList[(C1RFS & 0x000003FFL)].DatA
 ;;;1946       		*pDest = LPC_CAN2->RDA;
-002076  6aa0              LDR      r0,[r4,#0x28]
-002078  6048              STR      r0,[r1,#4]
+00207e  6aa0              LDR      r0,[r4,#0x28]
+002080  6048              STR      r0,[r1,#4]
 ;;;1947   			//plazma_can4=(char)LPC_CAN2->RDA; 
 ;;;1948       		pDest++; // set to gFullCANList[(C1RFS & 0x000003FFL)].DatB
 ;;;1949       		*pDest = LPC_CAN2->RDB; 
-00207a  6ae0              LDR      r0,[r4,#0x2c]
-00207c  6088              STR      r0,[r1,#8]
+002082  6ae0              LDR      r0,[r4,#0x2c]
+002084  6088              STR      r0,[r1,#8]
 ;;;1950   
 ;;;1951       		// now set the sempahore to complete
 ;;;1952       		buf |= 0x03000000L; // set semaphore to 11b
-00207e  f0427040          ORR      r0,r2,#0x3000000
+002086  f0427040          ORR      r0,r2,#0x3000000
 ;;;1953       		pDest -= 2; // set to gFullCANList[(C1RFS & 0x000003FFL)].Dat1
 ;;;1954       		*pDest = buf; 
-002082  6008              STR      r0,[r1,#0]
+00208a  6008              STR      r0,[r1,#0]
 ;;;1955       
 ;;;1956   		//temp=(char)gFullCANList[0].DatA;
 ;;;1957   		temp=(char)(LPC_CAN2->RDA);
-002084  6aa0              LDR      r0,[r4,#0x28]
-002086  b2c0              UXTB     r0,r0
+00208c  6aa0              LDR      r0,[r4,#0x28]
+00208e  b2c0              UXTB     r0,r0
 ;;;1958   		if(temp==0x30)
-002088  2830              CMP      r0,#0x30
-00208a  d00a              BEQ      |L1.8354|
+002090  2830              CMP      r0,#0x30
+002092  d00a              BEQ      |L1.8362|
 ;;;1959   			{
 ;;;1960   			 bR=0;
 ;;;1961   			 }
 ;;;1962   		else bR++;
-00208c  79f0              LDRB     r0,[r6,#7]  ; bR
-00208e  f1000001          ADD      r0,r0,#1
-002092  71f0              STRB     r0,[r6,#7]
-                  |L1.8340|
+002094  79f0              LDRB     r0,[r6,#7]  ; bR
+002096  f1000001          ADD      r0,r0,#1
+00209a  71f0              STRB     r0,[r6,#7]
+                  |L1.8348|
 ;;;1963   	
 ;;;1964   		//temp=(char)(((gFullCANList[0].Dat1)>>16)&0x0f); 
 ;;;1965        
@@ -5067,10 +5071,10 @@
 ;;;1973   				ptr++;
 ;;;1974   				}*/
 ;;;1975   			RXBUFF[0]=(char)(LPC_CAN2->RDA);
-002094  4d7c              LDR      r5,|L1.8840|
-002096  79f0              LDRB     r0,[r6,#7]            ;1968  ; bR
-002098  3524              ADDS     r5,r5,#0x24
-00209a  b130              CBZ      r0,|L1.8362|
+00209c  4d7c              LDR      r5,|L1.8848|
+00209e  79f0              LDRB     r0,[r6,#7]            ;1968  ; bR
+0020a0  3524              ADDS     r5,r5,#0x24
+0020a2  b130              CBZ      r0,|L1.8370|
 ;;;1976   			RXBUFF[1]=(char)((LPC_CAN2->RDA)>>8);
 ;;;1977   			RXBUFF[2]=(char)((LPC_CAN2->RDA)>>16);
 ;;;1978   			RXBUFF[3]=(char)((LPC_CAN2->RDA)>>24);
@@ -5081,122 +5085,122 @@
 ;;;1983   			
 ;;;1984   			}
 ;;;1985   		else if(bR==1)
-00209c  2801              CMP      r0,#1
-00209e  d023              BEQ      |L1.8424|
-0020a0  e03e              B        |L1.8480|
-                  |L1.8354|
-0020a2  f04f0000          MOV      r0,#0                 ;1960
-0020a6  71f0              STRB     r0,[r6,#7]            ;1960
-0020a8  e7f4              B        |L1.8340|
+0020a4  2801              CMP      r0,#1
+0020a6  d023              BEQ      |L1.8432|
+0020a8  e03e              B        |L1.8488|
                   |L1.8362|
-0020aa  6aa0              LDR      r0,[r4,#0x28]         ;1975
-0020ac  7028              STRB     r0,[r5,#0]            ;1975
-0020ae  6aa0              LDR      r0,[r4,#0x28]         ;1976
-0020b0  ea4f2010          LSR      r0,r0,#8              ;1976
-0020b4  7068              STRB     r0,[r5,#1]            ;1976
-0020b6  6aa0              LDR      r0,[r4,#0x28]         ;1977
-0020b8  ea4f4010          LSR      r0,r0,#16             ;1977
-0020bc  70a8              STRB     r0,[r5,#2]            ;1977
-0020be  6aa0              LDR      r0,[r4,#0x28]         ;1978
-0020c0  ea4f6010          LSR      r0,r0,#24             ;1978
-0020c4  70e8              STRB     r0,[r5,#3]            ;1978
-0020c6  6ae0              LDR      r0,[r4,#0x2c]         ;1979
-0020c8  7128              STRB     r0,[r5,#4]            ;1979
-0020ca  6ae0              LDR      r0,[r4,#0x2c]         ;1980
-0020cc  ea4f2010          LSR      r0,r0,#8              ;1980
-0020d0  7168              STRB     r0,[r5,#5]            ;1980
-0020d2  6ae0              LDR      r0,[r4,#0x2c]         ;1981
-0020d4  e000              B        |L1.8408|
-                  |L1.8406|
-0020d6  e03a              B        |L1.8526|
-                  |L1.8408|
-0020d8  ea4f4010          LSR      r0,r0,#16             ;1981
-0020dc  71a8              STRB     r0,[r5,#6]            ;1981
-0020de  6ae0              LDR      r0,[r4,#0x2c]         ;1982
-0020e0  ea4f6010          LSR      r0,r0,#24             ;1982
-0020e4  71e8              STRB     r0,[r5,#7]            ;1982
-0020e6  e01b              B        |L1.8480|
-                  |L1.8424|
+0020aa  f04f0000          MOV      r0,#0                 ;1960
+0020ae  71f0              STRB     r0,[r6,#7]            ;1960
+0020b0  e7f4              B        |L1.8348|
+                  |L1.8370|
+0020b2  6aa0              LDR      r0,[r4,#0x28]         ;1975
+0020b4  7028              STRB     r0,[r5,#0]            ;1975
+0020b6  6aa0              LDR      r0,[r4,#0x28]         ;1976
+0020b8  ea4f2010          LSR      r0,r0,#8              ;1976
+0020bc  7068              STRB     r0,[r5,#1]            ;1976
+0020be  6aa0              LDR      r0,[r4,#0x28]         ;1977
+0020c0  ea4f4010          LSR      r0,r0,#16             ;1977
+0020c4  70a8              STRB     r0,[r5,#2]            ;1977
+0020c6  6aa0              LDR      r0,[r4,#0x28]         ;1978
+0020c8  ea4f6010          LSR      r0,r0,#24             ;1978
+0020cc  70e8              STRB     r0,[r5,#3]            ;1978
+0020ce  6ae0              LDR      r0,[r4,#0x2c]         ;1979
+0020d0  7128              STRB     r0,[r5,#4]            ;1979
+0020d2  6ae0              LDR      r0,[r4,#0x2c]         ;1980
+0020d4  ea4f2010          LSR      r0,r0,#8              ;1980
+0020d8  7168              STRB     r0,[r5,#5]            ;1980
+0020da  6ae0              LDR      r0,[r4,#0x2c]         ;1981
+0020dc  e000              B        |L1.8416|
+                  |L1.8414|
+0020de  e03a              B        |L1.8534|
+                  |L1.8416|
+0020e0  ea4f4010          LSR      r0,r0,#16             ;1981
+0020e4  71a8              STRB     r0,[r5,#6]            ;1981
+0020e6  6ae0              LDR      r0,[r4,#0x2c]         ;1982
+0020e8  ea4f6010          LSR      r0,r0,#24             ;1982
+0020ec  71e8              STRB     r0,[r5,#7]            ;1982
+0020ee  e01b              B        |L1.8488|
+                  |L1.8432|
 ;;;1986   			{
 ;;;1987   			RXBUFF[8]=(char)(LPC_CAN2->RDA);
-0020e8  6aa0              LDR      r0,[r4,#0x28]
-0020ea  7228              STRB     r0,[r5,#8]
+0020f0  6aa0              LDR      r0,[r4,#0x28]
+0020f2  7228              STRB     r0,[r5,#8]
 ;;;1988   			RXBUFF[9]=(char)((LPC_CAN2->RDA)>>8);
-0020ec  6aa0              LDR      r0,[r4,#0x28]
-0020ee  ea4f2010          LSR      r0,r0,#8
-0020f2  7268              STRB     r0,[r5,#9]
-;;;1989   			RXBUFF[10]=(char)((LPC_CAN2->RDA)>>16);
 0020f4  6aa0              LDR      r0,[r4,#0x28]
-0020f6  ea4f4010          LSR      r0,r0,#16
-0020fa  72a8              STRB     r0,[r5,#0xa]
-;;;1990   			RXBUFF[11]=(char)((LPC_CAN2->RDA)>>24);
+0020f6  ea4f2010          LSR      r0,r0,#8
+0020fa  7268              STRB     r0,[r5,#9]
+;;;1989   			RXBUFF[10]=(char)((LPC_CAN2->RDA)>>16);
 0020fc  6aa0              LDR      r0,[r4,#0x28]
-0020fe  ea4f6010          LSR      r0,r0,#24
-002102  72e8              STRB     r0,[r5,#0xb]
+0020fe  ea4f4010          LSR      r0,r0,#16
+002102  72a8              STRB     r0,[r5,#0xa]
+;;;1990   			RXBUFF[11]=(char)((LPC_CAN2->RDA)>>24);
+002104  6aa0              LDR      r0,[r4,#0x28]
+002106  ea4f6010          LSR      r0,r0,#24
+00210a  72e8              STRB     r0,[r5,#0xb]
 ;;;1991   			RXBUFF[12]=(char)(LPC_CAN2->RDB);
-002104  6ae0              LDR      r0,[r4,#0x2c]
-002106  7328              STRB     r0,[r5,#0xc]
+00210c  6ae0              LDR      r0,[r4,#0x2c]
+00210e  7328              STRB     r0,[r5,#0xc]
 ;;;1992   			RXBUFF[13]=(char)((LPC_CAN2->RDB)>>8);
-002108  6ae0              LDR      r0,[r4,#0x2c]
-00210a  ea4f2010          LSR      r0,r0,#8
-00210e  7368              STRB     r0,[r5,#0xd]
-;;;1993   			RXBUFF[14]=(char)((LPC_CAN2->RDB)>>16);
 002110  6ae0              LDR      r0,[r4,#0x2c]
-002112  ea4f4010          LSR      r0,r0,#16
-002116  73a8              STRB     r0,[r5,#0xe]
-;;;1994   			RXBUFF[15]=(char)((LPC_CAN2->RDB)>>24);
+002112  ea4f2010          LSR      r0,r0,#8
+002116  7368              STRB     r0,[r5,#0xd]
+;;;1993   			RXBUFF[14]=(char)((LPC_CAN2->RDB)>>16);
 002118  6ae0              LDR      r0,[r4,#0x2c]
-00211a  ea4f6010          LSR      r0,r0,#24
-00211e  73e8              STRB     r0,[r5,#0xf]
-                  |L1.8480|
+00211a  ea4f4010          LSR      r0,r0,#16
+00211e  73a8              STRB     r0,[r5,#0xe]
+;;;1994   			RXBUFF[15]=(char)((LPC_CAN2->RDB)>>24);
+002120  6ae0              LDR      r0,[r4,#0x2c]
+002122  ea4f6010          LSR      r0,r0,#24
+002126  73e8              STRB     r0,[r5,#0xf]
+                  |L1.8488|
 ;;;1995   			} 		
 ;;;1996   	
 ;;;1997   	
 ;;;1998   	
 ;;;1999   		
 ;;;2000   		temp=((RXBUFF[1]&0x1f)+4);
-002120  7868              LDRB     r0,[r5,#1]  ; RXBUFF
-002122  f000071f          AND      r7,r0,#0x1f
-002126  f1070704          ADD      r7,r7,#4
+002128  7868              LDRB     r0,[r5,#1]  ; RXBUFF
+00212a  f000071f          AND      r7,r0,#0x1f
+00212e  f1070704          ADD      r7,r7,#4
 ;;;2001       		//rotor_can[2]++;
 ;;;2002   		if((CRC1_in()==RXBUFF[temp+1])&&(CRC2_in()==RXBUFF[temp+2])&&bR)
-00212a  f7fffffe          BL       CRC1_in
-00212e  443d              ADD      r5,r5,r7
-002130  7869              LDRB     r1,[r5,#1]
-002132  4288              CMP      r0,r1
-002134  d10b              BNE      |L1.8526|
-002136  f7fffffe          BL       CRC2_in
-00213a  78a9              LDRB     r1,[r5,#2]
-00213c  4288              CMP      r0,r1
-00213e  d106              BNE      |L1.8526|
-002140  79f0              LDRB     r0,[r6,#7]  ; bR
-002142  b120              CBZ      r0,|L1.8526|
+002132  f7fffffe          BL       CRC1_in
+002136  443d              ADD      r5,r5,r7
+002138  7869              LDRB     r1,[r5,#1]
+00213a  4288              CMP      r0,r1
+00213c  d10b              BNE      |L1.8534|
+00213e  f7fffffe          BL       CRC2_in
+002142  78a9              LDRB     r1,[r5,#2]
+002144  4288              CMP      r0,r1
+002146  d106              BNE      |L1.8534|
+002148  79f0              LDRB     r0,[r6,#7]  ; bR
+00214a  b120              CBZ      r0,|L1.8534|
 ;;;2003   			{
 ;;;2004     
 ;;;2005   			bIN=1;
-002144  f04f0001          MOV      r0,#1
-002148  7230              STRB     r0,[r6,#8]
+00214c  f04f0001          MOV      r0,#1
+002150  7230              STRB     r0,[r6,#8]
 ;;;2006     			//rotor_can[3]++;
 ;;;2007     			can_in_an2();
-00214a  f7fffffe          BL       can_in_an2
-                  |L1.8526|
+002152  f7fffffe          BL       can_in_an2
+                  |L1.8534|
 ;;;2008   			
 ;;;2009   			}    
 ;;;2010       
 ;;;2011     		}
 ;;;2012   
 ;;;2013   LPC_CAN2->CMR = 0x04; // release receive buffer
-00214e  f04f0004          MOV      r0,#4
-002152  6060              STR      r0,[r4,#4]
+002156  f04f0004          MOV      r0,#4
+00215a  6060              STR      r0,[r4,#4]
 ;;;2014   }
-002154  e8bd81f0          POP      {r4-r8,pc}
+00215c  e8bd81f0          POP      {r4-r8,pc}
 ;;;2015   /**************************************************************************
                           ENDP
 
                   can_isr_tx1 PROC
 ;;;2021   
 ;;;2022   void can_isr_tx1 (void) 
-002158  4a50              LDR      r2,|L1.8860|
+002160  4a50              LDR      r2,|L1.8868|
 ;;;2023   {
 ;;;2024   //unsigned int buf;
 ;;;2025   //unsigned int *pDest;
@@ -5206,246 +5210,246 @@
 ;;;2029   //plazma_can2++;
 ;;;2030   
 ;;;2031   can_tx_cnt++;
-00215a  7ad0              LDRB     r0,[r2,#0xb]  ; can_tx_cnt
-00215c  f1000001          ADD      r0,r0,#1
-002160  72d0              STRB     r0,[r2,#0xb]
+002162  7ad0              LDRB     r0,[r2,#0xb]  ; can_tx_cnt
+002164  f1000001          ADD      r0,r0,#1
+002168  72d0              STRB     r0,[r2,#0xb]
 ;;;2032   
 ;;;2033   rotor_can[5]++;
-002162  4949              LDR      r1,|L1.8840|
-002164  8948              LDRH     r0,[r1,#0xa]  ; rotor_can
-002166  f1000001          ADD      r0,r0,#1
-00216a  8148              STRH     r0,[r1,#0xa]
+00216a  4949              LDR      r1,|L1.8848|
+00216c  8948              LDRH     r0,[r1,#0xa]  ; rotor_can
+00216e  f1000001          ADD      r0,r0,#1
+002172  8148              STRH     r0,[r1,#0xa]
 ;;;2034   
 ;;;2035   if(ptr_can1_tx_wr!=ptr_can1_tx_rd)
-00216c  78d3              LDRB     r3,[r2,#3]  ; ptr_can1_tx_wr
-00216e  7910              LDRB     r0,[r2,#4]  ; ptr_can1_tx_rd
+002174  78d3              LDRB     r3,[r2,#3]  ; ptr_can1_tx_wr
+002176  7910              LDRB     r0,[r2,#4]  ; ptr_can1_tx_rd
 ;;;2036   	{
 ;;;2037   	LPC_CAN1->TFI1=can1_info[ptr_can1_tx_rd];
-002170  4946              LDR      r1,|L1.8844|
-002172  4283              CMP      r3,r0                 ;2035
-002174  d01f              BEQ      |L1.8630|
-002176  4b4b              LDR      r3,|L1.8868|
-002178  f8533020          LDR      r3,[r3,r0,LSL #2]
-00217c  630b              STR      r3,[r1,#0x30]
+002178  4946              LDR      r1,|L1.8852|
+00217a  4283              CMP      r3,r0                 ;2035
+00217c  d01f              BEQ      |L1.8638|
+00217e  4b4b              LDR      r3,|L1.8876|
+002180  f8533020          LDR      r3,[r3,r0,LSL #2]
+002184  630b              STR      r3,[r1,#0x30]
 ;;;2038        LPC_CAN1->TID1=can1_id[ptr_can1_tx_rd];
-00217e  4b49              LDR      r3,|L1.8868|
-002180  3320              ADDS     r3,r3,#0x20
-002182  f8533020          LDR      r3,[r3,r0,LSL #2]
-002186  634b              STR      r3,[r1,#0x34]
+002186  4b49              LDR      r3,|L1.8876|
+002188  3320              ADDS     r3,r3,#0x20
+00218a  f8533020          LDR      r3,[r3,r0,LSL #2]
+00218e  634b              STR      r3,[r1,#0x34]
 ;;;2039        LPC_CAN1->TDA1=can1_data[ptr_can1_tx_rd];
-002188  4b46              LDR      r3,|L1.8868|
-00218a  3340              ADDS     r3,r3,#0x40
-00218c  f8533020          LDR      r3,[r3,r0,LSL #2]
-002190  638b              STR      r3,[r1,#0x38]
+002190  4b46              LDR      r3,|L1.8876|
+002192  3340              ADDS     r3,r3,#0x40
+002194  f8533020          LDR      r3,[r3,r0,LSL #2]
+002198  638b              STR      r3,[r1,#0x38]
 ;;;2040        LPC_CAN1->TDB1=can1_datb[ptr_can1_tx_rd];
-002192  4b44              LDR      r3,|L1.8868|
-002194  3360              ADDS     r3,r3,#0x60
-002196  f8533020          LDR      r3,[r3,r0,LSL #2]
-00219a  63cb              STR      r3,[r1,#0x3c]
+00219a  4b44              LDR      r3,|L1.8876|
+00219c  3360              ADDS     r3,r3,#0x60
+00219e  f8533020          LDR      r3,[r3,r0,LSL #2]
+0021a2  63cb              STR      r3,[r1,#0x3c]
 ;;;2041        LPC_CAN1->CMR=0x00000021;
-00219c  f04f0321          MOV      r3,#0x21
-0021a0  604b              STR      r3,[r1,#4]
+0021a4  f04f0321          MOV      r3,#0x21
+0021a8  604b              STR      r3,[r1,#4]
 ;;;2042        ptr_can1_tx_rd++;
-0021a2  f1000001          ADD      r0,r0,#1
-0021a6  b2c0              UXTB     r0,r0
-0021a8  7110              STRB     r0,[r2,#4]
+0021aa  f1000001          ADD      r0,r0,#1
+0021ae  b2c0              UXTB     r0,r0
+0021b0  7110              STRB     r0,[r2,#4]
 ;;;2043        if(ptr_can1_tx_rd>=8)ptr_can1_tx_rd=0;
-0021aa  2808              CMP      r0,#8
-0021ac  d306              BCC      |L1.8636|
-0021ae  f04f0000          MOV      r0,#0
-0021b2  7110              STRB     r0,[r2,#4]
-0021b4  e002              B        |L1.8636|
-                  |L1.8630|
+0021b2  2808              CMP      r0,#8
+0021b4  d306              BCC      |L1.8644|
+0021b6  f04f0000          MOV      r0,#0
+0021ba  7110              STRB     r0,[r2,#4]
+0021bc  e002              B        |L1.8644|
+                  |L1.8638|
 ;;;2044   	}
 ;;;2045   else bOUT_FREE=1;
-0021b6  f04f0001          MOV      r0,#1
-0021ba  7010              STRB     r0,[r2,#0]
-                  |L1.8636|
+0021be  f04f0001          MOV      r0,#1
+0021c2  7010              STRB     r0,[r2,#0]
+                  |L1.8644|
 ;;;2046   temp=LPC_CAN1->ICR;
-0021bc  68c8              LDR      r0,[r1,#0xc]
+0021c4  68c8              LDR      r0,[r1,#0xc]
 ;;;2047   
 ;;;2048   }
-0021be  4770              BX       lr
+0021c6  4770              BX       lr
 ;;;2049   
                           ENDP
 
                   can_isr_tx2 PROC
 ;;;2050   /***************************************************************************/
 ;;;2051   void can_isr_tx2 (void) 
-0021c0  4a36              LDR      r2,|L1.8860|
+0021c8  4a36              LDR      r2,|L1.8868|
 ;;;2052   {
 ;;;2053   char temp;
 ;;;2054   can2_tx_cnt++;
-0021c2  8ad0              LDRH     r0,[r2,#0x16]  ; can2_tx_cnt
-0021c4  f1000001          ADD      r0,r0,#1
-0021c8  82d0              STRH     r0,[r2,#0x16]
+0021ca  8ad0              LDRH     r0,[r2,#0x16]  ; can2_tx_cnt
+0021cc  f1000001          ADD      r0,r0,#1
+0021d0  82d0              STRH     r0,[r2,#0x16]
 ;;;2055   
 ;;;2056   //=ptr_can2_tx_wr;
 ;;;2057   
 ;;;2058   if(ptr_can2_tx_wr!=ptr_can2_tx_rd)
-0021ca  7953              LDRB     r3,[r2,#5]  ; ptr_can2_tx_wr
-0021cc  7990              LDRB     r0,[r2,#6]  ; ptr_can2_tx_rd
+0021d2  7953              LDRB     r3,[r2,#5]  ; ptr_can2_tx_wr
+0021d4  7990              LDRB     r0,[r2,#6]  ; ptr_can2_tx_rd
 ;;;2059   	{
 ;;;2060   	LPC_CAN2->TFI1=can2_info[ptr_can2_tx_rd];
-0021ce  4934              LDR      r1,|L1.8864|
-0021d0  4283              CMP      r3,r0                 ;2058
-0021d2  d020              BEQ      |L1.8726|
-0021d4  4b2c              LDR      r3,|L1.8840|
-0021d6  3b80              SUBS     r3,r3,#0x80
-0021d8  f8533020          LDR      r3,[r3,r0,LSL #2]
-0021dc  630b              STR      r3,[r1,#0x30]
+0021d6  4934              LDR      r1,|L1.8872|
+0021d8  4283              CMP      r3,r0                 ;2058
+0021da  d020              BEQ      |L1.8734|
+0021dc  4b2c              LDR      r3,|L1.8848|
+0021de  3b80              SUBS     r3,r3,#0x80
+0021e0  f8533020          LDR      r3,[r3,r0,LSL #2]
+0021e4  630b              STR      r3,[r1,#0x30]
 ;;;2061        LPC_CAN2->TID1=can2_id[ptr_can2_tx_rd];
-0021de  4b2a              LDR      r3,|L1.8840|
-0021e0  3b60              SUBS     r3,r3,#0x60
-0021e2  f8533020          LDR      r3,[r3,r0,LSL #2]
-0021e6  634b              STR      r3,[r1,#0x34]
+0021e6  4b2a              LDR      r3,|L1.8848|
+0021e8  3b60              SUBS     r3,r3,#0x60
+0021ea  f8533020          LDR      r3,[r3,r0,LSL #2]
+0021ee  634b              STR      r3,[r1,#0x34]
 ;;;2062        LPC_CAN2->TDA1=can2_data[ptr_can2_tx_rd];
-0021e8  4b27              LDR      r3,|L1.8840|
-0021ea  3b40              SUBS     r3,r3,#0x40
-0021ec  f8533020          LDR      r3,[r3,r0,LSL #2]
-0021f0  638b              STR      r3,[r1,#0x38]
+0021f0  4b27              LDR      r3,|L1.8848|
+0021f2  3b40              SUBS     r3,r3,#0x40
+0021f4  f8533020          LDR      r3,[r3,r0,LSL #2]
+0021f8  638b              STR      r3,[r1,#0x38]
 ;;;2063        LPC_CAN2->TDB1=can2_datb[ptr_can2_tx_rd];
-0021f2  4b25              LDR      r3,|L1.8840|
-0021f4  3b20              SUBS     r3,r3,#0x20
-0021f6  f8533020          LDR      r3,[r3,r0,LSL #2]
-0021fa  63cb              STR      r3,[r1,#0x3c]
+0021fa  4b25              LDR      r3,|L1.8848|
+0021fc  3b20              SUBS     r3,r3,#0x20
+0021fe  f8533020          LDR      r3,[r3,r0,LSL #2]
+002202  63cb              STR      r3,[r1,#0x3c]
 ;;;2064        LPC_CAN2->CMR=0x00000021;
-0021fc  f04f0321          MOV      r3,#0x21
-002200  604b              STR      r3,[r1,#4]
+002204  f04f0321          MOV      r3,#0x21
+002208  604b              STR      r3,[r1,#4]
 ;;;2065        ptr_can2_tx_rd++;
-002202  f1000001          ADD      r0,r0,#1
-002206  b2c0              UXTB     r0,r0
-002208  7190              STRB     r0,[r2,#6]
+00220a  f1000001          ADD      r0,r0,#1
+00220e  b2c0              UXTB     r0,r0
+002210  7190              STRB     r0,[r2,#6]
 ;;;2066        if(ptr_can2_tx_rd>=8)ptr_can2_tx_rd=0;
-00220a  2808              CMP      r0,#8
-00220c  d306              BCC      |L1.8732|
-00220e  f04f0000          MOV      r0,#0
-002212  7190              STRB     r0,[r2,#6]
-002214  e002              B        |L1.8732|
-                  |L1.8726|
+002212  2808              CMP      r0,#8
+002214  d306              BCC      |L1.8740|
+002216  f04f0000          MOV      r0,#0
+00221a  7190              STRB     r0,[r2,#6]
+00221c  e002              B        |L1.8740|
+                  |L1.8734|
 ;;;2067   	}
 ;;;2068   else bOUT_FREE2=1;
-002216  f04f0001          MOV      r0,#1
-00221a  7050              STRB     r0,[r2,#1]
-                  |L1.8732|
+00221e  f04f0001          MOV      r0,#1
+002222  7050              STRB     r0,[r2,#1]
+                  |L1.8740|
 ;;;2069   temp=LPC_CAN2->ICR;
-00221c  68c8              LDR      r0,[r1,#0xc]
+002224  68c8              LDR      r0,[r1,#0xc]
 ;;;2070   }
-00221e  4770              BX       lr
+002226  4770              BX       lr
 ;;;2071   
                           ENDP
 
                   CAN_IRQHandler PROC
 ;;;2326   //-----------------------------------------------
 ;;;2327   void CAN_IRQHandler(void)  
-002220  b510              PUSH     {r4,lr}
+002228  b510              PUSH     {r4,lr}
 ;;;2328   {
 ;;;2329   //can_rotor[0]++;
 ;;;2330   CANStatus = LPC_CAN1->ICR;
-002222  481a              LDR      r0,|L1.8844|
-002224  68c0              LDR      r0,[r0,#0xc]
-002226  4c1d              LDR      r4,|L1.8860|
-002228  61a0              STR      r0,[r4,#0x18]  ; CANStatus
+00222a  481a              LDR      r0,|L1.8852|
+00222c  68c0              LDR      r0,[r0,#0xc]
+00222e  4c1d              LDR      r4,|L1.8868|
+002230  61a0              STR      r0,[r4,#0x18]  ; CANStatus
 ;;;2331   //new_rotor[3]=CANStatus;
 ;;;2332   //new_rotor[4]=CANStatus>>16;
 ;;;2333   //
 ;;;2334   //rotor_rotor_rotor[0]++;
 ;;;2335   		
 ;;;2336   if ( CANStatus & (1 << 0) )
-00222a  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
-00222c  07c0              LSLS     r0,r0,#31
-00222e  d005              BEQ      |L1.8764|
+002232  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
+002234  07c0              LSLS     r0,r0,#31
+002236  d005              BEQ      |L1.8772|
 ;;;2337        {
 ;;;2338   	CAN_ISR_Rx1();
-002230  f7fffffe          BL       CAN_ISR_Rx1
+002238  f7fffffe          BL       CAN_ISR_Rx1
 ;;;2339   	plazma_can1++;
-002234  7be0              LDRB     r0,[r4,#0xf]  ; plazma_can1
-002236  f1000001          ADD      r0,r0,#1
-00223a  73e0              STRB     r0,[r4,#0xf]
-                  |L1.8764|
+00223c  7be0              LDRB     r0,[r4,#0xf]  ; plazma_can1
+00223e  f1000001          ADD      r0,r0,#1
+002242  73e0              STRB     r0,[r4,#0xf]
+                  |L1.8772|
 ;;;2340        }
 ;;;2341   
 ;;;2342   if ( CANStatus & (1 << 1) )
-00223c  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
-00223e  0780              LSLS     r0,r0,#30
-002240  d505              BPL      |L1.8782|
+002244  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
+002246  0780              LSLS     r0,r0,#30
+002248  d505              BPL      |L1.8790|
 ;;;2343        {
 ;;;2344   	can_isr_tx1();
-002242  f7fffffe          BL       can_isr_tx1
+00224a  f7fffffe          BL       can_isr_tx1
 ;;;2345   	plazma_can2++;
-002246  7c20              LDRB     r0,[r4,#0x10]  ; plazma_can2
-002248  f1000001          ADD      r0,r0,#1
-00224c  7420              STRB     r0,[r4,#0x10]
-                  |L1.8782|
+00224e  7c20              LDRB     r0,[r4,#0x10]  ; plazma_can2
+002250  f1000001          ADD      r0,r0,#1
+002254  7420              STRB     r0,[r4,#0x10]
+                  |L1.8790|
 ;;;2346   	
 ;;;2347        }
 ;;;2348   
 ;;;2349   CANStatus = LPC_CAN2->ICR;
-00224e  4814              LDR      r0,|L1.8864|
-002250  68c0              LDR      r0,[r0,#0xc]
-002252  61a0              STR      r0,[r4,#0x18]  ; CANStatus
+002256  4814              LDR      r0,|L1.8872|
+002258  68c0              LDR      r0,[r0,#0xc]
+00225a  61a0              STR      r0,[r4,#0x18]  ; CANStatus
 ;;;2350   //new_rotor[3]=CANStatus;
 ;;;2351   //new_rotor[4]=CANStatus>>16;
 ;;;2352   //
 ;;;2353   //rotor_rotor_rotor[0]++;
 ;;;2354   plazma_can++;		
-002254  7ba0              LDRB     r0,[r4,#0xe]  ; plazma_can
-002256  f1000001          ADD      r0,r0,#1
-00225a  73a0              STRB     r0,[r4,#0xe]
+00225c  7ba0              LDRB     r0,[r4,#0xe]  ; plazma_can
+00225e  f1000001          ADD      r0,r0,#1
+002262  73a0              STRB     r0,[r4,#0xe]
 ;;;2355   if ( CANStatus & (1 << 0) )
-00225c  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
-00225e  07c0              LSLS     r0,r0,#31
-002260  d008              BEQ      |L1.8820|
+002264  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
+002266  07c0              LSLS     r0,r0,#31
+002268  d008              BEQ      |L1.8828|
 ;;;2356        {
 ;;;2357   	CAN_ISR_Rx2();
-002262  f7fffffe          BL       CAN_ISR_Rx2
+00226a  f7fffffe          BL       CAN_ISR_Rx2
 ;;;2358   	plazma_can3++;
-002266  7c60              LDRB     r0,[r4,#0x11]  ; plazma_can3
-002268  f1000001          ADD      r0,r0,#1
-00226c  7460              STRB     r0,[r4,#0x11]
+00226e  7c60              LDRB     r0,[r4,#0x11]  ; plazma_can3
+002270  f1000001          ADD      r0,r0,#1
+002274  7460              STRB     r0,[r4,#0x11]
 ;;;2359   	cnt_can_pal=0;
-00226e  f04f0000          MOV      r0,#0
-002272  7320              STRB     r0,[r4,#0xc]
-                  |L1.8820|
+002276  f04f0000          MOV      r0,#0
+00227a  7320              STRB     r0,[r4,#0xc]
+                  |L1.8828|
 ;;;2360   
 ;;;2361        }
 ;;;2362   
 ;;;2363   if ( CANStatus & (1 << 1) )
-002274  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
-002276  0780              LSLS     r0,r0,#30
-002278  d505              BPL      |L1.8838|
+00227c  69a0              LDR      r0,[r4,#0x18]  ; CANStatus
+00227e  0780              LSLS     r0,r0,#30
+002280  d505              BPL      |L1.8846|
 ;;;2364        {
 ;;;2365   	can_isr_tx2();
-00227a  f7fffffe          BL       can_isr_tx2
+002282  f7fffffe          BL       can_isr_tx2
 ;;;2366   	 plazma_can4++;
-00227e  7ca0              LDRB     r0,[r4,#0x12]  ; plazma_can4
-002280  f1000001          ADD      r0,r0,#1
-002284  74a0              STRB     r0,[r4,#0x12]
-                  |L1.8838|
+002286  7ca0              LDRB     r0,[r4,#0x12]  ; plazma_can4
+002288  f1000001          ADD      r0,r0,#1
+00228c  74a0              STRB     r0,[r4,#0x12]
+                  |L1.8846|
 ;;;2367   	
 ;;;2368        }
 ;;;2369   
 ;;;2370   return;
 ;;;2371   }
-002286  bd10              POP      {r4,pc}
+00228e  bd10              POP      {r4,pc}
 ;;;2372   
                           ENDP
 
-                  |L1.8840|
-                          DCD      ||.bss||+0x100
-                  |L1.8844|
-                          DCD      0x40044000
                   |L1.8848|
-                          DCD      0xc0000400
+                          DCD      ||.bss||+0x100
                   |L1.8852|
-                          DCD      0xc00f0000
+                          DCD      0x40044000
                   |L1.8856|
-                          DCD      0x01002000
+                          DCD      0xc0000400
                   |L1.8860|
-                          DCD      ||.data||
+                          DCD      0xc00f0000
                   |L1.8864|
-                          DCD      0x40048000
+                          DCD      0x01002000
                   |L1.8868|
+                          DCD      ||.data||
+                  |L1.8872|
+                          DCD      0x40048000
+                  |L1.8876|
                           DCD      ||.bss||
 
                           AREA ||area_number.2||, CODE, READONLY, ALIGN=2
