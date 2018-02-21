@@ -2956,6 +2956,8 @@ extern signed short RELE_VENT_LOGIC;
 extern signed short MODBUS_ADRESS;
 extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
+extern signed short I_LOAD_MODE;		
+
 
 
 
@@ -3378,11 +3380,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1456 "main.h"
+#line 1458 "main.h"
 
-#line 1467 "main.h"
+#line 1469 "main.h"
 
-#line 1483 "main.h"
+#line 1485 "main.h"
 
 extern char ext_can_cnt;
 
@@ -3426,7 +3428,7 @@ extern short can_plazma;
 
 
 
-#line 1537 "main.h"
+#line 1539 "main.h"
 
 
 
@@ -3589,7 +3591,7 @@ U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 #line 294 "eeprom_map.h"
 
 
-#line 336 "eeprom_map.h"
+#line 337 "eeprom_map.h"
 
 
 
@@ -3598,7 +3600,7 @@ U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
 
 
-#line 358 "eeprom_map.h"
+#line 359 "eeprom_map.h"
 
 
 

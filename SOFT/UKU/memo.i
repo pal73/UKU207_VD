@@ -88,7 +88,7 @@ void memo_read (void);
 #line 294 "eeprom_map.h"
 
 
-#line 336 "eeprom_map.h"
+#line 337 "eeprom_map.h"
 
 
 
@@ -97,7 +97,7 @@ void memo_read (void);
 
 
 
-#line 358 "eeprom_map.h"
+#line 359 "eeprom_map.h"
 
 
 
@@ -1157,6 +1157,8 @@ extern signed short RELE_VENT_LOGIC;
 extern signed short MODBUS_ADRESS;
 extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
+extern signed short I_LOAD_MODE;		
+
 
 
 
@@ -1579,11 +1581,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1456 "main.h"
+#line 1458 "main.h"
 
-#line 1467 "main.h"
+#line 1469 "main.h"
 
-#line 1483 "main.h"
+#line 1485 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1627,7 +1629,7 @@ extern short can_plazma;
 
 
 
-#line 1537 "main.h"
+#line 1539 "main.h"
 
 
 
@@ -2208,6 +2210,7 @@ KunetC=lc640_read_int(0x10+48);
 Kubps=lc640_read_int(0x10+50);
 Kuout=lc640_read_int(0x10+52);
 Kuvd=lc640_read_int(0x10+54);
+I_LOAD_MODE=lc640_read_int(0x10+100+78);
 
 Ktext[0]=lc640_read_int(0x10+100+50);
 Ktext[1]=lc640_read_int(0x10+100+52);
@@ -2309,7 +2312,7 @@ ICA_MODBUS_TCP_UNIT_ID=lc640_read_int(0x10+350+18);
 PWM_START=lc640_read_int(0x10+350+20);
 KB_ALGORITM=lc640_read_int(0x10+350+22);
 REG_SPEED=lc640_read_int(0x10+350+24);
-#line 161 "memo.c"
+#line 162 "memo.c"
 BAT_IS_ON[0]=(enum_bat_is_on)lc640_read_int(0x10+400);
 BAT_IS_ON[1]=(enum_bat_is_on)lc640_read_int(0x10+400+30);
 NUMBAT=0;

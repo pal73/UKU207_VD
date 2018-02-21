@@ -919,6 +919,8 @@ extern signed short RELE_VENT_LOGIC;
 extern signed short MODBUS_ADRESS;
 extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
+extern signed short I_LOAD_MODE;		
+
 
 
 
@@ -1341,11 +1343,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1456 "main.h"
+#line 1458 "main.h"
 
-#line 1467 "main.h"
+#line 1469 "main.h"
 
-#line 1483 "main.h"
+#line 1485 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1389,7 +1391,7 @@ extern short can_plazma;
 
 
 
-#line 1537 "main.h"
+#line 1539 "main.h"
 
 
 
@@ -3754,7 +3756,7 @@ void avar_bat_ips_hndl(char in);
 #line 294 "eeprom_map.h"
 
 
-#line 336 "eeprom_map.h"
+#line 337 "eeprom_map.h"
 
 
 
@@ -3763,7 +3765,7 @@ void avar_bat_ips_hndl(char in);
 
 
 
-#line 358 "eeprom_map.h"
+#line 359 "eeprom_map.h"
 
 
 
@@ -5201,7 +5203,7 @@ if((RXBUFF[0]==a_ind . s_i1)&&(RXBUFF[1]==0x91)&&(RXBUFF[2]==0xdd)&&(RXBUFF[3]==
 	}
 
 
-if((RXBUFF[1]==0xDA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<17))
+if((RXBUFF[1]==0xDA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
      {
 	
      slave_num=RXBUFF[0]&0x1f;
@@ -5234,7 +5236,7 @@ if((RXBUFF[1]==0xDA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<17))
 	can_reset_cnt=0;
      }
 
-if((RXBUFF[1]==0xDB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
+if((RXBUFF[1]==0xDB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
  	{
      slave_num=RXBUFF[0]&0x1f;  
 
@@ -5265,7 +5267,7 @@ if((RXBUFF[1]==0xDB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
 	can_reset_cnt=0;
    	}
 
-if((RXBUFF[1]==0xDC)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
+if((RXBUFF[1]==0xDC)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
  	{
      slave_num=RXBUFF[0]&0x1f;  
 

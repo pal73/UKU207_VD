@@ -120,8 +120,8 @@ signed char vent_stat=0;
 
 //***********************************************
 //Управление ШИМом
-signed short cntrl_stat=600;
-signed short cntrl_stat_old=600;
+signed short cntrl_stat=1200;
+signed short cntrl_stat_old=1200;
 signed short cntrl_stat_new;
 signed short Ibmax;
 unsigned char unh_cnt0,unh_cnt1,b1Hz_unh;
@@ -1085,6 +1085,17 @@ if(!bIBAT_SMKLBR)
 	temp_SL/=2000L;
 	
 	Ib_ips_termokompensat =(signed short)temp_SL;
+	out_I=Ib_ips_termokompensat;
+	}
+
+if(I_LOAD_MODE==0)
+	{
+	temp_SL=0;
+	for(i=0;i<NUMIST;i++)
+		{
+		temp_SL+=(signed long)bps[i]._Ii;
+		}
+	Ib_ips_termokompensat=(signed short)temp_SL/10;
 	out_I=Ib_ips_termokompensat;
 	}
 
@@ -3214,7 +3225,7 @@ if(bps[in]._cnt>=10) bps[in]._flags_tu|=BIN8(10000000);
 else bps[in]._flags_tu&=BIN8(1111111);
 	
 bps[in]._vol_u=cntrl_stat+bps[in]._x_;	
-bps[in]._vol_i=1000; 
+bps[in]._vol_i=2000; 
 }
 
 //-----------------------------------------------
@@ -4758,8 +4769,8 @@ if(mess_find_unvol(MESS2CNTRL_HNDL))
 		else if(bps_U<u_necc)
 			{
 			cntrl_hndl_plazma=12;	
-			if(((u_necc-bps_U)>40)&&(cntrl_stat<1015))cntrl_stat+=5;
-			else	if((cntrl_stat<1020)&&b1Hz_ch)cntrl_stat++;
+			if(((u_necc-bps_U)>40)&&(cntrl_stat<2015))cntrl_stat+=5;
+			else	if((cntrl_stat<2020)&&b1Hz_ch)cntrl_stat++;
 			}
 		#endif	
 	 	}
@@ -4859,8 +4870,8 @@ else if((b1Hz_ch)&&((!bIBAT_SMKLBR)||(bps[8]._cnt>40)))
 			}*/					
 		}
 
-	cntrl_stat_new=(short)((1000L*((long)(UOUT_-in_U)))/650L);
-	gran(&cntrl_stat_new,10,1010);			
+	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U)))/650L);
+	gran(&cntrl_stat_new,10,2010);			
 	cntrl_stat_old=cntrl_stat_new;
 	cntrl_stat=cntrl_stat_new;
 	cntrl_stat_buff[cntrl_stat_buff_ptr]=cntrl_stat_new;  //pwm_u_buff[pwm_u_buff_ptr]=pwm_u_;
@@ -4895,11 +4906,11 @@ for(i=0;i<NUMIST;i++)
 
 if(iiii==0)
      {
-     cntrl_stat=600;	
-     cntrl_stat_old=600;
-     cntrl_stat_new=600;
+     cntrl_stat=1200;	
+     cntrl_stat_old=1200;
+     cntrl_stat_new=1200;
      }
-gran(&cntrl_stat,10,1010); 
+gran(&cntrl_stat,10,2010); 
 b1Hz_ch=0;
 }
 

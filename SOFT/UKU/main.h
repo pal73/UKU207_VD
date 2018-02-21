@@ -1023,6 +1023,8 @@ extern signed short RELE_VENT_LOGIC;
 extern signed short MODBUS_ADRESS;
 extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
+extern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
+
 
 //***********************************************
 //Состояние батарей

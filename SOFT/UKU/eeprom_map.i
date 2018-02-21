@@ -49,7 +49,7 @@
 #line 294 "eeprom_map.h"
 
 
-#line 336 "eeprom_map.h"
+#line 337 "eeprom_map.h"
 
 
 
@@ -58,7 +58,7 @@
 
 
 
-#line 358 "eeprom_map.h"
+#line 359 "eeprom_map.h"
 
 
 

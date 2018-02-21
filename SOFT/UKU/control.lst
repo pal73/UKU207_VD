@@ -604,6 +604,7 @@ N#define EE_ETH_GW_4			SECTOR_ETH+70
 N#define EE_MODBUS_ADRESS		SECTOR_ETH+72
 N#define EE_MODBUS_BAUDRATE	SECTOR_ETH+74
 N#define EE_BAT_LINK			SECTOR_ETH+76
+N#define EE_I_LOAD_MODE		SECTOR_SETS+78
 N
 N
 N#define SECTOR_LOCATION  	SECTOR_ETH+200
@@ -2367,6 +2368,8 @@ N
 Nextern signed short MODBUS_ADRESS;
 Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
+Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
+N
 N
 N//***********************************************
 N//Состояние батарей
@@ -6879,8 +6882,8 @@ Nsigned char vent_stat=0;
 N
 N//***********************************************
 N//Управление ШИМом
-Nsigned short cntrl_stat=600;
-Nsigned short cntrl_stat_old=600;
+Nsigned short cntrl_stat=1200;
+Nsigned short cntrl_stat_old=1200;
 Nsigned short cntrl_stat_new;
 Nsigned short Ibmax;
 Nunsigned char unh_cnt0,unh_cnt1,b1Hz_unh;
@@ -7859,6 +7862,17 @@ N	temp_SL*=(signed long)Kibat1[0];
 N	temp_SL/=2000L;
 N	
 N	Ib_ips_termokompensat =(signed short)temp_SL;
+N	out_I=Ib_ips_termokompensat;
+N	}
+N
+Nif(I_LOAD_MODE==0)
+N	{
+N	temp_SL=0;
+N	for(i=0;i<NUMIST;i++)
+N		{
+N		temp_SL+=(signed long)bps[i]._Ii;
+N		}
+N	Ib_ips_termokompensat=(signed short)temp_SL/10;
 N	out_I=Ib_ips_termokompensat;
 N	}
 N
@@ -9238,7 +9252,7 @@ N
 N
 Navg_hndl_end:
 N__nop();  
-W "control.c" 2428 1 label "avg_hndl_end" was declared but never referenced
+W "control.c" 2439 1 label "avg_hndl_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9265,7 +9279,7 @@ N	//if(UOUT_>UOUT)UOUT_=UOUT;
 N	UOUT_--;
 N	if(UOUT_<(UOUT-50))UOUT_=UOUT-50;
 N	}
-W "control.c" 2435 6 variable "i" was declared but never referenced
+W "control.c" 2446 6 variable "i" was declared but never referenced
 N}
 N
 N/*//-----------------------------------------------
@@ -10068,7 +10082,7 @@ Nelse bps[in]._flags_tu&=BIN8(1111111);
 Xelse bps[in]._flags_tu&=(((0x1111111) | 0x1111111>>3 | 0x1111111>>6 | 0x1111111>>9) & 0xf | ((0x1111111) | 0x1111111>>3 | 0x1111111>>6 | 0x1111111>>9)>>12 & 0xf0);
 N	
 Nbps[in]._vol_u=cntrl_stat+bps[in]._x_;	
-Nbps[in]._vol_i=1000; 
+Nbps[in]._vol_i=2000; 
 N}
 N
 N//-----------------------------------------------
@@ -10898,7 +10912,7 @@ N		{
 N		overloadHndlCnt++;
 N		if(overloadHndlCnt==(TZAS*10))
 N			{
-W "control.c" 4038 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 4049 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(1);
 N			}
 N		}
@@ -10910,7 +10924,7 @@ N		{
 N		overloadHndlCnt--;
 N		if(overloadHndlCnt==0)
 N			{
-W "control.c" 4049 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 4060 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(0);
 N			}
 N		}
@@ -10931,7 +10945,7 @@ N		{
 N		uAvarHndlOutUMaxCnt++;
 N		if(uAvarHndlOutUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4069 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4080 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(1,out_U);
 N			}
 N		}
@@ -10944,7 +10958,7 @@ N		{
 N		uAvarHndlOutUMaxCnt--;
 N		if(uAvarHndlOutUMaxCnt==0)
 N			{
-W "control.c" 4081 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4092 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10958,7 +10972,7 @@ N		{
 N		uAvarHndlOutUMinCnt++;
 N		if(uAvarHndlOutUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4094 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4105 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(2,out_U);
 N			}
 N		}
@@ -10971,7 +10985,7 @@ N		{
 N		uAvarHndlOutUMinCnt--;
 N		if(uAvarHndlOutUMinCnt==0)
 N			{
-W "control.c" 4106 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4117 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10985,7 +10999,7 @@ N		{
 N		uAvarHndlInUMaxCnt++;
 N		if(uAvarHndlInUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4119 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4130 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(1,in_U);
 N			}
 N		}
@@ -10998,7 +11012,7 @@ N		{
 N		uAvarHndlInUMaxCnt--;
 N		if(uAvarHndlInUMaxCnt==0)
 N			{
-W "control.c" 4131 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4142 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11012,7 +11026,7 @@ N		{
 N		uAvarHndlInUMinCnt++;
 N		if(uAvarHndlInUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4144 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4155 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(2,in_U);
 N			}
 N		}
@@ -11025,7 +11039,7 @@ N		{
 N		uAvarHndlInUMinCnt--;
 N		if(uAvarHndlInUMinCnt==0)
 N			{
-W "control.c" 4156 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4167 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11046,7 +11060,7 @@ N		{
 N		sysTAvarHndlCnt++;
 N		if(sysTAvarHndlCnt>=(10*TZAS))
 N			{
-W "control.c" 4176 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4187 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(1,sys_T);
 N			}
 N		}
@@ -11059,7 +11073,7 @@ N		{
 N		sysTAvarHndlCnt--;
 N		if(sysTAvarHndlCnt==0)
 N			{
-W "control.c" 4188 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4199 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(0,sys_T);
 N			}
 N		}
@@ -11642,8 +11656,8 @@ N			}
 N		else if(bps_U<u_necc)
 N			{
 N			cntrl_hndl_plazma=12;	
-N			if(((u_necc-bps_U)>40)&&(cntrl_stat<1015))cntrl_stat+=5;
-N			else	if((cntrl_stat<1020)&&b1Hz_ch)cntrl_stat++;
+N			if(((u_necc-bps_U)>40)&&(cntrl_stat<2015))cntrl_stat+=5;
+N			else	if((cntrl_stat<2020)&&b1Hz_ch)cntrl_stat++;
 N			}
 N		#endif	
 N	 	}
@@ -11743,8 +11757,8 @@ N			cntrl_stat_new--;
 N			}*/					
 N		}
 N
-N	cntrl_stat_new=(short)((1000L*((long)(UOUT_-in_U)))/650L);
-N	gran(&cntrl_stat_new,10,1010);			
+N	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U)))/650L);
+N	gran(&cntrl_stat_new,10,2010);			
 N	cntrl_stat_old=cntrl_stat_new;
 N	cntrl_stat=cntrl_stat_new;
 N	cntrl_stat_buff[cntrl_stat_buff_ptr]=cntrl_stat_new;  //pwm_u_buff[pwm_u_buff_ptr]=pwm_u_;
@@ -11779,11 +11793,11 @@ N     }
 N
 Nif(iiii==0)
 N     {
-N     cntrl_stat=600;	
-N     cntrl_stat_old=600;
-N     cntrl_stat_new=600;
+N     cntrl_stat=1200;	
+N     cntrl_stat_old=1200;
+N     cntrl_stat_new=1200;
 N     }
-Ngran(&cntrl_stat,10,1010); 
+Ngran(&cntrl_stat,10,2010); 
 Nb1Hz_ch=0;
 N}
 N

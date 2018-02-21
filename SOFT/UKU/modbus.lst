@@ -4995,6 +4995,8 @@ N
 Nextern signed short MODBUS_ADRESS;
 Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
+Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
+N
 N
 N//***********************************************
 N//Состояние батарей
@@ -6637,6 +6639,7 @@ N#define EE_ETH_GW_4			SECTOR_ETH+70
 N#define EE_MODBUS_ADRESS		SECTOR_ETH+72
 N#define EE_MODBUS_BAUDRATE	SECTOR_ETH+74
 N#define EE_BAT_LINK			SECTOR_ETH+76
+N#define EE_I_LOAD_MODE		SECTOR_SETS+78
 N
 N
 N#define SECTOR_LOCATION  	SECTOR_ETH+200

@@ -47,6 +47,7 @@ KunetC=lc640_read_int(EE_KUNETC);
 Kubps=lc640_read_int(EE_KUBPS);
 Kuout=lc640_read_int(EE_KUOUT);
 Kuvd=lc640_read_int(EE_KUVD);
+I_LOAD_MODE=lc640_read_int(EE_I_LOAD_MODE);
 
 Ktext[0]=lc640_read_int(KT_EXT0);
 Ktext[1]=lc640_read_int(KT_EXT1);

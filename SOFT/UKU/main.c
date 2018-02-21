@@ -277,6 +277,8 @@ signed short RELE_VENT_LOGIC;
 signed short MODBUS_ADRESS;
 signed short MODBUS_BAUDRATE;
 signed short BAT_LINK;
+signed short I_LOAD_MODE;	//ñïîñîá èçìåğåíèÿ âûõîäíîãî òîêà - ïî øóíòó èëè êàê ñóììó òîêîâ èñòî÷íèêîâ
+
 
 
 //***********************************************
@@ -1167,7 +1169,7 @@ if((((LPC_CAN1->GSR)>>16)&0x00ff)==127)bRESET=1;
 void net_drv(void)
 { 
 
-max_net_slot=15;
+max_net_slot=24;
 
 
 if(++cnt_net_drv>max_net_slot) 
@@ -1201,12 +1203,12 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot)) // ñ 1 ïî 12 ïîñûëêè àäğåñíûå
 //		if(cntrl_stat==1000)	can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),0xe8,0x03);
 //		else 					can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),*((char*)(&bps[cnt_net_drv]._x_)),*((char*)((&bps[cnt_net_drv]._x_))+1));
 
-		if(cntrl_stat==1000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
 		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
      	}
-	if(cnt_net_drv<=11)
+	if(cnt_net_drv<=max_net_slot)
 	     {
 	     if(bps[cnt_net_drv]._cnt<CNT_SRC_MAX)
    	 		{    
@@ -1241,10 +1243,10 @@ else if(cnt_net_drv==-3)
 	}
 	
 	
-else if(cnt_net_drv==15)
-	{
+//else if(cnt_net_drv==15)
+	//{
      //if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&TMAX)),*((char*)((&TMAX))+1),*((char*)(&TSIGN)),*((char*)((&TSIGN))+1),(char)TZAS);
-     }
+     //}
 
 
 }
@@ -3184,9 +3186,11 @@ else if((ind==iSet_VD))
 	ptrs[24]=		" MODBUS ADRESS     <";
 	ptrs[25]=		" MODBUS BAUDRATE    ";
 	ptrs[26]=		"                  >0";
-    ptrs[27]=		" Âûõîä              ";
-    ptrs[28]=		" Êàëèáğîâêè         "; 
-    ptrs[29]=		"                    ";        
+	ptrs[27]=		" Èçìåğåíèå òîêà     ";
+	ptrs[28]=		" íàãğóçêè          {";
+    ptrs[29]=		" Âûõîä              ";
+    ptrs[30]=		" Êàëèáğîâêè         "; 
+    ptrs[31]=		"                    ";        
 	
 	if((sub_ind-index_set)>2)index_set=sub_ind-2;
 	else if(sub_ind<index_set)index_set=sub_ind;
@@ -3217,6 +3221,12 @@ else if((ind==iSet_VD))
 
 		if(TBAT==0)sub_bgnd("âûêë.",'q',0);	
 		else int2lcd(TBAT,'q',0);
+
+		if(I_LOAD_MODE)
+     		{
+     		sub_bgnd("øóíò",'{',-3);
+     		}
+		else sub_bgnd("ñóììIáïñ",'{',-7);
 	    } 
 	
 	
@@ -4357,17 +4367,27 @@ else if(ind==iK_makb)
 else if(ind==iK_bps_sel)
 	{
 	ptrs[0]=						" ÁÏÑ N1             ";
-     ptrs[1]=						" ÁÏÑ N2             ";
-     ptrs[2]=						" ÁÏÑ N3             ";
+    ptrs[1]=						" ÁÏÑ N2             ";
+    ptrs[2]=						" ÁÏÑ N3             ";
 	ptrs[3]=						" ÁÏÑ N4             ";
-     ptrs[4]=						" ÁÏÑ N5             ";
-     ptrs[5]=						" ÁÏÑ N6             ";
+    ptrs[4]=						" ÁÏÑ N5             ";
+    ptrs[5]=						" ÁÏÑ N6             ";
 	ptrs[6]=						" ÁÏÑ N7             ";
-     ptrs[7]=						" ÁÏÑ N8             ";
-     ptrs[8]=						" ÁÏÑ N9             ";
+    ptrs[7]=						" ÁÏÑ N8             ";
+    ptrs[8]=						" ÁÏÑ N9             ";
 	ptrs[9]=						" ÁÏÑ N10            ";
-     ptrs[10]=						" ÁÏÑ N11            ";
-     ptrs[11]=						" ÁÏÑ N12            ";               
+    ptrs[10]=						" ÁÏÑ N11            ";
+    ptrs[11]=						" ÁÏÑ N12            ";
+    ptrs[12]=						" ÁÏÑ N13            ";
+	ptrs[13]=						" ÁÏÑ N14            ";
+    ptrs[14]=						" ÁÏÑ N15            ";
+    ptrs[15]=						" ÁÏÑ N16            ";
+	ptrs[16]=						" ÁÏÑ N17            ";
+    ptrs[17]=						" ÁÏÑ N18            ";
+    ptrs[18]=						" ÁÏÑ N19            ";
+	ptrs[19]=						" ÁÏÑ N20            ";
+    ptrs[20]=						" ÁÏÑ N21            ";
+    ptrs[21]=						" ÁÏÑ N22            ";	               
 	ptrs[NUMIST]=					" Âûõîä              ";
 	ptrs[1+NUMIST]=				"                    ";
 	ptrs[2+NUMIST]=				"                    ";
@@ -4446,7 +4466,7 @@ else if(ind==iK_bps)
 		{
 		mess_send(MESS2BPS_HNDL,PARAM_BPS_MASK_ON_OFF_AFTER_2SEC,(1<<sub_ind1),10);
 		mess_send(MESS2BAT_HNDL,PARAM_BAT_ALL_OFF_AFTER_2SEC,0,10);
-	    mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
+	    mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,2000,10);
         }
   	if(sub_ind==6)
 		{
@@ -4467,7 +4487,7 @@ else if(ind==iK_bps)
           	mess_send(MESS2BPS_HNDL,PARAM_BPS_MASK_ON_OFF_AFTER_2SEC,(1<<sub_ind1),10);
 			mess_send(MESS2BAT_HNDL,PARAM_BAT_ALL_OFF_AFTER_2SEC,0,10);
           	}
-       	mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
+       	mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,2000,10);
         }
 	
     if(sub_ind==12)
@@ -4478,7 +4498,7 @@ else if(ind==iK_bps)
 		{
 		mess_send(MESS2BPS_HNDL,PARAM_BPS_MASK_ON_OFF_AFTER_2SEC,(1<<sub_ind1),10);
 		mess_send(MESS2BAT_HNDL,PARAM_BAT_ALL_OFF_AFTER_2SEC,0,10);
-	    mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
+	    mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,2000,10);
         }          
           
 	if(mess_find( (MESS2IND_HNDL)) && (mess_data[0]==PARAM_U_AVT_GOOD) )
@@ -7772,8 +7792,13 @@ else if(ind==iSet_VD)
         	{
 			sub_ind=27;
             //index_set=19;
+            }
+		if(sub_ind==28)
+        	{
+			sub_ind=29;
+            //index_set=19;
             }																			
-		gran_char(&sub_ind,0,28);
+		gran_char(&sub_ind,0,30);
 		}
 	else if(but==butU)
 		{
@@ -7791,11 +7816,16 @@ else if(ind==iSet_VD)
 			sub_ind=25;
             //index_set=19;
             }
-		gran_char(&sub_ind,0,28);
+		if(sub_ind==28)
+        	{
+			sub_ind=27;
+            //index_set=19;
+            }
+		gran_char(&sub_ind,0,30);
 		}
 	else if(but==butD_)
 		{
-		sub_ind=27;
+		sub_ind=29;
 		}
 
 	else if(but==butLR_)
@@ -8101,7 +8131,22 @@ else if(ind==iSet_VD)
 	     	}
           }
 
-    else if((sub_ind==27) || (sub_ind==3))
+     else if(sub_ind==27)
+	     {
+	     if((but==butR)||(but==butR_))
+	     	{
+	     	I_LOAD_MODE=1;
+	     	lc640_write_int(EE_I_LOAD_MODE,I_LOAD_MODE);
+	     	}
+	     
+	     else if((but==butL)||(but==butL_))
+	     	{
+	     	I_LOAD_MODE=0;
+	     	lc640_write_int(EE_I_LOAD_MODE,I_LOAD_MODE);
+	     	}
+          }
+
+    else if((sub_ind==29) || (sub_ind==3))
 		{
 		if(but==butE)
 		     {
@@ -8110,7 +8155,7 @@ else if(ind==iSet_VD)
 		     }
 		}
 				
-	else if(sub_ind==28)
+	else if(sub_ind==30)
 		{
 		if(but==butE)
 		     {		
@@ -14051,7 +14096,7 @@ b1000Hz=1;
 	bFF_=bFF;
 
 
-if(++t0cnt5>=20)
+if(++t0cnt5>=40)
      {
      t0cnt5=0;
      b50Hz=1;
@@ -14629,7 +14674,7 @@ while (1)
 		//LPC_GPIO1->FIODIR|=(1UL<<31);
 		//LPC_GPIO1->FIOPIN^=(1UL<<31);
 
-
+ 		cntrl_hndl();
   		}
 
 	if(b2Hz)
@@ -14677,7 +14722,7 @@ while (1)
                
           vent_hndl();
 
-		cntrl_hndl();
+
 		  
 		if(t_ext_can_nd<10) t_ext_can_nd++;
 		

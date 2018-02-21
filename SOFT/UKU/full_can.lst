@@ -1567,6 +1567,8 @@ N
 Nextern signed short MODBUS_ADRESS;
 Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
+Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
+N
 N
 N//***********************************************
 N//Состояние батарей
@@ -6157,6 +6159,7 @@ N#define EE_ETH_GW_4			SECTOR_ETH+70
 N#define EE_MODBUS_ADRESS		SECTOR_ETH+72
 N#define EE_MODBUS_BAUDRATE	SECTOR_ETH+74
 N#define EE_BAT_LINK			SECTOR_ETH+76
+N#define EE_I_LOAD_MODE		SECTOR_SETS+78
 N
 N
 N#define SECTOR_LOCATION  	SECTOR_ETH+200
@@ -7642,8 +7645,8 @@ N	can_reset_cnt=0;
 N	}
 N
 N
-Nif((RXBUFF[1]==PUTTM1)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<17))
-Xif((RXBUFF[1]==0xDA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<17))
+Nif((RXBUFF[1]==PUTTM1)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
+Xif((RXBUFF[1]==0xDA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
 N     {
 N	//can_debug_plazma[1][2]++;
 N     slave_num=RXBUFF[0]&0x1f;
@@ -7676,8 +7679,8 @@ N
 N	can_reset_cnt=0;
 N     }
 N
-Nif((RXBUFF[1]==PUTTM2)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-Xif((RXBUFF[1]==0xDB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
+Nif((RXBUFF[1]==PUTTM2)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
+Xif((RXBUFF[1]==0xDB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
 N 	{
 N     slave_num=RXBUFF[0]&0x1f;  
 N
@@ -7708,8 +7711,8 @@ N   	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_
 N	can_reset_cnt=0;
 N   	}
 N
-Nif((RXBUFF[1]==PUTTM3)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-Xif((RXBUFF[1]==0xDC)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
+Nif((RXBUFF[1]==PUTTM3)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
+Xif((RXBUFF[1]==0xDC)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<29))
 N 	{
 N     slave_num=RXBUFF[0]&0x1f;  
 N

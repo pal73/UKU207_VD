@@ -1576,6 +1576,8 @@ N
 Nextern signed short MODBUS_ADRESS;
 Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
+Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
+N
 N
 N//***********************************************
 N//Состояние батарей

@@ -311,7 +311,7 @@ void community2lcd(char* in,
 #line 294 "eeprom_map.h"
 
 
-#line 336 "eeprom_map.h"
+#line 337 "eeprom_map.h"
 
 
 
@@ -320,7 +320,7 @@ void community2lcd(char* in,
 
 
 
-#line 358 "eeprom_map.h"
+#line 359 "eeprom_map.h"
 
 
 
@@ -1413,6 +1413,8 @@ extern signed short RELE_VENT_LOGIC;
 extern signed short MODBUS_ADRESS;
 extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
+extern signed short I_LOAD_MODE;		
+
 
 
 
@@ -1835,11 +1837,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1456 "main.h"
+#line 1458 "main.h"
 
-#line 1467 "main.h"
+#line 1469 "main.h"
 
-#line 1483 "main.h"
+#line 1485 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1883,7 +1885,7 @@ extern short can_plazma;
 
 
 
-#line 1537 "main.h"
+#line 1539 "main.h"
 
 
 
@@ -4516,8 +4518,8 @@ signed char vent_stat=0;
 
 
 
-signed short cntrl_stat=600;
-signed short cntrl_stat_old=600;
+signed short cntrl_stat=1200;
+signed short cntrl_stat_old=1200;
 signed short cntrl_stat_new;
 signed short Ibmax;
 unsigned char unh_cnt0,unh_cnt1,b1Hz_unh;
@@ -5127,15 +5129,26 @@ if(!bIBAT_SMKLBR)
 	out_I=Ib_ips_termokompensat;
 	}
 
+if(I_LOAD_MODE==0)
+	{
+	temp_SL=0;
+	for(i=0;i<NUMIST;i++)
+		{
+		temp_SL+=(signed long)bps[i]._Ii;
+		}
+	Ib_ips_termokompensat=(signed short)temp_SL/10;
+	out_I=Ib_ips_termokompensat;
+	}
+
 
 bat[0]._Ub=load_U;
 
 
 
 
-#line 1119 "control.c"
+#line 1130 "control.c"
 
-#line 1142 "control.c"
+#line 1153 "control.c"
 
 
 temp_SL=(signed long)adc_buff_ext_[0];
@@ -5377,7 +5390,7 @@ if((BAT_IS_ON[0]==bisON)&&(bat[0]._Ub>200)) Ibmax=bat[0]._Ib;
 if((BAT_IS_ON[1]==bisON)&&(bat[1]._Ub>200)&&(bat[1]._Ib>bat[0]._Ib)) Ibmax=bat[1]._Ib;
 
 
-#line 1395 "control.c"
+#line 1406 "control.c"
 
 
 
@@ -5421,7 +5434,7 @@ for(i=0;i<NUMIST;i++)
      }
 
 load_I=0;
-#line 1448 "control.c"
+#line 1459 "control.c"
 load_I=-(bat[0]._Ib/10)-(bat[1]._Ib/10);
 
 Isumm=0;
@@ -5451,7 +5464,7 @@ if(load_I<0)load_I=0;
 
 
 
-#line 1506 "control.c"
+#line 1517 "control.c"
 
 
 if (NUMINV)
@@ -5496,7 +5509,7 @@ if (NUMINV)
    	}
 
 
-#line 1569 "control.c"
+#line 1580 "control.c"
 
 
 
@@ -5515,9 +5528,9 @@ if (NUMINV)
 
  
 
-#line 1802 "control.c"
+#line 1813 "control.c"
 
-#line 1857 "control.c"
+#line 1868 "control.c"
 
 
 
@@ -5640,7 +5653,7 @@ if(adc_ch_net)
 		}
 	if((adc_net_buff_cnt&0x03ff)==0)
 		{
-#line 1985 "control.c"
+#line 1996 "control.c"
 		net_buff_=(short)((main_power_buffer[adc_net_buff_cnt>>10])>>8);
 
 
@@ -6873,7 +6886,7 @@ if(bps[in]._cnt>=10) bps[in]._flags_tu|=(((0x10000000) | 0x10000000>>3 | 0x10000
 else bps[in]._flags_tu&=(((0x1111111) | 0x1111111>>3 | 0x1111111>>6 | 0x1111111>>9) & 0xf | ((0x1111111) | 0x1111111>>3 | 0x1111111>>6 | 0x1111111>>9)>>12 & 0xf0);
 	
 bps[in]._vol_u=cntrl_stat+bps[in]._x_;	
-bps[in]._vol_i=1000; 
+bps[in]._vol_i=2000; 
 }
 
 
@@ -7043,9 +7056,9 @@ else
  
 }
 
-#line 3574 "control.c"
+#line 3585 "control.c"
 
-#line 3747 "control.c"
+#line 3758 "control.c"
 
 
 
@@ -7115,7 +7128,7 @@ if(main_vent_pos<=1)mixer_vent_stat=mvsON;
 else mixer_vent_stat=mvsOFF;
 
 
-#line 3833 "control.c"
+#line 3844 "control.c"
 
 if((TBATDISABLE>=50) && (TBATDISABLE<=90))
 	{
@@ -7172,7 +7185,7 @@ else
 }
 
 
-#line 4022 "control.c"
+#line 4033 "control.c"
 
 
 
@@ -7407,7 +7420,7 @@ if(ICA_EN)u_necc+=ica_u_necc;
 
 
 
-#line 4629 "control.c"
+#line 4640 "control.c"
 
 temp_L=(signed long) u_necc;
 temp_L*=98L;
@@ -7540,8 +7553,8 @@ if(mess_find_unvol(225))
 		else if(bps_U<u_necc)
 			{
 			cntrl_hndl_plazma=12;	
-			if(((u_necc-bps_U)>40)&&(cntrl_stat<1015))cntrl_stat+=5;
-			else	if((cntrl_stat<1020)&&b1Hz_ch)cntrl_stat++;
+			if(((u_necc-bps_U)>40)&&(cntrl_stat<2015))cntrl_stat+=5;
+			else	if((cntrl_stat<2020)&&b1Hz_ch)cntrl_stat++;
 			}
 
 	 	}
@@ -7641,8 +7654,8 @@ else if((b1Hz_ch)&&((!bIBAT_SMKLBR)||(bps[8]._cnt>40)))
  					
 		}
 
-	cntrl_stat_new=(short)((1000L*((long)(UOUT_-in_U)))/650L);
-	gran(&cntrl_stat_new,10,1010);			
+	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U)))/650L);
+	gran(&cntrl_stat_new,10,2010);			
 	cntrl_stat_old=cntrl_stat_new;
 	cntrl_stat=cntrl_stat_new;
 	cntrl_stat_buff[cntrl_stat_buff_ptr]=cntrl_stat_new;  
@@ -7677,11 +7690,11 @@ for(i=0;i<NUMIST;i++)
 
 if(iiii==0)
      {
-     cntrl_stat=600;	
-     cntrl_stat_old=600;
-     cntrl_stat_new=600;
+     cntrl_stat=1200;	
+     cntrl_stat_old=1200;
+     cntrl_stat_new=1200;
      }
-gran(&cntrl_stat,10,1010); 
+gran(&cntrl_stat,10,2010); 
 b1Hz_ch=0;
 }
 
@@ -7694,9 +7707,9 @@ char i;
 
 for(i=0;i<NUMSK;i++)
 	{
-#line 4940 "control.c"
+#line 4951 "control.c"
 	if(adc_buff_[sk_buff_220[i]]<2000)
-#line 4948 "control.c"
+#line 4959 "control.c"
 		{
 		if(sk_cnt[i]<10)
 			{
@@ -7799,7 +7812,7 @@ for(i=0;i<NUMSK;i++)
 	 	}
 
 
-#line 5070 "control.c"
+#line 5081 "control.c"
 	sk_av_stat_old[i]=sk_av_stat[i];
 	}
 }
