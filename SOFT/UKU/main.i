@@ -6714,7 +6714,7 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot))
 
 		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
 
-		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
+		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -7246,6 +7246,7 @@ else if(a_ind . i==iMn_VD)
 	
 
 	
+
 	}
 
 
@@ -10548,7 +10549,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5085 "main.c"
+#line 5086 "main.c"
     	}
 
 
@@ -11155,7 +11156,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 5824 "main.c"
+#line 5825 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11252,6 +11253,14 @@ else if(a_ind . i==iBps_list)
 
 		}
 
+ 	else if(a_ind . s_i==4) 
+     	{
+      	bgnd_par(" N   U    I   pwm  D",
+     	         " !    ^    $   &   {",
+     	         " !    ^    $   &   {",
+     	         " !    ^    $   &   {");
+
+		}
 
 	int2lcd(a_ind . s_i1+1,'!',0);
 	int2lcd(a_ind . s_i1+2,'!',0);
@@ -11292,11 +11301,24 @@ else if(a_ind . i==iBps_list)
 	int2lcd(bps[a_ind . s_i1+1]._x_+50,'(',0);
 	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._x_+50,'(',0);
 	else sub_bgnd(" ",'(',0);
+ 
 
-	int2lcd(bps[a_ind . s_i1]._avg,')',0);
-	int2lcd(bps[a_ind . s_i1+1]._avg,')',0);
-	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._avg,')',0);
+
+
+ 
+
+	int2lcd(bps[a_ind . s_i1]._cntrl_stat+50,')',0);
+	int2lcd(bps[a_ind . s_i1+1]._cntrl_stat+50,')',0);
+	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._cntrl_stat+50,')',0);
 	else sub_bgnd(" ",')',0);
+
+	int2lcd(bps[a_ind . s_i1].debug_info_to_uku1,'{',0);
+	int2lcd(bps[a_ind . s_i1+1].debug_info_to_uku1,'{',0);
+	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2].debug_info_to_uku1,'{',0);
+	else sub_bgnd(" ",'&',0);
+
+
+
 
 	}
 	
@@ -11521,12 +11543,12 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 }							    
 
 
-#line 6195 "main.c"
+#line 6217 "main.c"
 
 
 
 
-#line 6218 "main.c"
+#line 6240 "main.c"
 
 
 
@@ -12670,7 +12692,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7373 "main.c"
+#line 7395 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -12692,7 +12714,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7419 "main.c"
+#line 7441 "main.c"
 
 
 
@@ -17616,9 +17638,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 12588 "main.c"
+#line 12610 "main.c"
 
-#line 12798 "main.c"
+#line 12820 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -17944,7 +17966,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13503 "main.c"
+#line 13525 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -18109,13 +18131,13 @@ else if(a_ind . i==iBps_list)
 	else if(but==239)
 		{
 		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,3);
+		gran_char(&a_ind . s_i,0,4);
 		}
 				
 	else if(but==247)
 		{
 		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,3);
+		gran_char(&a_ind . s_i,0,4);
 		}
 	else if(but==254)
 		{
@@ -18808,7 +18830,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14372 "main.c"
+#line 14394 "main.c"
 
 
 
@@ -18899,7 +18921,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 14480 "main.c"
+#line 14502 "main.c"
 
 
 cntrl_stat=10*PWM_START;

@@ -1205,7 +1205,7 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot)) // с 1 по 12 посылки адресные
 
 		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
-		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -1737,6 +1737,7 @@ else if(ind==iMn_VD)
 	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
 //	int2lcdyx(bat[0]._sign_temper_cnt,0,19,0);
 	//int2lcdyx(uAvarHndlOutUMaxCnt,0,16,0);
+//		int2lcdyx(UOUT_,0,9,0);
 	}
 
 #ifndef _DEBUG_
@@ -5917,6 +5918,14 @@ else if(ind==iBps_list)
 
 		}
 
+ 	else if(sub_ind==4) 
+     	{
+      	bgnd_par(" N   U    I   pwm  D",
+     	         " !    ^    $   &   {",
+     	         " !    ^    $   &   {",
+     	         " !    ^    $   &   {");
+
+		}
 
 	int2lcd(sub_ind1+1,'!',0);
 	int2lcd(sub_ind1+2,'!',0);
@@ -5957,12 +5966,25 @@ else if(ind==iBps_list)
 	int2lcd(bps[sub_ind1+1]._x_+50,'(',0);
 	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._x_+50,'(',0);
 	else sub_bgnd(" ",'(',0);
-
+ /*
 	int2lcd(bps[sub_ind1]._avg,')',0);
 	int2lcd(bps[sub_ind1+1]._avg,')',0);
 	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._avg,')',0);
+	else sub_bgnd(" ",')',0); */
+
+	int2lcd(bps[sub_ind1]._cntrl_stat+50,')',0);
+	int2lcd(bps[sub_ind1+1]._cntrl_stat+50,')',0);
+	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._cntrl_stat+50,')',0);
 	else sub_bgnd(" ",')',0);
 
+	int2lcd(bps[sub_ind1].debug_info_to_uku1,'{',0);
+	int2lcd(bps[sub_ind1+1].debug_info_to_uku1,'{',0);
+	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2].debug_info_to_uku1,'{',0);
+	else sub_bgnd(" ",'&',0);
+
+//	int2lcdyx(cntrl_stat,0,3,0);
+//	int2lcdyx(UOUT_,0,9,0);
+//	int2lcdyx(out_U,0,14,0); 	
 	}
 	
 else if(ind==iAvt_set_sel)
@@ -13664,13 +13686,13 @@ else if(ind==iBps_list)
 	else if(but==butR)
 		{
 		sub_ind++;
-		gran_char(&sub_ind,0,3);
+		gran_char(&sub_ind,0,4);
 		}
 				
 	else if(but==butL)
 		{
 		sub_ind--;
-		gran_char(&sub_ind,0,3);
+		gran_char(&sub_ind,0,4);
 		}
 	else if(but==butE)
 		{
