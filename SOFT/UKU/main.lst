@@ -10120,6 +10120,7 @@ N	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 N	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
 N//	int2lcdyx(bat[0]._sign_temper_cnt,0,19,0);
 N	//int2lcdyx(uAvarHndlOutUMaxCnt,0,16,0);
+N//		int2lcdyx(UOUT_,0,9,0);
 N	}
 N
 N#ifndef _DEBUG_
@@ -10385,7 +10386,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 1947 16 unrecognized character escape sequence
+W "main.c" 1948 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -11266,7 +11267,7 @@ N		{
 N		av_j_si_max=4;  
 N		ptrs[0]=" Авария выходного   ";
 N		ptrs[1]=" напряжения (заниж.)";
-W "main.c" 2733 6 subscript out of range
+W "main.c" 2734 6 subscript out of range
 N		if(av_head_int[2]==1)ptrs[1]=" напряжения (завыш.)";
 N		ptrs[2]="   Начало           ";
 N		ptrs[3]="  0%[  0^ 0@:0#:0$  ";
@@ -12214,7 +12215,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3542 7 variable "sss" was declared but never referenced
+W "main.c" 3543 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -15017,6 +15018,9 @@ N	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._avg,')',0);
 X	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._avg,')',0);
 N	else sub_bgnd(" ",')',0);
 N
+N//	int2lcdyx(cntrl_stat,0,3,0);
+N//	int2lcdyx(UOUT_,0,9,0);
+N//	int2lcdyx(out_U,0,14,0); 	
 N	}
 N	
 Nelse if(ind==iAvt_set_sel)
@@ -15739,7 +15743,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6559 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6563 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -25576,7 +25580,7 @@ N
 N		
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14051 1 label "but_an_end" was declared but never referenced
+W "main.c" 14055 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -25993,7 +25997,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14436 15 pointless comparison of unsigned integer with zero
+W "main.c" 14440 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26053,7 +26057,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 14494 1 function "sc16is700_init" declared implicitly
+W "main.c" 14498 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26082,7 +26086,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 14521 3 function "can_in_an1" declared implicitly
+W "main.c" 14525 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26090,7 +26094,7 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 14528 3 function "modbus_in" declared implicitly
+W "main.c" 14532 3 function "modbus_in" declared implicitly
 N		modbus_in();
 N		}
 N
@@ -26141,7 +26145,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 14578 3 function "sc16is700_uart_hndl" declared implicitly
+W "main.c" 14582 3 function "sc16is700_uart_hndl" declared implicitly
 N		sc16is700_uart_hndl();
 N		#endif		
 N		}
@@ -26214,11 +26218,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 14649 3 function "u_avar_hndl" declared implicitly
+W "main.c" 14653 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 14650 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 14654 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 14651 3 function "overload_hndl" declared implicitly
+W "main.c" 14655 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26238,7 +26242,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 14669 3 function "rele_av_hndl" declared implicitly
+W "main.c" 14673 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26276,7 +26280,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 14706 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 14710 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26304,7 +26308,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 14733 3 function "npn_hndl" declared implicitly
+W "main.c" 14737 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26320,7 +26324,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 14748 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 14752 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26330,7 +26334,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 14757 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 14761 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26347,7 +26351,7 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 14773 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 14777 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N

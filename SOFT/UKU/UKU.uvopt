@@ -2791,10 +2791,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>24</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>4034</TopLine>
-      <CurrentLine>4044</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>4</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\control.c</PathWithFileName>
       <FilenameWithoutPath>control.c</FilenameWithoutPath>
@@ -2889,10 +2889,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>11</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>14096</TopLine>
-      <CurrentLine>14096</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>7</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -3799,9 +3799,9 @@
       <Documents>
         <Doc>
           <Name>.\main.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>14096</TopLine>
-          <CurrentLine>14096</CurrentLine>
+          <ColumnNumber>11</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>7</CurrentLine>
         </Doc>
         <Doc>
           <Name>C:\Keil\ARM\RV31\INC\RTL.h</Name>
@@ -3811,9 +3811,9 @@
         </Doc>
         <Doc>
           <Name>.\control.c</Name>
-          <ColumnNumber>24</ColumnNumber>
-          <TopLine>4034</TopLine>
-          <CurrentLine>4044</CurrentLine>
+          <ColumnNumber>19</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>4</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\memo.c</Name>
