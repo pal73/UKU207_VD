@@ -1737,6 +1737,7 @@ else if(ind==iMn_VD)
 	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
 //	int2lcdyx(bat[0]._sign_temper_cnt,0,19,0);
 	//int2lcdyx(uAvarHndlOutUMaxCnt,0,16,0);
+//		int2lcdyx(UOUT_,0,9,0);
 	}
 
 #ifndef _DEBUG_
@@ -5963,6 +5964,9 @@ else if(ind==iBps_list)
 	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._avg,')',0);
 	else sub_bgnd(" ",')',0);
 
+//	int2lcdyx(cntrl_stat,0,3,0);
+//	int2lcdyx(UOUT_,0,9,0);
+//	int2lcdyx(out_U,0,14,0); 	
 	}
 	
 else if(ind==iAvt_set_sel)

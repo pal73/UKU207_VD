@@ -1439,8 +1439,8 @@ for(i=0;i<NUMIST;i++)
      	bps[i]._flags_tm=0; 
 	     //bps[i]._rotor=0;
 		bps[i]._Uisum=0; 
-		bps[i].debug_info_to_uku0=bps[i]._buff[12]+(bps[i]._buff[13]*256); 
-		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256);    
+		bps[i].debug_info_to_uku0=0; 
+		bps[i].debug_info_to_uku1=0;    
      	}
      
      }
@@ -2435,6 +2435,10 @@ else
 		}			
 	}   	 
 
+if(((signed long)(UOUT_-in_U))<20L)
+	{
+	for(i=0;i<NUMIST;i++) bps[i]._x_=0;
+	}
 
 avg_hndl_end:
 __nop();  
@@ -2464,6 +2468,7 @@ else if(out_U>(UOUT+5))
 	UOUT_--;
 	if(UOUT_<(UOUT-50))UOUT_=UOUT-50;
 	}
+UOUT_=UOUT;
 }
 
 /*//-----------------------------------------------
@@ -4871,6 +4876,7 @@ else if((b1Hz_ch)&&((!bIBAT_SMKLBR)||(bps[8]._cnt>40)))
 		}
 
 	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U)))/650L);
+	if(((signed long)(UOUT_-in_U))<0L)cntrl_stat_new=0;
 	gran(&cntrl_stat_new,10,2010);			
 	cntrl_stat_old=cntrl_stat_new;
 	cntrl_stat=cntrl_stat_new;
