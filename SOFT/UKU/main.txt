@@ -27926,7 +27926,7 @@
 ;;;10245  		else if(but==butL)temp_SS--;
 ;;;10246  		else if(but==butL_)temp_SS-=2;
 ;;;10247  						
-;;;10248  		gran(&temp_SS,200,30000);
+;;;10248  		gran(&temp_SS,20,30000);
 ;;;10249  		lc640_write_int(ADR_KI1BAT[0],temp_SS);
 ;;;10250  		phase=1;
 ;;;10251  		speed=1;
@@ -40876,7 +40876,7 @@
 0106dc  9005              STR      r0,[sp,#0x14]         ;10246
                   |L1.67294|
 0106de  f2475230          MOV      r2,#0x7530            ;10248
-0106e2  21c8              MOVS     r1,#0xc8              ;10248
+0106e2  2114              MOVS     r1,#0x14              ;10248
 0106e4  a805              ADD      r0,sp,#0x14           ;10248
 0106e6  f7fffffe          BL       gran
 0106ea  f9b40000          LDRSH    r0,[r4,#0]            ;10249  ; ADR_KI1BAT
@@ -48001,13 +48001,13 @@
 01433c  f8060f26          STRB     r0,[r6,#0x26]!
 ;;;14101  
 ;;;14102  
-;;;14103  if(++t0cnt5>=40)
+;;;14103  if(++t0cnt5>=60)
 014340  8d70              LDRH     r0,[r6,#0x2a]  ; t0cnt5
 014342  1c40              ADDS     r0,r0,#1
 014344  b200              SXTH     r0,r0
 014346  8570              STRH     r0,[r6,#0x2a]
 014348  f1a60626          SUB      r6,r6,#0x26
-01434c  2828              CMP      r0,#0x28
+01434c  283c              CMP      r0,#0x3c
 01434e  db02              BLT      |L1.82774|
 ;;;14104       {
 ;;;14105       t0cnt5=0;

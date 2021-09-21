@@ -1105,7 +1105,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>0</IsCurrentTarget>
+        <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
       <CpuCode>0</CpuCode>
       <DllOpt>
@@ -2573,7 +2573,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>1</IsCurrentTarget>
+        <IsCurrentTarget>0</IsCurrentTarget>
       </OPTFL>
       <CpuCode>8</CpuCode>
       <Books>
@@ -2726,14 +2726,14 @@
       <TopLine>0</TopLine>
       <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\WEB\web.inp</PathWithFileName>
+      <PathWithFileName>E:\Users\Pal\DEVICES\UKU217_dev\SOFT\UKU\WEB\web.inp</PathWithFileName>
       <FilenameWithoutPath>web.inp</FilenameWithoutPath>
     </File>
   </Group>
 
   <Group>
     <GroupName>Startup</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <File>
@@ -2768,7 +2768,7 @@
 
   <Group>
     <GroupName>Source</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <File>
@@ -2777,10 +2777,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>12</ColumnNumber>
+      <ColumnNumber>28</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>867</TopLine>
-      <CurrentLine>867</CurrentLine>
+      <TopLine>858</TopLine>
+      <CurrentLine>872</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\common_func.c</PathWithFileName>
       <FilenameWithoutPath>common_func.c</FilenameWithoutPath>
@@ -2791,10 +2791,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>24</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>4034</TopLine>
-      <CurrentLine>4044</CurrentLine>
+      <TopLine>1412</TopLine>
+      <CurrentLine>1431</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\control.c</PathWithFileName>
       <FilenameWithoutPath>control.c</FilenameWithoutPath>
@@ -2861,10 +2861,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>36</ColumnNumber>
+      <ColumnNumber>41</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>17</CurrentLine>
+      <CurrentLine>36</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\eeprom_map.c</PathWithFileName>
       <FilenameWithoutPath>eeprom_map.c</FilenameWithoutPath>
@@ -2875,9 +2875,9 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>28</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>29</TopLine>
+      <TopLine>17</TopLine>
       <CurrentLine>39</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\cmd.h</PathWithFileName>
@@ -2889,10 +2889,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>20</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1175</TopLine>
-      <CurrentLine>1175</CurrentLine>
+      <TopLine>8532</TopLine>
+      <CurrentLine>8532</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -2903,10 +2903,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>96</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>255</TopLine>
+      <CurrentLine>262</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\simbols.c</PathWithFileName>
       <FilenameWithoutPath>simbols.c</FilenameWithoutPath>
@@ -2919,8 +2919,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\graphic.c</PathWithFileName>
       <FilenameWithoutPath>graphic.c</FilenameWithoutPath>
@@ -2943,7 +2943,7 @@
       <GroupNumber>3</GroupNumber>
       <FileNumber>16</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -2968,8 +2968,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>19</TopLine>
-      <CurrentLine>29</CurrentLine>
+      <TopLine>15</TopLine>
+      <CurrentLine>30</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\memo.c</PathWithFileName>
       <FilenameWithoutPath>memo.c</FilenameWithoutPath>
@@ -3092,10 +3092,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>67</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1191</TopLine>
-      <CurrentLine>1191</CurrentLine>
+      <TopLine>1176</TopLine>
+      <CurrentLine>1176</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\full_can.c</PathWithFileName>
       <FilenameWithoutPath>full_can.c</FilenameWithoutPath>
@@ -3505,32 +3505,6 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_U_dev\SOFT\UKU\2\описание.txt</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>20</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\sacred_sun.h</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>4</CurrentLine>
@@ -3584,7 +3558,7 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\modbus.h</PathWithFilename>
-    <TopLine>4</TopLine>
+    <TopLine>1</TopLine>
     <CurrentLine>25</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
@@ -3612,84 +3586,6 @@
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\snmp_data_file.h</PathWithFilename>
     <TopLine>82</TopLine>
     <CurrentLine>92</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_U_dev\SOFT\UKU\2\traps.txt</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>2</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\simbol.h</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>5</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\eeprom_map.h</PathWithFilename>
-    <TopLine>80</TopLine>
-    <CurrentLine>90</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -3741,7 +3637,7 @@
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\common_func.h</PathWithFilename>
     <TopLine>1</TopLine>
-    <CurrentLine>6</CurrentLine>
+    <CurrentLine>17</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -3790,18 +3686,106 @@
     </WindowPosition>
   </AlienFiles>
 
+  <AlienFiles>
+    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\eeprom_map.h</PathWithFilename>
+    <TopLine>476</TopLine>
+    <CurrentLine>495</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
+  <AlienFiles>
+    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\simbol.h</PathWithFilename>
+    <TopLine>1</TopLine>
+    <CurrentLine>1</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
   <MDIGroups>
     <Orientation>1</Orientation>
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>0</ActiveTab>
+      <ActiveTab>6</ActiveTab>
       <Documents>
         <Doc>
-          <Name>.\main.c</Name>
-          <ColumnNumber>11</ColumnNumber>
+          <Name>.\full_can.c</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1176</TopLine>
+          <CurrentLine>1176</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\cmd.h</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>17</TopLine>
+          <CurrentLine>39</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>simbol.h</Name>
+          <ColumnNumber>0</ColumnNumber>
           <TopLine>1</TopLine>
-          <CurrentLine>7</CurrentLine>
+          <CurrentLine>1</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\simbols.c</Name>
+          <ColumnNumber>96</ColumnNumber>
+          <TopLine>255</TopLine>
+          <CurrentLine>262</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\graphic.c</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>eeprom_map.h</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>476</TopLine>
+          <CurrentLine>495</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\main.c</Name>
+          <ColumnNumber>20</ColumnNumber>
+          <TopLine>8532</TopLine>
+          <CurrentLine>8532</CurrentLine>
         </Doc>
         <Doc>
           <Name>C:\Keil\ARM\RV31\INC\RTL.h</Name>
@@ -3811,39 +3795,33 @@
         </Doc>
         <Doc>
           <Name>.\control.c</Name>
-          <ColumnNumber>19</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>4</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1412</TopLine>
+          <CurrentLine>1431</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\memo.c</Name>
           <ColumnNumber>0</ColumnNumber>
-          <TopLine>19</TopLine>
-          <CurrentLine>29</CurrentLine>
+          <TopLine>15</TopLine>
+          <CurrentLine>30</CurrentLine>
         </Doc>
         <Doc>
           <Name>common_func.h</Name>
-          <ColumnNumber>36</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>6</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\eeprom_map.c</Name>
-          <ColumnNumber>36</ColumnNumber>
+          <ColumnNumber>0</ColumnNumber>
           <TopLine>1</TopLine>
           <CurrentLine>17</CurrentLine>
         </Doc>
         <Doc>
-          <Name>.\full_can.c</Name>
-          <ColumnNumber>67</ColumnNumber>
-          <TopLine>1191</TopLine>
-          <CurrentLine>1191</CurrentLine>
+          <Name>.\eeprom_map.c</Name>
+          <ColumnNumber>41</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>36</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\common_func.c</Name>
-          <ColumnNumber>12</ColumnNumber>
-          <TopLine>867</TopLine>
-          <CurrentLine>867</CurrentLine>
+          <ColumnNumber>28</ColumnNumber>
+          <TopLine>858</TopLine>
+          <CurrentLine>872</CurrentLine>
         </Doc>
         <Doc>
           <Name>main.h</Name>
@@ -3876,24 +3854,6 @@
           <CurrentLine>1189</CurrentLine>
         </Doc>
         <Doc>
-          <Name>eeprom_map.h</Name>
-          <ColumnNumber>20</ColumnNumber>
-          <TopLine>80</TopLine>
-          <CurrentLine>90</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>simbol.h</Name>
-          <ColumnNumber>34</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>5</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\cmd.h</Name>
-          <ColumnNumber>28</ColumnNumber>
-          <TopLine>29</TopLine>
-          <CurrentLine>39</CurrentLine>
-        </Doc>
-        <Doc>
           <Name>.\uart2.c</Name>
           <ColumnNumber>7</ColumnNumber>
           <TopLine>71</TopLine>
@@ -3904,12 +3864,6 @@
           <ColumnNumber>0</ColumnNumber>
           <TopLine>1</TopLine>
           <CurrentLine>1</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>E:\Users\Pal\DEVICES\UKU207_U_dev\SOFT\UKU\2\traps.txt</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>2</CurrentLine>
         </Doc>
         <Doc>
           <Name>snmp_data_file.h</Name>
@@ -3938,7 +3892,7 @@
         <Doc>
           <Name>modbus.h</Name>
           <ColumnNumber>0</ColumnNumber>
-          <TopLine>4</TopLine>
+          <TopLine>1</TopLine>
           <CurrentLine>25</CurrentLine>
         </Doc>
         <Doc>
@@ -3970,12 +3924,6 @@
           <ColumnNumber>14</ColumnNumber>
           <TopLine>1</TopLine>
           <CurrentLine>4</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>E:\Users\Pal\DEVICES\UKU207_U_dev\SOFT\UKU\2\описание.txt</Name>
-          <ColumnNumber>93</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>20</CurrentLine>
         </Doc>
         <Doc>
           <Name>modbus_tcp.h</Name>

@@ -20768,7 +20768,7 @@ X		else if(but==247)temp_SS--;
 N		else if(but==butL_)temp_SS-=2;
 X		else if(but==119)temp_SS-=2;
 N						
-N		gran(&temp_SS,200,30000);
+N		gran(&temp_SS,20,30000);
 N		lc640_write_int(ADR_KI1BAT[0],temp_SS);
 N		phase=1;
 N		speed=1;
@@ -25637,7 +25637,7 @@ N	if(bFF!=bFF_) hz_out++;
 N	bFF_=bFF;
 N
 N
-Nif(++t0cnt5>=40)
+Nif(++t0cnt5>=60)
 N     {
 N     t0cnt5=0;
 N     b50Hz=1;

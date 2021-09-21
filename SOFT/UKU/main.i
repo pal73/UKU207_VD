@@ -15522,7 +15522,7 @@ else if(a_ind . i==iK_VD)
 		else if(but==247)temp_SS--;
 		else if(but==119)temp_SS-=2;
 						
-		gran(&temp_SS,200,30000);
+		gran(&temp_SS,20,30000);
 		lc640_write_int(ADR_KI1BAT[0],temp_SS);
 		phase=1;
 		speed=1;
@@ -18545,7 +18545,7 @@ b1000Hz=1;
 	bFF_=bFF;
 
 
-if(++t0cnt5>=40)
+if(++t0cnt5>=60)
      {
      t0cnt5=0;
      b50Hz=1;

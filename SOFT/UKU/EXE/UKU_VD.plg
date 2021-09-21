@@ -1,12 +1,3 @@
-<html>
-<body>
-<pre>
-<h1>µVision Build Log</h1>
-<h2>Project:</h2>
-E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\UKU.uvproj
-Project File Date:  08/22/2017
-
-<h2>Output:</h2>
 Build target 'VD'
 assembling startup_LPC17xx.s...
 creating preprocessor file for Net_Config_HTTP.c...
