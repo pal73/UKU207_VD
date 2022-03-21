@@ -6678,7 +6678,7 @@ if((((((LPC_CAN_TypeDef *) ((0x40000000UL) + 0x44000) )->GSR)>>16)&0x00ff)==127)
 void net_drv(void)
 { 
 
-max_net_slot=24;
+max_net_slot=25;
 
 
 if(++cnt_net_drv>max_net_slot) 
@@ -6712,9 +6712,9 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot))
 
 
 
-		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
+	
 
-		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
+  mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -10949,7 +10949,20 @@ else if(a_ind . i==iTst_VD)
     ptrs[16]=						" ÁÏÑ N9             ";               
 	ptrs[17]=						" ÁÏÑ N10            ";
     ptrs[18]=						" ÁÏÑ N11            ";
-    ptrs[19]=						" ÁÏÑ N12            ";               
+    ptrs[19]=						" ÁÏÑ N12            ";
+	ptrs[20]=						" ÁÏÑ N13            ";
+    ptrs[21]=						" ÁÏÑ N14            ";
+    ptrs[22]=						" ÁÏÑ N15            ";
+	ptrs[23]=						" ÁÏÑ N16            ";
+    ptrs[24]=						" ÁÏÑ N17            ";
+    ptrs[25]=						" ÁÏÑ N18            ";
+	ptrs[26]=						" ÁÏÑ N19            ";
+    ptrs[27]=						" ÁÏÑ N20            ";
+    ptrs[28]=						" ÁÏÑ N21            ";               
+	ptrs[29]=						" ÁÏÑ N22            ";
+    ptrs[30]=						" ÁÏÑ N23            ";
+    ptrs[31]=						" ÁÏÑ N24            ";	
+	ptrs[32]=						" ÁÏÑ N25            ";               
 	ptrs[8+NUMIST]=					" Âûõîä              ";
 	ptrs[9+NUMIST]=					" Ïğîâåğêà WDT(âíóòğ)";
 	ptrs[10+NUMIST]=				" Ïğîâåğêà WDT(âíåøí)";
@@ -11156,7 +11169,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 5825 "main.c"
+#line 5838 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11525,12 +11538,12 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 }							    
 
 
-#line 6199 "main.c"
+#line 6212 "main.c"
 
 
 
 
-#line 6222 "main.c"
+#line 6235 "main.c"
 
 
 
@@ -12674,7 +12687,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7377 "main.c"
+#line 7390 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -12696,7 +12709,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7423 "main.c"
+#line 7436 "main.c"
 
 
 
@@ -13824,7 +13837,7 @@ else if(a_ind . i==iStr_VD)
 	     if((but==239)||(but==111))
 	     	{
 	     	NUMIST++;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,25);
 	     	lc640_write_int(0x10+100+36,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -13832,7 +13845,7 @@ else if(a_ind . i==iStr_VD)
 	     else if((but==247)||(but==119))
 	     	{
 	     	NUMIST--;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,25);
 	     	lc640_write_int(0x10+100+36,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -17620,9 +17633,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 12592 "main.c"
+#line 12605 "main.c"
 
-#line 12802 "main.c"
+#line 12815 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -17655,6 +17668,11 @@ else if(a_ind . i==iTst_bps)
 			a_ind . s_i=1;
 			
 			}
+		}
+
+	if(but==123)
+		{
+		a_ind . s_i=3;
 		}
 
 	else if(a_ind . s_i==0)
@@ -17948,7 +17966,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13507 "main.c"
+#line 13525 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -18812,7 +18830,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14376 "main.c"
+#line 14394 "main.c"
 
 
 
@@ -18903,7 +18921,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 14484 "main.c"
+#line 14502 "main.c"
 
 
 cntrl_stat=10*PWM_START;

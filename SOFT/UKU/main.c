@@ -1169,7 +1169,7 @@ if((((LPC_CAN1->GSR)>>16)&0x00ff)==127)bRESET=1;
 void net_drv(void)
 { 
 
-max_net_slot=24;
+max_net_slot=25;
 
 
 if(++cnt_net_drv>max_net_slot) 
@@ -1203,9 +1203,9 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot)) // ñ 1 ïî 12 ïîñûëêè àäğåñíûå
 //		if(cntrl_stat==1000)	can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),0xe8,0x03);
 //		else 					can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),*((char*)(&bps[cnt_net_drv]._x_)),*((char*)((&bps[cnt_net_drv]._x_))+1));
 
-		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+	/*	if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8));
 
-		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+		else*/ can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -5482,7 +5482,20 @@ else if(ind==iTst_VD)
     ptrs[16]=						" ÁÏÑ N9             ";               
 	ptrs[17]=						" ÁÏÑ N10            ";
     ptrs[18]=						" ÁÏÑ N11            ";
-    ptrs[19]=						" ÁÏÑ N12            ";               
+    ptrs[19]=						" ÁÏÑ N12            ";
+	ptrs[20]=						" ÁÏÑ N13            ";
+    ptrs[21]=						" ÁÏÑ N14            ";
+    ptrs[22]=						" ÁÏÑ N15            ";
+	ptrs[23]=						" ÁÏÑ N16            ";
+    ptrs[24]=						" ÁÏÑ N17            ";
+    ptrs[25]=						" ÁÏÑ N18            ";
+	ptrs[26]=						" ÁÏÑ N19            ";
+    ptrs[27]=						" ÁÏÑ N20            ";
+    ptrs[28]=						" ÁÏÑ N21            ";               
+	ptrs[29]=						" ÁÏÑ N22            ";
+    ptrs[30]=						" ÁÏÑ N23            ";
+    ptrs[31]=						" ÁÏÑ N24            ";	
+	ptrs[32]=						" ÁÏÑ N25            ";               
 	ptrs[8+NUMIST]=					" Âûõîä              ";
 	ptrs[9+NUMIST]=					" Ïğîâåğêà WDT(âíóòğ)";
 	ptrs[10+NUMIST]=				" Ïğîâåğêà WDT(âíåøí)";
@@ -8547,7 +8560,7 @@ else if(ind==iStr_VD)
 	     if((but==butR)||(but==butR_))
 	     	{
 	     	NUMIST++;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,25);
 	     	lc640_write_int(EE_NUMIST,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -8555,7 +8568,7 @@ else if(ind==iStr_VD)
 	     else if((but==butL)||(but==butL_))
 	     	{
 	     	NUMIST--;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,25);
 	     	lc640_write_int(EE_NUMIST,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -12831,6 +12844,11 @@ else if(ind==iTst_bps)
 			sub_ind=1;
 			//index_set=2;
 			}
+		}
+
+	if(but==butD_)
+		{
+		sub_ind=3;
 		}
 
 	else if(sub_ind==0)

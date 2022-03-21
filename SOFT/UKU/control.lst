@@ -9237,10 +9237,11 @@ N				tempSL*=100L;
 N				if(i_avg==0) i_avg=1;
 N				tempSL/=(signed long)i_avg;
 N				bps[i]._avg=(signed short)tempSL;
-N
-N				if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
-N				if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
-N			
+N				if(bps[i]._Ii<500)
+N					{
+N					if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
+N					if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
+N					}
 N				if(bps[i]._x_<-50)bps[i]._x_=-50;
 N				if(bps[i]._x_>50)bps[i]._x_=50;	
 N				}
@@ -9256,7 +9257,7 @@ N	}
 N
 Navg_hndl_end:
 N__nop();  
-W "control.c" 2443 1 label "avg_hndl_end" was declared but never referenced
+W "control.c" 2444 1 label "avg_hndl_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9284,7 +9285,7 @@ N	UOUT_--;
 N	if(UOUT_<(UOUT-50))UOUT_=UOUT-50;
 N	}
 NUOUT_=UOUT;
-W "control.c" 2450 6 variable "i" was declared but never referenced
+W "control.c" 2451 6 variable "i" was declared but never referenced
 N}
 N
 N/*//-----------------------------------------------
@@ -10917,7 +10918,7 @@ N		{
 N		overloadHndlCnt++;
 N		if(overloadHndlCnt==(TZAS*10))
 N			{
-W "control.c" 4054 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 4055 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(1);
 N			}
 N		}
@@ -10929,7 +10930,7 @@ N		{
 N		overloadHndlCnt--;
 N		if(overloadHndlCnt==0)
 N			{
-W "control.c" 4065 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 4066 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(0);
 N			}
 N		}
@@ -10950,7 +10951,7 @@ N		{
 N		uAvarHndlOutUMaxCnt++;
 N		if(uAvarHndlOutUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4085 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4086 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(1,out_U);
 N			}
 N		}
@@ -10963,7 +10964,7 @@ N		{
 N		uAvarHndlOutUMaxCnt--;
 N		if(uAvarHndlOutUMaxCnt==0)
 N			{
-W "control.c" 4097 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4098 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10977,7 +10978,7 @@ N		{
 N		uAvarHndlOutUMinCnt++;
 N		if(uAvarHndlOutUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4110 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4111 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(2,out_U);
 N			}
 N		}
@@ -10990,7 +10991,7 @@ N		{
 N		uAvarHndlOutUMinCnt--;
 N		if(uAvarHndlOutUMinCnt==0)
 N			{
-W "control.c" 4122 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4123 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -11004,7 +11005,7 @@ N		{
 N		uAvarHndlInUMaxCnt++;
 N		if(uAvarHndlInUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4135 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4136 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(1,in_U);
 N			}
 N		}
@@ -11017,7 +11018,7 @@ N		{
 N		uAvarHndlInUMaxCnt--;
 N		if(uAvarHndlInUMaxCnt==0)
 N			{
-W "control.c" 4147 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4148 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11031,7 +11032,7 @@ N		{
 N		uAvarHndlInUMinCnt++;
 N		if(uAvarHndlInUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4160 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4161 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(2,in_U);
 N			}
 N		}
@@ -11044,7 +11045,7 @@ N		{
 N		uAvarHndlInUMinCnt--;
 N		if(uAvarHndlInUMinCnt==0)
 N			{
-W "control.c" 4172 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4173 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11065,7 +11066,7 @@ N		{
 N		sysTAvarHndlCnt++;
 N		if(sysTAvarHndlCnt>=(10*TZAS))
 N			{
-W "control.c" 4192 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4193 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(1,sys_T);
 N			}
 N		}
@@ -11078,7 +11079,7 @@ N		{
 N		sysTAvarHndlCnt--;
 N		if(sysTAvarHndlCnt==0)
 N			{
-W "control.c" 4204 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4205 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(0,sys_T);
 N			}
 N		}

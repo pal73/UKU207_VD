@@ -2423,10 +2423,11 @@ else
 				if(i_avg==0) i_avg=1;
 				tempSL/=(signed long)i_avg;
 				bps[i]._avg=(signed short)tempSL;
-
-				if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
-				if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
-			
+				if(bps[i]._Ii<500)
+					{
+					if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
+					if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
+					}
 				if(bps[i]._x_<-50)bps[i]._x_=-50;
 				if(bps[i]._x_>50)bps[i]._x_=50;	
 				}

@@ -1105,7 +1105,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>1</IsCurrentTarget>
+        <IsCurrentTarget>0</IsCurrentTarget>
       </OPTFL>
       <CpuCode>0</CpuCode>
       <DllOpt>
@@ -2573,7 +2573,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>0</IsCurrentTarget>
+        <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
       <CpuCode>8</CpuCode>
       <Books>
@@ -2742,10 +2742,10 @@
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>35</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <CurrentLine>15</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup_LPC17xx.s</PathWithFileName>
       <FilenameWithoutPath>startup_LPC17xx.s</FilenameWithoutPath>
@@ -2791,10 +2791,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>33</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1412</TopLine>
-      <CurrentLine>1431</CurrentLine>
+      <TopLine>983</TopLine>
+      <CurrentLine>983</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\control.c</PathWithFileName>
       <FilenameWithoutPath>control.c</FilenameWithoutPath>
@@ -2889,10 +2889,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>20</ColumnNumber>
+      <ColumnNumber>9</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>8532</TopLine>
-      <CurrentLine>8532</CurrentLine>
+      <TopLine>1695</TopLine>
+      <CurrentLine>1723</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -3743,8 +3743,14 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>6</ActiveTab>
+      <ActiveTab>10</ActiveTab>
       <Documents>
+        <Doc>
+          <Name>.\startup_LPC17xx.s</Name>
+          <ColumnNumber>35</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>15</CurrentLine>
+        </Doc>
         <Doc>
           <Name>.\full_can.c</Name>
           <ColumnNumber>0</ColumnNumber>
@@ -3783,9 +3789,9 @@
         </Doc>
         <Doc>
           <Name>.\main.c</Name>
-          <ColumnNumber>20</ColumnNumber>
-          <TopLine>8532</TopLine>
-          <CurrentLine>8532</CurrentLine>
+          <ColumnNumber>9</ColumnNumber>
+          <TopLine>1695</TopLine>
+          <CurrentLine>1723</CurrentLine>
         </Doc>
         <Doc>
           <Name>C:\Keil\ARM\RV31\INC\RTL.h</Name>
@@ -3795,9 +3801,9 @@
         </Doc>
         <Doc>
           <Name>.\control.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>1412</TopLine>
-          <CurrentLine>1431</CurrentLine>
+          <ColumnNumber>33</ColumnNumber>
+          <TopLine>983</TopLine>
+          <CurrentLine>983</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\memo.c</Name>
@@ -4002,12 +4008,6 @@
           <ColumnNumber>0</ColumnNumber>
           <TopLine>38</TopLine>
           <CurrentLine>48</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\startup_LPC17xx.s</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>1</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

@@ -6084,10 +6084,11 @@ else
 				if(i_avg==0) i_avg=1;
 				tempSL/=(signed long)i_avg;
 				bps[i]._avg=(signed short)tempSL;
-
-				if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
-				if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
-			
+				if(bps[i]._Ii<500)
+					{
+					if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
+					if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
+					}
 				if(bps[i]._x_<-50)bps[i]._x_=-50;
 				if(bps[i]._x_>50)bps[i]._x_=50;	
 				}
@@ -7061,9 +7062,9 @@ else
  
 }
 
-#line 3590 "control.c"
+#line 3591 "control.c"
 
-#line 3763 "control.c"
+#line 3764 "control.c"
 
 
 
@@ -7133,7 +7134,7 @@ if(main_vent_pos<=1)mixer_vent_stat=mvsON;
 else mixer_vent_stat=mvsOFF;
 
 
-#line 3849 "control.c"
+#line 3850 "control.c"
 
 if((TBATDISABLE>=50) && (TBATDISABLE<=90))
 	{
@@ -7190,7 +7191,7 @@ else
 }
 
 
-#line 4038 "control.c"
+#line 4039 "control.c"
 
 
 
@@ -7425,7 +7426,7 @@ if(ICA_EN)u_necc+=ica_u_necc;
 
 
 
-#line 4645 "control.c"
+#line 4646 "control.c"
 
 temp_L=(signed long) u_necc;
 temp_L*=98L;
@@ -7713,9 +7714,9 @@ char i;
 
 for(i=0;i<NUMSK;i++)
 	{
-#line 4957 "control.c"
+#line 4958 "control.c"
 	if(adc_buff_[sk_buff_220[i]]<2000)
-#line 4965 "control.c"
+#line 4966 "control.c"
 		{
 		if(sk_cnt[i]<10)
 			{
@@ -7818,7 +7819,7 @@ for(i=0;i<NUMSK;i++)
 	 	}
 
 
-#line 5087 "control.c"
+#line 5088 "control.c"
 	sk_av_stat_old[i]=sk_av_stat[i];
 	}
 }

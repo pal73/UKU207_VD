@@ -9510,7 +9510,7 @@ N//-----------------------------------------------
 Nvoid net_drv(void)
 N{ 
 N
-Nmax_net_slot=24;
+Nmax_net_slot=25;
 N
 N
 Nif(++cnt_net_drv>max_net_slot) 
@@ -9547,11 +9547,10 @@ N		{
 N//		if(cntrl_stat==1000)	can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),0xe8,0x03);
 N//		else 					can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),*((char*)(&bps[cnt_net_drv]._x_)),*((char*)((&bps[cnt_net_drv]._x_))+1));
 N
-N		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
-X		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
+N	/*	if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8));
 N
-N		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
-X		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
+N		else*/ can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+X  mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 N
 N     	}
 N	if(cnt_net_drv<=max_net_slot)
@@ -14457,7 +14456,20 @@ N    ptrs[15]=						" ÁÏÑ N8             ";
 N    ptrs[16]=						" ÁÏÑ N9             ";               
 N	ptrs[17]=						" ÁÏÑ N10            ";
 N    ptrs[18]=						" ÁÏÑ N11            ";
-N    ptrs[19]=						" ÁÏÑ N12            ";               
+N    ptrs[19]=						" ÁÏÑ N12            ";
+N	ptrs[20]=						" ÁÏÑ N13            ";
+N    ptrs[21]=						" ÁÏÑ N14            ";
+N    ptrs[22]=						" ÁÏÑ N15            ";
+N	ptrs[23]=						" ÁÏÑ N16            ";
+N    ptrs[24]=						" ÁÏÑ N17            ";
+N    ptrs[25]=						" ÁÏÑ N18            ";
+N	ptrs[26]=						" ÁÏÑ N19            ";
+N    ptrs[27]=						" ÁÏÑ N20            ";
+N    ptrs[28]=						" ÁÏÑ N21            ";               
+N	ptrs[29]=						" ÁÏÑ N22            ";
+N    ptrs[30]=						" ÁÏÑ N23            ";
+N    ptrs[31]=						" ÁÏÑ N24            ";	
+N	ptrs[32]=						" ÁÏÑ N25            ";               
 N	ptrs[8+NUMIST]=					" Âûõîä              ";
 N	ptrs[9+NUMIST]=					" Ïðîâåðêà WDT(âíóòð)";
 N	ptrs[10+NUMIST]=				" Ïðîâåðêà WDT(âíåøí)";
@@ -15743,7 +15755,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6563 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6576 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -18447,7 +18459,7 @@ N	     if((but==butR)||(but==butR_))
 X	     if((but==239)||(but==111))
 N	     	{
 N	     	NUMIST++;
-N	     	gran(&NUMIST,0,18);
+N	     	gran(&NUMIST,0,25);
 N	     	lc640_write_int(EE_NUMIST,NUMIST);
 X	     	lc640_write_int(0x10+100+36,NUMIST);
 N			numOfForvardBps_init();
@@ -18457,7 +18469,7 @@ N	     else if((but==butL)||(but==butL_))
 X	     else if((but==247)||(but==119))
 N	     	{
 N	     	NUMIST--;
-N	     	gran(&NUMIST,0,18);
+N	     	gran(&NUMIST,0,25);
 N	     	lc640_write_int(EE_NUMIST,NUMIST);
 X	     	lc640_write_int(0x10+100+36,NUMIST);
 N			numOfForvardBps_init();
@@ -24058,6 +24070,13 @@ N			//index_set=2;
 N			}
 N		}
 N
+N	if(but==butD_)
+X	if(but==123)
+N		{
+N		sub_ind=3;
+X		a_ind . s_i=3;
+N		}
+N
 N	else if(sub_ind==0)
 X	else if(a_ind . s_i==0)
 N		{
@@ -25580,7 +25599,7 @@ N
 N		
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14055 1 label "but_an_end" was declared but never referenced
+W "main.c" 14073 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -25997,7 +26016,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14440 15 pointless comparison of unsigned integer with zero
+W "main.c" 14458 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26057,7 +26076,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 14498 1 function "sc16is700_init" declared implicitly
+W "main.c" 14516 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26086,7 +26105,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 14525 3 function "can_in_an1" declared implicitly
+W "main.c" 14543 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26094,7 +26113,7 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 14532 3 function "modbus_in" declared implicitly
+W "main.c" 14550 3 function "modbus_in" declared implicitly
 N		modbus_in();
 N		}
 N
@@ -26145,7 +26164,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 14582 3 function "sc16is700_uart_hndl" declared implicitly
+W "main.c" 14600 3 function "sc16is700_uart_hndl" declared implicitly
 N		sc16is700_uart_hndl();
 N		#endif		
 N		}
@@ -26218,11 +26237,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 14653 3 function "u_avar_hndl" declared implicitly
+W "main.c" 14671 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 14654 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 14672 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 14655 3 function "overload_hndl" declared implicitly
+W "main.c" 14673 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26242,7 +26261,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 14673 3 function "rele_av_hndl" declared implicitly
+W "main.c" 14691 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26280,7 +26299,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 14710 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 14728 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26308,7 +26327,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 14737 3 function "npn_hndl" declared implicitly
+W "main.c" 14755 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26324,7 +26343,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 14752 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 14770 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26334,7 +26353,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 14761 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 14779 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26351,7 +26370,7 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 14777 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 14795 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Ïðîãðàììà ñìåíû ïåðâîãî èñòî÷íèêà äëÿ ðàâíîìåðíîãî èçíîñà ÁÏÑîâ
 N		}
 N
