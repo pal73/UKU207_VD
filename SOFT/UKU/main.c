@@ -41,6 +41,7 @@
 #include "mcp2515.h"
 //#include "sc16is7xx.h"
 #include "modbus_tcp.h"
+#include "curr_version.h"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -1632,7 +1633,8 @@ else if(ind==iMn_VD)
 	ptrs[6+NUMIST]= 	" Установки          "; 
     ptrs[7+NUMIST]= 	" Журнал событий     ";
 	ptrs[8+NUMIST]= 	" Выход              ";
-	ptrs[9+NUMIST]=	" Тест               ";
+	ptrs[9+NUMIST]=		" Версия ПО          ";
+	ptrs[10+NUMIST]=	" Тест               ";
 	
 
     if(sub_ind==0)index_set=0;
@@ -5981,7 +5983,20 @@ else if(ind==iBps_list)
 //	int2lcdyx(UOUT_,0,9,0);
 //	int2lcdyx(out_U,0,14,0); 	
 	}
+
+else if(ind==iFWabout)
+	{
+	bgnd_par(	" Версия             ",
+				" Сборка  0000.00.00 ",
+				"                    ",
+				"                    ");
+	int2lcdyx(BUILD_YEAR,1,12,0);
+	int2lcdyx(BUILD_MONTH,1,15,0);
+	int2lcdyx(BUILD_DAY,1,18,0);
 	
+	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
+	}
+		
 else if(ind==iAvt_set_sel)
 	{
 	ptrs[0]=						" БПС N1             ";
@@ -6485,13 +6500,13 @@ else if(ind==iMn_VD)
 	if(but==butD)
 		{
 		sub_ind++;
-		gran_char(&sub_ind,0,6+NUMIST);
+		gran_char(&sub_ind,0,7+NUMIST);
 		}
 		
 	else if(but==butU)
 		{
 		sub_ind--;
-		gran_char(&sub_ind,0,6+NUMIST);
+		gran_char(&sub_ind,0,7+NUMIST);
 		}	
 
 	else if(but==butR)
@@ -6564,7 +6579,14 @@ else if(ind==iMn_VD)
 			{
 			sub_ind=0;
 			}
-		else if(sub_ind==(6+NUMIST))
+		else if(sub_ind==(6+NUMIST)) //o_12
+			{
+			if(but==butE)
+		     	{
+		     	tree_up(iFWabout,0,0,0);
+		     	}
+			}
+		else if(sub_ind==(7+NUMIST))
 			{
 	     	tree_up(iPrltst,0,0,0);
 		    parol_init();
@@ -13705,6 +13727,17 @@ else if(ind==iBps_list)
 		else bAVG_BLOCK=1;
 		}						
 	}
+
+else if(ind==iFWabout)
+	{
+	ret(1000);
+	if(but==butE)
+	     {
+	     tree_down(0,0);
+	     ret(0);
+	     }
+	}
+
 else if(ind==iAvt_set_sel)
 	{
 	ret(1000);

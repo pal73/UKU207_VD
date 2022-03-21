@@ -766,6 +766,7 @@ typedef enum {
 	iNpn_set,
 	iBps_list,
 	iRele_set,iRele_set_,
+	iFWabout,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
 

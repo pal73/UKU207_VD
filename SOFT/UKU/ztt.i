@@ -674,6 +674,7 @@ typedef enum {
 	iNpn_set,
 	iBps_list,
 	iRele_set,iRele_set_,
+	iFWabout,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
 
@@ -1355,11 +1356,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1458 "main.h"
+#line 1459 "main.h"
 
-#line 1469 "main.h"
+#line 1470 "main.h"
 
-#line 1485 "main.h"
+#line 1486 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1403,7 +1404,7 @@ extern short can_plazma;
 
 
 
-#line 1539 "main.h"
+#line 1540 "main.h"
 
 
 

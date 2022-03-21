@@ -1,7 +1,9 @@
 .\EXE\modbus_tcp.o: MODBUS_TCP.c
 .\EXE\modbus_tcp.o: C:\Keil\ARM\INC\NXP\LPC17xx\lpc17xx.h
-.\EXE\modbus_tcp.o: C:\Keil\ARM\RV31\INC\core_cm3.h
+.\EXE\modbus_tcp.o: C:\Keil\ARM\CMSIS\Include\core_cm3.h
 .\EXE\modbus_tcp.o: C:\Keil\ARM\RV31\INC\stdint.h
+.\EXE\modbus_tcp.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
+.\EXE\modbus_tcp.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
 .\EXE\modbus_tcp.o: C:\Keil\ARM\INC\NXP\LPC17xx\system_LPC17xx.h
 .\EXE\modbus_tcp.o: C:\Keil\ARM\RV31\INC\rtl.h
 .\EXE\modbus_tcp.o: main.h

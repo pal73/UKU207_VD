@@ -2,8 +2,10 @@
 .\EXE\full_can.o: main.h
 .\EXE\full_can.o: C:\Keil\ARM\RV31\INC\rtl.h
 .\EXE\full_can.o: C:\Keil\ARM\INC\NXP\LPC17xx\LPC17xx.H
-.\EXE\full_can.o: C:\Keil\ARM\RV31\INC\core_cm3.h
+.\EXE\full_can.o: C:\Keil\ARM\CMSIS\Include\core_cm3.h
 .\EXE\full_can.o: C:\Keil\ARM\RV31\INC\stdint.h
+.\EXE\full_can.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
+.\EXE\full_can.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
 .\EXE\full_can.o: C:\Keil\ARM\INC\NXP\LPC17xx\system_LPC17xx.h
 .\EXE\full_can.o: full_can.h
 .\EXE\full_can.o: cmd.h

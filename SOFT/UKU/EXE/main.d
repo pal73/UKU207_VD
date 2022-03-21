@@ -33,6 +33,9 @@
 .\EXE\main.o: ztt.h
 .\EXE\main.o: mcp2515.h
 .\EXE\main.o: modbus_tcp.h
+.\EXE\main.o: curr_version.h
 .\EXE\main.o: C:\Keil\ARM\INC\NXP\LPC17xx\LPC17xx.H
-.\EXE\main.o: C:\Keil\ARM\RV31\INC\core_cm3.h
+.\EXE\main.o: C:\Keil\ARM\CMSIS\Include\core_cm3.h
+.\EXE\main.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
+.\EXE\main.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
 .\EXE\main.o: C:\Keil\ARM\INC\NXP\LPC17xx\system_LPC17xx.h

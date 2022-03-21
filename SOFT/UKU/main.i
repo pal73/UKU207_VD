@@ -967,6 +967,7 @@ typedef enum {
 	iNpn_set,
 	iBps_list,
 	iRele_set,iRele_set_,
+	iFWabout,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
 
@@ -1648,11 +1649,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1458 "main.h"
+#line 1459 "main.h"
 
-#line 1469 "main.h"
+#line 1470 "main.h"
 
-#line 1485 "main.h"
+#line 1486 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1696,7 +1697,7 @@ extern short can_plazma;
 
 
 
-#line 1539 "main.h"
+#line 1540 "main.h"
 
 
 
@@ -3772,6 +3773,14 @@ extern char* modbus_tcp_out_ptr;
 U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
 #line 44 "main.c"
+#line 1 "curr_version.h"
+extern const short HARDVARE_VERSION;
+extern const short SOFT_VERSION;
+extern const short BUILD;
+extern const short BUILD_YEAR;
+extern const short BUILD_MONTH;
+extern const short BUILD_DAY;
+#line 45 "main.c"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -4313,7 +4322,9 @@ typedef enum IRQn
 
 
 
-#line 1 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
+#line 1 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+ 
+
 
 
 
@@ -4357,6 +4368,29 @@ typedef enum IRQn
 
 
 
+  
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+ 
 
 
 
@@ -4366,6 +4400,13 @@ typedef enum IRQn
 
 
 
+
+
+#line 93 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+
+#line 95 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+#line 1 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cmInstr.h"
+ 
 
 
 
@@ -4388,27 +4429,23 @@ typedef enum IRQn
 
  
 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
  
 
 
-#line 86 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
+
+ 
+
+
+ 
 
 
 
 
-
-
-
-
-
-
+ 
 
 
 
@@ -4418,16 +4455,7 @@ typedef enum IRQn
 
  
 
-#line 112 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
 
-
-
-
-
- 
-
-
- 
 
 
 
@@ -4441,283 +4469,58 @@ typedef enum IRQn
 
 
  
-typedef struct
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline __asm uint32_t __REV16(uint32_t value)
 {
-  volatile uint32_t ISER[8];                       
-       uint32_t RESERVED0[24];
-  volatile uint32_t ICER[8];                       
-       uint32_t RSERVED1[24];
-  volatile uint32_t ISPR[8];                       
-       uint32_t RESERVED2[24];
-  volatile uint32_t ICPR[8];                       
-       uint32_t RESERVED3[24];
-  volatile uint32_t IABR[8];                       
-       uint32_t RESERVED4[56];
-  volatile uint8_t  IP[240];                       
-       uint32_t RESERVED5[644];
-  volatile  uint32_t STIR;                          
-}  NVIC_Type;
-
-
- 
-typedef struct
-{
-  volatile const  uint32_t CPUID;                         
-  volatile uint32_t ICSR;                          
-  volatile uint32_t VTOR;                          
-  volatile uint32_t AIRCR;                         
-  volatile uint32_t SCR;                           
-  volatile uint32_t CCR;                           
-  volatile uint8_t  SHP[12];                       
-  volatile uint32_t SHCSR;                         
-  volatile uint32_t CFSR;                          
-  volatile uint32_t HFSR;                          
-  volatile uint32_t DFSR;                          
-  volatile uint32_t MMFAR;                         
-  volatile uint32_t BFAR;                          
-  volatile uint32_t AFSR;                          
-  volatile const  uint32_t PFR[2];                        
-  volatile const  uint32_t DFR;                           
-  volatile const  uint32_t ADR;                           
-  volatile const  uint32_t MMFR[4];                       
-  volatile const  uint32_t ISAR[5];                       
-} SCB_Type;
-
-
- 
-typedef struct
-{
-  volatile uint32_t CTRL;                          
-  volatile uint32_t LOAD;                          
-  volatile uint32_t VAL;                           
-  volatile const  uint32_t CALIB;                         
-} SysTick_Type;
-
-
- 
-typedef struct
-{
-  volatile  union  
-  {
-    volatile  uint8_t    u8;                        
-    volatile  uint16_t   u16;                       
-    volatile  uint32_t   u32;                       
-  }  PORT [32];                                
-       uint32_t RESERVED0[864];
-  volatile uint32_t TER;                           
-       uint32_t RESERVED1[15];
-  volatile uint32_t TPR;                           
-       uint32_t RESERVED2[15];
-  volatile uint32_t TCR;                           
-       uint32_t RESERVED3[29];
-  volatile uint32_t IWR;                           
-  volatile uint32_t IRR;                           
-  volatile uint32_t IMCR;                          
-       uint32_t RESERVED4[43];
-  volatile uint32_t LAR;                           
-  volatile uint32_t LSR;                           
-       uint32_t RESERVED5[6];
-  volatile const  uint32_t PID4;                          
-  volatile const  uint32_t PID5;
-  volatile const  uint32_t PID6;
-  volatile const  uint32_t PID7;
-  volatile const  uint32_t PID0;
-  volatile const  uint32_t PID1;
-  volatile const  uint32_t PID2;
-  volatile const  uint32_t PID3;
-  volatile const  uint32_t CID0;
-  volatile const  uint32_t CID1;
-  volatile const  uint32_t CID2;
-  volatile const  uint32_t CID3;
-} ITM_Type;
-
-
- 
-typedef struct
-{
-       uint32_t RESERVED0;
-  volatile const  uint32_t ICTR;                          
-
-
-
-       uint32_t RESERVED1;
-
-} InterruptType_Type;
-
-
- 
-
-typedef struct
-{
-  volatile const  uint32_t TYPE;                          
-  volatile uint32_t CTRL;                          
-  volatile uint32_t RNR;                           
-  volatile uint32_t RBAR;                          
-  volatile uint32_t RASR;                          
-  volatile uint32_t RBAR_A1;                       
-  volatile uint32_t RASR_A1;                       
-  volatile uint32_t RBAR_A2;                       
-  volatile uint32_t RASR_A2;                       
-  volatile uint32_t RBAR_A3;                       
-  volatile uint32_t RASR_A3;                       
-} MPU_Type;
-
-
-
- 
-typedef struct
-{
-  volatile uint32_t DHCSR;                         
-  volatile  uint32_t DCRSR;                         
-  volatile uint32_t DCRDR;                         
-  volatile uint32_t DEMCR;                         
-} CoreDebug_Type;
-
-
- 
-#line 274 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
-
-#line 281 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-#line 311 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
-
-
- 
-
-
- 
-
-
-
-
-#line 336 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
-
-
- 
- 
- 
- 
-
-
-
-
-
-
-
-
-
- 
-extern uint32_t __get_PSP(void);
-
-
-
-
-
-
-
-
-
- 
-extern void __set_PSP(uint32_t topOfProcStack);
-
-
-
-
-
-
-
-
-
- 
-extern uint32_t __get_MSP(void);
-
-
-
-
-
-
-
-
-
- 
-extern void __set_MSP(uint32_t topOfMainStack);
-
-
-
-
-
-
-
-
- 
-extern uint32_t __REV16(uint16_t value);
-
-
-
-
-
-
-
-
- 
-extern int32_t __REVSH(int16_t value);
-
-
-#line 502 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
- 
-static __inline uint32_t  __get_BASEPRI(void)
-{
-  register uint32_t __regBasePri         __asm("basepri");
-  return(__regBasePri);
-}
-
-
-
-
-
-
-
-
- 
-static __inline void __set_BASEPRI(uint32_t basePri)
-{
-  register uint32_t __regBasePri         __asm("basepri");
-  __regBasePri = (basePri & 0x1ff);
+  rev16 r0, r0
+  bx lr
 }
 
 
@@ -4729,10 +4532,13 @@ static __inline void __set_BASEPRI(uint32_t basePri)
 
 
  
-static __inline uint32_t __get_PRIMASK(void)
+
+
+
+static __inline __asm int32_t __REVSH(int32_t value)
 {
-  register uint32_t __regPriMask         __asm("primask");
-  return(__regPriMask);
+  revsh r0, r0
+  bx lr
 }
 
 
@@ -4742,26 +4548,11 @@ static __inline uint32_t __get_PRIMASK(void)
 
 
 
- 
-static __inline void __set_PRIMASK(uint32_t priMask)
-{
-  register uint32_t __regPriMask         __asm("primask");
-  __regPriMask = (priMask);
-}
-
-
-
-
-
 
 
 
  
-static __inline uint32_t __get_FAULTMASK(void)
-{
-  register uint32_t __regFaultMask       __asm("faultmask");
-  return(__regFaultMask);
-}
+
 
 
 
@@ -4771,11 +4562,7 @@ static __inline uint32_t __get_FAULTMASK(void)
 
 
  
-static __inline void __set_FAULTMASK(uint32_t faultMask)
-{
-  register uint32_t __regFaultMask       __asm("faultmask");
-  __regFaultMask = (faultMask & 1);
-}
+
 
 
 
@@ -4785,6 +4572,155 @@ static __inline void __set_FAULTMASK(uint32_t faultMask)
 
 
  
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+#line 772 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cmInstr.h"
+
+   
+
+#line 96 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+#line 1 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cmFunc.h"
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+ 
+
+
+ 
+
+ 
+ 
+
+
+
+
+
+
+ 
+
+
+
 static __inline uint32_t __get_CONTROL(void)
 {
   register uint32_t __regControl         __asm("control");
@@ -4799,6 +4735,9 @@ static __inline uint32_t __get_CONTROL(void)
 
 
  
+
+
+
 static __inline void __set_CONTROL(uint32_t control)
 {
   register uint32_t __regControl         __asm("control");
@@ -4809,7 +4748,6 @@ static __inline void __set_CONTROL(uint32_t control)
 
 
 
-#line 1044 "C:\\Keil\\ARM\\RV31\\INC\\core_cm3.h"
 
 
 
@@ -4817,6 +4755,1017 @@ static __inline void __set_CONTROL(uint32_t control)
 
 
 
+static __inline uint32_t __get_IPSR(void)
+{
+  register uint32_t __regIPSR          __asm("ipsr");
+  return(__regIPSR);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t __get_APSR(void)
+{
+  register uint32_t __regAPSR          __asm("apsr");
+  return(__regAPSR);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t __get_xPSR(void)
+{
+  register uint32_t __regXPSR          __asm("xpsr");
+  return(__regXPSR);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t __get_PSP(void)
+{
+  register uint32_t __regProcessStackPointer  __asm("psp");
+  return(__regProcessStackPointer);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline void __set_PSP(uint32_t topOfProcStack)
+{
+  register uint32_t __regProcessStackPointer  __asm("psp");
+  __regProcessStackPointer = topOfProcStack;
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t __get_MSP(void)
+{
+  register uint32_t __regMainStackPointer     __asm("msp");
+  return(__regMainStackPointer);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline void __set_MSP(uint32_t topOfMainStack)
+{
+  register uint32_t __regMainStackPointer     __asm("msp");
+  __regMainStackPointer = topOfMainStack;
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t __get_PRIMASK(void)
+{
+  register uint32_t __regPriMask         __asm("primask");
+  return(__regPriMask);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline void __set_PRIMASK(uint32_t priMask)
+{
+  register uint32_t __regPriMask         __asm("primask");
+  __regPriMask = (priMask);
+}
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t  __get_BASEPRI(void)
+{
+  register uint32_t __regBasePri         __asm("basepri");
+  return(__regBasePri);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline void __set_BASEPRI(uint32_t basePri)
+{
+  register uint32_t __regBasePri         __asm("basepri");
+  __regBasePri = (basePri & 0xff);
+}
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+static __inline uint32_t __get_FAULTMASK(void)
+{
+  register uint32_t __regFaultMask       __asm("faultmask");
+  return(__regFaultMask);
+}
+
+
+
+
+
+
+
+
+ 
+
+
+
+static __inline void __set_FAULTMASK(uint32_t faultMask)
+{
+  register uint32_t __regFaultMask       __asm("faultmask");
+  __regFaultMask = (faultMask & 1);
+}
+
+
+
+
+
+#line 348 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cmFunc.h"
+
+
+#line 840 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cmFunc.h"
+
+ 
+
+
+#line 97 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+
+
+
+
+
+
+
+
+
+ 
+#line 114 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+
+
+ 
+typedef union
+{
+  struct
+  {
+
+    uint32_t _reserved0:27;               
+
+
+
+
+
+    uint32_t Q:1;                         
+    uint32_t V:1;                         
+    uint32_t C:1;                         
+    uint32_t Z:1;                         
+    uint32_t N:1;                         
+  } b;                                    
+  uint32_t w;                              
+} APSR_Type;
+
+
+
+ 
+typedef union
+{
+  struct
+  {
+    uint32_t ISR:9;                       
+    uint32_t _reserved0:23;               
+  } b;                                    
+  uint32_t w;                             
+} IPSR_Type;
+
+
+
+ 
+typedef union
+{
+  struct
+  {
+    uint32_t ISR:9;                       
+
+    uint32_t _reserved0:15;               
+
+
+
+
+
+    uint32_t T:1;                         
+    uint32_t IT:2;                        
+    uint32_t Q:1;                         
+    uint32_t V:1;                         
+    uint32_t C:1;                         
+    uint32_t Z:1;                         
+    uint32_t N:1;                         
+  } b;                                    
+  uint32_t w;                             
+} xPSR_Type;
+
+
+
+ 
+typedef union
+{
+  struct
+  {
+    uint32_t nPRIV:1;                     
+    uint32_t SPSEL:1;                     
+    uint32_t FPCA:1;                      
+    uint32_t _reserved0:29;               
+  } b;                                    
+  uint32_t w;                             
+} CONTROL_Type;
+
+ 
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+  volatile uint32_t ISER[8];                  
+       uint32_t RESERVED0[24];                                   
+  volatile uint32_t ICER[8];                  
+       uint32_t RSERVED1[24];                                    
+  volatile uint32_t ISPR[8];                  
+       uint32_t RESERVED2[24];                                   
+  volatile uint32_t ICPR[8];                  
+       uint32_t RESERVED3[24];                                   
+  volatile uint32_t IABR[8];                  
+       uint32_t RESERVED4[56];                                   
+  volatile uint8_t  IP[240];                  
+       uint32_t RESERVED5[644];                                  
+  volatile  uint32_t STIR;                     
+}  NVIC_Type;                                               
+
+ 
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+  volatile const  uint32_t CPUID;                    
+  volatile uint32_t ICSR;                     
+  volatile uint32_t VTOR;                     
+  volatile uint32_t AIRCR;                    
+  volatile uint32_t SCR;                      
+  volatile uint32_t CCR;                      
+  volatile uint8_t  SHP[12];                  
+  volatile uint32_t SHCSR;                    
+  volatile uint32_t CFSR;                     
+  volatile uint32_t HFSR;                     
+  volatile uint32_t DFSR;                     
+  volatile uint32_t MMFAR;                    
+  volatile uint32_t BFAR;                     
+  volatile uint32_t AFSR;                     
+  volatile const  uint32_t PFR[2];                   
+  volatile const  uint32_t DFR;                      
+  volatile const  uint32_t ADR;                      
+  volatile const  uint32_t MMFR[4];                  
+  volatile const  uint32_t ISAR[5];                  
+} SCB_Type;                                                
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+  volatile uint32_t CTRL;                     
+  volatile uint32_t LOAD;                     
+  volatile uint32_t VAL;                      
+  volatile const  uint32_t CALIB;                    
+} SysTick_Type;
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+  volatile  union  
+  {
+    volatile  uint8_t    u8;                   
+    volatile  uint16_t   u16;                  
+    volatile  uint32_t   u32;                  
+  }  PORT [32];                           
+       uint32_t RESERVED0[864];                                 
+  volatile uint32_t TER;                      
+       uint32_t RESERVED1[15];                                  
+  volatile uint32_t TPR;                      
+       uint32_t RESERVED2[15];                                  
+  volatile uint32_t TCR;                      
+       uint32_t RESERVED3[29];                                  
+  volatile uint32_t IWR;                      
+  volatile uint32_t IRR;                      
+  volatile uint32_t IMCR;                     
+       uint32_t RESERVED4[43];                                  
+  volatile uint32_t LAR;                      
+  volatile uint32_t LSR;                      
+       uint32_t RESERVED5[6];                                   
+  volatile const  uint32_t PID4;                     
+  volatile const  uint32_t PID5;                     
+  volatile const  uint32_t PID6;                     
+  volatile const  uint32_t PID7;                     
+  volatile const  uint32_t PID0;                     
+  volatile const  uint32_t PID1;                     
+  volatile const  uint32_t PID2;                     
+  volatile const  uint32_t PID3;                     
+  volatile const  uint32_t CID0;                     
+  volatile const  uint32_t CID1;                     
+  volatile const  uint32_t CID2;                     
+  volatile const  uint32_t CID3;                     
+} ITM_Type;                                                
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+       uint32_t RESERVED0;
+  volatile const  uint32_t ICTR;                     
+
+
+
+       uint32_t RESERVED1;
+
+} InterruptType_Type;
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+  volatile const  uint32_t TYPE;                     
+  volatile uint32_t CTRL;                     
+  volatile uint32_t RNR;                      
+  volatile uint32_t RBAR;                     
+  volatile uint32_t RASR;                     
+  volatile uint32_t RBAR_A1;                  
+  volatile uint32_t RASR_A1;                  
+  volatile uint32_t RBAR_A2;                  
+  volatile uint32_t RASR_A2;                  
+  volatile uint32_t RBAR_A3;                  
+  volatile uint32_t RASR_A3;                  
+} MPU_Type;                                                
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+ 
+typedef struct
+{
+  volatile uint32_t DHCSR;                    
+  volatile  uint32_t DCRSR;                    
+  volatile uint32_t DCRDR;                    
+  volatile uint32_t DEMCR;                    
+} CoreDebug_Type;
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+ 
+ 
+#line 848 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+
+#line 855 "C:\\Keil\\ARM\\CMSIS\\Include\\core_cm3.h"
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
+
+ 
 
 
 
@@ -4833,12 +5782,13 @@ static __inline void NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
   uint32_t reg_value;
   uint32_t PriorityGroupTmp = (PriorityGroup & 0x07);                          
   
-  reg_value  = ((SCB_Type *) ((0xE000E000) + 0x0D00))->AIRCR;                                                     
-  reg_value &= ~((0xFFFFU << 16) | (0x0F << 8));                               
-  reg_value  = ((reg_value | (0x5FA << 16) | (PriorityGroupTmp << 8)));   
-  ((SCB_Type *) ((0xE000E000) + 0x0D00))->AIRCR = reg_value;
+  reg_value  =  ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->AIRCR;                                                    
+  reg_value &= ~((0xFFFFUL << 16) | (7UL << 8));              
+  reg_value  =  (reg_value                       |
+                (0x5FA << 16) | 
+                (PriorityGroupTmp << 8));                                      
+  ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->AIRCR =  reg_value;
 }
-
 
 
 
@@ -4850,9 +5800,8 @@ static __inline void NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
  
 static __inline uint32_t NVIC_GetPriorityGrouping(void)
 {
-  return ((((SCB_Type *) ((0xE000E000) + 0x0D00))->AIRCR >> 8) & 0x07);                                           
+  return ((((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->AIRCR & (7UL << 8)) >> 8);    
 }
-
 
 
 
@@ -4864,9 +5813,8 @@ static __inline uint32_t NVIC_GetPriorityGrouping(void)
  
 static __inline void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
-  ((NVIC_Type *) ((0xE000E000) + 0x0100))->ISER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
+  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->ISER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
 }
-
 
 
 
@@ -4878,8 +5826,9 @@ static __inline void NVIC_EnableIRQ(IRQn_Type IRQn)
  
 static __inline void NVIC_DisableIRQ(IRQn_Type IRQn)
 {
-  ((NVIC_Type *) ((0xE000E000) + 0x0100))->ICER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
+  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->ICER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
 }
+
 
 
 
@@ -4892,9 +5841,8 @@ static __inline void NVIC_DisableIRQ(IRQn_Type IRQn)
  
 static __inline uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
 {
-  return((uint32_t) ((((NVIC_Type *) ((0xE000E000) + 0x0100))->ISPR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));  
+  return((uint32_t) ((((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->ISPR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));  
 }
-
 
 
 
@@ -4906,9 +5854,8 @@ static __inline uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
  
 static __inline void NVIC_SetPendingIRQ(IRQn_Type IRQn)
 {
-  ((NVIC_Type *) ((0xE000E000) + 0x0100))->ISPR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
+  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->ISPR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
 }
-
 
 
 
@@ -4920,9 +5867,8 @@ static __inline void NVIC_SetPendingIRQ(IRQn_Type IRQn)
  
 static __inline void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
 {
-  ((NVIC_Type *) ((0xE000E000) + 0x0100))->ICPR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
+  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->ICPR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));  
 }
-
 
 
 
@@ -4934,9 +5880,8 @@ static __inline void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
  
 static __inline uint32_t NVIC_GetActive(IRQn_Type IRQn)
 {
-  return((uint32_t)((((NVIC_Type *) ((0xE000E000) + 0x0100))->IABR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));  
+  return((uint32_t)((((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->IABR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));  
 }
-
 
 
 
@@ -4953,12 +5898,10 @@ static __inline uint32_t NVIC_GetActive(IRQn_Type IRQn)
 static __inline void NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
 {
   if(IRQn < 0) {
-    ((SCB_Type *) ((0xE000E000) + 0x0D00))->SHP[((uint32_t)(IRQn) & 0xF)-4] = ((priority << (8 - 5)) & 0xff); }  
+    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->SHP[((uint32_t)(IRQn) & 0xF)-4] = ((priority << (8 - 5)) & 0xff); }  
   else {
-    ((NVIC_Type *) ((0xE000E000) + 0x0100))->IP[(uint32_t)(IRQn)] = ((priority << (8 - 5)) & 0xff);    }         
+    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->IP[(uint32_t)(IRQn)] = ((priority << (8 - 5)) & 0xff);    }         
 }
-
-
 
 
 
@@ -4977,11 +5920,10 @@ static __inline uint32_t NVIC_GetPriority(IRQn_Type IRQn)
 {
 
   if(IRQn < 0) {
-    return((uint32_t)(((SCB_Type *) ((0xE000E000) + 0x0D00))->SHP[((uint32_t)(IRQn) & 0xF)-4] >> (8 - 5)));  }  
+    return((uint32_t)(((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->SHP[((uint32_t)(IRQn) & 0xF)-4] >> (8 - 5)));  }  
   else {
-    return((uint32_t)(((NVIC_Type *) ((0xE000E000) + 0x0100))->IP[(uint32_t)(IRQn)]           >> (8 - 5)));  }  
+    return((uint32_t)(((NVIC_Type *) ((0xE000E000UL) + 0x0100UL))->IP[(uint32_t)(IRQn)]           >> (8 - 5)));  }  
 }
-
 
 
 
@@ -5000,7 +5942,7 @@ static __inline uint32_t NVIC_GetPriority(IRQn_Type IRQn)
  
 static __inline uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t PreemptPriority, uint32_t SubPriority)
 {
-  uint32_t PriorityGroupTmp = (PriorityGroup & 0x07);                          
+  uint32_t PriorityGroupTmp = (PriorityGroup & 0x07);           
   uint32_t PreemptPriorityBits;
   uint32_t SubPriorityBits;
 
@@ -5027,12 +5969,10 @@ static __inline uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
 
 
 
-
-
  
 static __inline void NVIC_DecodePriority (uint32_t Priority, uint32_t PriorityGroup, uint32_t* pPreemptPriority, uint32_t* pSubPriority)
 {
-  uint32_t PriorityGroupTmp = (PriorityGroup & 0x07);                          
+  uint32_t PriorityGroupTmp = (PriorityGroup & 0x07);           
   uint32_t PreemptPriorityBits;
   uint32_t SubPriorityBits;
 
@@ -5045,6 +5985,20 @@ static __inline void NVIC_DecodePriority (uint32_t Priority, uint32_t PriorityGr
 
 
 
+
+
+ 
+static __inline void NVIC_SystemReset(void)
+{
+  __dsb(0xF);                                                     
+               
+  ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->AIRCR  = ((0x5FA << 16)      | 
+                 (((SCB_Type *) ((0xE000E000UL) + 0x0D00UL))->AIRCR & (7UL << 8)) | 
+                 (1UL << 2));                    
+  __dsb(0xF);                                                                    
+  while(1);                                                     
+}
+
  
 
 
@@ -5053,6 +6007,7 @@ static __inline void NVIC_DecodePriority (uint32_t Priority, uint32_t PriorityGr
 
 
 
+ 
 
 
 
@@ -5067,18 +6022,20 @@ static __inline void NVIC_DecodePriority (uint32_t Priority, uint32_t PriorityGr
  
 static __inline uint32_t SysTick_Config(uint32_t ticks)
 { 
-  if (ticks > ((1<<24) -1))  return (1);                                              
-
-  ((SysTick_Type *) ((0xE000E000) + 0x0010))->LOAD  =  (ticks & ((1<<24) -1)) - 1;                                       
-  NVIC_SetPriority (SysTick_IRQn, (1<<5) - 1);                             
-  ((SysTick_Type *) ((0xE000E000) + 0x0010))->VAL   =  (0x00);                                                               
-  ((SysTick_Type *) ((0xE000E000) + 0x0010))->CTRL = (1 << 2) | (1<<0) | (1<<1);  
-  return (0);                                                                             
+  if (ticks > (0xFFFFFFUL << 0))  return (1);             
+                                                               
+  ((SysTick_Type *) ((0xE000E000UL) + 0x0010UL))->LOAD  = (ticks & (0xFFFFFFUL << 0)) - 1;       
+  NVIC_SetPriority (SysTick_IRQn, (1<<5) - 1);   
+  ((SysTick_Type *) ((0xE000E000UL) + 0x0010UL))->VAL   = 0;                                           
+  ((SysTick_Type *) ((0xE000E000UL) + 0x0010UL))->CTRL  = (1UL << 2) | 
+                   (1UL << 1)   | 
+                   (1UL << 0);                     
+  return (0);                                                   
 }
 
 
 
-
+ 
 
 
 
@@ -5086,21 +6043,9 @@ static __inline uint32_t SysTick_Config(uint32_t ticks)
 
 
 
-
-
-
-
-
  
-static __inline void NVIC_SystemReset(void)
-{
-  ((SCB_Type *) ((0xE000E000) + 0x0D00))->AIRCR  = ((0x5FA << 16) | (((SCB_Type *) ((0xE000E000) + 0x0D00))->AIRCR & (0x700)) | (1<<2));  
-  __dsb(0);                                                                                            
-  while(1);                                                                             
-}
 
-
- 
+extern volatile int32_t ITM_RxBuffer;                     
 
 
 
@@ -5115,17 +6060,58 @@ static __inline void NVIC_SystemReset(void)
  
 static __inline uint32_t ITM_SendChar (uint32_t ch)
 {
-  if (ch == '\n') ITM_SendChar('\r');
-  
-  if ((((CoreDebug_Type *) (0xE000EDF0))->DEMCR & (1 << 24))  &&
-      (((ITM_Type *) (0xE0000000))->TCR & 1)                  &&
-      (((ITM_Type *) (0xE0000000))->TER & (1UL << 0))  ) 
+  if ((((CoreDebug_Type *) (0xE000EDF0UL))->DEMCR & (1UL << 24))  &&       
+      (((ITM_Type *) (0xE0000000UL))->TCR & (1UL << 0))                  &&       
+      (((ITM_Type *) (0xE0000000UL))->TER & (1UL << 0)        )                    )      
   {
-    while (((ITM_Type *) (0xE0000000))->PORT[0].u32 == 0);
-    ((ITM_Type *) (0xE0000000))->PORT[0].u8 = (uint8_t) ch;
+    while (((ITM_Type *) (0xE0000000UL))->PORT[0].u32 == 0);
+    ((ITM_Type *) (0xE0000000UL))->PORT[0].u8 = (uint8_t) ch;
   }  
   return (ch);
 }
+
+
+
+
+
+
+
+
+
+
+ 
+static __inline int32_t ITM_ReceiveChar (void) {
+  int32_t ch = -1;                            
+
+  if (ITM_RxBuffer != 0x5AA55AA5) {
+    ch = ITM_RxBuffer;
+    ITM_RxBuffer = 0x5AA55AA5;        
+  }
+  
+  return (ch); 
+}
+
+
+
+
+
+
+
+
+
+ 
+static __inline int32_t ITM_CheckChar (void) {
+
+  if (ITM_RxBuffer == 0x5AA55AA5) {
+    return (0);                                  
+  } else {
+    return (1);                                  
+  }
+}
+
+ 
+
+
 
 
 
@@ -6028,7 +7014,7 @@ typedef struct
  
 #line 1031 "C:\\Keil\\ARM\\INC\\NXP\\LPC17xx\\LPC17xx.H"
 
-#line 490 "main.c"
+#line 491 "main.c"
 
 
 
@@ -6137,11 +7123,11 @@ enum_av_tbox_stat av_tbox_stat=atsOFF;
 signed short av_tbox_cnt;
 char tbatdisable_cmnd=20,tloaddisable_cmnd=22;
 short tbatdisable_cnt,tloaddisable_cnt;
-#line 604 "main.c"
+#line 605 "main.c"
 
-#line 613 "main.c"
+#line 614 "main.c"
 
-#line 626 "main.c"
+#line 627 "main.c"
 
 
 
@@ -6168,7 +7154,7 @@ char ibat_metr_cnt=0;
 
 
 
-#line 663 "main.c"
+#line 664 "main.c"
 
 
 
@@ -6298,7 +7284,7 @@ void rtc_init (void)
 
 static void timer_poll () 
 {
-if (((SysTick_Type *) ((0xE000E000) + 0x0010))->CTRL & 0x10000) 
+if (((SysTick_Type *) ((0xE000E000UL) + 0x0010UL))->CTRL & 0x10000) 
      {
      timer_tick ();
      tick = 1;
@@ -7141,7 +8127,8 @@ else if(a_ind . i==iMn_VD)
 	ptrs[6+NUMIST]= 	" Установки          "; 
     ptrs[7+NUMIST]= 	" Журнал событий     ";
 	ptrs[8+NUMIST]= 	" Выход              ";
-	ptrs[9+NUMIST]=	" Тест               ";
+	ptrs[9+NUMIST]=		" Версия ПО          ";
+	ptrs[10+NUMIST]=	" Тест               ";
 	
 
     if(a_ind . s_i==0)a_ind . i_s=0;
@@ -10549,7 +11536,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5086 "main.c"
+#line 5088 "main.c"
     	}
 
 
@@ -11169,7 +12156,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 5838 "main.c"
+#line 5840 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11316,7 +12303,20 @@ else if(a_ind . i==iBps_list)
 
 
 	}
+
+else if(a_ind . i==iFWabout)
+	{
+	bgnd_par(	" Версия             ",
+				" Сборка  0000.00.00 ",
+				"                    ",
+				"                    ");
+	int2lcdyx(BUILD_YEAR,1,12,0);
+	int2lcdyx(BUILD_MONTH,1,15,0);
+	int2lcdyx(BUILD_DAY,1,18,0);
 	
+	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
+	}
+		
 else if(a_ind . i==iAvt_set_sel)
 	{
 	ptrs[0]=						" БПС N1             ";
@@ -11538,12 +12538,12 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 }							    
 
 
-#line 6212 "main.c"
+#line 6227 "main.c"
 
 
 
 
-#line 6235 "main.c"
+#line 6250 "main.c"
 
 
 
@@ -11797,13 +12797,13 @@ else if(a_ind . i==iMn_VD)
 	if(but==251)
 		{
 		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,6+NUMIST);
+		gran_char(&a_ind . s_i,0,7+NUMIST);
 		}
 		
 	else if(but==253)
 		{
 		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,6+NUMIST);
+		gran_char(&a_ind . s_i,0,7+NUMIST);
 		}	
 
 	else if(but==239)
@@ -11876,7 +12876,14 @@ else if(a_ind . i==iMn_VD)
 			{
 			a_ind . s_i=0;
 			}
-		else if(a_ind . s_i==(6+NUMIST))
+		else if(a_ind . s_i==(6+NUMIST)) 
+			{
+			if(but==254)
+		     	{
+		     	tree_up(iFWabout,0,0,0);
+		     	}
+			}
+		else if(a_ind . s_i==(7+NUMIST))
 			{
 	     	tree_up(iPrltst,0,0,0);
 		    parol_init();
@@ -12687,7 +13694,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7390 "main.c"
+#line 7412 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -12709,7 +13716,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7436 "main.c"
+#line 7458 "main.c"
 
 
 
@@ -17633,9 +18640,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 12605 "main.c"
+#line 12627 "main.c"
 
-#line 12815 "main.c"
+#line 12837 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -17966,7 +18973,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13525 "main.c"
+#line 13547 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -18150,6 +19157,17 @@ else if(a_ind . i==iBps_list)
 		else bAVG_BLOCK=1;
 		}						
 	}
+
+else if(a_ind . i==iFWabout)
+	{
+	ret(1000);
+	if(but==254)
+	     {
+	     tree_down(0,0);
+	     ret(0);
+	     }
+	}
+
 else if(a_ind . i==iAvt_set_sel)
 	{
 	ret(1000);
@@ -18682,8 +19700,8 @@ SystemInit();
 
 bTPS=1;
 
-((SysTick_Type *) ((0xE000E000) + 0x0010))->LOAD = (SystemFrequency / 2000) - 1;
-((SysTick_Type *) ((0xE000E000) + 0x0010))->CTRL = 0x07;
+((SysTick_Type *) ((0xE000E000UL) + 0x0010UL))->LOAD = (SystemFrequency / 2000) - 1;
+((SysTick_Type *) ((0xE000E000UL) + 0x0010UL))->CTRL = 0x07;
 
 
 
@@ -18830,7 +19848,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14394 "main.c"
+#line 14427 "main.c"
 
 
 
@@ -18921,7 +19939,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 14502 "main.c"
+#line 14535 "main.c"
 
 
 cntrl_stat=10*PWM_START;
