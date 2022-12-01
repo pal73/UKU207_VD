@@ -2768,7 +2768,7 @@
 
   <Group>
     <GroupName>Source</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <File>
@@ -2791,10 +2791,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>33</ColumnNumber>
+      <ColumnNumber>52</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>983</TopLine>
-      <CurrentLine>983</CurrentLine>
+      <TopLine>2402</TopLine>
+      <CurrentLine>2424</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\control.c</PathWithFileName>
       <FilenameWithoutPath>control.c</FilenameWithoutPath>
@@ -2849,7 +2849,7 @@
       <Focus>0</Focus>
       <ColumnNumber>5</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>742</TopLine>
+      <TopLine>736</TopLine>
       <CurrentLine>747</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\avar_hndl.c</PathWithFileName>
@@ -2889,10 +2889,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>9</ColumnNumber>
+      <ColumnNumber>15</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1695</TopLine>
-      <CurrentLine>1723</CurrentLine>
+      <TopLine>31</TopLine>
+      <CurrentLine>31</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -2952,6 +2952,20 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\SNMP_MIB.c</PathWithFileName>
       <FilenameWithoutPath>SNMP_MIB.c</FilenameWithoutPath>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>0</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>25</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>9</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\curr_version.c</PathWithFileName>
+      <FilenameWithoutPath>curr_version.c</FilenameWithoutPath>
     </File>
   </Group>
 
@@ -3092,10 +3106,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>16</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1176</TopLine>
-      <CurrentLine>1176</CurrentLine>
+      <TopLine>1184</TopLine>
+      <CurrentLine>1193</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\full_can.c</PathWithFileName>
       <FilenameWithoutPath>full_can.c</FilenameWithoutPath>
@@ -3610,8 +3624,8 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\main.h</PathWithFilename>
-    <TopLine>1596</TopLine>
-    <CurrentLine>1596</CurrentLine>
+    <TopLine>742</TopLine>
+    <CurrentLine>742</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -3743,8 +3757,20 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>10</ActiveTab>
+      <ActiveTab>0</ActiveTab>
       <Documents>
+        <Doc>
+          <Name>.\curr_version.c</Name>
+          <ColumnNumber>25</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>9</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\avar_hndl.c</Name>
+          <ColumnNumber>5</ColumnNumber>
+          <TopLine>736</TopLine>
+          <CurrentLine>747</CurrentLine>
+        </Doc>
         <Doc>
           <Name>.\startup_LPC17xx.s</Name>
           <ColumnNumber>35</ColumnNumber>
@@ -3753,15 +3779,15 @@
         </Doc>
         <Doc>
           <Name>.\full_can.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>1176</TopLine>
-          <CurrentLine>1176</CurrentLine>
+          <ColumnNumber>16</ColumnNumber>
+          <TopLine>1184</TopLine>
+          <CurrentLine>1193</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\cmd.h</Name>
-          <ColumnNumber>0</ColumnNumber>
+          <ColumnNumber>8</ColumnNumber>
           <TopLine>17</TopLine>
-          <CurrentLine>39</CurrentLine>
+          <CurrentLine>32</CurrentLine>
         </Doc>
         <Doc>
           <Name>simbol.h</Name>
@@ -3789,9 +3815,9 @@
         </Doc>
         <Doc>
           <Name>.\main.c</Name>
-          <ColumnNumber>9</ColumnNumber>
-          <TopLine>1695</TopLine>
-          <CurrentLine>1723</CurrentLine>
+          <ColumnNumber>15</ColumnNumber>
+          <TopLine>31</TopLine>
+          <CurrentLine>31</CurrentLine>
         </Doc>
         <Doc>
           <Name>C:\Keil\ARM\RV31\INC\RTL.h</Name>
@@ -3801,9 +3827,9 @@
         </Doc>
         <Doc>
           <Name>.\control.c</Name>
-          <ColumnNumber>33</ColumnNumber>
-          <TopLine>983</TopLine>
-          <CurrentLine>983</CurrentLine>
+          <ColumnNumber>52</ColumnNumber>
+          <TopLine>2402</TopLine>
+          <CurrentLine>2424</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\memo.c</Name>
@@ -3831,15 +3857,9 @@
         </Doc>
         <Doc>
           <Name>main.h</Name>
-          <ColumnNumber>7</ColumnNumber>
-          <TopLine>1596</TopLine>
-          <CurrentLine>1596</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\avar_hndl.c</Name>
-          <ColumnNumber>5</ColumnNumber>
+          <ColumnNumber>6</ColumnNumber>
           <TopLine>742</TopLine>
-          <CurrentLine>747</CurrentLine>
+          <CurrentLine>742</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\modbus.c</Name>

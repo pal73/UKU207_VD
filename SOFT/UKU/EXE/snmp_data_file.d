@@ -6,10 +6,8 @@
 .\EXE\snmp_data_file.o: C:\Keil\ARM\RV31\INC\net_config.h
 .\EXE\snmp_data_file.o: control.h
 .\EXE\snmp_data_file.o: C:\Keil\ARM\INC\NXP\LPC17xx\LPC17xx.H
-.\EXE\snmp_data_file.o: C:\Keil\ARM\CMSIS\Include\core_cm3.h
+.\EXE\snmp_data_file.o: C:\Keil\ARM\RV31\INC\core_cm3.h
 .\EXE\snmp_data_file.o: C:\Keil\ARM\RV31\INC\stdint.h
-.\EXE\snmp_data_file.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
-.\EXE\snmp_data_file.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
 .\EXE\snmp_data_file.o: C:\Keil\ARM\INC\NXP\LPC17xx\system_LPC17xx.h
 .\EXE\snmp_data_file.o: C:\Keil\ARM\RV31\INC\string.h
 .\EXE\snmp_data_file.o: 25lc640.h

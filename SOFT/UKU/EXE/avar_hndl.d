@@ -4,10 +4,8 @@
 .\EXE\avar_hndl.o: full_can.h
 .\EXE\avar_hndl.o: 25lc640.h
 .\EXE\avar_hndl.o: C:\Keil\ARM\INC\NXP\LPC17xx\LPC17xx.H
-.\EXE\avar_hndl.o: C:\Keil\ARM\CMSIS\Include\core_cm3.h
+.\EXE\avar_hndl.o: C:\Keil\ARM\RV31\INC\core_cm3.h
 .\EXE\avar_hndl.o: C:\Keil\ARM\RV31\INC\stdint.h
-.\EXE\avar_hndl.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
-.\EXE\avar_hndl.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
 .\EXE\avar_hndl.o: C:\Keil\ARM\INC\NXP\LPC17xx\system_LPC17xx.h
 .\EXE\avar_hndl.o: main.h
 .\EXE\avar_hndl.o: C:\Keil\ARM\RV31\INC\rtl.h
