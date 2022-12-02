@@ -7,6 +7,7 @@
 
 
 
+
 #line 1 "lcd_AGM1232_uku207_3.h"
 
 
@@ -45,7 +46,7 @@ void lcd_on(void);
 void lcd_off(void);
 void lcd_out(char* adr);
 
-#line 10 "main.c"
+#line 11 "main.c"
 #line 1 "C:\\Keil\\ARM\\RV31\\INC\\rtl.h"
 
 
@@ -407,7 +408,7 @@ extern BOOL snmp_set_community (const char *community);
   
 
  
-#line 11 "main.c"
+#line 12 "main.c"
 #line 1 "type.h"
 
 
@@ -664,7 +665,7 @@ typedef unsigned       __int64 uintmax_t;
 typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus;
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 
-#line 12 "main.c"
+#line 13 "main.c"
 #line 1 "main.h"
 #line 2 "main.h"
 
@@ -1790,7 +1791,7 @@ extern short pvlk;
 
 
  
-#line 13 "main.c"
+#line 14 "main.c"
 #line 1 "simbol.h"
 
 const char caracter[1536]={
@@ -1986,7 +1987,7 @@ const char caracter[1536]={
 0x00,0x7C,0x50,0x50,0x50,0x20,0x00,0x28,
 0x44,0x54,0x54,0x38,0x00,0x7C,0x10,0x38,
 0x44,0x38,0x00,0x08,0x54,0x34,0x14,0x7C};
-#line 14 "main.c"
+#line 15 "main.c"
 #line 1 "25lc640.h"
 
 
@@ -2015,7 +2016,7 @@ char lc640_write(int ADR,char in);
 char lc640_write_int(short ADR,short in);
 char lc640_write_long(int ADR,long in);
 char lc640_write_long_ptr(int ADR,char* in);
-#line 15 "main.c"
+#line 16 "main.c"
 #line 1 "Timer.h"
 
 
@@ -2045,7 +2046,7 @@ extern void TIMER1_IRQHandler (void);
 
 
  
-#line 16 "main.c"
+#line 17 "main.c"
 #line 1 "gran.h"
 
 void gran_ring_char(signed char *adr, signed char min, signed char max) ;
@@ -2053,7 +2054,7 @@ void gran_char(signed char *adr, signed char min, signed char max);
 void gran(signed short *adr, signed short min, signed short max);
 void gran_ring(signed short *adr, signed short min, signed short max);
 void gran_long(signed long *adr, signed long min, signed long max); 
-#line 17 "main.c"
+#line 18 "main.c"
 #line 1 "uart0.h"
 
 
@@ -2113,7 +2114,7 @@ void uart_out_buff0 (char *ptr, char len);
 void rs232_data_out_1(void);
 uint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 
-#line 18 "main.c"
+#line 19 "main.c"
 #line 1 "uart1.h"
 
 
@@ -2155,7 +2156,7 @@ char index_offset1 (signed char index,signed char offset);
 char control_check1(char index);
 void uart_in1(void);
 
-#line 19 "main.c"
+#line 20 "main.c"
 #line 1 "uart2.h"
 
 
@@ -2208,11 +2209,11 @@ uint32_t UART_2_Init(uint32_t baudrate );
 void uart_in2(void); 
 
 
-#line 20 "main.c"
+#line 21 "main.c"
 #line 1 "cmd.h"
 
 
-#line 21 "main.c"
+#line 22 "main.c"
 #line 1 "ret.h"
 
 
@@ -2240,7 +2241,7 @@ void ret_hndl(void);
  
 
      
-#line 22 "main.c"
+#line 23 "main.c"
 #line 1 "eeprom_map.h"
 
 
@@ -2439,7 +2440,7 @@ extern const unsigned short ADR_SK_RS_EN[4];
 
 extern const unsigned short ADR_EE_RELE_SET_MASK[4];
 
-#line 23 "main.c"
+#line 24 "main.c"
 #line 1 "common_func.h"
 
 
@@ -2483,7 +2484,7 @@ void community2lcd(char* in,
 			char flash_pos,
 			char flash_on);
 
-#line 24 "main.c"
+#line 25 "main.c"
 #line 1 "control.h"
 
 
@@ -2641,7 +2642,7 @@ void numOfForvardBps_init(void);
 void outVoltContrHndl(void);
 
 
-#line 25 "main.c"
+#line 26 "main.c"
 #line 1 "mess.h"
 
 
@@ -2664,7 +2665,7 @@ void mess_send(char _mess, short par0, short par1, char _time);
 char mess_find(char _mess);
 char mess_find_unvol(char _mess);
 
-#line 26 "main.c"
+#line 27 "main.c"
 #line 1 "full_can.h"
 
 
@@ -2781,7 +2782,7 @@ void CAN_ISR_Rx1( void );
 extern char can_debug_plazma[2][10];
 extern char ccc_plazma[20];
 
-#line 27 "main.c"
+#line 28 "main.c"
 #line 1 "watchdog.h"
 
 void watchdog_init(unsigned long f,unsigned long time_out);
@@ -2791,7 +2792,7 @@ void watchdog_reset(void);
 
 
 
-#line 28 "main.c"
+#line 29 "main.c"
 #line 1 "ad7705.h"
 
 extern unsigned short ad7705_res1,ad7705_res2;
@@ -2810,7 +2811,7 @@ void ad7705_drv(void);
 
 
 
-#line 29 "main.c"
+#line 30 "main.c"
 #line 1 "beep.h"
 
 extern unsigned long beep_stat_temp,beep_stat;
@@ -2821,7 +2822,7 @@ extern char bU_BAT2REL_AV_BAT;
 void beep_drv(void);
 void beep_init(long zvuk,char fl);
 void beep_hndl(void);
-#line 30 "main.c"
+#line 31 "main.c"
 #line 1 "avar_hndl.h"
 
 
@@ -2854,7 +2855,7 @@ void avar_bat_ips_hndl(char in);
 
 
 
-#line 31 "main.c"
+#line 32 "main.c"
 #line 1 "memo.h"
 
 void memo_read (void);
@@ -2864,7 +2865,7 @@ void memo_read (void);
 
 
 
-#line 32 "main.c"
+#line 33 "main.c"
 #line 1 "simbols.h"
 
 
@@ -2875,7 +2876,7 @@ extern const char sBPS2[30];
 extern const char sAVT[30];
 extern const char sAVU[30];
 extern const char caracter[1536];
-#line 33 "main.c"
+#line 34 "main.c"
 #line 1 "graphic.h"
 
 
@@ -2886,7 +2887,7 @@ void plot(signed short x_b,signed short y_b,unsigned long data,signed short len,
 void graphic_print(signed short x_b,signed short y_b,signed short x_l,signed short y_l,signed short x_d,signed short y_d,const char* adress,char inverse);
 void graphic_print_text(signed short x_b,signed short y_b,const char* bgnd,signed short num,signed short data,signed short des,signed short pos,char inverse);
 void graphic_print_text_text(signed short x_b,signed short y_b,const char* bgnd,signed short num,signed short data,signed short des,signed short pos,char inverse);
-#line 34 "main.c"
+#line 35 "main.c"
 #line 1 "snmp_data_file.h"
 extern char snmp_community[10];
 
@@ -3164,7 +3165,7 @@ void snmp_cool_20_dtemper_write(int mode);
 
 
  
-#line 35 "main.c"
+#line 36 "main.c"
 #line 1 "C:\\Keil\\ARM\\RV31\\INC\\net_config.h"
 
 
@@ -3559,7 +3560,7 @@ extern void modem_run (void);
 
 
 
-#line 36 "main.c"
+#line 37 "main.c"
 #line 1 "uart0.h"
 
 
@@ -3619,8 +3620,8 @@ void uart_out_buff0 (char *ptr, char len);
 void rs232_data_out_1(void);
 uint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 
-#line 37 "main.c"
 #line 38 "main.c"
+#line 39 "main.c"
 #line 1 "modbus.h"
 
 extern unsigned char modbus_buf[20];
@@ -3660,7 +3661,7 @@ void modbus_input_registers_transmit(unsigned char adr,unsigned char func,unsign
 
 
 
-#line 39 "main.c"
+#line 40 "main.c"
 #line 1 "sacred_sun.h"
 
 extern char portForSacredSunBatteryIsInitiated;
@@ -3671,7 +3672,7 @@ extern short sacredSunSilentCnt;
 
 void sacred_san_bat_hndl(void);
 short ascii2halFhex(char in);
-#line 40 "main.c"
+#line 41 "main.c"
 #line 1 "ztt.h"
 
 extern char portZTTSunBatteryIsInitiated;
@@ -3683,7 +3684,7 @@ extern char zTTButteryCnter;
 extern char zTTBatteryHndlCmnd;
 
 void ztt_bat_hndl(void);
-#line 41 "main.c"
+#line 42 "main.c"
 #line 1 "mcp2515.h"
 
 
@@ -3752,7 +3753,7 @@ void can_mcp2515_init(void);
 
 void can_mcp2515_hndl(void);
 
-#line 42 "main.c"
+#line 43 "main.c"
 
 #line 1 "modbus_tcp.h"
 
@@ -3771,7 +3772,7 @@ extern char* modbus_tcp_out_ptr;
 
 U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
-#line 44 "main.c"
+#line 45 "main.c"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -6028,7 +6029,7 @@ typedef struct
  
 #line 1031 "C:\\Keil\\ARM\\INC\\NXP\\LPC17xx\\LPC17xx.H"
 
-#line 490 "main.c"
+#line 491 "main.c"
 
 
 
@@ -6137,11 +6138,11 @@ enum_av_tbox_stat av_tbox_stat=atsOFF;
 signed short av_tbox_cnt;
 char tbatdisable_cmnd=20,tloaddisable_cmnd=22;
 short tbatdisable_cnt,tloaddisable_cnt;
-#line 604 "main.c"
+#line 605 "main.c"
 
-#line 613 "main.c"
+#line 614 "main.c"
 
-#line 626 "main.c"
+#line 627 "main.c"
 
 
 
@@ -6168,7 +6169,7 @@ char ibat_metr_cnt=0;
 
 
 
-#line 663 "main.c"
+#line 664 "main.c"
 
 
 
@@ -10549,7 +10550,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5086 "main.c"
+#line 5087 "main.c"
     	}
 
 
@@ -11156,7 +11157,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 5825 "main.c"
+#line 5826 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11525,12 +11526,12 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 }							    
 
 
-#line 6199 "main.c"
+#line 6200 "main.c"
 
 
 
 
-#line 6222 "main.c"
+#line 6223 "main.c"
 
 
 
@@ -12674,7 +12675,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7377 "main.c"
+#line 7378 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -12696,7 +12697,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7423 "main.c"
+#line 7424 "main.c"
 
 
 
@@ -17620,9 +17621,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 12592 "main.c"
+#line 12593 "main.c"
 
-#line 12802 "main.c"
+#line 12803 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -17948,7 +17949,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13507 "main.c"
+#line 13508 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -18812,7 +18813,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14376 "main.c"
+#line 14377 "main.c"
 
 
 
@@ -18903,7 +18904,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 14484 "main.c"
+#line 14485 "main.c"
 
 
 cntrl_stat=10*PWM_START;

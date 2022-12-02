@@ -1,5 +1,6 @@
 //Базовая ветка
 //#define SC16IS740_UART
+//Branch_021222
 
 #ifdef UKU2071x
 #define can1_out mcp2515_transmit

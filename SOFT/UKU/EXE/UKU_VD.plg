@@ -1,3 +1,12 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\UKU.uvproj
+Project File Date:  12/02/2022
+
+<h2>Output:</h2>
 Build target 'VD'
 assembling startup_LPC17xx.s...
 creating preprocessor file for Net_Config_HTTP.c...
@@ -37,34 +46,34 @@ creating preprocessor file for eeprom_map.c...
 compiling eeprom_map.c...
 creating preprocessor file for main.c...
 compiling main.c...
-main.c(1369): warning:  #177-D: variable "ptr_cnt" was declared but never referenced
-main.c(1369): warning:  #177-D: variable "ptr_cnt1" was declared but never referenced
-main.c(1369): warning:  #177-D: variable "ptr_cnt2" was declared but never referenced
-main.c(1369): warning:  #177-D: variable "ptr_cnt3" was declared but never referenced
-main.c(1369): warning:  #177-D: variable "ptr_cnt4" was declared but never referenced
-main.c(1948): warning:  #192-D: unrecognized character escape sequence
-main.c(2734): warning:  #175-D: subscript out of range
-main.c(3543): warning:  #177-D: variable "sss" was declared but never referenced
-main.c(1402): warning:  #177-D: variable "ii_" was declared but never referenced
-main.c(1403): warning:  #177-D: variable "cnt_ind_bat" was declared but never referenced
-main.c(6563): warning:  #223-D: function "avar_sys_t_hndl" declared implicitly
-main.c(14055): warning:  #177-D: label "but_an_end" was declared but never referenced
-main.c(14440): warning:  #186-D: pointless comparison of unsigned integer with zero
-main.c(14498): warning:  #223-D: function "sc16is700_init" declared implicitly
-main.c(14525): warning:  #223-D: function "can_in_an1" declared implicitly
-main.c(14532): warning:  #223-D: function "modbus_in" declared implicitly
-main.c(14582): warning:  #223-D: function "sc16is700_uart_hndl" declared implicitly
-main.c(14653): warning:  #223-D: function "u_avar_hndl" declared implicitly
-main.c(14654): warning:  #223-D: function "t_sys_avar_hndl" declared implicitly
-main.c(14655): warning:  #223-D: function "overload_hndl" declared implicitly
-main.c(14673): warning:  #223-D: function "rele_av_hndl" declared implicitly
-main.c(14710): warning:  #223-D: function "u_out_reg_hndl" declared implicitly
-main.c(14737): warning:  #223-D: function "npn_hndl" declared implicitly
-main.c(14752): warning:  #223-D: function "powerAntiAliasingHndl" declared implicitly
-main.c(14761): warning:  #223-D: function "vd_is_work_hndl" declared implicitly
-main.c(14777): warning:  #223-D: function "numOfForvardBps_hndl" declared implicitly
-main.c(790): warning:  #177-D: function "timer_poll" was declared but never referenced
-main.c(6190): warning: C3487E: read from variable 'av_head_int' with offset out of bounds
+main.c(1370): warning:  #177-D: variable "ptr_cnt" was declared but never referenced
+main.c(1370): warning:  #177-D: variable "ptr_cnt1" was declared but never referenced
+main.c(1370): warning:  #177-D: variable "ptr_cnt2" was declared but never referenced
+main.c(1370): warning:  #177-D: variable "ptr_cnt3" was declared but never referenced
+main.c(1370): warning:  #177-D: variable "ptr_cnt4" was declared but never referenced
+main.c(1949): warning:  #192-D: unrecognized character escape sequence
+main.c(2735): warning:  #175-D: subscript out of range
+main.c(3544): warning:  #177-D: variable "sss" was declared but never referenced
+main.c(1403): warning:  #177-D: variable "ii_" was declared but never referenced
+main.c(1404): warning:  #177-D: variable "cnt_ind_bat" was declared but never referenced
+main.c(6564): warning:  #223-D: function "avar_sys_t_hndl" declared implicitly
+main.c(14056): warning:  #177-D: label "but_an_end" was declared but never referenced
+main.c(14441): warning:  #186-D: pointless comparison of unsigned integer with zero
+main.c(14499): warning:  #223-D: function "sc16is700_init" declared implicitly
+main.c(14526): warning:  #223-D: function "can_in_an1" declared implicitly
+main.c(14533): warning:  #223-D: function "modbus_in" declared implicitly
+main.c(14583): warning:  #223-D: function "sc16is700_uart_hndl" declared implicitly
+main.c(14654): warning:  #223-D: function "u_avar_hndl" declared implicitly
+main.c(14655): warning:  #223-D: function "t_sys_avar_hndl" declared implicitly
+main.c(14656): warning:  #223-D: function "overload_hndl" declared implicitly
+main.c(14674): warning:  #223-D: function "rele_av_hndl" declared implicitly
+main.c(14711): warning:  #223-D: function "u_out_reg_hndl" declared implicitly
+main.c(14738): warning:  #223-D: function "npn_hndl" declared implicitly
+main.c(14753): warning:  #223-D: function "powerAntiAliasingHndl" declared implicitly
+main.c(14762): warning:  #223-D: function "vd_is_work_hndl" declared implicitly
+main.c(14778): warning:  #223-D: function "numOfForvardBps_hndl" declared implicitly
+main.c(791): warning:  #177-D: function "timer_poll" was declared but never referenced
+main.c(6191): warning: C3487E: read from variable 'av_head_int' with offset out of bounds
 creating preprocessor file for simbols.c...
 compiling simbols.c...
 creating preprocessor file for graphic.c...

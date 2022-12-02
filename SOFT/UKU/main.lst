@@ -1,6 +1,7 @@
 L 1 "main.c"
 N//Базовая ветка
 N//#define SC16IS740_UART
+N//Branch_021222
 N
 N#ifdef UKU2071x
 N#define can1_out mcp2515_transmit
@@ -62,7 +63,7 @@ Nvoid lcd_off(void);
 Nvoid lcd_out(char* adr);
 N
 N#endif
-L 10 "main.c" 2
+L 11 "main.c" 2
 N#include "rtl.h"
 L 1 "C:\Keil\ARM\RV31\INC\rtl.h" 1
 N/*----------------------------------------------------------------------------
@@ -603,7 +604,7 @@ N *---------------------------------------------------------------------------*/
 N  
 N#endif
 N 
-L 11 "main.c" 2
+L 12 "main.c" 2
 N#include "type.h"
 L 1 "type.h" 1
 N/*****************************************************************************
@@ -909,7 +910,7 @@ Ntypedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus;
 Ntypedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 N
 N#endif  /* __TYPE_H__ */
-L 12 "main.c" 2
+L 13 "main.c" 2
 N#include "main.h"
 L 1 "main.h" 1
 N#include <rtl.h>
@@ -2544,7 +2545,7 @@ N
 N/*----------------------------------------------------------------------------
 N * end of file
 N *---------------------------------------------------------------------------*/
-L 13 "main.c" 2
+L 14 "main.c" 2
 N#include "simbol.h"
 L 1 "simbol.h" 1
 N
@@ -2741,7 +2742,7 @@ N0x50,0x20,0x00,0x7C,0x50,0x20,0x00,0x7C,
 N0x00,0x7C,0x50,0x50,0x50,0x20,0x00,0x28,
 N0x44,0x54,0x54,0x38,0x00,0x7C,0x10,0x38,
 N0x44,0x38,0x00,0x08,0x54,0x34,0x14,0x7C};
-L 14 "main.c" 2
+L 15 "main.c" 2
 N#include "25lc640.h"
 L 1 "25lc640.h" 1
 N
@@ -2771,7 +2772,7 @@ Nchar lc640_write(int ADR,char in);
 Nchar lc640_write_int(short ADR,short in);
 Nchar lc640_write_long(int ADR,long in);
 Nchar lc640_write_long_ptr(int ADR,char* in);
-L 15 "main.c" 2
+L 16 "main.c" 2
 N#include "Timer.h"
 L 1 "Timer.h" 1
 N/*****************************************************************************
@@ -2802,7 +2803,7 @@ N#endif /* end __TIMER_H */
 N/*****************************************************************************
 N**                            End Of File
 N******************************************************************************/
-L 16 "main.c" 2
+L 17 "main.c" 2
 N#include "gran.h"
 L 1 "gran.h" 1
 N
@@ -2811,7 +2812,7 @@ Nvoid gran_char(signed char *adr, signed char min, signed char max);
 Nvoid gran(signed short *adr, signed short min, signed short max);
 Nvoid gran_ring(signed short *adr, signed short min, signed short max);
 Nvoid gran_long(signed long *adr, signed long min, signed long max); 
-L 17 "main.c" 2
+L 18 "main.c" 2
 N#include "uart0.h"
 L 1 "uart0.h" 1
 N
@@ -2881,7 +2882,7 @@ Nvoid uart_out_buff0 (char *ptr, char len);
 Nvoid rs232_data_out_1(void);
 Nuint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 N
-L 18 "main.c" 2
+L 19 "main.c" 2
 N#include "uart1.h"
 L 1 "uart1.h" 1
 N#define RX_BUFFER_SIZE1 100
@@ -2926,7 +2927,7 @@ Nchar index_offset1 (signed char index,signed char offset);
 Nchar control_check1(char index);
 Nvoid uart_in1(void);
 N
-L 19 "main.c" 2
+L 20 "main.c" 2
 N#include "uart2.h"
 L 1 "uart2.h" 1
 N
@@ -2989,7 +2990,7 @@ Nuint32_t UART_2_Init(uint32_t baudrate );
 Nvoid uart_in2(void); 
 N
 N
-L 20 "main.c" 2
+L 21 "main.c" 2
 N#include "cmd.h"
 L 1 "cmd.h" 1
 N//-----------------------------------------------
@@ -3060,7 +3061,7 @@ N#define PUT_ZTT_TM5 	0xC5
 N#define PUT_ZTT_TM6 	0xC6
 N#define PUT_ZTT_TM7 	0xC7
 N#define PUT_ZTT_TM8 	0xC8
-L 21 "main.c" 2
+L 22 "main.c" 2
 N#include "ret.h"
 L 1 "ret.h" 1
 N#ifndef _RET_H_
@@ -3089,7 +3090,7 @@ N
 N 
 N
 N     
-L 22 "main.c" 2
+L 23 "main.c" 2
 N#include "eeprom_map.h"
 L 1 "eeprom_map.h" 1
 N
@@ -3588,7 +3589,7 @@ Nextern const unsigned short ADR_SK_RS_EN[4];
 N
 Nextern const unsigned short ADR_EE_RELE_SET_MASK[4];
 N
-L 23 "main.c" 2
+L 24 "main.c" 2
 N#include "common_func.h"
 L 1 "common_func.h" 1
 N#ifndef _COMMON_FUNC_H_
@@ -3634,7 +3635,7 @@ N			char flash_pos,
 N			char flash_on);
 N
 N#endif
-L 24 "main.c" 2
+L 25 "main.c" 2
 N#include "control.h"
 L 1 "control.h" 1
 N#ifndef _CONTROL_H_
@@ -3793,7 +3794,7 @@ Nvoid numOfForvardBps_init(void);
 Nvoid outVoltContrHndl(void);
 N
 N
-L 25 "main.c" 2
+L 26 "main.c" 2
 N#include "mess.h"
 L 1 "mess.h" 1
 N
@@ -3817,7 +3818,7 @@ Nvoid mess_send(char _mess, short par0, short par1, char _time);
 Nchar mess_find(char _mess);
 Nchar mess_find_unvol(char _mess);
 N
-L 26 "main.c" 2
+L 27 "main.c" 2
 N#include "full_can.h"
 L 1 "full_can.h" 1
 N/**************************************************************************
@@ -3943,7 +3944,7 @@ N
 Nextern char can_debug_plazma[2][10];
 Nextern char ccc_plazma[20];
 N
-L 27 "main.c" 2
+L 28 "main.c" 2
 N#include "watchdog.h"
 L 1 "watchdog.h" 1
 N
@@ -3954,7 +3955,7 @@ N
 N
 N
 N
-L 28 "main.c" 2
+L 29 "main.c" 2
 N#include "ad7705.h"
 L 1 "ad7705.h" 1
 N
@@ -3974,7 +3975,7 @@ Nvoid ad7705_drv(void);
 N
 N
 N
-L 29 "main.c" 2
+L 30 "main.c" 2
 N#include "beep.h"
 L 1 "beep.h" 1
 N
@@ -3986,7 +3987,7 @@ N
 Nvoid beep_drv(void);
 Nvoid beep_init(long zvuk,char fl);
 Nvoid beep_hndl(void);
-L 30 "main.c" 2
+L 31 "main.c" 2
 N#include "avar_hndl.h"
 L 1 "avar_hndl.h" 1
 N
@@ -4020,7 +4021,7 @@ Nvoid avar_bat_ips_hndl(char in);
 N
 N
 N
-L 31 "main.c" 2
+L 32 "main.c" 2
 N#include "memo.h"
 L 1 "memo.h" 1
 N
@@ -4031,7 +4032,7 @@ N
 N
 N
 N
-L 32 "main.c" 2
+L 33 "main.c" 2
 N#include "simbols.h"
 L 1 "simbols.h" 1
 N
@@ -4043,7 +4044,7 @@ Nextern const char sBPS2[30];
 Nextern const char sAVT[30];
 Nextern const char sAVU[30];
 Nextern const char caracter[1536];
-L 33 "main.c" 2
+L 34 "main.c" 2
 N#include "graphic.h"
 L 1 "graphic.h" 1
 N
@@ -4055,7 +4056,7 @@ Nvoid plot(signed short x_b,signed short y_b,unsigned long data,signed short len
 Nvoid graphic_print(signed short x_b,signed short y_b,signed short x_l,signed short y_l,signed short x_d,signed short y_d,const char* adress,char inverse);
 Nvoid graphic_print_text(signed short x_b,signed short y_b,const char* bgnd,signed short num,signed short data,signed short des,signed short pos,char inverse);
 Nvoid graphic_print_text_text(signed short x_b,signed short y_b,const char* bgnd,signed short num,signed short data,signed short des,signed short pos,char inverse);
-L 34 "main.c" 2
+L 35 "main.c" 2
 N#include "snmp_data_file.h" 
 L 1 "snmp_data_file.h" 1
 Nextern char snmp_community[10];
@@ -4334,7 +4335,7 @@ N
 N
 N
 N 
-L 35 "main.c" 2
+L 36 "main.c" 2
 N#include "net_config.h"
 L 1 "C:\Keil\ARM\RV31\INC\net_config.h" 1
 N/*----------------------------------------------------------------------------
@@ -4773,7 +4774,7 @@ N *---------------------------------------------------------------------------*/
 N
 N#endif
 N
-L 36 "main.c" 2
+L 37 "main.c" 2
 N#include "uart0.h"
 L 1 "uart0.h" 1
 N
@@ -4843,7 +4844,7 @@ Nvoid uart_out_buff0 (char *ptr, char len);
 Nvoid rs232_data_out_1(void);
 Nuint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 N
-L 37 "main.c" 2
+L 38 "main.c" 2
 N#include <rtl.h>
 N#include "modbus.h"
 L 1 "modbus.h" 1
@@ -4885,7 +4886,7 @@ N//void modbus_hold_register_transmit(unsigned char adr,unsigned char func,unsig
 N
 N
 N
-L 39 "main.c" 2
+L 40 "main.c" 2
 N#include "sacred_sun.h"
 L 1 "sacred_sun.h" 1
 N
@@ -4897,7 +4898,7 @@ Nextern short sacredSunSilentCnt;
 N
 Nvoid sacred_san_bat_hndl(void);
 Nshort ascii2halFhex(char in);
-L 40 "main.c" 2
+L 41 "main.c" 2
 N#include "ztt.h"
 L 1 "ztt.h" 1
 N
@@ -4910,7 +4911,7 @@ Nextern char zTTButteryCnter;
 Nextern char zTTBatteryHndlCmnd;
 N
 Nvoid ztt_bat_hndl(void);
-L 41 "main.c" 2
+L 42 "main.c" 2
 N#include "mcp2515.h"
 L 1 "mcp2515.h" 1
 N
@@ -5086,7 +5087,7 @@ Nvoid can_mcp2515_init(void);
 N//-----------------------------------------------
 Nvoid can_mcp2515_hndl(void);
 N
-L 42 "main.c" 2
+L 43 "main.c" 2
 N//#include "sc16is7xx.h"
 N#include "modbus_tcp.h"
 L 1 "modbus_tcp.h" 1
@@ -5106,7 +5107,7 @@ Nextern char* modbus_tcp_out_ptr;
 N
 NU16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 N
-L 44 "main.c" 2
+L 45 "main.c" 2
 N
 Nextern U8 own_hw_adr[];
 Nextern U8  snmp_Community[];
@@ -8668,7 +8669,7 @@ N#define LPC_GPDMACH7          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH7_BASE )
 N#define LPC_USB               ((LPC_USB_TypeDef       *) LPC_USB_BASE      )
 N
 N#endif  // __LPC17xx_H__
-L 490 "main.c" 2
+L 491 "main.c" 2
 N
 N
 N
@@ -9751,11 +9752,11 @@ N			lcd_bitmap[ptr_bitmap++]=caracter[((unsigned)lcd_buffer[x]*6)+5];
 N			} 
 N		}
 N	}	
-W "main.c" 1369 13 variable "ptr_cnt" was declared but never referenced
-W "main.c" 1369 21 variable "ptr_cnt1" was declared but never referenced
-W "main.c" 1369 30 variable "ptr_cnt2" was declared but never referenced
-W "main.c" 1369 39 variable "ptr_cnt3" was declared but never referenced
-W "main.c" 1369 48 variable "ptr_cnt4" was declared but never referenced
+W "main.c" 1370 13 variable "ptr_cnt" was declared but never referenced
+W "main.c" 1370 21 variable "ptr_cnt1" was declared but never referenced
+W "main.c" 1370 30 variable "ptr_cnt2" was declared but never referenced
+W "main.c" 1370 39 variable "ptr_cnt3" was declared but never referenced
+W "main.c" 1370 48 variable "ptr_cnt4" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -10386,7 +10387,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 1948 16 unrecognized character escape sequence
+W "main.c" 1949 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -11267,7 +11268,7 @@ N		{
 N		av_j_si_max=4;  
 N		ptrs[0]=" Авария выходного   ";
 N		ptrs[1]=" напряжения (заниж.)";
-W "main.c" 2734 6 subscript out of range
+W "main.c" 2735 6 subscript out of range
 N		if(av_head_int[2]==1)ptrs[1]=" напряжения (завыш.)";
 N		ptrs[2]="   Начало           ";
 N		ptrs[3]="  0%[  0^ 0@:0#:0$  ";
@@ -12215,7 +12216,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3543 7 variable "sss" was declared but never referenced
+W "main.c" 3544 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -15277,8 +15278,8 @@ Nint2lcdyx(retcntsec,0,7,0);	*/
 N//int2lcdyx(bps[0]._vol_i,0,15,0);
 N//int2lcdyx(cntrl_stat,0,19,0); 
 N//int2lcdyx(bps[0]._Uin,0,4,0);
-W "main.c" 1402 6 variable "ii_" was declared but never referenced
-W "main.c" 1403 20 variable "cnt_ind_bat" was declared but never referenced
+W "main.c" 1403 6 variable "ii_" was declared but never referenced
+W "main.c" 1404 20 variable "cnt_ind_bat" was declared but never referenced
 N}							    
 N
 N
@@ -15743,7 +15744,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6563 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6564 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -25580,7 +25581,7 @@ N
 N		
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14055 1 label "but_an_end" was declared but never referenced
+W "main.c" 14056 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -25997,7 +25998,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14440 15 pointless comparison of unsigned integer with zero
+W "main.c" 14441 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26057,7 +26058,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 14498 1 function "sc16is700_init" declared implicitly
+W "main.c" 14499 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26086,7 +26087,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 14525 3 function "can_in_an1" declared implicitly
+W "main.c" 14526 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26094,7 +26095,7 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 14532 3 function "modbus_in" declared implicitly
+W "main.c" 14533 3 function "modbus_in" declared implicitly
 N		modbus_in();
 N		}
 N
@@ -26145,7 +26146,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 14582 3 function "sc16is700_uart_hndl" declared implicitly
+W "main.c" 14583 3 function "sc16is700_uart_hndl" declared implicitly
 N		sc16is700_uart_hndl();
 N		#endif		
 N		}
@@ -26218,11 +26219,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 14653 3 function "u_avar_hndl" declared implicitly
+W "main.c" 14654 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 14654 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 14655 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 14655 3 function "overload_hndl" declared implicitly
+W "main.c" 14656 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26242,7 +26243,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 14673 3 function "rele_av_hndl" declared implicitly
+W "main.c" 14674 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26280,7 +26281,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 14710 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 14711 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26308,7 +26309,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 14737 3 function "npn_hndl" declared implicitly
+W "main.c" 14738 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26324,7 +26325,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 14752 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 14753 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26334,7 +26335,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 14761 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 14762 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26351,10 +26352,10 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 14777 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 14778 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N
 N	}
 N}
-W "main.c" 790 13 function "timer_poll" was declared but never referenced
+W "main.c" 791 13 function "timer_poll" was declared but never referenced
