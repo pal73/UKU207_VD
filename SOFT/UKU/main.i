@@ -872,9 +872,9 @@ typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 
 
 
-#line 574 "main.h"
+#line 575 "main.h"
 
-#line 588 "main.h"
+#line 590 "main.h"
 
 
 
@@ -887,27 +887,37 @@ typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
  
 
 
-#line 609 "main.h"
+#line 611 "main.h"
 
-#line 619 "main.h"
+#line 621 "main.h"
 
-#line 628 "main.h"
+#line 630 "main.h"
 
-#line 637 "main.h"
+#line 639 "main.h"
 
-#line 649 "main.h"
+#line 651 "main.h"
 
-#line 659 "main.h"
+#line 661 "main.h"
 
-#line 668 "main.h"
+#line 670 "main.h"
 
-#line 676 "main.h"
+#line 678 "main.h"
 
-#line 685 "main.h"
+#line 687 "main.h"
 
-#line 697 "main.h"
+#line 699 "main.h"
 
-#line 709 "main.h"
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
@@ -960,7 +970,7 @@ typedef enum {
 	iExt_set,iExt_set_3U,
 	iExt_dt,
 	iExt_sk,iExt_sk_3U,
-	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 	iEnerg3,iEnerg,
 	iVent,
 	iK_power_net3,
@@ -969,7 +979,9 @@ typedef enum {
 	iBps_list,
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
-	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+	iFWabout,
+	iCurr_overload}i_enum;
 
 typedef struct  
 {
@@ -1227,6 +1239,8 @@ extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
 extern signed short I_LOAD_MODE;		
 
+extern signed short OVERLOAD_CURR;
+extern signed short OVERLOAD_TIME;
 
 
 
@@ -1467,6 +1481,7 @@ typedef struct
 	unsigned short _vent_resurs;
 	signed short debug_info_to_uku0;
 	signed short debug_info_to_uku1;
+	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
@@ -1649,11 +1664,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1458 "main.h"
+#line 1465 "main.h"
 
-#line 1469 "main.h"
+#line 1476 "main.h"
 
-#line 1485 "main.h"
+#line 1492 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1670,7 +1685,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 
 extern signed long ibat_metr_buff_[2];
-extern short bIBAT_SMKLBR;
+extern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 extern char ibat_metr_cnt;
 
 
@@ -1697,7 +1712,7 @@ extern short can_plazma;
 
 
 
-#line 1539 "main.h"
+#line 1546 "main.h"
 
 
 
@@ -1760,7 +1775,7 @@ extern U8 tcp_connect_stat;
 
 
 
-extern short overloadHndlCnt;
+extern short overloadHndlCnt,overloadHndlCnt1;
 extern char overloadAvar;
 
 
@@ -2274,34 +2289,34 @@ void ret_hndl(void);
 
  
 
-#line 204 "eeprom_map.h"
+#line 206 "eeprom_map.h"
 
 
 
-#line 216 "eeprom_map.h"
+#line 218 "eeprom_map.h"
 
 
-#line 227 "eeprom_map.h"
-
-
-
-#line 238 "eeprom_map.h"
+#line 229 "eeprom_map.h"
 
 
 
-#line 294 "eeprom_map.h"
-
-
-#line 337 "eeprom_map.h"
+#line 240 "eeprom_map.h"
 
 
 
+#line 296 "eeprom_map.h"
 
+
+#line 339 "eeprom_map.h"
 
 
 
 
-#line 359 "eeprom_map.h"
+
+
+
+
+#line 361 "eeprom_map.h"
 
 
 
@@ -2526,6 +2541,7 @@ extern short adc_gorb_cnt,adc_zero_cnt;
 extern char adc_window_flag;
 extern short adc_window_cnt;
 extern short adc_net_buff_cnt;
+extern short rele_on_cnt;
 
 
 char vz_start(char hour);
@@ -2828,10 +2844,10 @@ void beep_hndl(void);
 
 
 
-extern unsigned avar_stat;	 	
-extern unsigned avar_ind_stat; 	
-extern unsigned avar_stat_old;
-extern unsigned avar_stat_new,avar_stat_offed;
+extern unsigned avar_stat, avar_stat1;	 	
+extern unsigned avar_ind_stat, avar_ind_stat1; 	
+extern unsigned avar_stat_old, avar_stat1_old;
+extern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 
 
 
@@ -3773,6 +3789,14 @@ extern char* modbus_tcp_out_ptr;
 U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
 #line 45 "main.c"
+#line 1 "curr_version.h"
+extern const short HARDVARE_VERSION;
+extern const short SOFT_VERSION;
+extern const short BUILD;
+extern const short BUILD_YEAR;
+extern const short BUILD_MONTH;
+extern const short BUILD_DAY;
+#line 46 "main.c"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -4011,6 +4035,8 @@ signed short MODBUS_BAUDRATE;
 signed short BAT_LINK;
 signed short I_LOAD_MODE;	
 
+signed short OVERLOAD_CURR;
+signed short OVERLOAD_TIME;
 
 
 
@@ -6029,7 +6055,7 @@ typedef struct
  
 #line 1031 "C:\\Keil\\ARM\\INC\\NXP\\LPC17xx\\LPC17xx.H"
 
-#line 491 "main.c"
+#line 494 "main.c"
 
 
 
@@ -6138,11 +6164,11 @@ enum_av_tbox_stat av_tbox_stat=atsOFF;
 signed short av_tbox_cnt;
 char tbatdisable_cmnd=20,tloaddisable_cmnd=22;
 short tbatdisable_cnt,tloaddisable_cnt;
-#line 605 "main.c"
+#line 608 "main.c"
 
-#line 614 "main.c"
+#line 617 "main.c"
 
-#line 627 "main.c"
+#line 630 "main.c"
 
 
 
@@ -6163,13 +6189,13 @@ char max_net_slot;
 
 
 signed long ibat_metr_buff_[2];
-short bIBAT_SMKLBR;
+short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 char ibat_metr_cnt=0;
 
 
 
 
-#line 664 "main.c"
+#line 667 "main.c"
 
 
 
@@ -6255,7 +6281,7 @@ U8 tcp_connect_stat;
 
 
 
-short overloadHndlCnt;
+short overloadHndlCnt,overloadHndlCnt1;
 char overloadAvar;
 
 
@@ -6678,8 +6704,9 @@ if((((((LPC_CAN_TypeDef *) ((0x40000000UL) + 0x44000) )->GSR)>>16)&0x00ff)==127)
 
 void net_drv(void)
 { 
-
-max_net_slot=24;
+signed short UOUT_tr;
+signed short UAVT_tr;
+max_net_slot=32;
 
 
 if(++cnt_net_drv>max_net_slot) 
@@ -6708,12 +6735,15 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot))
 	
 	
 	
-	if(!bCAN_OFF)
+	
+	
+	if((!bCAN_OFF)&&(main_1Hz_cnt>5))
 		{
+		UOUT_tr=UOUT+30;
 
 
 
-		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
+		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
 
 		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
 
@@ -6743,13 +6773,14 @@ else if(cnt_net_drv==-1)
 else if(cnt_net_drv==-2)
 	{
 	
-     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT)),*((char*)((&UAVT))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
+	UAVT_tr=UAVT+30;
+     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
      byps._cnt++;
 	} 
 else if(cnt_net_drv==-3)
 	{                 
 	if(!bCAN_OFF) mcp2515_transmit(0x1d,0x1d,0,0,0,0,0,0);
-	ibat_metr_cnt++;
+	if(ibat_metr_cnt<60)ibat_metr_cnt++;
 	}
 	
 	
@@ -6947,70 +6978,457 @@ if(avar_stat&0x0001)
 
  
 
-if(ips_bat_av_stat)
-	{
-	sub_ptrs[i++]=	"  Авария батареи    ";
-	sub_cnt_max++;	
-	}
-if(avar_stat&(1<<(3+0)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+if(bps[0]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №1    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+1)))
+if(bps[1]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №2    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+2)))
+if(bps[2]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №3    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+3)))
+if(bps[3]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №4    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+4)))
+if(bps[4]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №5    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+5)))
+if(bps[5]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №6    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+6)))
+if(bps[6]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №7    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+7)))
+if(bps[7]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №8    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+8)))
+if(bps[8]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №9    ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+9)))
+if(bps[9]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №10   ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+10)))
+if(bps[10]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №11   ";
 	sub_cnt_max++;	
 	}
-if(avar_stat&(1<<(3+11)))
+if(bps[11]._av&0xef)
 	{
 	sub_ptrs[i++]=	"   Авария БПС №12   ";
 	sub_cnt_max++;	
+	}
+if(bps[12]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №13   ";
+	sub_cnt_max++;	
+	}
+if(bps[13]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №14   ";
+	sub_cnt_max++;	
+	}
+if(bps[14]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №15   ";
+	sub_cnt_max++;	
+	}
+if(bps[15]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №16   ";
+	sub_cnt_max++;	
+	}
+if(bps[16]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №17   ";
+	sub_cnt_max++;	
+	}
+if(bps[17]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №18   ";
+	sub_cnt_max++;	
+	}
+if(bps[18]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №19   ";
+	sub_cnt_max++;	
+	}
+if(bps[19]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №20   ";
+	sub_cnt_max++;	
+	}
+if(bps[20]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №21   ";
+	sub_cnt_max++;	
+	}
+if(bps[21]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №22   ";
+	sub_cnt_max++;	
+	}
+if(bps[22]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №23   ";
+	sub_cnt_max++;	
+	}
+if(bps[23]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №24   ";
+	sub_cnt_max++;	
+	}
+if(bps[24]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №25   ";
+	sub_cnt_max++;	
+	}
+if(bps[25]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №26   ";
+	sub_cnt_max++;	
+	}
+if(bps[26]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №27   ";
+	sub_cnt_max++;	
+	}
+if(bps[27]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №28   ";
+	sub_cnt_max++;	
+	}
+if(bps[28]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №29   ";
+	sub_cnt_max++;	
+	}
+if(bps[29]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №30   ";
+	sub_cnt_max++;	
+	}
+if(bps[30]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №31   ";
+	sub_cnt_max++;	
+	}
+if(bps[31]._av&0xef)
+	{
+	sub_ptrs[i++]=	"   Авария БПС №32   ";
+	sub_cnt_max++;	
+	}
+
+if(bps[0]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС1   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[1]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС2   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[2]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС3   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[3]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС4   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[4]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС5   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[5]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС6   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[6]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС7   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[7]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС8   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[8]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС9   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[9]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС10  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[10]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС11  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[11]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС12  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[12]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС13  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[13]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС14  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[14]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС15  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[15]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС16  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[16]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС17  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[17]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС18  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[18]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС19  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[19]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС20  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[20]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС21  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[21]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС22  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[22]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС23  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[23]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС24  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[24]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС25  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[25]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС26  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[26]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС27  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[27]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС28  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[28]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС29  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[29]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС30  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[30]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС31   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[31]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС32   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
 	}
 
 if(uout_av)
@@ -7064,6 +7482,11 @@ if(uInAvar==2)
 	sub_cnt_max++;	
 	}
 
+if(ibat_metr_cnt>30)
+	{
+	sub_ptrs[i++]=	"Шунт не подключен!!!";
+	sub_cnt_max++;	
+	}
 cnt_of_slave=NUMIST+NUMINV;
 
 
@@ -7141,8 +7564,9 @@ else if(a_ind . i==iMn_VD)
 	ptrs[5+NUMIST]=		" Таблица источников ";
 	ptrs[6+NUMIST]= 	" Установки          "; 
     ptrs[7+NUMIST]= 	" Журнал событий     ";
-	ptrs[8+NUMIST]= 	" Выход              ";
-	ptrs[9+NUMIST]=	" Тест               ";
+	ptrs[8+NUMIST]=		" Версия ПО          ";
+	ptrs[9+NUMIST]= 	" Выход              ";
+	ptrs[10+NUMIST]=	" Тест               ";
 	
 
     if(a_ind . s_i==0)a_ind . i_s=0;
@@ -7210,6 +7634,7 @@ else if(a_ind . i==iMn_VD)
 		if(bIBAT_SMKLBR)sub_bgnd("КЛБР. ",'$',-3);
 		else  int2lcd_mmm(Ib_ips_termokompensat,'$',0);
 		
+		if(ND_EXT[0])sub_bgnd("неиспр.",'?',-3);
 		int2lcd_mmm(t_ext[0],'?',0);
 		
 	
@@ -7241,6 +7666,8 @@ else if(a_ind . i==iMn_VD)
 
 	
 
+	
+	
 	
 	
 	
@@ -7478,6 +7905,7 @@ else if(a_ind . i==iMakb)
     
     
    	
+	
 	
 	
 	
@@ -8241,7 +8669,7 @@ else if(a_ind . i==iLog_)
 		av_j_si_max=4;  
 		ptrs[0]=" Авария выходного   ";
 		ptrs[1]=" напряжения (заниж.)";
-		if(av_head_int[2]==1)ptrs[1]=" напряжения (завыш.)";
+		if(av_head_int[1]==1)ptrs[1]=" напряжения (завыш.)";
 		ptrs[2]="   Начало           ";
 		ptrs[3]="  0%[  0^ 0@:0#:0$  ";
 		ptrs[4]="       Uвых=    <В  ";
@@ -8699,9 +9127,11 @@ else if((a_ind . i==iSet_VD))
 	ptrs[26]=		"                  >0";
 	ptrs[27]=		" Измерение тока     ";
 	ptrs[28]=		" нагрузки          {";
-    ptrs[29]=		" Выход              ";
-    ptrs[30]=		" Калибровки         "; 
-    ptrs[31]=		"                    ";        
+	ptrs[29]=		" Перегрузка по току ";
+    ptrs[30]=		" Выравнивание токов ";
+    ptrs[31]=		" Выход              ";
+    ptrs[32]=		" Калибровки         "; 
+    ptrs[33]=		"                    ";        
 	
 	if((a_ind . s_i-a_ind . i_s)>2)a_ind . i_s=a_ind . s_i-2;
 	else if(a_ind . s_i<a_ind . i_s)a_ind . i_s=a_ind . s_i;
@@ -9474,7 +9904,7 @@ else if(a_ind . i==iK_VD)
 	
     
 	
-	if((a_ind . s_i==0)||(a_ind . s_i==3))mess_send(225,229,1000,10);
+	
 	
 	
 	
@@ -10550,7 +10980,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5087 "main.c"
+#line 5494 "main.c"
     	}
 
 
@@ -11157,7 +11587,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 5826 "main.c"
+#line 6233 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11439,26 +11869,54 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 	{ 
 	if(ICA_EN==0)
 		{
-		ptrs[0]=		" Выключено          ";
+		ptrs[0]=		" Ведомый            ";
 		simax=1;
 		}
-	else 
+	else if(ICA_EN==1) 
 		{
 		ptrs[0]=		" Включено           ";
 		if(ICA_CH==0)
 			{
-			ptrs[1]=	" КАНАЛ  MODBUS-RTU  ";
+			ptrs[1]=	" Канал  MODBUS-RTU  ";
 			ptrs[2]=	" АДРЕС ВЕДОМОГО   ! ";
 			simax=3;
 			}
-		else
+		else if(ICA_CH==1)
 			{
-			ptrs[1]=	" КАНАЛ   MODBUS-TCP ";
+			ptrs[1]=	" Канал   MODBUS-TCP ";
 			ptrs[2]=	" IP 00@.00#.00$.00% ";
 			ptrs[3]=	" АДРЕС ВЕДОМОГО   ^ ";
 			simax=4;
 			}
+		else if(ICA_CH==2)
+			{
+			ptrs[1]=	" Канал   RS485-2    ";
+			ptrs[2]=	"                    ";
+			ptrs[3]=	"                    ";
+			simax=2;
+			}
+		else 
+			{
+			ptrs[1]=	" Неопределенность   ";
+			ptrs[2]=	"                    ";
+			ptrs[3]=	"                    ";
+			simax=2;
+			}
 		} 
+	else if(ICA_EN==2) 
+		{
+		ptrs[0]=		" ПОД ВНЕШНИМ        ";
+		ptrs[1]=		" УПРАВЛЕНИЕМ        ";
+		simax=2;
+		}
+	else 
+		{
+		ptrs[0]=		" Неопределенность   ";
+		ptrs[1]=		"                    ";
+		ptrs[2]=		"                    ";
+		ptrs[3]=		"                    ";
+		simax=1;
+		}
 	ptrs[simax]=		" Выход              ";
 	
 	if(a_ind . s_i<a_ind . i_s) a_ind . i_s=a_ind . s_i;
@@ -11481,16 +11939,52 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 	int2lcd(ICA_MODBUS_TCP_UNIT_ID,'^',0);	
      
  	} 
+else if(a_ind . i==iFWabout)
+	{
+	bgnd_par(	" Версия             ",
+				" Сборка  0000.00.00 ",
+
+				"                    ",
 
 
 
 
+				"                    ");
+	int2lcdyx(BUILD_YEAR,1,12,0);
+	int2lcdyx(BUILD_MONTH,1,15,0);
+	int2lcdyx(BUILD_DAY,1,18,0);
+	
+	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
+	}
+else if(a_ind . i==iLog_reset_prl)
+	{
+	ptrs[0]="Для очистки журнала ";
+	bgnd_par(ptrs[0],"  введите  пароль   ",sm_,sm_);
+	
+     int2lcdyx(parol[0],2,8,0);
+     int2lcdyx(parol[1],2,9,0);
+     int2lcdyx(parol[2],2,10,0);
+     lcd_buffer[68+a_ind . s_i]='¤';	
+	}
+
+else if(a_ind . i==iCurr_overload)
+	{
+	ptrs[0]=" Iперегруз.      !A ";
+	ptrs[1]=" Tвыдерж.        #с ";
 
 
+	ptrs[2]=" Выход              ";
+	
+	if(a_ind . s_i<a_ind . i_s) a_ind . i_s=a_ind . s_i;
+	else if((a_ind . s_i-a_ind . i_s)>2) a_ind . i_s=a_ind . s_i-2;
+	bgnd_par(" ПЕРЕГРУЗКА ПО ТОКУ ",ptrs[a_ind . i_s],ptrs[a_ind . i_s+1],ptrs[a_ind . i_s+2]);
+	
+	pointer_set(1);
 
+	int2lcd(OVERLOAD_CURR,'!',0); 
+	int2lcd(OVERLOAD_TIME,'#',0);
+	}    
 
-
- 
 
 
 
@@ -11526,12 +12020,12 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 }							    
 
 
-#line 6200 "main.c"
+#line 6671 "main.c"
 
 
 
 
-#line 6223 "main.c"
+#line 6694 "main.c"
 
 
 
@@ -11785,13 +12279,13 @@ else if(a_ind . i==iMn_VD)
 	if(but==251)
 		{
 		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,6+NUMIST);
+		gran_char(&a_ind . s_i,0,7+NUMIST);
 		}
 		
 	else if(but==253)
 		{
 		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,6+NUMIST);
+		gran_char(&a_ind . s_i,0,7+NUMIST);
 		}	
 
 	else if(but==239)
@@ -11808,7 +12302,8 @@ else if(a_ind . i==iMn_VD)
 		}
 	else if(but==123)
 		{
-		a_ind . s_i=0;
+		
+		a_ind . s_i=(2+NUMIST);
 		}
 
 	else if(but==103)
@@ -11821,21 +12316,24 @@ else if(a_ind . i==iMn_VD)
 		{
 		if(a_ind . s_i==0)
 			{
-			if(avar_ind_stat)
-				{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 				
-				
-				tree_up(iAv_view,0,0,0);
-				while(!(avar_ind_stat&(1<<a_ind . s_i)))
-					{
-					a_ind . s_i++;
-					if(a_ind . s_i>=32)
-						{
-						tree_down(0,0);
-						avar_ind_stat=0;
-						}
-					}
-				}																							
+			avar_ind_stat=0;
+			avar_ind_stat1=0;																											
 			}
 
 		else if((a_ind . s_i>1)&&(a_ind . s_i<=(1+NUMIST)))
@@ -11862,9 +12360,16 @@ else if(a_ind . i==iMn_VD)
 			}
 		else if(a_ind . s_i==(5+NUMIST))
 			{
-			a_ind . s_i=0;
+			if(but==254)
+		     	{
+		     	tree_up(iFWabout,0,0,0);
+		     	}
 			}
 		else if(a_ind . s_i==(6+NUMIST))
+			{
+			a_ind . s_i=0;
+			}
+		else if(a_ind . s_i==(7+NUMIST))
 			{
 	     	tree_up(iPrltst,0,0,0);
 		    parol_init();
@@ -12173,7 +12678,7 @@ else if(a_ind . i==iEnerg3)
 
 else if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 	||(a_ind . i==iAusw_prl)
-	||(a_ind . i==iPrltst))
+	||(a_ind . i==iPrltst)||(a_ind . i==iLog_reset_prl))
 	{
 	ret(50);
 	if(but==239)
@@ -12371,6 +12876,32 @@ else if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 	          			"                    ",1000);
 				}
 			}
+		else if(a_ind . i==iLog_reset_prl)
+			{
+			if(tempU==691) 
+				{
+				tree_down(0,0);
+				lc640_write(1024+1024+512+1024+2,0);
+				lc640_write(1024+1024+512+1024,0);
+				tree_down(0,0);
+				avar_ind_stat=0;
+				avar_stat=0;
+				avar_stat_old=0;
+	    	    show_mess("                    ",
+	          			"   Журнал событий   ",
+	          			"      очищен!!!     ",
+	          			"                    ",1000);
+				
+				}
+	  		else 
+				{
+		          tree_down(0,0);
+	    	          show_mess("                    ",
+	          			"       Пароль       ",
+	          			"     неверный!!!    ",
+	          			"                    ",1000);
+				}  
+			}
 		}
 	}
 
@@ -12561,17 +13092,19 @@ else if(a_ind . i==iLog)
 		
 	else if(but==254)
 		{  
-		if(a_ind . s_i==av_j_si_max+1)
+		if((a_ind . s_i==av_j_si_max+1)&&(av_j_si_max!=0))
 			{
-			lc640_write(1024+1024+512+1024+2,0);
-			lc640_write(1024+1024+512+1024,0);
-			tree_down(0,0);
-			avar_ind_stat=0;
-			avar_stat=0;
-			avar_stat_old=0;				
+			tree_up(iLog_reset_prl,0,0,0);
+			parol_init();
+			
+
+
+
+
+ 				
 			}
 					
-		else if(a_ind . s_i==av_j_si_max)
+		else if((a_ind . s_i==av_j_si_max)||(av_j_si_max==0))
 			{
 			tree_down(0,0);
 			ret(0);
@@ -12675,7 +13208,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7378 "main.c"
+#line 7888 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -12697,7 +13230,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7424 "main.c"
+#line 7934 "main.c"
 
 
 
@@ -13080,7 +13613,7 @@ else if(a_ind . i==iSet_VD)
 			a_ind . s_i=29;
             
             }																			
-		gran_char(&a_ind . s_i,0,30);
+		gran_char(&a_ind . s_i,0,32);
 		}
 	else if(but==253)
 		{
@@ -13103,11 +13636,11 @@ else if(a_ind . i==iSet_VD)
 			a_ind . s_i=27;
             
             }
-		gran_char(&a_ind . s_i,0,30);
+		gran_char(&a_ind . s_i,0,32);
 		}
 	else if(but==123)
 		{
-		a_ind . s_i=29;
+		a_ind . s_i=30;
 		}
 
 	else if(but==103)
@@ -13428,7 +13961,25 @@ else if(a_ind . i==iSet_VD)
 	     	}
           }
 
-    else if((a_ind . s_i==29) || (a_ind . s_i==3))
+	else if(a_ind . s_i==29)
+		{
+		if(but==254)
+		    {		
+			tree_up(iCurr_overload,0,0,0);
+			ret(500);
+			}						
+		}
+
+	else if(a_ind . s_i==29)
+	    {
+		if(but==254) 
+			{
+		    tree_up(iIps_Curr_Avg_Set,0,0,0);
+		    ret(1000);
+		    }	     
+	    }
+
+    else if((a_ind . s_i==31) || (a_ind . s_i==3))
 		{
 		if(but==254)
 		     {
@@ -13437,7 +13988,7 @@ else if(a_ind . i==iSet_VD)
 		     }
 		}
 				
-	else if(a_ind . s_i==30)
+	else if(a_ind . s_i==32)
 		{
 		if(but==254)
 		     {		
@@ -13825,7 +14376,7 @@ else if(a_ind . i==iStr_VD)
 	     if((but==239)||(but==111))
 	     	{
 	     	NUMIST++;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,32);
 	     	lc640_write_int(0x10+100+36,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -13833,7 +14384,7 @@ else if(a_ind . i==iStr_VD)
 	     else if((but==247)||(but==119))
 	     	{
 	     	NUMIST--;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,32);
 	     	lc640_write_int(0x10+100+36,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -17621,9 +18172,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 12593 "main.c"
+#line 13121 "main.c"
 
-#line 12803 "main.c"
+#line 13331 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -17949,7 +18500,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13508 "main.c"
+#line 14036 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -18496,8 +19047,65 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 
 
   	} 
+else if(a_ind . i==iFWabout)
+	{
+	ret(1000);
+	if(but==254)
+	     {
+	     tree_down(0,0);
+	     ret(0);
+	     }
+	}
 
-		
+else if(a_ind . i==iCurr_overload)
+	{
+	if(but==251)
+		{
+		a_ind . s_i++;
+		gran_char(&a_ind . s_i,0,2);
+		}
+	else if(but==253)
+		{
+		a_ind . s_i--;
+		gran_char(&a_ind . s_i,0,2);
+		}
+	else if(a_ind . s_i==0)
+		{
+		if(but==239)OVERLOAD_CURR++;
+		else if(but==111)OVERLOAD_CURR=(OVERLOAD_CURR/10+1)*10;
+		else if(but==247)OVERLOAD_CURR--;
+		else if(but==119)OVERLOAD_CURR=(OVERLOAD_CURR/10-1)*10;
+		gran(&OVERLOAD_CURR,1,2000);
+		lc640_write_int(0x10+350+26,OVERLOAD_CURR);
+		speed=1;
+		}
+	else if(a_ind . s_i==1)
+		{
+		if((but==239)||(but==111))
+			{
+			OVERLOAD_TIME++;
+			gran(&OVERLOAD_TIME,1,120);
+			lc640_write_int(0x10+350+28,OVERLOAD_TIME);
+			speed=1;
+			}
+		if((but==247)||(but==119))
+			{
+			OVERLOAD_TIME--;
+			gran(&OVERLOAD_TIME,1,120);
+			lc640_write_int(0x10+350+28,OVERLOAD_TIME);
+			speed=1;
+			}
+		}
+	else if(a_ind . s_i==2)
+		{
+		if(but==254)
+			{
+			tree_down(0,0);
+			ret(0);
+			}
+		}
+	}
+			
 but_an_end:
 n_but=0;
 }
@@ -18701,6 +19309,8 @@ bps[6]._state=bsOFF_AV_NET;
 
 
 
+
+
 ad7705_reset();
 {long xx; xx=(unsigned long)20 * 12000UL; while(xx)xx--;};
 
@@ -18813,7 +19423,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14377 "main.c"
+#line 14964 "main.c"
 
 
 
@@ -18904,12 +19514,13 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 14485 "main.c"
+#line 15072 "main.c"
 
 
-cntrl_stat=10*PWM_START;
-cntrl_stat_old=10*PWM_START;
 
+
+
+ 
 
 
 
@@ -19025,7 +19636,7 @@ while (1)
 		
 		
 		
-		net_drv();
+		 net_drv();
 		
 		}
 

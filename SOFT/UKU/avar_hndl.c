@@ -10,10 +10,10 @@
      
 //***********************************************
 //јварии
-unsigned avar_stat;	 	//"ќтображение" всех аварийных в данный момент устройств в одном месте
-unsigned avar_ind_stat; 	//"ќтображение" всех не просмотренных аварийных устройств в одном месте
-unsigned avar_stat_old;
-unsigned avar_stat_new,avar_stat_offed;
+unsigned avar_stat, avar_stat1;	 	//"ќтображение" всех аварийных в данный момент устройств в одном месте
+unsigned avar_ind_stat, avar_ind_stat1; 	//"ќтображение" всех не просмотренных аварийных устройств в одном месте
+unsigned avar_stat_old, avar_stat1_old;
+unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 //—труктура переменных
 //1бит  - питающа€ сеть
 //2бита - батареи
@@ -64,56 +64,46 @@ char i;
 if(net_av)		SET_REG(avar_stat,1,0,1);
 else	   			SET_REG(avar_stat,0,0,1);
 
-for(i=0;i<2;i++)
-	{
-	if(bat[i]._av&1)	SET_REG(avar_stat,1,1+i,1);
-	else	   		SET_REG(avar_stat,0,1+i,1);
-	}
-
-for(i=0;i<12;i++)
+for(i=0;i<29;i++)
 	{
 	if(bps[i]._av&0xef)	SET_REG(avar_stat,1,3+i,1);
-	else	   		SET_REG(avar_stat,0,3+i,1);
+	else	   			SET_REG(avar_stat,0,3+i,1);
+	}
+for(i=29;i<32;i++)
+	{
+	if(bps[i]._av&0xef)	SET_REG(avar_stat1,1,i-29,1);
+	else	   			SET_REG(avar_stat1,0,i-29,1);
 	}
 
-for(i=0;i<6;i++)
-	{
-	if(av_inv[i])	SET_REG(avar_stat,1,15+i,1);
-	else	   		SET_REG(avar_stat,0,15+i,1);
-	}
 
-/*for(i=0;i<4;i++)
-	{
-	if(av_dt[i])	SET_REG(avar_stat,1,21+i,1);
-	else	   		SET_REG(avar_stat,0,21+i,1);
-	}  */
-for(i=0;i<4;i++)
-	{
-	if(sk_av_stat[i]==sasON)	SET_REG(avar_stat,1,24+i,1);
-	else	   		SET_REG(avar_stat,0,24+i,1);
-	}
-
-if(uout_av)			SET_REG(avar_stat,1,28,1);
-else	   			SET_REG(avar_stat,0,28,1);
+if(uout_av)			SET_REG(avar_stat,1,1,1);
+else	   			SET_REG(avar_stat,0,1,1);
 
 
 avar_stat_new=(avar_stat^avar_stat_old)&avar_stat;
 
 avar_ind_stat|=avar_stat_new;
 
-if((SK_ZVUK_EN[0])) avar_ind_stat&=(~(1UL<<24));
-if((SK_ZVUK_EN[1])) avar_ind_stat&=(~(1UL<<25));
-if((SK_ZVUK_EN[2])) avar_ind_stat&=(~(1UL<<26));
-if((SK_ZVUK_EN[3])) avar_ind_stat&=(~(1UL<<27));	
-
-
 avar_stat_offed=~((avar_stat^avar_stat_old)&avar_stat_old);
 
-if(!AV_OFF_AVT)avar_stat_offed|=0xeffffffe;
+if(!AV_OFF_AVT)avar_stat_offed|=0x00000006;
 
 avar_ind_stat&=avar_stat_offed; 
 
 avar_stat_old=avar_stat;
+
+
+avar_stat1_new=(avar_stat1^avar_stat1_old)&avar_stat1;
+
+avar_ind_stat1|=avar_stat1_new;
+
+avar_stat1_offed=~((avar_stat1^avar_stat1_old)&avar_stat1_old);
+
+if(!AV_OFF_AVT)avar_stat1_offed|=0x00000000;
+
+avar_ind_stat1&=avar_stat1_offed; 
+
+avar_stat1_old=avar_stat1;
 }
 
 //-----------------------------------------------

@@ -71,6 +71,7 @@ Nextern short adc_gorb_cnt,adc_zero_cnt;
 Nextern char adc_window_flag;
 Nextern short adc_window_cnt;
 Nextern short adc_net_buff_cnt;
+Nextern short rele_on_cnt;
 N
 N
 Nchar vz_start(char hour);
@@ -472,6 +473,8 @@ N#define EE_ICA_MODBUS_TCP_UNIT_ID		SECTOR_SETS2+18
 N#define EE_PWM_START					SECTOR_SETS2+20
 N#define EE_KB_ALGORITM					SECTOR_SETS2+22
 N#define EE_REG_SPEED					SECTOR_SETS2+24
+N#define EE_OVERLOAD_CURR				SECTOR_SETS2+26
+N#define EE_OVERLOAD_TIME				SECTOR_SETS2+28
 N
 N#define SECTOR_BAT  		SECTOR_KOEF+400
 N
@@ -772,10 +775,10 @@ N
 N
 N//***********************************************
 N//Аварии
-Nextern unsigned avar_stat;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
-Nextern unsigned avar_ind_stat; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
-Nextern unsigned avar_stat_old;
-Nextern unsigned avar_stat_new,avar_stat_offed;
+Nextern unsigned avar_stat, avar_stat1;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
+Nextern unsigned avar_ind_stat, avar_ind_stat1; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
+Nextern unsigned avar_stat_old, avar_stat1_old;
+Nextern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 N//Структура переменных
 N//1бит  - питающая сеть
 N//2бита - батареи
@@ -1914,6 +1917,7 @@ N#define PAROL_VZ 126
 N#define PAROL_TST 999 
 N#define PAROL_DEFAULT 295
 N#define PAROL_AUSW 949
+N#define PAROL_LOG_RESET	691
 N#endif                
 N
 N#ifdef PAROL_ALL_ZERO
@@ -1928,6 +1932,7 @@ S#define PAROL_VZ 0
 S#define PAROL_TST 0
 S#define PAROL_DEFAULT 0
 S#define PAROL_AUSW 0
+S#define PAROL_LOG_RESET	0
 N#endif
 N
 N
@@ -2038,18 +2043,18 @@ S#define SHIFT_REL_WARM		4
 S#define SHIFT_REL_VENT	     7
 S#define SHIFT_REL_VVENT	     6
 N#endif
-N
+N/*
 N#ifdef UKU_TELECORE2017
-S#define SHIFT_REL_AV_NET		5
-S#define SHIFT_REL_AV_BAT	4
-S#define SHIFT_REL_AV_BPS	     7
-S#define SHIFT_REL_BAT1	     8
-S#define SHIFT_REL_BAT2	     6
-S#define SHIFT_REL_LIGHT		9
-S#define SHIFT_REL_WARM		4
-S#define SHIFT_REL_VENT	     7
-S#define SHIFT_REL_VVENT	     6
-N#endif
+N#define SHIFT_REL_AV_NET		5
+N#define SHIFT_REL_AV_BAT	4
+N#define SHIFT_REL_AV_BPS	     7
+N#define SHIFT_REL_BAT1	     8
+N#define SHIFT_REL_BAT2	     6
+N#define SHIFT_REL_LIGHT		9
+N#define SHIFT_REL_WARM		4
+N#define SHIFT_REL_VENT	     7
+N#define SHIFT_REL_VVENT	     6
+N#endif*/
 N
 N//***********************************************
 N//Таймер
@@ -2102,7 +2107,7 @@ N	iK_power_net,
 N	iExt_set,iExt_set_3U,
 N	iExt_dt,
 N	iExt_sk,iExt_sk_3U,
-N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 N	iEnerg3,iEnerg,
 N	iVent,
 N	iK_power_net3,
@@ -2111,7 +2116,9 @@ N	iNpn_set,
 N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
-N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+N	iFWabout,
+N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
 N{
@@ -2370,6 +2377,8 @@ Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
 Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
 N
+Nextern signed short OVERLOAD_CURR;
+Nextern signed short OVERLOAD_TIME;
 N
 N//***********************************************
 N//Состояние батарей
@@ -2610,6 +2619,7 @@ N	char _vent_resurs_temp[4];
 N	unsigned short _vent_resurs;
 N	signed short debug_info_to_uku0;
 N	signed short debug_info_to_uku1;
+N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
@@ -2843,7 +2853,7 @@ N
 N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
-Nextern short bIBAT_SMKLBR;
+Nextern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
@@ -2943,7 +2953,7 @@ Nextern U8 tcp_connect_stat;
 N
 N//-----------------------------------------------
 N//Авария по перегрузке
-Nextern short overloadHndlCnt;
+Nextern short overloadHndlCnt,overloadHndlCnt1;
 Nextern char overloadAvar;
 N
 N//-----------------------------------------------
@@ -6846,6 +6856,7 @@ Nshort adc_gorb_cnt,adc_zero_cnt;
 Nchar adc_window_flag;
 Nshort adc_window_cnt;
 Nshort adc_net_buff_cnt;
+Nshort rele_on_cnt;
 N
 N
 Nextern int mess_par0[MESS_DEEP],mess_par1[MESS_DEEP],mess_data[2];
@@ -7174,182 +7185,186 @@ N//signed short temp_SS;
 Nsigned long temp_SL/*,temp_SL_*/;
 Nchar /*temp,*/i;
 N//signed short temp_SS;
-N
+N/*
 N#ifdef UKU_MGTS
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=110000L;
-Snet_U=(signed short)temp_SL;
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=110000L;
+Nnet_U=(signed short)temp_SL;
 N#endif
+N*/
 N
+N/*
 N#ifdef UKU_RSTKM
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=110000L;
-Snet_U=(signed short)temp_SL;
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=110000L;
+Nnet_U=(signed short)temp_SL;
 N#endif
-N
+N*/
+N/*
 N#ifdef UKU_3U
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=36000L;
-Snet_U=(signed short)temp_SL;
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=36000L;
+Nnet_U=(signed short)temp_SL;
 N#endif
-N
+N*/
+N/*
 N#ifdef UKU_6U
-S//напряжение сети
-S
-Sif((AUSW_MAIN%10)||(AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000))
-S	{
-S
-S	if(bps[11]._device==dNET_METR)
-S		{
-S		net_metr_buff_[0]=((signed short)bps[11]._buff[0])+(((signed short)bps[11]._buff[1])<<8);
-S		net_metr_buff_[1]=((signed short)bps[11]._buff[2])+(((signed short)bps[11]._buff[3])<<8);
-S		net_metr_buff_[2]=((signed short)bps[11]._buff[4])+(((signed short)bps[11]._buff[5])<<8);
-S
-S		temp_SL=(signed long)net_metr_buff_[0];
-S		temp_SL*=KunetA;
-S		temp_SL/=6000L;
-S		net_Ua=(signed short)temp_SL;
-S	
-S		temp_SL=(signed long)net_metr_buff_[1];
-S		temp_SL*=KunetB;
-S		temp_SL/=6000L;
-S		net_Ub=(signed short)temp_SL;
-S	
-S		temp_SL=(signed long)net_metr_buff_[2];
-S		temp_SL*=KunetC;
-S		temp_SL/=6000L;
-S		net_Uc=(signed short)temp_SL;
-S		}
-S	else
-S		{
-S		temp_SL=(signed long)net_buff_;
-S		temp_SL*=KunetA;
-S		temp_SL/=110000L;
-S		net_Ua=(signed short)temp_SL;
-S	
-S		temp_SL=(signed long)adc_buff_[3];
-S		temp_SL*=KunetB;
-S		temp_SL/=6000L;
-S		net_Ub=(signed short)temp_SL;
-S	
-S		temp_SL=(signed long)adc_buff_[10];
-S		temp_SL*=KunetC;
-S		temp_SL/=6000L;
-S		net_Uc=(signed short)temp_SL;
-S		}
-S
-S	net_U=net_Ua;
-S	if(net_Ub<net_U)net_U=net_Ub;
-S	if(net_Uc<net_U)net_U=net_Uc;
-S	}
-Selse 
-S	{
-S	temp_SL=(signed long)net_buff_;
-S	temp_SL*=Kunet;
-S	temp_SL/=110000L;
-S	net_U=(signed short)temp_SL;
-S	}
-S
-S
-S
-S
-N#endif
+N//напряжение сети
 N
+Nif((AUSW_MAIN%10)||(AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000))
+N	{
+N
+N	if(bps[11]._device==dNET_METR)
+N		{
+N		net_metr_buff_[0]=((signed short)bps[11]._buff[0])+(((signed short)bps[11]._buff[1])<<8);
+N		net_metr_buff_[1]=((signed short)bps[11]._buff[2])+(((signed short)bps[11]._buff[3])<<8);
+N		net_metr_buff_[2]=((signed short)bps[11]._buff[4])+(((signed short)bps[11]._buff[5])<<8);
+N
+N		temp_SL=(signed long)net_metr_buff_[0];
+N		temp_SL*=KunetA;
+N		temp_SL/=6000L;
+N		net_Ua=(signed short)temp_SL;
+N	
+N		temp_SL=(signed long)net_metr_buff_[1];
+N		temp_SL*=KunetB;
+N		temp_SL/=6000L;
+N		net_Ub=(signed short)temp_SL;
+N	
+N		temp_SL=(signed long)net_metr_buff_[2];
+N		temp_SL*=KunetC;
+N		temp_SL/=6000L;
+N		net_Uc=(signed short)temp_SL;
+N		}
+N	else
+N		{
+N		temp_SL=(signed long)net_buff_;
+N		temp_SL*=KunetA;
+N		temp_SL/=110000L;
+N		net_Ua=(signed short)temp_SL;
+N	
+N		temp_SL=(signed long)adc_buff_[3];
+N		temp_SL*=KunetB;
+N		temp_SL/=6000L;
+N		net_Ub=(signed short)temp_SL;
+N	
+N		temp_SL=(signed long)adc_buff_[10];
+N		temp_SL*=KunetC;
+N		temp_SL/=6000L;
+N		net_Uc=(signed short)temp_SL;
+N		}
+N
+N	net_U=net_Ua;
+N	if(net_Ub<net_U)net_U=net_Ub;
+N	if(net_Uc<net_U)net_U=net_Uc;
+N	}
+Nelse 
+N	{
+N	temp_SL=(signed long)net_buff_;
+N	temp_SL*=Kunet;
+N	temp_SL/=110000L;
+N	net_U=(signed short)temp_SL;
+N	}
+N
+N
+N
+N
+N#endif */
+N/*
 N#ifdef UKU_GLONASS
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=110000L;
-Snet_U=(signed short)temp_SL;
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=110000L;
+Nnet_U=(signed short)temp_SL;
 N#endif
+N*/
+N/*#ifdef UKU_KONTUR
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=110000L;
+Nnet_U=(signed short)temp_SL;
+N#endif */
 N
-N#ifdef UKU_KONTUR
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=110000L;
-Snet_U=(signed short)temp_SL;
-N#endif
-N
-N
+N/*
 N#ifdef UKU_220_V2
-S//напряжение сети
-S
-Sif(AUSW_MAIN==22033)
-S	{
-S	temp_SL=(signed long)net_buff_;
-S	temp_SL*=KunetA;
-S	temp_SL/=6000L;
-S	net_Ua=(signed short)temp_SL;
-S
-S	temp_SL=(signed long)adc_buff_[3];
-S	temp_SL*=KunetB;
-S	temp_SL/=6000L;
-S	net_Ub=(signed short)temp_SL;
-S
-S	temp_SL=(signed long)adc_buff_[10];
-S	temp_SL*=KunetC;
-S	temp_SL/=6000L;
-S	net_Uc=(signed short)temp_SL;
-S
-S	net_U=net_Ua;
-S	if(net_Ub<net_U)net_U=net_Ub;
-S	if(net_Uc<net_U)net_U=net_Uc;
-S	}
-Selse
-S	{
-S	temp_SL=(signed long)net_buff_;
-S	temp_SL*=Kunet;
-S	temp_SL/=5000L;
-S	net_U=(signed short)temp_SL;
-S	}
+N//напряжение сети
+N
+Nif(AUSW_MAIN==22033)
+N	{
+N	temp_SL=(signed long)net_buff_;
+N	temp_SL*=KunetA;
+N	temp_SL/=6000L;
+N	net_Ua=(signed short)temp_SL;
+N
+N	temp_SL=(signed long)adc_buff_[3];
+N	temp_SL*=KunetB;
+N	temp_SL/=6000L;
+N	net_Ub=(signed short)temp_SL;
+N
+N	temp_SL=(signed long)adc_buff_[10];
+N	temp_SL*=KunetC;
+N	temp_SL/=6000L;
+N	net_Uc=(signed short)temp_SL;
+N
+N	net_U=net_Ua;
+N	if(net_Ub<net_U)net_U=net_Ub;
+N	if(net_Uc<net_U)net_U=net_Uc;
+N	}
+Nelse
+N	{
+N	temp_SL=(signed long)net_buff_;
+N	temp_SL*=Kunet;
+N	temp_SL/=5000L;
+N	net_U=(signed short)temp_SL;
+N	}
 N#endif
-N
-N
+N*/
+N/*
 N#ifdef UKU_220
-S//напряжение сети
-S
-Sif(AUSW_MAIN==22035)
-S	{
-S	temp_SL=(signed long)net_buff_;
-S	temp_SL*=KunetA;
-S	temp_SL/=6000L;
-S	net_Ua=(signed short)temp_SL;
-S
-S	temp_SL=(signed long)adc_buff_[3];
-S	temp_SL*=KunetB;
-S	temp_SL/=6000L;
-S	net_Ub=(signed short)temp_SL;
-S
-S	temp_SL=(signed long)adc_buff_[10];
-S	temp_SL*=KunetC;
-S	temp_SL/=6000L;
-S	net_Uc=(signed short)temp_SL;
-S
-S	net_U=net_Ua;
-S	if(net_Ub<net_U)net_U=net_Ub;
-S	if(net_Uc<net_U)net_U=net_Uc;
-S	}
-Selse
-S	{
-S	temp_SL=(signed long)net_buff_;
-S	temp_SL*=Kunet;
-S	#ifdef _ACDC_
-S	temp_SL/=500L;
-S	#else
-S	temp_SL/=5000L;
-S	#endif
-S	net_U=(signed short)temp_SL;
-S	
-S	}
-N#endif
+N//напряжение сети
 N
+Nif(AUSW_MAIN==22035)
+N	{
+N	temp_SL=(signed long)net_buff_;
+N	temp_SL*=KunetA;
+N	temp_SL/=6000L;
+N	net_Ua=(signed short)temp_SL;
+N
+N	temp_SL=(signed long)adc_buff_[3];
+N	temp_SL*=KunetB;
+N	temp_SL/=6000L;
+N	net_Ub=(signed short)temp_SL;
+N
+N	temp_SL=(signed long)adc_buff_[10];
+N	temp_SL*=KunetC;
+N	temp_SL/=6000L;
+N	net_Uc=(signed short)temp_SL;
+N
+N	net_U=net_Ua;
+N	if(net_Ub<net_U)net_U=net_Ub;
+N	if(net_Uc<net_U)net_U=net_Uc;
+N	}
+Nelse
+N	{
+N	temp_SL=(signed long)net_buff_;
+N	temp_SL*=Kunet;
+N	#ifdef _ACDC_
+N	temp_SL/=500L;
+N	#else
+N	temp_SL/=5000L;
+N	#endif
+N	net_U=(signed short)temp_SL;
+N	
+N	}
+N#endif
+N*/
 N#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N//напряжение сети
 N
@@ -7445,76 +7460,76 @@ N
 N	}
 Nif(bps[11]._device!=dNET_METR) net_F3=net_F;
 N#endif
-N
+N/*
 N#ifdef UKU_TELECORE2015
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=110000L;
-Snet_U=(signed short)temp_SL;
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=110000L;
+Nnet_U=(signed short)temp_SL;
 N#endif
-N
+N*//*
 N#ifdef UKU_TELECORE2017
-S//напряжение сети
-Stemp_SL=(signed long)net_buff_;
-Stemp_SL*=Kunet;
-Stemp_SL/=110000L;
-Snet_U=(signed short)temp_SL;
-N#endif
+N//напряжение сети
+Ntemp_SL=(signed long)net_buff_;
+Ntemp_SL*=Kunet;
+Ntemp_SL/=110000L;
+Nnet_U=(signed short)temp_SL;
+N#endif*/
 N
 N//Напряжения батарей
 Ntemp_SL=(signed long)adc_buff_[0];
 Ntemp_SL*=Kubat[0];
 Ntemp_SL/=2000L;
 Nbat[0]._Ub=(signed short)temp_SL;
-N
+N/*
 N#ifdef UKU_220
-S//Напряжения батарей
-Stemp_SL=(signed long)adc_buff_[0];
-Stemp_SL*=Kubat[0];
-Stemp_SL/=400L;
-Sbat[0]._Ub=(signed short)temp_SL;
+N//Напряжения батарей
+Ntemp_SL=(signed long)adc_buff_[0];
+Ntemp_SL*=Kubat[0];
+Ntemp_SL/=400L;
+Nbat[0]._Ub=(signed short)temp_SL;
 N#endif
 N
 N#ifdef UKU_220_V2
-S//Напряжения батарей
-Stemp_SL=(signed long)adc_buff_[0];
-Stemp_SL*=Kubat[0];
-Stemp_SL/=400L;
-Sbat[0]._Ub=(signed short)temp_SL;
-N#endif
+N//Напряжения батарей
+Ntemp_SL=(signed long)adc_buff_[0];
+Ntemp_SL*=Kubat[0];
+Ntemp_SL/=400L;
+Nbat[0]._Ub=(signed short)temp_SL;
+N#endif */
 N
 Ntemp_SL=(signed long)adc_buff_[4];
 Ntemp_SL*=Kubatm[0];
 Ntemp_SL/=700L;
 Nbat[0]._Ubm=(signed short)temp_SL;
-N
+N/*
 N#ifdef UKU_KONTUR
-Stemp_SL=(signed long)adc_buff_[4];
-Stemp_SL*=Kubatm[0];
-Stemp_SL/=2000L;
-Sbat[0]._Ubm=(signed short)temp_SL;
-N#endif
+Ntemp_SL=(signed long)adc_buff_[4];
+Ntemp_SL*=Kubatm[0];
+Ntemp_SL/=2000L;
+Nbat[0]._Ubm=(signed short)temp_SL;
+N#endif */
 N
 Ntemp_SL=(signed long)adc_buff_[12];
 Ntemp_SL*=Kubat[1];
 Ntemp_SL/=2000L;
 Nbat[1]._Ub=(signed short)temp_SL;
-N
+N/*
 N#ifdef UKU_220
-Stemp_SL=(signed long)adc_buff_[12];
-Stemp_SL*=Kubat[1];
-Stemp_SL/=400L;
-Sbat[1]._Ub=(signed short)temp_SL;
+Ntemp_SL=(signed long)adc_buff_[12];
+Ntemp_SL*=Kubat[1];
+Ntemp_SL/=400L;
+Nbat[1]._Ub=(signed short)temp_SL;
 N#endif
 N
 N#ifdef UKU_220_V2
-Stemp_SL=(signed long)adc_buff_[12];
-Stemp_SL*=Kubat[1];
-Stemp_SL/=400L;
-Sbat[1]._Ub=(signed short)temp_SL;
+Ntemp_SL=(signed long)adc_buff_[12];
+Ntemp_SL*=Kubat[1];
+Ntemp_SL/=400L;
+Nbat[1]._Ub=(signed short)temp_SL;
 N#endif
-N
+N*/
 Ntemp_SL=(signed long)adc_buff_[1];
 Ntemp_SL*=Kubatm[1];
 Ntemp_SL/=700L;
@@ -7704,23 +7719,23 @@ Ntemp_SL=(signed long)adc_buff_[2];
 Ntemp_SL*=Kuload;
 Ntemp_SL/=2000L;
 Nload_U=(signed short)temp_SL;
-N
+N/*
 N#ifdef UKU_220 
-S//Напряжение нагрузки
-Stemp_SL=(signed long)adc_buff_[2];
-Stemp_SL*=Kuload;
-Stemp_SL/=350L;
-Sload_U=(signed short)temp_SL;
+N//Напряжение нагрузки
+Ntemp_SL=(signed long)adc_buff_[2];
+Ntemp_SL*=Kuload;
+Ntemp_SL/=350L;
+Nload_U=(signed short)temp_SL;
 N#endif
 N
 N#ifdef UKU_220_V2 
-S//Напряжение нагрузки
-Stemp_SL=(signed long)adc_buff_[2];
-Stemp_SL*=Kuload;
-Stemp_SL/=350L;
-Sload_U=(signed short)temp_SL;
+N//Напряжение нагрузки
+Ntemp_SL=(signed long)adc_buff_[2];
+Ntemp_SL*=Kuload;
+Ntemp_SL/=350L;
+Nload_U=(signed short)temp_SL;
 N#endif
-N
+N*/
 N#ifdef UKU_VD
 N//Напряжение выхода
 Ntemp_SL=(signed long)adc_buff_[1];
@@ -7765,17 +7780,8 @@ N
 N
 N#endif
 N
-N
+N/*
 N#ifdef UKU_KONTUR
-S//Внешний датчик температуры №1(температура внешнего воздуха)
-Sif((adc_buff_[5]>800)&&(adc_buff_[5]<3800))ND_EXT[0]=0;
-Selse ND_EXT[0]=1;
-Stemp_SL=(signed long)adc_buff_[5];
-Stemp_SL*=Ktext[0];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[0]=(signed short)temp_SL;
-N#else 
 N//Внешний датчик температуры №1(температура внешнего воздуха)
 Nif((adc_buff_[5]>800)&&(adc_buff_[5]<3800))ND_EXT[0]=0;
 Nelse ND_EXT[0]=1;
@@ -7784,40 +7790,42 @@ Ntemp_SL*=Ktext[0];
 Ntemp_SL/=20000L;
 Ntemp_SL-=273L;
 Nt_ext[0]=(signed short)temp_SL;
+N#else 
+N//Внешний датчик температуры №1(температура внешнего воздуха)
+Nif((adc_buff_[5]>800)&&(adc_buff_[5]<3800))ND_EXT[0]=0;
+Nelse ND_EXT[0]=1;
+Ntemp_SL=(signed long)adc_buff_[5];
+Ntemp_SL*=Ktext[0];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[0]=(signed short)temp_SL;	
+N
+N#endif	  */
 N/*
-Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
+N#ifdef UKU_220
+N
+N//Внешний датчик температуры №2(температура отсека ЭПУ)
+Nif((adc_buff_[3]>800)&&(adc_buff_[3]<3800))ND_EXT[1]=0;
 Nelse ND_EXT[1]=1;
-Ntemp_SL=(signed long)adc_buff_[6];
+Ntemp_SL=(signed long)adc_buff_[3];
 Ntemp_SL*=Ktext[1];
 Ntemp_SL/=20000L;
 Ntemp_SL-=273L;
-Nt_ext[1]=(signed short)temp_SL;	*/
-N#endif
+Nt_ext[1]=(signed short)temp_SL;
 N
-N#ifdef UKU_220
-S
-S//Внешний датчик температуры №2(температура отсека ЭПУ)
-Sif((adc_buff_[3]>800)&&(adc_buff_[3]<3800))ND_EXT[1]=0;
-Selse ND_EXT[1]=1;
-Stemp_SL=(signed long)adc_buff_[3];
-Stemp_SL*=Ktext[1];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[1]=(signed short)temp_SL;
-S
-S//Внешний датчик температуры №3(температура отсека MSAN)
-Sif((adc_buff_[10]>800)&&(adc_buff_[10]<3800))ND_EXT[2]=0;
-Selse ND_EXT[2]=1;
-Stemp_SL=(signed long)adc_buff_[10];
-Stemp_SL*=Ktext[2];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[2]=(signed short)temp_SL;
-S
+N//Внешний датчик температуры №3(температура отсека MSAN)
+Nif((adc_buff_[10]>800)&&(adc_buff_[10]<3800))ND_EXT[2]=0;
+Nelse ND_EXT[2]=1;
+Ntemp_SL=(signed long)adc_buff_[10];
+Ntemp_SL*=Ktext[2];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[2]=(signed short)temp_SL;
+N
 N#else
+N*/
 N
-N
-N#ifdef UKU_220_IPS_TERMOKOMPENSAT
+N#ifdef UKU_VD
 N
 N//Внешний датчик температуры 
 Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[0]=0;
@@ -7827,31 +7835,35 @@ Ntemp_SL*=Ktext[0];
 Ntemp_SL/=20000L;
 Ntemp_SL-=273L;
 Nt_ext[0]=(signed short)temp_SL;
-Nsys_T=t_ext[0];
-N#else
-S
-S
-S
-S//Внешний датчик температуры №2(температура отсека ЭПУ)
-Sif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
-Selse ND_EXT[1]=1;
-Stemp_SL=(signed long)adc_buff_[6];
-Stemp_SL*=Ktext[1];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[1]=(signed short)temp_SL;
-S
-S//Внешний датчик температуры №3(температура отсека MSAN)
-Sif((adc_buff_[3]>800)&&(adc_buff_[3]<3800))ND_EXT[2]=0;
-Selse ND_EXT[2]=1;
-Stemp_SL=(signed long)adc_buff_[3];
-Stemp_SL*=Ktext[2];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[2]=(signed short)temp_SL;
-S
+Nif(rele_on_cnt<0)rele_on_cnt=0;
+Nif(rele_on_cnt>3)rele_on_cnt=3;
+Nt_ext[0]+=3*rele_on_cnt;
+Nif(ND_EXT[0]==0)sys_T=t_ext[0];
+Nelse sys_T=20;
+N
 N#endif
-N#endif
+N
+N/*
+N//Внешний датчик температуры №2(температура отсека ЭПУ)
+Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
+Nelse ND_EXT[1]=1;
+Ntemp_SL=(signed long)adc_buff_[6];
+Ntemp_SL*=Ktext[1];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[1]=(signed short)temp_SL;
+N
+N//Внешний датчик температуры №3(температура отсека MSAN)
+Nif((adc_buff_[3]>800)&&(adc_buff_[3]<3800))ND_EXT[2]=0;
+Nelse ND_EXT[2]=1;
+Ntemp_SL=(signed long)adc_buff_[3];
+Ntemp_SL*=Ktext[2];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[2]=(signed short)temp_SL;
+N
+N#endif */
+N
 N
 Nif(!bIBAT_SMKLBR)
 N	{
@@ -7861,8 +7873,19 @@ N	temp_SL-=(signed long)ibat_metr_buff_[1];
 N	temp_SL*=(signed long)Kibat1[0];
 N	temp_SL/=2000L;
 N	
-N	Ib_ips_termokompensat =(signed short)temp_SL;
-N	out_I=Ib_ips_termokompensat;
+N	if(bIBAT_SMKLBR_CNT) bIBAT_SMKLBR_CNT--;
+N
+N	if(ibat_metr_cnt>30)temp_SL=0;
+N	
+N	if(!bIBAT_SMKLBR_CNT)
+N		{
+N		Ib_ips_termokompensat =(signed short)temp_SL;
+N		out_I=Ib_ips_termokompensat;
+N		}
+N	}
+Nelse
+N	{
+N	bIBAT_SMKLBR_CNT=50;
 N	}
 N
 Nif(I_LOAD_MODE==0)
@@ -7881,53 +7904,54 @@ Nbat[0]._Ub=load_U;
 N
 N
 N
-N
+N/*
 N#ifdef UKU_TELECORE2015
-S
-S//Внешний датчик температуры №1
-Sif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))ND_EXT[0]=0;
-Selse ND_EXT[0]=1;
-Stemp_SL=(signed long)adc_buff_[7];
-Stemp_SL*=Ktext[0];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[0]=(signed short)temp_SL;
-S
-S
-S//Внешний датчик температуры №2
-Sif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
-Selse ND_EXT[1]=1;
-Stemp_SL=(signed long)adc_buff_[6];
-Stemp_SL*=Ktext[1];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[1]=(signed short)temp_SL;
-S
-N#endif
 N
+N//Внешний датчик температуры №1
+Nif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))ND_EXT[0]=0;
+Nelse ND_EXT[0]=1;
+Ntemp_SL=(signed long)adc_buff_[7];
+Ntemp_SL*=Ktext[0];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[0]=(signed short)temp_SL;
+N
+N
+N//Внешний датчик температуры №2
+Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
+Nelse ND_EXT[1]=1;
+Ntemp_SL=(signed long)adc_buff_[6];
+Ntemp_SL*=Ktext[1];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[1]=(signed short)temp_SL;
+N
+N#endif
+N*/
+N/*
 N#ifdef UKU_TELECORE2017
-S
-S//Внешний датчик температуры №1
-Sif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))ND_EXT[0]=0;
-Selse ND_EXT[0]=1;
-Stemp_SL=(signed long)adc_buff_[7];
-Stemp_SL*=Ktext[0];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[0]=(signed short)temp_SL;
-S
-S
-S//Внешний датчик температуры №2
-Sif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
-Selse ND_EXT[1]=1;
-Stemp_SL=(signed long)adc_buff_[6];
-Stemp_SL*=Ktext[1];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-St_ext[1]=(signed short)temp_SL;
-S
-N#endif
 N
+N//Внешний датчик температуры №1
+Nif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))ND_EXT[0]=0;
+Nelse ND_EXT[0]=1;
+Ntemp_SL=(signed long)adc_buff_[7];
+Ntemp_SL*=Ktext[0];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[0]=(signed short)temp_SL;
+N
+N
+N//Внешний датчик температуры №2
+Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
+Nelse ND_EXT[1]=1;
+Ntemp_SL=(signed long)adc_buff_[6];
+Ntemp_SL*=Ktext[1];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nt_ext[1]=(signed short)temp_SL;
+N
+N#endif
+N*/
 N//напряжение ввода
 Ntemp_SL=(signed long)adc_buff_ext_[0];
 Ntemp_SL*=Kunet_ext[0];
@@ -8002,166 +8026,7 @@ N	if(t_ext_can_nd<5)t_box= t_ext_can;
 N	else t_box=20;
 N	}
 N#endif
-N/*
-N//Вычисление температуры шкафа
 N
-Nibt._T[0]=bat[0]._Tb+273;
-Nibt._T[1]=bat[1]._Tb+273;
-Nibt._T[2]=t_ext[1]+273;
-Nibt._T[3]=t_ext[2]+273;
-N
-Nibt._nd[0]=bat[0]._nd;
-Nibt._nd[1]=bat[1]._nd;
-Nibt._nd[2]=ND_EXT[1];
-Nibt._nd[3]=ND_EXT[2];
-N
-Nibt._avg1=0;
-Nibt._avg_cnt=4;
-N
-Nif(ibt._nd[0]==0)
-N	{
-N	ibt._avg1+=ibt._T[0];
-N	}
-Nelse 
-N	{
-N	ibt._avg_cnt--;
-N	}
-N
-Nif(ibt._nd[1]==0)
-N	{
-N	ibt._avg1+=ibt._T[1];
-N	}
-Nelse 
-N	{
-N	ibt._avg_cnt--;
-N	}
-N
-Nif(ibt._nd[2]==0)
-N	{
-N	ibt._avg1+=ibt._T[2];
-N	}
-Nelse 
-N	{
-N	ibt._avg_cnt--;
-N	}
-N
-Nif(ibt._nd[3]==0)
-N	{
-N	ibt._avg1+=ibt._T[3];
-N	}
-Nelse 
-N	{
-N	ibt._avg_cnt--;
-N	}
-N
-Nif(ibt._avg_cnt==0)
-N	{
-N	}
-Nelse
-N	{
-N	ibt._avg1/=ibt._avg_cnt;
-N	}
-N
-N
-Nif(ibt._nd[0]!=0)
-N	{
-N	ibt._T_dispers[0]=0;
-N	}
-Nelse 
-N	{
-N	ibt._T_dispers[0]=abs(ibt._T[0]-ibt._avg1);
-N	}
-N
-Nif(ibt._nd[1]!=0)
-N	{
-N	ibt._T_dispers[1]=0;
-N	}
-Nelse 
-N	{
-N	ibt._T_dispers[1]=abs(ibt._T[1]-ibt._avg1);
-N	}
-N
-Nif(ibt._nd[2]!=0)
-N	{
-N	ibt._T_dispers[2]=0;
-N	}
-Nelse 
-N	{
-N	ibt._T_dispers[2]=abs(ibt._T[2]-ibt._avg1);
-N	}
-N
-Nif(ibt._nd[3]!=0)
-N	{
-N	ibt._T_dispers[3]=0;
-N	}
-Nelse 
-N	{
-N	ibt._T_dispers[3]=abs(ibt._T[3]-ibt._avg1);
-N	}
-N
-Nif(	ibt._nd[0]&&
-N	ibt._nd[1]&&
-N	ibt._nd[2]&&
-N	ibt._nd[3]
-N	)
-N	{
-N	t_box=(bps[0]._Ti);
-N	}
-N
-Nelse if(	ibt._nd[0]||
-N	ibt._nd[1]||
-N	ibt._nd[2]||
-N	ibt._nd[3]
-N	)
-N	{
-N	t_box=(ibt._avg1-273);
-N	}
-Nelse 
-N	{
-N	ibt._max_dispers_num=0;
-N	ibt._max_dispers=ibt._T_dispers[0];
-N
-N	if(ibt._T_dispers[1]>ibt._max_dispers)
-N		{
-N		ibt._max_dispers_num=1;
-N		ibt._max_dispers=ibt._T_dispers[1];
-N		}
-N	if(ibt._T_dispers[2]>ibt._max_dispers)
-N		{
-N		ibt._max_dispers_num=2;
-N		ibt._max_dispers=ibt._T_dispers[2];
-N		}
-N	if(ibt._T_dispers[3]>ibt._max_dispers)
-N		{
-N		ibt._max_dispers_num=3;
-N		ibt._max_dispers=ibt._T_dispers[3];
-N		}
-N
-N	ibt._avg2=0;
-N
-N	if(ibt._max_dispers_num!=0)
-N		{
-N		ibt._avg2+=ibt._T[0];
-N		}
-N	if(ibt._max_dispers_num!=1)
-N		{
-N		ibt._avg2+=ibt._T[1];
-N		}
-N	if(ibt._max_dispers_num!=2)
-N		{
-N		ibt._avg2+=ibt._T[2];
-N		}
-N	if(ibt._max_dispers_num!=3)
-N		{
-N		ibt._avg2+=ibt._T[3];
-N		}
-N
-N	t_box=(ibt._avg2/3)-273;
-N
-N	}*/
-N
-N
-N//*********************************************
 N
 N#ifndef TELECORE
 Nif((BAT_IS_ON[0]==bisON)&&(bat[0]._Ub>200)) Ibmax=bat[0]._Ib;
@@ -8205,7 +8070,8 @@ N     	bps[i]._flags_tm=bps[i]._buff[8];
 N	    //bps[i]._rotor=bps[i]._buff[10]+(bps[i]._buff[11]*256); 
 N		bps[i]._Uisum=bps[i]._buff[10]+(bps[i]._buff[11]*256); 
 N		bps[i].debug_info_to_uku0=bps[i]._buff[12]+(bps[i]._buff[13]*256); 
-N		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256);    
+N		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256); 
+N		bps[i].debug_info_to_uku2=bps[i]._buff[16]+(bps[i]._buff[17]*256);   
 N     	} 
 N	else 
 N     	{
@@ -8217,7 +8083,8 @@ N     	bps[i]._flags_tm=0;
 N	     //bps[i]._rotor=0;
 N		bps[i]._Uisum=0; 
 N		bps[i].debug_info_to_uku0=0; 
-N		bps[i].debug_info_to_uku1=0;    
+N		bps[i].debug_info_to_uku1=0; 
+N		bps[i].debug_info_to_uku2=0;   
 N     	}
 N     
 N     }
@@ -9256,7 +9123,7 @@ N	}
 N
 Navg_hndl_end:
 N__nop();  
-W "control.c" 2443 1 label "avg_hndl_end" was declared but never referenced
+W "control.c" 2300 1 label "avg_hndl_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9284,7 +9151,7 @@ N	UOUT_--;
 N	if(UOUT_<(UOUT-50))UOUT_=UOUT-50;
 N	}
 NUOUT_=UOUT;
-W "control.c" 2450 6 variable "i" was declared but never referenced
+W "control.c" 2307 6 variable "i" was declared but never referenced
 N}
 N
 N/*//-----------------------------------------------
@@ -9309,8 +9176,8 @@ Ni2=0;
 N
 Nfor(i=0;i<NUMIST;i++)
 N	{
-N	if(bps[i]._av&0x07)i1=1;
-N	if(bps[i]._av&0x08)i2=1;
+N	if(bps[i]._av&0x0f)i1=1;
+N	if(bps[i]._av&0x10)i2=1;
 N	}
 N
 Nif(i1)					avar_vd_stat|=(1<<0);
@@ -9366,6 +9233,7 @@ N
 N
 N
 N
+N
 Nif((mess_find_unvol(MESS2RELE_HNDL))&&	(mess_data[0]==PARAM_RELE_AV_1))
 Xif((mess_find_unvol(210))&&	(mess_data[0]==101))
 N	{
@@ -9417,6 +9285,14 @@ Nelse if(!(rele_av_flags&(1<<3))) SET_REG(LPC_GPIO0->FIOCLR,1,9,1);
 Xelse if(!(rele_av_flags&(1<<3))) ((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR = ( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR & ~((0xffffffff>>(32-1))<<9)) | (1 << 9) );
 Nelse SET_REG(LPC_GPIO0->FIOSET,1,9,1);
 Xelse ((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOSET = ( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOSET & ~((0xffffffff>>(32-1))<<9)) | (1 << 9) );
+N
+Nrele_on_cnt=0;
+Nif(GET_REG( LPC_GPIO3->FIOPIN, 25, 1))	rele_on_cnt++;
+Xif(( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00060) )->FIOPIN & ((0xffffffff>>(32-1))<<25)) >> 25))	rele_on_cnt++;
+Nif(GET_REG( LPC_GPIO0->FIOPIN, 7, 1))  rele_on_cnt++;
+Xif(( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOPIN & ((0xffffffff>>(32-1))<<7)) >> 7))  rele_on_cnt++;
+Nif(GET_REG( LPC_GPIO0->FIOPIN, 4, 1))  rele_on_cnt++;
+Xif(( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOPIN & ((0xffffffff>>(32-1))<<4)) >> 4))  rele_on_cnt++;
 N
 N}
 N
@@ -9926,12 +9802,12 @@ Ntemp=bps[in]._flags_tm;
 Nif(temp&(1<<AV_T))
 Xif(temp&(1<<1))
 N	{
-N	if(bps[in]._temp_av_cnt<1200) 
+N	if(bps[in]._temp_av_cnt<10/*1200*/) 
 N		{
 N		bps[in]._temp_av_cnt++;
-N		if(bps[in]._temp_av_cnt>=1200)
+N		if(bps[in]._temp_av_cnt>=10/*1200*/)
 N			{
-N			bps[in]._temp_av_cnt=1200;
+N			bps[in]._temp_av_cnt=10/*1200*/;
 N		   	if(!(bps[in]._av&(1<<0)))avar_bps_hndl(in,0,1);
 N			}
 N		}
@@ -10385,247 +10261,240 @@ S		}
 S	}
 S}
 N#endif
+N/*
 N#ifdef UKU_TELECORE2015
-S//-----------------------------------------------
-Svoid klimat_hndl_telecore2015(void)
-S{
-Schar i;
-Schar t_bps=20;
-S//t_box=25; 
-S
-Sif(TELECORE2015_KLIMAT_WARM_SIGNAL==0)
-S	{
-S	t_box_warm=t_ext[1];
-S	if(ND_EXT[1])t_box_warm=20;
-S	}
-Selse if(TELECORE2015_KLIMAT_WARM_SIGNAL==1) 
-S	{
-S	t_box_warm=t_ext[0];
-S	if(ND_EXT[0])t_box_warm=20;
-S	}
-S
-Sif(TELECORE2015_KLIMAT_VENT_SIGNAL==0)
-S	{
-S	t_box_vent=t_ext[1];
-S	if(ND_EXT[1])t_box_vent=20;
-S	}
-Selse if(TELECORE2015_KLIMAT_VENT_SIGNAL==1) 
-S	{
-S	t_box_vent=t_ext[0];
-S	if(ND_EXT[0])t_box_vent=20;
-S	}
-S
-STELECORE2015_KLIMAT_WARM_ON_temp=TELECORE2015_KLIMAT_WARM_ON;
-Sif(
-S	(lakb_stat_comm_error)		//хотя бы у одной из литиевых батарей есть проблемы со связью 
-S	|| ((NUMBAT_TELECORE>0)&&(lakb[0]._zar_percent<TELECORE2015_KLIMAT_CAP)) //есть 1 батарея и ее заряд снизился ниже установленного порога
-S	|| ((NUMBAT_TELECORE>1)&&(lakb[1]._zar_percent<TELECORE2015_KLIMAT_CAP)) //есть 2-я батарея .....
-S	|| ((NUMBAT_TELECORE>2)&&(lakb[2]._zar_percent<TELECORE2015_KLIMAT_CAP)) //есть 3-я батарея	.....
-S  )	TELECORE2015_KLIMAT_WARM_ON_temp=0;
-S
-Sif(t_box_warm<TELECORE2015_KLIMAT_WARM_ON_temp) t_box_warm_on_cnt++;
-Selse if(t_box_warm>TELECORE2015_KLIMAT_WARM_OFF) t_box_warm_on_cnt--;
-Sgran(&t_box_warm_on_cnt,0,10);
-S
-Sif(t_box_warm_on_cnt>9) warm_stat_k=wsON;
-Selse if(t_box_warm_on_cnt<1) warm_stat_k=wsOFF;
-S
-S
-Sif(t_box_vent>TELECORE2015_KLIMAT_VENT_ON) t_box_vent_on_cnt++;
-Selse if(t_box_vent<TELECORE2015_KLIMAT_VENT_OFF) t_box_vent_on_cnt--;
-Sgran(&t_box_vent_on_cnt,0,10);
-S
-Sif(t_box_vent_on_cnt>9) vent_stat_k=vsON;
-Selse if(t_box_vent_on_cnt<1) vent_stat_k=vsOFF;
-S
-Sfor(i=0;i<NUMIST;i++)
-S	{
-S	if((bps[i]._Ti>t_bps)&&(bps[i]._cnt<10))t_bps=bps[i]._Ti;
-S	}
-S
-Sif(t_bps>TELECORE2015_KLIMAT_VVENT_ON) t_box_vvent_on_cnt++;
-Selse if(t_bps<TELECORE2015_KLIMAT_VVENT_OFF) t_box_vvent_on_cnt--;
-Sgran(&t_box_vvent_on_cnt,0,10);
-S
-Sif(t_box_vvent_on_cnt>9) vvent_stat_k=vsON;
-Selse if(t_box_vvent_on_cnt<1) vvent_stat_k=vsOFF;
-S
-S}
-N#endif
+N//-----------------------------------------------
+Nvoid klimat_hndl_telecore2015(void)
+N{
+Nchar i;
+Nchar t_bps=20;
+N//t_box=25; 
 N
+Nif(TELECORE2015_KLIMAT_WARM_SIGNAL==0)
+N	{
+N	t_box_warm=t_ext[1];
+N	if(ND_EXT[1])t_box_warm=20;
+N	}
+Nelse if(TELECORE2015_KLIMAT_WARM_SIGNAL==1) 
+N	{
+N	t_box_warm=t_ext[0];
+N	if(ND_EXT[0])t_box_warm=20;
+N	}
+N
+Nif(TELECORE2015_KLIMAT_VENT_SIGNAL==0)
+N	{
+N	t_box_vent=t_ext[1];
+N	if(ND_EXT[1])t_box_vent=20;
+N	}
+Nelse if(TELECORE2015_KLIMAT_VENT_SIGNAL==1) 
+N	{
+N	t_box_vent=t_ext[0];
+N	if(ND_EXT[0])t_box_vent=20;
+N	}
+N
+NTELECORE2015_KLIMAT_WARM_ON_temp=TELECORE2015_KLIMAT_WARM_ON;
+Nif(
+N	(lakb_stat_comm_error)		//хотя бы у одной из литиевых батарей есть проблемы со связью 
+N	|| ((NUMBAT_TELECORE>0)&&(lakb[0]._zar_percent<TELECORE2015_KLIMAT_CAP)) //есть 1 батарея и ее заряд снизился ниже установленного порога
+N	|| ((NUMBAT_TELECORE>1)&&(lakb[1]._zar_percent<TELECORE2015_KLIMAT_CAP)) //есть 2-я батарея .....
+N	|| ((NUMBAT_TELECORE>2)&&(lakb[2]._zar_percent<TELECORE2015_KLIMAT_CAP)) //есть 3-я батарея	.....
+N  )	TELECORE2015_KLIMAT_WARM_ON_temp=0;
+N
+Nif(t_box_warm<TELECORE2015_KLIMAT_WARM_ON_temp) t_box_warm_on_cnt++;
+Nelse if(t_box_warm>TELECORE2015_KLIMAT_WARM_OFF) t_box_warm_on_cnt--;
+Ngran(&t_box_warm_on_cnt,0,10);
+N
+Nif(t_box_warm_on_cnt>9) warm_stat_k=wsON;
+Nelse if(t_box_warm_on_cnt<1) warm_stat_k=wsOFF;
+N
+N
+Nif(t_box_vent>TELECORE2015_KLIMAT_VENT_ON) t_box_vent_on_cnt++;
+Nelse if(t_box_vent<TELECORE2015_KLIMAT_VENT_OFF) t_box_vent_on_cnt--;
+Ngran(&t_box_vent_on_cnt,0,10);
+N
+Nif(t_box_vent_on_cnt>9) vent_stat_k=vsON;
+Nelse if(t_box_vent_on_cnt<1) vent_stat_k=vsOFF;
+N
+Nfor(i=0;i<NUMIST;i++)
+N	{
+N	if((bps[i]._Ti>t_bps)&&(bps[i]._cnt<10))t_bps=bps[i]._Ti;
+N	}
+N
+Nif(t_bps>TELECORE2015_KLIMAT_VVENT_ON) t_box_vvent_on_cnt++;
+Nelse if(t_bps<TELECORE2015_KLIMAT_VVENT_OFF) t_box_vvent_on_cnt--;
+Ngran(&t_box_vvent_on_cnt,0,10);
+N
+Nif(t_box_vvent_on_cnt>9) vvent_stat_k=vsON;
+Nelse if(t_box_vvent_on_cnt<1) vvent_stat_k=vsOFF;
+N
+N}
+N#endif
+N*/
+N
+N/*
 N#ifdef UKU_TELECORE2017
-S//-----------------------------------------------
-Svoid klimat_hndl_telecore2017(void)
-S{
-S//char i;
-S//char t_bps=20;
-Sshort delta_t;
-S 
-S
-Sif(TELECORE2017_KLIMAT_WARM_SIGNAL==0)
-S	{
-S	t_box_warm=t_ext[1];
-S	if(ND_EXT[1])t_box_warm=20;
-S	}
-Selse if(TELECORE2017_KLIMAT_WARM_SIGNAL==1) 
-S	{
-S	t_box_warm=t_ext[0];
-S	if(ND_EXT[0])t_box_warm=20;
-S	}
-S
-Sif(TELECORE2017_KLIMAT_VENT_SIGNAL==0)
-S	{
-S	t_box_vent=t_ext[1];
-S	if(ND_EXT[1])t_box_vent=20;
-S	}
-Selse if(TELECORE2017_KLIMAT_VENT_SIGNAL==1) 
-S	{
-S	t_box_vent=t_ext[0];
-S	if(ND_EXT[0])t_box_vent=20;
-S	}
-S
-STELECORE2017_KLIMAT_WARM_ON_temp=TELECORE2017_KLIMAT_WARM_ON;
-Sif(
-S	(lakb_stat_comm_error)		//хотя бы у одной из литиевых батарей есть проблемы со связью 
-S	|| ((NUMBAT_TELECORE>0)&&(lakb[0]._zar_percent<TELECORE2017_KLIMAT_CAP)) //есть 1 батарея и ее заряд снизился ниже установленного порога
-S	|| ((NUMBAT_TELECORE>1)&&(lakb[1]._zar_percent<TELECORE2017_KLIMAT_CAP)) //есть 2-я батарея .....
-S	|| ((NUMBAT_TELECORE>2)&&(lakb[2]._zar_percent<TELECORE2017_KLIMAT_CAP)) //есть 3-я батарея	.....
-S  )	TELECORE2017_KLIMAT_WARM_ON_temp=0;
-S
-Sif(t_box_warm<TELECORE2017_KLIMAT_WARM_ON_temp) t_box_warm_on_cnt++;
-Selse if(t_box_warm>TELECORE2017_KLIMAT_WARM_OFF) t_box_warm_on_cnt--;
-Sgran(&t_box_warm_on_cnt,0,10);
-S
-Sif(t_box_warm_on_cnt>9) warm_stat_k=wsON;
-Selse if(t_box_warm_on_cnt<1) warm_stat_k=wsOFF;
-S
-S
-Sif(/*(t_box_vent>TELECORE2017_KLIMAT_VENT_ON0)&&*/(t_box_vent<TELECORE2017_KLIMAT_VENT_ON20)) 	TELECORE2017_EXT_VENT_PWM=0;
-Sif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON20)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON40)) 	TELECORE2017_EXT_VENT_PWM=1;
-Sif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON40)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON60)) 	TELECORE2017_EXT_VENT_PWM=2;
-Sif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON60)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON80)) 	TELECORE2017_EXT_VENT_PWM=3;
-Sif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON80)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON100)) TELECORE2017_EXT_VENT_PWM=4;
-Sif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON100) ) 											TELECORE2017_EXT_VENT_PWM=5;
-Sif(warm_stat_k==wsON) TELECORE2017_EXT_VENT_PWM=0;
-S
-Sdelta_t= abs(t_ext[0]-t_ext[1]);
-Sif(/*(delta_t>TELECORE2017_KLIMAT_DVENT_ON0)&&*/(delta_t<TELECORE2017_KLIMAT_DVENT_ON20)) 		TELECORE2017_INT_VENT_PWM=0;
-Sif((delta_t>TELECORE2017_KLIMAT_DVENT_ON20)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON40)) 		TELECORE2017_INT_VENT_PWM=1;
-Sif((delta_t>TELECORE2017_KLIMAT_DVENT_ON40)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON60)) 		TELECORE2017_INT_VENT_PWM=2;
-Sif((delta_t>TELECORE2017_KLIMAT_DVENT_ON60)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON80)) 		TELECORE2017_INT_VENT_PWM=3;
-Sif((delta_t>TELECORE2017_KLIMAT_DVENT_ON80)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON100)) 	TELECORE2017_INT_VENT_PWM=4;
-Sif((delta_t>TELECORE2017_KLIMAT_DVENT_ON100) ) 												TELECORE2017_INT_VENT_PWM=5;
-S
-Sgran_char(&TELECORE2017_EXT_VENT_PWM,0,5);
-Sgran_char(&TELECORE2017_INT_VENT_PWM,0,5);
-S
-Sif(TELECORE2017_EXT_VENT_PWM)TELECORE2017_INT_VENT_PWM=TELECORE2017_EXT_VENT_PWM;
-S
-S//ND_EXT[0]=0;
-S//ND_EXT[1]=0;
-S
-S/*if((ND_EXT[0])||(ND_EXT[1]))
-S	{
-S	TELECORE2017_INT_VENT_PWM=3;
-S	TELECORE2017_EXT_VENT_PWM=3;
-S	} */
-S
-S
-Sif((mess_find_unvol(MESS2KLIMAT_CNTRL))&&(mess_data[0]==PARAM_KLIMAT_CNTRL_VENT_INT))
-S	{
-S	TELECORE2017_INT_VENT_PWM=mess_data[1];
-S	}
-S/*else 
-S	{
-S	TELECORE2017_INT_VENT_PWM=0;
-S	}*/ 
-S
-Sif((mess_find_unvol(MESS2KLIMAT_CNTRL))&&(mess_data[0]==PARAM_KLIMAT_CNTRL_VENT_EXT))
-S	{
-S	TELECORE2017_EXT_VENT_PWM=mess_data[1];
-S	}
-S/*else 
-S	{
-S	TELECORE2017_EXT_VENT_PWM=0;
-S	}*/ 
-S	
-Sif(TELECORE2017_INT_VENT_PWM||TELECORE2017_EXT_VENT_PWM) 	vent_stat_k=vsON;
-Selse 														vent_stat_k=vsOFF;
-S
-S
-Sif(t_box_warm<-20)
-S	{
-S	if(t_box_warm_minus20_cnt<60)
-S		{
-S		t_box_warm_minus20_cnt++;
-S		if(t_box_warm_minus20_cnt==60)
-S			{
-S			snmp_trap_send("Temperature at the bottom of box is below -20",20,1,1);
-S			}
-S		}
-S	}
-Selse if(t_box_warm>-20)
-S	{
-S	if(t_box_warm_minus20_cnt>0)
-S		{
-S		t_box_warm_minus20_cnt--;
-S		if(t_box_warm_minus20_cnt==0)
-S			{
-S			snmp_trap_send("Temperature at the bottom of box is below -20  clear",20,1,0);
-S			}
-S		}
-S	} 
-S
-Sif(t_box_warm>65)
-S	{
-S	if(t_box_warm_plus65_cnt<60)
-S		{
-S		t_box_warm_plus65_cnt++;
-S		if(t_box_warm_plus65_cnt==60)
-S			{
-S			snmp_trap_send("Temperature at the bottom of box is above 65",20,2,1);
-S			}
-S		}
-S	}
-Selse if(t_box_warm<65)
-S	{
-S	if(t_box_warm_plus65_cnt>0)
-S		{
-S		t_box_warm_plus65_cnt--;
-S		if(t_box_warm_plus65_cnt==0)
-S			{
-S			snmp_trap_send("Temperature at the bottom of box is above 65 clear",20,2,0);
-S			}
-S		}
-S	}
-S	
-Sif(t_box_vent>70)
-S	{
-S	if(t_box_cool_plus70_cnt<60)
-S		{
-S		t_box_cool_plus70_cnt++;
-S		if(t_box_cool_plus70_cnt==60)
-S			{
-S			snmp_trap_send("Temperature at the top of box is above 70",20,3,1);
-S			}
-S		}
-S	}
-Selse if(t_box_vent<70)
-S	{
-S	if(t_box_cool_plus70_cnt>0)
-S		{
-S		t_box_cool_plus70_cnt--;
-S		if(t_box_cool_plus70_cnt==0)
-S			{
-S			snmp_trap_send("Temperature at the top of box is above 70 clear",20,3,0);
-S			}
-S		}
-S	}	 
-S}
-S
-S														
-N#endif
+N//-----------------------------------------------
+Nvoid klimat_hndl_telecore2017(void)
+N{
+N//char i;
+N//char t_bps=20;
+Nshort delta_t;
+N 
 N
+Nif(TELECORE2017_KLIMAT_WARM_SIGNAL==0)
+N	{
+N	t_box_warm=t_ext[1];
+N	if(ND_EXT[1])t_box_warm=20;
+N	}
+Nelse if(TELECORE2017_KLIMAT_WARM_SIGNAL==1) 
+N	{
+N	t_box_warm=t_ext[0];
+N	if(ND_EXT[0])t_box_warm=20;
+N	}
+N
+Nif(TELECORE2017_KLIMAT_VENT_SIGNAL==0)
+N	{
+N	t_box_vent=t_ext[1];
+N	if(ND_EXT[1])t_box_vent=20;
+N	}
+Nelse if(TELECORE2017_KLIMAT_VENT_SIGNAL==1) 
+N	{
+N	t_box_vent=t_ext[0];
+N	if(ND_EXT[0])t_box_vent=20;
+N	}
+N
+NTELECORE2017_KLIMAT_WARM_ON_temp=TELECORE2017_KLIMAT_WARM_ON;
+Nif(
+N	(lakb_stat_comm_error)		//хотя бы у одной из литиевых батарей есть проблемы со связью 
+N	|| ((NUMBAT_TELECORE>0)&&(lakb[0]._zar_percent<TELECORE2017_KLIMAT_CAP)) //есть 1 батарея и ее заряд снизился ниже установленного порога
+N	|| ((NUMBAT_TELECORE>1)&&(lakb[1]._zar_percent<TELECORE2017_KLIMAT_CAP)) //есть 2-я батарея .....
+N	|| ((NUMBAT_TELECORE>2)&&(lakb[2]._zar_percent<TELECORE2017_KLIMAT_CAP)) //есть 3-я батарея	.....
+N  )	TELECORE2017_KLIMAT_WARM_ON_temp=0;
+N
+Nif(t_box_warm<TELECORE2017_KLIMAT_WARM_ON_temp) t_box_warm_on_cnt++;
+Nelse if(t_box_warm>TELECORE2017_KLIMAT_WARM_OFF) t_box_warm_on_cnt--;
+Ngran(&t_box_warm_on_cnt,0,10);
+N
+Nif(t_box_warm_on_cnt>9) warm_stat_k=wsON;
+Nelse if(t_box_warm_on_cnt<1) warm_stat_k=wsOFF;
+N
+N
+Nif((t_box_vent<TELECORE2017_KLIMAT_VENT_ON20)) 	TELECORE2017_EXT_VENT_PWM=0;
+Nif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON20)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON40)) 	TELECORE2017_EXT_VENT_PWM=1;
+Nif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON40)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON60)) 	TELECORE2017_EXT_VENT_PWM=2;
+Nif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON60)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON80)) 	TELECORE2017_EXT_VENT_PWM=3;
+Nif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON80)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON100)) TELECORE2017_EXT_VENT_PWM=4;
+Nif((t_box_vent>TELECORE2017_KLIMAT_VENT_ON100) ) 											TELECORE2017_EXT_VENT_PWM=5;
+Nif(warm_stat_k==wsON) TELECORE2017_EXT_VENT_PWM=0;
+N
+Ndelta_t= abs(t_ext[0]-t_ext[1]);
+Nif((delta_t<TELECORE2017_KLIMAT_DVENT_ON20)) 		TELECORE2017_INT_VENT_PWM=0;
+Nif((delta_t>TELECORE2017_KLIMAT_DVENT_ON20)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON40)) 		TELECORE2017_INT_VENT_PWM=1;
+Nif((delta_t>TELECORE2017_KLIMAT_DVENT_ON40)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON60)) 		TELECORE2017_INT_VENT_PWM=2;
+Nif((delta_t>TELECORE2017_KLIMAT_DVENT_ON60)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON80)) 		TELECORE2017_INT_VENT_PWM=3;
+Nif((delta_t>TELECORE2017_KLIMAT_DVENT_ON80)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON100)) 	TELECORE2017_INT_VENT_PWM=4;
+Nif((delta_t>TELECORE2017_KLIMAT_DVENT_ON100) ) 												TELECORE2017_INT_VENT_PWM=5;
+N
+Ngran_char(&TELECORE2017_EXT_VENT_PWM,0,5);
+Ngran_char(&TELECORE2017_INT_VENT_PWM,0,5);
+N
+Nif(TELECORE2017_EXT_VENT_PWM)TELECORE2017_INT_VENT_PWM=TELECORE2017_EXT_VENT_PWM;
+N
+N//ND_EXT[0]=0;
+N//ND_EXT[1]=0;
+N
+N
+N
+N
+Nif((mess_find_unvol(MESS2KLIMAT_CNTRL))&&(mess_data[0]==PARAM_KLIMAT_CNTRL_VENT_INT))
+N	{
+N	TELECORE2017_INT_VENT_PWM=mess_data[1];
+N	}
+N
+N
+Nif((mess_find_unvol(MESS2KLIMAT_CNTRL))&&(mess_data[0]==PARAM_KLIMAT_CNTRL_VENT_EXT))
+N	{
+N	TELECORE2017_EXT_VENT_PWM=mess_data[1];
+N	}
+N
+N	
+Nif(TELECORE2017_INT_VENT_PWM||TELECORE2017_EXT_VENT_PWM) 	vent_stat_k=vsON;
+Nelse 														vent_stat_k=vsOFF;
+N
+N
+Nif(t_box_warm<-20)
+N	{
+N	if(t_box_warm_minus20_cnt<60)
+N		{
+N		t_box_warm_minus20_cnt++;
+N		if(t_box_warm_minus20_cnt==60)
+N			{
+N			snmp_trap_send("Temperature at the bottom of box is below -20",20,1,1);
+N			}
+N		}
+N	}
+Nelse if(t_box_warm>-20)
+N	{
+N	if(t_box_warm_minus20_cnt>0)
+N		{
+N		t_box_warm_minus20_cnt--;
+N		if(t_box_warm_minus20_cnt==0)
+N			{
+N			snmp_trap_send("Temperature at the bottom of box is below -20  clear",20,1,0);
+N			}
+N		}
+N	} 
+N
+Nif(t_box_warm>65)
+N	{
+N	if(t_box_warm_plus65_cnt<60)
+N		{
+N		t_box_warm_plus65_cnt++;
+N		if(t_box_warm_plus65_cnt==60)
+N			{
+N			snmp_trap_send("Temperature at the bottom of box is above 65",20,2,1);
+N			}
+N		}
+N	}
+Nelse if(t_box_warm<65)
+N	{
+N	if(t_box_warm_plus65_cnt>0)
+N		{
+N		t_box_warm_plus65_cnt--;
+N		if(t_box_warm_plus65_cnt==0)
+N			{
+N			snmp_trap_send("Temperature at the bottom of box is above 65 clear",20,2,0);
+N			}
+N		}
+N	}
+N	
+Nif(t_box_vent>70)
+N	{
+N	if(t_box_cool_plus70_cnt<60)
+N		{
+N		t_box_cool_plus70_cnt++;
+N		if(t_box_cool_plus70_cnt==60)
+N			{
+N			snmp_trap_send("Temperature at the top of box is above 70",20,3,1);
+N			}
+N		}
+N	}
+Nelse if(t_box_vent<70)
+N	{
+N	if(t_box_cool_plus70_cnt>0)
+N		{
+N		t_box_cool_plus70_cnt--;
+N		if(t_box_cool_plus70_cnt==0)
+N			{
+N			snmp_trap_send("Temperature at the top of box is above 70 clear",20,3,0);
+N			}
+N		}
+N	}	 
+N}
+N
+N														
+N#endif
+N*/
 N#ifndef UKU_KONTUR
 N//-----------------------------------------------
 Nvoid klimat_hndl(void)
@@ -10910,30 +10779,56 @@ N{
 N
 Nif(main_1Hz_cnt<30)return;
 N
-Nif((out_U<UOUT)&&((UOUT-out_U)>50))
+Nif((out_U<UOUT)&&((UOUT-out_U)>50)&&(!(avar_vd_stat&0x0081)))
 N	{
-N	if(overloadHndlCnt<(TZAS*10))
+N	if(overloadHndlCnt<(OVERLOAD_TIME*10/*TZAS*10*/))
 N		{
 N		overloadHndlCnt++;
-N		if(overloadHndlCnt==(TZAS*10))
+N		if(overloadHndlCnt==(OVERLOAD_TIME*10/*TZAS*10*/))
 N			{
-W "control.c" 4054 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 3910 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(1);
 N			}
 N		}
 N	}
-Nelse if(out_U>(UOUT-20))
+Nelse if(out_U>(UOUT-50))
 N	{
 N	if(overloadHndlCnt)
 N		{
 N		overloadHndlCnt--;
 N		if(overloadHndlCnt==0)
 N			{
-W "control.c" 4065 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 3921 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(0);
 N			}
 N		}
 N	}
+N
+Nif((Ib_ips_termokompensat>OVERLOAD_CURR))
+N	{
+N	if(overloadHndlCnt1<(OVERLOAD_TIME*10))
+N		{
+N		overloadHndlCnt1++;
+N		if(overloadHndlCnt1==(OVERLOAD_TIME*10))
+N			{
+W "control.c" 3933 4 function "avar_overload_hndl" declared implicitly
+N			avar_overload_hndl(1);
+N			}
+N		}
+N	}
+Nelse if((Ib_ips_termokompensat<OVERLOAD_CURR)  && (!bIBAT_SMKLBR))
+N	{
+N	if(overloadHndlCnt1)
+N		{
+N		overloadHndlCnt1--;
+N		if(overloadHndlCnt1==0)
+N			{
+W "control.c" 3944 4 function "avar_overload_hndl" declared implicitly
+N			avar_overload_hndl(0);
+N			}
+N		}
+N	}
+N
 N
 N}
 N
@@ -10950,7 +10845,7 @@ N		{
 N		uAvarHndlOutUMaxCnt++;
 N		if(uAvarHndlOutUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4085 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3965 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(1,out_U);
 N			}
 N		}
@@ -10963,7 +10858,7 @@ N		{
 N		uAvarHndlOutUMaxCnt--;
 N		if(uAvarHndlOutUMaxCnt==0)
 N			{
-W "control.c" 4097 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3977 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10977,7 +10872,7 @@ N		{
 N		uAvarHndlOutUMinCnt++;
 N		if(uAvarHndlOutUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4110 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3990 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(2,out_U);
 N			}
 N		}
@@ -10990,7 +10885,7 @@ N		{
 N		uAvarHndlOutUMinCnt--;
 N		if(uAvarHndlOutUMinCnt==0)
 N			{
-W "control.c" 4122 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 4002 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -11004,7 +10899,7 @@ N		{
 N		uAvarHndlInUMaxCnt++;
 N		if(uAvarHndlInUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4135 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4015 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(1,in_U);
 N			}
 N		}
@@ -11017,7 +10912,7 @@ N		{
 N		uAvarHndlInUMaxCnt--;
 N		if(uAvarHndlInUMaxCnt==0)
 N			{
-W "control.c" 4147 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4027 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11031,7 +10926,7 @@ N		{
 N		uAvarHndlInUMinCnt++;
 N		if(uAvarHndlInUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4160 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4040 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(2,in_U);
 N			}
 N		}
@@ -11044,7 +10939,7 @@ N		{
 N		uAvarHndlInUMinCnt--;
 N		if(uAvarHndlInUMinCnt==0)
 N			{
-W "control.c" 4172 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 4052 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -11065,7 +10960,7 @@ N		{
 N		sysTAvarHndlCnt++;
 N		if(sysTAvarHndlCnt>=(10*TZAS))
 N			{
-W "control.c" 4192 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4072 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(1,sys_T);
 N			}
 N		}
@@ -11078,7 +10973,7 @@ N		{
 N		sysTAvarHndlCnt--;
 N		if(sysTAvarHndlCnt==0)
 N			{
-W "control.c" 4204 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 4084 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(0,sys_T);
 N			}
 N		}
@@ -11149,379 +11044,364 @@ Nif(ICA_EN)u_necc+=ica_u_necc;
 N#endif
 N
 N
-N#ifndef UKU_220_IPS_TERMOKOMPENSAT
-S
-S#ifndef UKU_TELECORE2015
-S#ifndef UKU_TELECORE2017
-Sif(unh_cnt0<10)
-S	{
-S	unh_cnt0++;
-S	if(unh_cnt0>=10)
-S		{
-S		unh_cnt0=0;
-S		b1Hz_unh=1;
-S		}
-S	}
-S
-Sif(unh_cnt1<5)
-S	{
-S	unh_cnt1++;
-S	if(unh_cnt1==5)
-S		{
-S		unh_cnt1=0;
-S//		b2Hz_unh=1;
-S		}
-S	} 
-S
-S
-S
-Sif(mess_find_unvol(MESS2UNECC_HNDL))
-S	{		
-S	if(mess_data[0]==PARAM_UNECC_SET)
-S		{
-S		u_necc=mess_data[1];
-S		}		
-S	}
-S
-S
-Selse if(b1Hz_unh)
-S	{
-S	
-S	if((BAT_IS_ON[0]!=bisON) && (BAT_IS_ON[1]!=bisON))
-S		{
-S		
-S		u_necc=U0B;
-S		}
-S	else 
-S		{
-S		if(BAT_TYPE==0) //если батарея обычная
-S			{
-S			for(i=0;i<2;i++)
-S				{
-S				if(BAT_IS_ON[i]==bisON)
-S					{
-S					if(bat[i]._nd)t[i]=20;
-S					else t[i]=bat[i]._Tb;
-S					}
-S				else
-S					{
-S					t[i]=-20;
-S					}
-S				}
-S			if(t[0]>t[1])mat_temper=t[0];
-S			else mat_temper=t[1];
-S			
-S		
-S			if(mat_temper<0)temp_SL=UB0; 
-S			else 
-S				{
-S				if(mat_temper>40)mat_temper=40; 
-S				temp_SL=(UB20-UB0)*10;
-S				temp_SL*=mat_temper;
-S				temp_SL/=200;
-S				temp_SL+=UB0;
-S				}
-S			if(spc_stat==spcVZ)
-S				{
-S				temp_SL=UVZ;
-S				}
-S			u_necc=(unsigned int)temp_SL;
-S			}
-S		else if(BAT_TYPE==1) //если батарея китайская
-S			{
-S			u_necc=U0B;
-S					
-S			u_necc=bat[0]._Ub+10;
-S
-S			
-S			if(spc_stat==spcVZ)
-S				{
-S				u_necc=UVZ;
-S				}
-S			if(u_necc>=UB0) u_necc=UB0;
-S			if(u_necc>=UB20) u_necc=UB20;
-S			}
-S		}  
-S	}
-S#endif
-S#endif
-S
-S#ifdef UKU_TELECORE2015
-S
-Sif(unh_cnt0<10)
-S	{
-S	unh_cnt0++;
-S	if(unh_cnt0>=10)
-S		{
-S		unh_cnt0=0;
-S		b1Hz_unh=1;
-S		}
-S	}
-S
-Sif(unh_cnt1<5)
-S	{
-S	unh_cnt1++;
-S	if(unh_cnt1==5)
-S		{
-S		unh_cnt1=0;
-S//		b2Hz_unh=1;
-S		}
-S	} 
-S
-S
-S
-Sif(mess_find_unvol(MESS2UNECC_HNDL))
-S	{		
-S	if(mess_data[0]==PARAM_UNECC_SET)
-S		{
-S		u_necc=mess_data[1];
-S		}		
-S	}
-S
-S
-Selse if(b1Hz_unh)
-S	{
-S	b1Hz_unh=0;
-S
-S	if(BAT_TYPE==0)
-S		{
-S		if(bat[0]._nd)mat_temper=20;
-S		else mat_temper=bat[0]._Tb;
-S
-S			
-S		if(mat_temper<0)temp_SL=UB0; 
-S		else 
-S			{
-S			if(mat_temper>40)mat_temper=40; 
-S			temp_SL=(UB20-UB0)*10;
-S			temp_SL*=mat_temper;
-S			temp_SL/=200;
-S			temp_SL+=UB0;
-S			}
-S		if(spc_stat==spcVZ)
-S			{
-S			temp_SL=UVZ;
-S			}
-S		u_necc=(unsigned int)temp_SL;
-S	///u_necc=3456;
-S		}
-S	else if(BAT_TYPE==1)
-S		{
-S		
-S		gran(&DU_LI_BAT,1,30);
-S		u_necc=li_bat._Ub+DU_LI_BAT;
-S		gran(&u_necc,0,UB0);
-S		gran(&u_necc,0,UB20);
-S		gran(&u_necc,0,540);		
-S
-S
-S		if(li_bat._batStat!=bsOK)
-S			{
-S			u_necc=U0B;
-S			}
-S		if(spc_stat==spcVZ)
-S			{
-S			u_necc=UVZ;
-S			}
-S		/* 
-S		u_necc=U0B;
-S		
-S
-S	
-S		u_necc=UB0;
-S		u_necc=li_bat._Ub+10;
-S		if((li_bat._Ub<450)||(li_bat._Ub>550))
-S			{
-S			lakb_error_cnt++;
-S			if(lakb_error_cnt>=30)
-S				{
-S				lakb_error_cnt=30;
-S				u_necc=U0B;
-S				}
-S			}
-S		else lakb_error_cnt=0;*/
-S		}
-S	else if(BAT_TYPE==2)
-S		{
-S		u_necc=U0B;
-S		
-S		if(spc_stat==spcVZ)
-S			{
-S			u_necc=UVZ;
-S			}
-S	
-S		u_necc=UB0;
-S		}
-S
-S	else if(BAT_TYPE==3)
-S		{
-S		u_necc=U0B;
-S		
-S		if(spc_stat==spcVZ)
-S			{
-S			u_necc=UVZ;
-S			}
-S
-S		gran(&DU_LI_BAT,1,30);
-S
-S
-S		if(lakbNotErrorNum==0)
-S			{
-S			u_necc=U0B;
-S			}
-S		else 
-S			{
-S			signed short i;
-S			//signed short u_necc_max;
-S			//u_necc_max=0;
-S			char soc_flag=0;
-S
-S			for(i=(NUMBAT_TELECORE-1);i>=0;i--)
-S				{
-S				if(lakb[i]._communicationFullErrorStat==0)u_necc=lakb[i]._tot_bat_volt+DU_LI_BAT;
-S				if(lakb[i]._s_o_c_percent<QSODERG_LI_BAT)soc_flag=1;
-S				}
-S
-S			if(soc_flag==0)u_necc=USODERG_LI_BAT;
-S			}
-S		gran(&u_necc,0,UB0);
-S		//gran(&u_necc,0,UB20);
-S		gran(&u_necc,0,540);
-S		}
-S	}
-S
-S#endif 
-S
-S#ifdef UKU_TELECORE2017
-S
-Sif(unh_cnt0<10)
-S	{
-S	unh_cnt0++;
-S	if(unh_cnt0>=10)
-S		{
-S		unh_cnt0=0;
-S		b1Hz_unh=1;
-S		}
-S	}
-S
-Sif(unh_cnt1<5)
-S	{
-S	unh_cnt1++;
-S	if(unh_cnt1==5)
-S		{
-S		unh_cnt1=0;
-S//		b2Hz_unh=1;
-S		}
-S	} 
-S
-S
-S
-Sif(mess_find_unvol(MESS2UNECC_HNDL))
-S	{		
-S	if(mess_data[0]==PARAM_UNECC_SET)
-S		{
-S		u_necc=mess_data[1];
-S		}		
-S	}
-S
-S
-Selse if(b1Hz_unh)
-S	{
-S	b1Hz_unh=0;
-S
-S	if(BAT_TYPE==0)
-S		{
-S		if(bat[0]._nd)mat_temper=20;
-S		else mat_temper=bat[0]._Tb;
-S
-S			
-S		if(mat_temper<0)temp_SL=UB0; 
-S		else 
-S			{
-S			if(mat_temper>40)mat_temper=40; 
-S			temp_SL=(UB20-UB0)*10;
-S			temp_SL*=mat_temper;
-S			temp_SL/=200;
-S			temp_SL+=UB0;
-S			}
-S		if(spc_stat==spcVZ)
-S			{
-S			temp_SL=UVZ;
-S			}
-S		u_necc=(unsigned int)temp_SL;
-S	///u_necc=3456;
-S		}
-S	else if(BAT_TYPE==1)
-S		{
-S		
-S		gran(&DU_LI_BAT,1,30);
-S		u_necc=li_bat._Ub+DU_LI_BAT;
-S		gran(&u_necc,0,UB0);
-S		gran(&u_necc,0,UB20);
-S		gran(&u_necc,0,540);		
-S
-S
-S		if(li_bat._batStat!=bsOK)
-S			{
-S			u_necc=U0B;
-S			}
-S		if(spc_stat==spcVZ)
-S			{
-S			u_necc=UVZ;
-S			}
-S		}
-S	else if(BAT_TYPE==2)
-S		{
-S		u_necc=U0B;
-S		
-S		if(spc_stat==spcVZ)
-S			{
-S			u_necc=UVZ;
-S			}
-S	
-S		u_necc=UB0;
-S		}
-S
-S	else if(BAT_TYPE==3)
-S		{
-S		u_necc=U0B;
-S		
-S		if(spc_stat==spcVZ)
-S			{
-S			u_necc=UVZ;
-S			}
-S
-S		gran(&DU_LI_BAT,1,30);
-S
-S
-S		if(lakbNotErrorNum==0)
-S			{
-S			u_necc=U0B;
-S			}
-S		else 
-S			{
-S			signed short i;
-S			//signed short u_necc_max;
-S			//u_necc_max=0;
-S			char soc_flag=0;
-S
-S			for(i=(NUMBAT_TELECORE-1);i>=0;i--)
-S				{
-S				if(lakb[i]._communicationFullErrorStat==0)u_necc=lakb[i]._tot_bat_volt+DU_LI_BAT;
-S				if(lakb[i]._s_o_c_percent<QSODERG_LI_BAT)soc_flag=1;
-S				}
-S
-S			if(soc_flag==0)u_necc=USODERG_LI_BAT;
-S			}
-S		gran(&u_necc,0,UB0);
-S		//gran(&u_necc,0,UB20);
-S		gran(&u_necc,0,540);
-S		}
-S	}
-S
-S#endif 
-S//u_necc=2356;
-N#endif//gran(&u_necc,400,UMAX);
+N//#ifndef UKU_220_IPS_TERMOKOMPENSAT
+N/*
+N#ifndef UKU_TELECORE2015
+N#ifndef UKU_TELECORE2017
+Nif(unh_cnt0<10)
+N	{
+N	unh_cnt0++;
+N	if(unh_cnt0>=10)
+N		{
+N		unh_cnt0=0;
+N		b1Hz_unh=1;
+N		}
+N	}
+N
+Nif(unh_cnt1<5)
+N	{
+N	unh_cnt1++;
+N	if(unh_cnt1==5)
+N		{
+N		unh_cnt1=0;
+N//		b2Hz_unh=1;
+N		}
+N	} 
+N
+N
+N
+Nif(mess_find_unvol(MESS2UNECC_HNDL))
+N	{		
+N	if(mess_data[0]==PARAM_UNECC_SET)
+N		{
+N		u_necc=mess_data[1];
+N		}		
+N	}
+N
+N
+Nelse if(b1Hz_unh)
+N	{
+N	
+N	if((BAT_IS_ON[0]!=bisON) && (BAT_IS_ON[1]!=bisON))
+N		{
+N		
+N		u_necc=U0B;
+N		}
+N	else 
+N		{
+N		if(BAT_TYPE==0) //если батарея обычная
+N			{
+N			for(i=0;i<2;i++)
+N				{
+N				if(BAT_IS_ON[i]==bisON)
+N					{
+N					if(bat[i]._nd)t[i]=20;
+N					else t[i]=bat[i]._Tb;
+N					}
+N				else
+N					{
+N					t[i]=-20;
+N					}
+N				}
+N			if(t[0]>t[1])mat_temper=t[0];
+N			else mat_temper=t[1];
+N			
+N		
+N			if(mat_temper<0)temp_SL=UB0; 
+N			else 
+N				{
+N				if(mat_temper>40)mat_temper=40; 
+N				temp_SL=(UB20-UB0)*10;
+N				temp_SL*=mat_temper;
+N				temp_SL/=200;
+N				temp_SL+=UB0;
+N				}
+N			if(spc_stat==spcVZ)
+N				{
+N				temp_SL=UVZ;
+N				}
+N			u_necc=(unsigned int)temp_SL;
+N			}
+N		else if(BAT_TYPE==1) //если батарея китайская
+N			{
+N			u_necc=U0B;
+N					
+N			u_necc=bat[0]._Ub+10;
+N
+N			
+N			if(spc_stat==spcVZ)
+N				{
+N				u_necc=UVZ;
+N				}
+N			if(u_necc>=UB0) u_necc=UB0;
+N			if(u_necc>=UB20) u_necc=UB20;
+N			}
+N		}  
+N	}
+N#endif
+N#endif*/
+N/*
+N#ifdef UKU_TELECORE2015
+N
+Nif(unh_cnt0<10)
+N	{
+N	unh_cnt0++;
+N	if(unh_cnt0>=10)
+N		{
+N		unh_cnt0=0;
+N		b1Hz_unh=1;
+N		}
+N	}
+N
+Nif(unh_cnt1<5)
+N	{
+N	unh_cnt1++;
+N	if(unh_cnt1==5)
+N		{
+N		unh_cnt1=0;
+N//		b2Hz_unh=1;
+N		}
+N	} 
+N
+N
+N
+Nif(mess_find_unvol(MESS2UNECC_HNDL))
+N	{		
+N	if(mess_data[0]==PARAM_UNECC_SET)
+N		{
+N		u_necc=mess_data[1];
+N		}		
+N	}
+N
+N
+Nelse if(b1Hz_unh)
+N	{
+N	b1Hz_unh=0;
+N
+N	if(BAT_TYPE==0)
+N		{
+N		if(bat[0]._nd)mat_temper=20;
+N		else mat_temper=bat[0]._Tb;
+N
+N			
+N		if(mat_temper<0)temp_SL=UB0; 
+N		else 
+N			{
+N			if(mat_temper>40)mat_temper=40; 
+N			temp_SL=(UB20-UB0)*10;
+N			temp_SL*=mat_temper;
+N			temp_SL/=200;
+N			temp_SL+=UB0;
+N			}
+N		if(spc_stat==spcVZ)
+N			{
+N			temp_SL=UVZ;
+N			}
+N		u_necc=(unsigned int)temp_SL;
+N	///u_necc=3456;
+N		}
+N	else if(BAT_TYPE==1)
+N		{
+N		
+N		gran(&DU_LI_BAT,1,30);
+N		u_necc=li_bat._Ub+DU_LI_BAT;
+N		gran(&u_necc,0,UB0);
+N		gran(&u_necc,0,UB20);
+N		gran(&u_necc,0,540);		
+N
+N
+N		if(li_bat._batStat!=bsOK)
+N			{
+N			u_necc=U0B;
+N			}
+N		if(spc_stat==spcVZ)
+N			{
+N			u_necc=UVZ;
+N			}
+N
+N		}
+N	else if(BAT_TYPE==2)
+N		{
+N		u_necc=U0B;
+N		
+N		if(spc_stat==spcVZ)
+N			{
+N			u_necc=UVZ;
+N			}
+N	
+N		u_necc=UB0;
+N		}
+N
+N	else if(BAT_TYPE==3)
+N		{
+N		u_necc=U0B;
+N		
+N		if(spc_stat==spcVZ)
+N			{
+N			u_necc=UVZ;
+N			}
+N
+N		gran(&DU_LI_BAT,1,30);
+N
+N
+N		if(lakbNotErrorNum==0)
+N			{
+N			u_necc=U0B;
+N			}
+N		else 
+N			{
+N			signed short i;
+N			//signed short u_necc_max;
+N			//u_necc_max=0;
+N			char soc_flag=0;
+N
+N			for(i=(NUMBAT_TELECORE-1);i>=0;i--)
+N				{
+N				if(lakb[i]._communicationFullErrorStat==0)u_necc=lakb[i]._tot_bat_volt+DU_LI_BAT;
+N				if(lakb[i]._s_o_c_percent<QSODERG_LI_BAT)soc_flag=1;
+N				}
+N
+N			if(soc_flag==0)u_necc=USODERG_LI_BAT;
+N			}
+N		gran(&u_necc,0,UB0);
+N		//gran(&u_necc,0,UB20);
+N		gran(&u_necc,0,540);
+N		}
+N	}
+N
+N#endif */
+N/*
+N#ifdef UKU_TELECORE2017
+N
+Nif(unh_cnt0<10)
+N	{
+N	unh_cnt0++;
+N	if(unh_cnt0>=10)
+N		{
+N		unh_cnt0=0;
+N		b1Hz_unh=1;
+N		}
+N	}
+N
+Nif(unh_cnt1<5)
+N	{
+N	unh_cnt1++;
+N	if(unh_cnt1==5)
+N		{
+N		unh_cnt1=0;
+N//		b2Hz_unh=1;
+N		}
+N	} 
+N
+N
+N
+Nif(mess_find_unvol(MESS2UNECC_HNDL))
+N	{		
+N	if(mess_data[0]==PARAM_UNECC_SET)
+N		{
+N		u_necc=mess_data[1];
+N		}		
+N	}
+N
+N
+Nelse if(b1Hz_unh)
+N	{
+N	b1Hz_unh=0;
+N
+N	if(BAT_TYPE==0)
+N		{
+N		if(bat[0]._nd)mat_temper=20;
+N		else mat_temper=bat[0]._Tb;
+N
+N			
+N		if(mat_temper<0)temp_SL=UB0; 
+N		else 
+N			{
+N			if(mat_temper>40)mat_temper=40; 
+N			temp_SL=(UB20-UB0)*10;
+N			temp_SL*=mat_temper;
+N			temp_SL/=200;
+N			temp_SL+=UB0;
+N			}
+N		if(spc_stat==spcVZ)
+N			{
+N			temp_SL=UVZ;
+N			}
+N		u_necc=(unsigned int)temp_SL;
+N	///u_necc=3456;
+N		}
+N	else if(BAT_TYPE==1)
+N		{
+N		
+N		gran(&DU_LI_BAT,1,30);
+N		u_necc=li_bat._Ub+DU_LI_BAT;
+N		gran(&u_necc,0,UB0);
+N		gran(&u_necc,0,UB20);
+N		gran(&u_necc,0,540);		
+N
+N
+N		if(li_bat._batStat!=bsOK)
+N			{
+N			u_necc=U0B;
+N			}
+N		if(spc_stat==spcVZ)
+N			{
+N			u_necc=UVZ;
+N			}
+N		}
+N	else if(BAT_TYPE==2)
+N		{
+N		u_necc=U0B;
+N		
+N		if(spc_stat==spcVZ)
+N			{
+N			u_necc=UVZ;
+N			}
+N	
+N		u_necc=UB0;
+N		}
+N
+N	else if(BAT_TYPE==3)
+N		{
+N		u_necc=U0B;
+N		
+N		if(spc_stat==spcVZ)
+N			{
+N			u_necc=UVZ;
+N			}
+N
+N		gran(&DU_LI_BAT,1,30);
+N
+N
+N		if(lakbNotErrorNum==0)
+N			{
+N			u_necc=U0B;
+N			}
+N		else 
+N			{
+N			signed short i;
+N			//signed short u_necc_max;
+N			//u_necc_max=0;
+N			char soc_flag=0;
+N
+N			for(i=(NUMBAT_TELECORE-1);i>=0;i--)
+N				{
+N				if(lakb[i]._communicationFullErrorStat==0)u_necc=lakb[i]._tot_bat_volt+DU_LI_BAT;
+N				if(lakb[i]._s_o_c_percent<QSODERG_LI_BAT)soc_flag=1;
+N				}
+N
+N			if(soc_flag==0)u_necc=USODERG_LI_BAT;
+N			}
+N		gran(&u_necc,0,UB0);
+N		//gran(&u_necc,0,UB20);
+N		gran(&u_necc,0,540);
+N		}
+N	}
+N
+N#endif 
+N*/
+N//u_necc=2356;
+N//#endif//gran(&u_necc,400,UMAX);
 N
 Ntemp_L=(signed long) u_necc;
 Ntemp_L*=98L;
@@ -11762,8 +11642,8 @@ N			cntrl_stat_new--;
 N			}*/					
 N		}
 N
-N	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U)))/650L);
-N	if(((signed long)(UOUT_-in_U))<0L)cntrl_stat_new=0;
+N	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U+30)))/650L);
+N	if(((signed long)(UOUT_-in_U+30))<0L)cntrl_stat_new=0;
 N	gran(&cntrl_stat_new,10,2010);			
 N	cntrl_stat_old=cntrl_stat_new;
 N	cntrl_stat=cntrl_stat_new;
@@ -11782,7 +11662,7 @@ N			}
 N		tempSL>>=4;
 N		cntrl_stat_buff_=(signed short)tempSL;
 N		}
-N	if(NUMSK)cntrl_stat=cntrl_stat_buff_;
+N	//if(NUMSK)cntrl_stat=cntrl_stat_buff_;
 N
 N	}
 N
@@ -11804,6 +11684,9 @@ N     cntrl_stat_old=1200;
 N     cntrl_stat_new=1200;
 N     }
 Ngran(&cntrl_stat,10,2010); 
+N
+N//if(main_1Hz_cnt<10)	cntrl_stat=2000;
+N
 Nb1Hz_ch=0;
 N}
 N

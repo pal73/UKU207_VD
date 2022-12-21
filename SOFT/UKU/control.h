@@ -38,6 +38,7 @@ extern short adc_gorb_cnt,adc_zero_cnt;
 extern char adc_window_flag;
 extern short adc_window_cnt;
 extern short adc_net_buff_cnt;
+extern short rele_on_cnt;
 
 
 char vz_start(char hour);

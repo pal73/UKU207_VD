@@ -64,9 +64,13 @@ else if(fl=='S')
 void beep_hndl(void) 
 { 
 static char bcnt;
+char i;
 bcnt++; 
 if(bcnt>9)bcnt=0;
 //bU_BAT2REL_AV_BAT=0;
+
+if((avar_ind_stat)||(avar_ind_stat1)) beep_init(0x33333333,'R');
+/*
 if((avar_ind_stat)||(ips_bat_av_stat))beep_init(0x33333333,'R');
 
 
@@ -91,14 +95,18 @@ else if ( ((bat[0]._temper_stat&0x03)||(bat[1]._temper_stat&0x03)) )
 	{
 	if(!bSILENT) beep_init(0x00000005,'R');
 	}
-
+ */
 
 else 
 	{
 	beep_init(0x00000000,'S');
 	bSILENT=0;
-	} 
+	}
 
+/*for(i=0;i<NUMIST;i++)
+	{
+	if(bps[i]._av) 	beep_init(0x33333333,'R');
+	}*/
 
 //if(!avar_ind_stat)beep_init(0x00000000,'R');
 

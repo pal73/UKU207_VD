@@ -85,6 +85,7 @@ short adc_gorb_cnt,adc_zero_cnt;
 char adc_window_flag;
 short adc_window_cnt;
 short adc_net_buff_cnt;
+short rele_on_cnt;
 
 
 extern int mess_par0[MESS_DEEP],mess_par1[MESS_DEEP],mess_data[2];
@@ -398,7 +399,7 @@ void matemat(void)
 signed long temp_SL/*,temp_SL_*/;
 char /*temp,*/i;
 //signed short temp_SS;
-
+/*
 #ifdef UKU_MGTS
 //напряжение сети
 temp_SL=(signed long)net_buff_;
@@ -406,7 +407,9 @@ temp_SL*=Kunet;
 temp_SL/=110000L;
 net_U=(signed short)temp_SL;
 #endif
+*/
 
+/*
 #ifdef UKU_RSTKM
 //напряжение сети
 temp_SL=(signed long)net_buff_;
@@ -414,7 +417,8 @@ temp_SL*=Kunet;
 temp_SL/=110000L;
 net_U=(signed short)temp_SL;
 #endif
-
+*/
+/*
 #ifdef UKU_3U
 //напряжение сети
 temp_SL=(signed long)net_buff_;
@@ -422,7 +426,8 @@ temp_SL*=Kunet;
 temp_SL/=36000L;
 net_U=(signed short)temp_SL;
 #endif
-
+*/
+/*
 #ifdef UKU_6U
 //напряжение сети
 
@@ -483,8 +488,8 @@ else
 
 
 
-#endif
-
+#endif */
+/*
 #ifdef UKU_GLONASS
 //напряжение сети
 temp_SL=(signed long)net_buff_;
@@ -492,16 +497,16 @@ temp_SL*=Kunet;
 temp_SL/=110000L;
 net_U=(signed short)temp_SL;
 #endif
-
-#ifdef UKU_KONTUR
+*/
+/*#ifdef UKU_KONTUR
 //напряжение сети
 temp_SL=(signed long)net_buff_;
 temp_SL*=Kunet;
 temp_SL/=110000L;
 net_U=(signed short)temp_SL;
-#endif
+#endif */
 
-
+/*
 #ifdef UKU_220_V2
 //напряжение сети
 
@@ -534,8 +539,8 @@ else
 	net_U=(signed short)temp_SL;
 	}
 #endif
-
-
+*/
+/*
 #ifdef UKU_220
 //напряжение сети
 
@@ -573,7 +578,7 @@ else
 	
 	}
 #endif
-
+*/
 #ifdef UKU_220_IPS_TERMOKOMPENSAT
 //напряжение сети
 
@@ -669,7 +674,7 @@ else
 	}
 if(bps[11]._device!=dNET_METR) net_F3=net_F;
 #endif
-
+/*
 #ifdef UKU_TELECORE2015
 //напряжение сети
 temp_SL=(signed long)net_buff_;
@@ -677,21 +682,21 @@ temp_SL*=Kunet;
 temp_SL/=110000L;
 net_U=(signed short)temp_SL;
 #endif
-
+*//*
 #ifdef UKU_TELECORE2017
 //напряжение сети
 temp_SL=(signed long)net_buff_;
 temp_SL*=Kunet;
 temp_SL/=110000L;
 net_U=(signed short)temp_SL;
-#endif
+#endif*/
 
 //Напряжения батарей
 temp_SL=(signed long)adc_buff_[0];
 temp_SL*=Kubat[0];
 temp_SL/=2000L;
 bat[0]._Ub=(signed short)temp_SL;
-
+/*
 #ifdef UKU_220
 //Напряжения батарей
 temp_SL=(signed long)adc_buff_[0];
@@ -706,25 +711,25 @@ temp_SL=(signed long)adc_buff_[0];
 temp_SL*=Kubat[0];
 temp_SL/=400L;
 bat[0]._Ub=(signed short)temp_SL;
-#endif
+#endif */
 
 temp_SL=(signed long)adc_buff_[4];
 temp_SL*=Kubatm[0];
 temp_SL/=700L;
 bat[0]._Ubm=(signed short)temp_SL;
-
+/*
 #ifdef UKU_KONTUR
 temp_SL=(signed long)adc_buff_[4];
 temp_SL*=Kubatm[0];
 temp_SL/=2000L;
 bat[0]._Ubm=(signed short)temp_SL;
-#endif
+#endif */
 
 temp_SL=(signed long)adc_buff_[12];
 temp_SL*=Kubat[1];
 temp_SL/=2000L;
 bat[1]._Ub=(signed short)temp_SL;
-
+/*
 #ifdef UKU_220
 temp_SL=(signed long)adc_buff_[12];
 temp_SL*=Kubat[1];
@@ -738,7 +743,7 @@ temp_SL*=Kubat[1];
 temp_SL/=400L;
 bat[1]._Ub=(signed short)temp_SL;
 #endif
-
+*/
 temp_SL=(signed long)adc_buff_[1];
 temp_SL*=Kubatm[1];
 temp_SL/=700L;
@@ -927,7 +932,7 @@ temp_SL=(signed long)adc_buff_[2];
 temp_SL*=Kuload;
 temp_SL/=2000L;
 load_U=(signed short)temp_SL;
-
+/*
 #ifdef UKU_220 
 //Напряжение нагрузки
 temp_SL=(signed long)adc_buff_[2];
@@ -943,7 +948,7 @@ temp_SL*=Kuload;
 temp_SL/=350L;
 load_U=(signed short)temp_SL;
 #endif
-
+*/
 #ifdef UKU_VD
 //Напряжение выхода
 temp_SL=(signed long)adc_buff_[1];
@@ -988,7 +993,7 @@ bps_I=(signed short)temp_SL;
 
 #endif
 
-
+/*
 #ifdef UKU_KONTUR
 //Внешний датчик температуры №1(температура внешнего воздуха)
 if((adc_buff_[5]>800)&&(adc_buff_[5]<3800))ND_EXT[0]=0;
@@ -1006,17 +1011,10 @@ temp_SL=(signed long)adc_buff_[5];
 temp_SL*=Ktext[0];
 temp_SL/=20000L;
 temp_SL-=273L;
-t_ext[0]=(signed short)temp_SL;
-/*
-if((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
-else ND_EXT[1]=1;
-temp_SL=(signed long)adc_buff_[6];
-temp_SL*=Ktext[1];
-temp_SL/=20000L;
-temp_SL-=273L;
-t_ext[1]=(signed short)temp_SL;	*/
-#endif
+t_ext[0]=(signed short)temp_SL;	
 
+#endif	  */
+/*
 #ifdef UKU_220
 
 //Внешний датчик температуры №2(температура отсека ЭПУ)
@@ -1038,9 +1036,9 @@ temp_SL-=273L;
 t_ext[2]=(signed short)temp_SL;
 
 #else
+*/
 
-
-#ifdef UKU_220_IPS_TERMOKOMPENSAT
+#ifdef UKU_VD
 
 //Внешний датчик температуры 
 if((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[0]=0;
@@ -1050,11 +1048,15 @@ temp_SL*=Ktext[0];
 temp_SL/=20000L;
 temp_SL-=273L;
 t_ext[0]=(signed short)temp_SL;
-sys_T=t_ext[0];
-#else
+if(rele_on_cnt<0)rele_on_cnt=0;
+if(rele_on_cnt>3)rele_on_cnt=3;
+t_ext[0]+=3*rele_on_cnt;
+if(ND_EXT[0]==0)sys_T=t_ext[0];
+else sys_T=20;
 
+#endif
 
-
+/*
 //Внешний датчик температуры №2(температура отсека ЭПУ)
 if((adc_buff_[6]>800)&&(adc_buff_[6]<3800))ND_EXT[1]=0;
 else ND_EXT[1]=1;
@@ -1073,8 +1075,8 @@ temp_SL/=20000L;
 temp_SL-=273L;
 t_ext[2]=(signed short)temp_SL;
 
-#endif
-#endif
+#endif */
+
 
 if(!bIBAT_SMKLBR)
 	{
@@ -1084,8 +1086,19 @@ if(!bIBAT_SMKLBR)
 	temp_SL*=(signed long)Kibat1[0];
 	temp_SL/=2000L;
 	
-	Ib_ips_termokompensat =(signed short)temp_SL;
-	out_I=Ib_ips_termokompensat;
+	if(bIBAT_SMKLBR_CNT) bIBAT_SMKLBR_CNT--;
+
+	if(ibat_metr_cnt>30)temp_SL=0;
+	
+	if(!bIBAT_SMKLBR_CNT)
+		{
+		Ib_ips_termokompensat =(signed short)temp_SL;
+		out_I=Ib_ips_termokompensat;
+		}
+	}
+else
+	{
+	bIBAT_SMKLBR_CNT=50;
 	}
 
 if(I_LOAD_MODE==0)
@@ -1104,7 +1117,7 @@ bat[0]._Ub=load_U;
 
 
 
-
+/*
 #ifdef UKU_TELECORE2015
 
 //Внешний датчик температуры №1
@@ -1127,7 +1140,8 @@ temp_SL-=273L;
 t_ext[1]=(signed short)temp_SL;
 
 #endif
-
+*/
+/*
 #ifdef UKU_TELECORE2017
 
 //Внешний датчик температуры №1
@@ -1150,7 +1164,7 @@ temp_SL-=273L;
 t_ext[1]=(signed short)temp_SL;
 
 #endif
-
+*/
 //напряжение ввода
 temp_SL=(signed long)adc_buff_ext_[0];
 temp_SL*=Kunet_ext[0];
@@ -1225,166 +1239,7 @@ else if((ibt._nd[0]==1) &&  (ibt._nd[1]==1))
 	else t_box=20;
 	}
 #endif
-/*
-//Вычисление температуры шкафа
 
-ibt._T[0]=bat[0]._Tb+273;
-ibt._T[1]=bat[1]._Tb+273;
-ibt._T[2]=t_ext[1]+273;
-ibt._T[3]=t_ext[2]+273;
-
-ibt._nd[0]=bat[0]._nd;
-ibt._nd[1]=bat[1]._nd;
-ibt._nd[2]=ND_EXT[1];
-ibt._nd[3]=ND_EXT[2];
-
-ibt._avg1=0;
-ibt._avg_cnt=4;
-
-if(ibt._nd[0]==0)
-	{
-	ibt._avg1+=ibt._T[0];
-	}
-else 
-	{
-	ibt._avg_cnt--;
-	}
-
-if(ibt._nd[1]==0)
-	{
-	ibt._avg1+=ibt._T[1];
-	}
-else 
-	{
-	ibt._avg_cnt--;
-	}
-
-if(ibt._nd[2]==0)
-	{
-	ibt._avg1+=ibt._T[2];
-	}
-else 
-	{
-	ibt._avg_cnt--;
-	}
-
-if(ibt._nd[3]==0)
-	{
-	ibt._avg1+=ibt._T[3];
-	}
-else 
-	{
-	ibt._avg_cnt--;
-	}
-
-if(ibt._avg_cnt==0)
-	{
-	}
-else
-	{
-	ibt._avg1/=ibt._avg_cnt;
-	}
-
-
-if(ibt._nd[0]!=0)
-	{
-	ibt._T_dispers[0]=0;
-	}
-else 
-	{
-	ibt._T_dispers[0]=abs(ibt._T[0]-ibt._avg1);
-	}
-
-if(ibt._nd[1]!=0)
-	{
-	ibt._T_dispers[1]=0;
-	}
-else 
-	{
-	ibt._T_dispers[1]=abs(ibt._T[1]-ibt._avg1);
-	}
-
-if(ibt._nd[2]!=0)
-	{
-	ibt._T_dispers[2]=0;
-	}
-else 
-	{
-	ibt._T_dispers[2]=abs(ibt._T[2]-ibt._avg1);
-	}
-
-if(ibt._nd[3]!=0)
-	{
-	ibt._T_dispers[3]=0;
-	}
-else 
-	{
-	ibt._T_dispers[3]=abs(ibt._T[3]-ibt._avg1);
-	}
-
-if(	ibt._nd[0]&&
-	ibt._nd[1]&&
-	ibt._nd[2]&&
-	ibt._nd[3]
-	)
-	{
-	t_box=(bps[0]._Ti);
-	}
-
-else if(	ibt._nd[0]||
-	ibt._nd[1]||
-	ibt._nd[2]||
-	ibt._nd[3]
-	)
-	{
-	t_box=(ibt._avg1-273);
-	}
-else 
-	{
-	ibt._max_dispers_num=0;
-	ibt._max_dispers=ibt._T_dispers[0];
-
-	if(ibt._T_dispers[1]>ibt._max_dispers)
-		{
-		ibt._max_dispers_num=1;
-		ibt._max_dispers=ibt._T_dispers[1];
-		}
-	if(ibt._T_dispers[2]>ibt._max_dispers)
-		{
-		ibt._max_dispers_num=2;
-		ibt._max_dispers=ibt._T_dispers[2];
-		}
-	if(ibt._T_dispers[3]>ibt._max_dispers)
-		{
-		ibt._max_dispers_num=3;
-		ibt._max_dispers=ibt._T_dispers[3];
-		}
-
-	ibt._avg2=0;
-
-	if(ibt._max_dispers_num!=0)
-		{
-		ibt._avg2+=ibt._T[0];
-		}
-	if(ibt._max_dispers_num!=1)
-		{
-		ibt._avg2+=ibt._T[1];
-		}
-	if(ibt._max_dispers_num!=2)
-		{
-		ibt._avg2+=ibt._T[2];
-		}
-	if(ibt._max_dispers_num!=3)
-		{
-		ibt._avg2+=ibt._T[3];
-		}
-
-	t_box=(ibt._avg2/3)-273;
-
-	}*/
-
-
-//*********************************************
 
 #ifndef TELECORE
 if((BAT_IS_ON[0]==bisON)&&(bat[0]._Ub>200)) Ibmax=bat[0]._Ib;
@@ -1428,7 +1283,8 @@ for(i=0;i<NUMIST;i++)
 	    //bps[i]._rotor=bps[i]._buff[10]+(bps[i]._buff[11]*256); 
 		bps[i]._Uisum=bps[i]._buff[10]+(bps[i]._buff[11]*256); 
 		bps[i].debug_info_to_uku0=bps[i]._buff[12]+(bps[i]._buff[13]*256); 
-		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256);    
+		bps[i].debug_info_to_uku1=bps[i]._buff[14]+(bps[i]._buff[15]*256); 
+		bps[i].debug_info_to_uku2=bps[i]._buff[16]+(bps[i]._buff[17]*256);   
      	} 
 	else 
      	{
@@ -1440,7 +1296,8 @@ for(i=0;i<NUMIST;i++)
 	     //bps[i]._rotor=0;
 		bps[i]._Uisum=0; 
 		bps[i].debug_info_to_uku0=0; 
-		bps[i].debug_info_to_uku1=0;    
+		bps[i].debug_info_to_uku1=0; 
+		bps[i].debug_info_to_uku2=0;   
      	}
      
      }
@@ -2493,8 +2350,8 @@ i2=0;
 
 for(i=0;i<NUMIST;i++)
 	{
-	if(bps[i]._av&0x07)i1=1;
-	if(bps[i]._av&0x08)i2=1;
+	if(bps[i]._av&0x0f)i1=1;
+	if(bps[i]._av&0x10)i2=1;
 	}
 
 if(i1)					avar_vd_stat|=(1<<0);
@@ -2544,6 +2401,7 @@ SET_REG(LPC_GPIO0->FIODIR,1,29,1);
 
 
 
+
 if((mess_find_unvol(MESS2RELE_HNDL))&&	(mess_data[0]==PARAM_RELE_AV_1))
 	{
 	if(mess_data[1]==0) SET_REG(LPC_GPIO3->FIOCLR,1,25,1);
@@ -2575,6 +2433,11 @@ if((mess_find_unvol(MESS2RELE_HNDL))&&	(mess_data[0]==PARAM_RELE_AV_4))
 	}
 else if(!(rele_av_flags&(1<<3))) SET_REG(LPC_GPIO0->FIOCLR,1,9,1);
 else SET_REG(LPC_GPIO0->FIOSET,1,9,1);
+
+rele_on_cnt=0;
+if(GET_REG( LPC_GPIO3->FIOPIN, 25, 1))	rele_on_cnt++;
+if(GET_REG( LPC_GPIO0->FIOPIN, 7, 1))  rele_on_cnt++;
+if(GET_REG( LPC_GPIO0->FIOPIN, 4, 1))  rele_on_cnt++;
 
 }
 
@@ -3077,12 +2940,12 @@ if (bps[in]._device!=dSRC) return;
 temp=bps[in]._flags_tm;
 if(temp&(1<<AV_T))
 	{
-	if(bps[in]._temp_av_cnt<1200) 
+	if(bps[in]._temp_av_cnt<10/*1200*/) 
 		{
 		bps[in]._temp_av_cnt++;
-		if(bps[in]._temp_av_cnt>=1200)
+		if(bps[in]._temp_av_cnt>=10/*1200*/)
 			{
-			bps[in]._temp_av_cnt=1200;
+			bps[in]._temp_av_cnt=10/*1200*/;
 		   	if(!(bps[in]._av&(1<<0)))avar_bps_hndl(in,0,1);
 			}
 		}
@@ -3520,6 +3383,7 @@ for(i=0;i<3;i++)
 	}
 }
 #endif
+/*
 #ifdef UKU_TELECORE2015
 //-----------------------------------------------
 void klimat_hndl_telecore2015(void)
@@ -3587,7 +3451,9 @@ else if(t_box_vvent_on_cnt<1) vvent_stat_k=vsOFF;
 
 }
 #endif
+*/
 
+/*
 #ifdef UKU_TELECORE2017
 //-----------------------------------------------
 void klimat_hndl_telecore2017(void)
@@ -3635,7 +3501,7 @@ if(t_box_warm_on_cnt>9) warm_stat_k=wsON;
 else if(t_box_warm_on_cnt<1) warm_stat_k=wsOFF;
 
 
-if(/*(t_box_vent>TELECORE2017_KLIMAT_VENT_ON0)&&*/(t_box_vent<TELECORE2017_KLIMAT_VENT_ON20)) 	TELECORE2017_EXT_VENT_PWM=0;
+if((t_box_vent<TELECORE2017_KLIMAT_VENT_ON20)) 	TELECORE2017_EXT_VENT_PWM=0;
 if((t_box_vent>TELECORE2017_KLIMAT_VENT_ON20)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON40)) 	TELECORE2017_EXT_VENT_PWM=1;
 if((t_box_vent>TELECORE2017_KLIMAT_VENT_ON40)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON60)) 	TELECORE2017_EXT_VENT_PWM=2;
 if((t_box_vent>TELECORE2017_KLIMAT_VENT_ON60)&&(t_box_vent<TELECORE2017_KLIMAT_VENT_ON80)) 	TELECORE2017_EXT_VENT_PWM=3;
@@ -3644,7 +3510,7 @@ if((t_box_vent>TELECORE2017_KLIMAT_VENT_ON100) ) 											TELECORE2017_EXT_VEN
 if(warm_stat_k==wsON) TELECORE2017_EXT_VENT_PWM=0;
 
 delta_t= abs(t_ext[0]-t_ext[1]);
-if(/*(delta_t>TELECORE2017_KLIMAT_DVENT_ON0)&&*/(delta_t<TELECORE2017_KLIMAT_DVENT_ON20)) 		TELECORE2017_INT_VENT_PWM=0;
+if((delta_t<TELECORE2017_KLIMAT_DVENT_ON20)) 		TELECORE2017_INT_VENT_PWM=0;
 if((delta_t>TELECORE2017_KLIMAT_DVENT_ON20)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON40)) 		TELECORE2017_INT_VENT_PWM=1;
 if((delta_t>TELECORE2017_KLIMAT_DVENT_ON40)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON60)) 		TELECORE2017_INT_VENT_PWM=2;
 if((delta_t>TELECORE2017_KLIMAT_DVENT_ON60)&&(delta_t<TELECORE2017_KLIMAT_DVENT_ON80)) 		TELECORE2017_INT_VENT_PWM=3;
@@ -3659,30 +3525,20 @@ if(TELECORE2017_EXT_VENT_PWM)TELECORE2017_INT_VENT_PWM=TELECORE2017_EXT_VENT_PWM
 //ND_EXT[0]=0;
 //ND_EXT[1]=0;
 
-/*if((ND_EXT[0])||(ND_EXT[1]))
-	{
-	TELECORE2017_INT_VENT_PWM=3;
-	TELECORE2017_EXT_VENT_PWM=3;
-	} */
+
 
 
 if((mess_find_unvol(MESS2KLIMAT_CNTRL))&&(mess_data[0]==PARAM_KLIMAT_CNTRL_VENT_INT))
 	{
 	TELECORE2017_INT_VENT_PWM=mess_data[1];
 	}
-/*else 
-	{
-	TELECORE2017_INT_VENT_PWM=0;
-	}*/ 
+
 
 if((mess_find_unvol(MESS2KLIMAT_CNTRL))&&(mess_data[0]==PARAM_KLIMAT_CNTRL_VENT_EXT))
 	{
 	TELECORE2017_EXT_VENT_PWM=mess_data[1];
 	}
-/*else 
-	{
-	TELECORE2017_EXT_VENT_PWM=0;
-	}*/ 
+
 	
 if(TELECORE2017_INT_VENT_PWM||TELECORE2017_EXT_VENT_PWM) 	vent_stat_k=vsON;
 else 														vent_stat_k=vsOFF;
@@ -3760,7 +3616,7 @@ else if(t_box_vent<70)
 
 														
 #endif
-
+*/
 #ifndef UKU_KONTUR
 //-----------------------------------------------
 void klimat_hndl(void)
@@ -4044,18 +3900,18 @@ void overload_hndl(void)
 
 if(main_1Hz_cnt<30)return;
 
-if((out_U<UOUT)&&((UOUT-out_U)>50))
+if((out_U<UOUT)&&((UOUT-out_U)>50)&&(!(avar_vd_stat&0x0081)))
 	{
-	if(overloadHndlCnt<(TZAS*10))
+	if(overloadHndlCnt<(OVERLOAD_TIME*10/*TZAS*10*/))
 		{
 		overloadHndlCnt++;
-		if(overloadHndlCnt==(TZAS*10))
+		if(overloadHndlCnt==(OVERLOAD_TIME*10/*TZAS*10*/))
 			{
 			avar_overload_hndl(1);
 			}
 		}
 	}
-else if(out_U>(UOUT-20))
+else if(out_U>(UOUT-50))
 	{
 	if(overloadHndlCnt)
 		{
@@ -4066,6 +3922,30 @@ else if(out_U>(UOUT-20))
 			}
 		}
 	}
+
+if((Ib_ips_termokompensat>OVERLOAD_CURR))
+	{
+	if(overloadHndlCnt1<(OVERLOAD_TIME*10))
+		{
+		overloadHndlCnt1++;
+		if(overloadHndlCnt1==(OVERLOAD_TIME*10))
+			{
+			avar_overload_hndl(1);
+			}
+		}
+	}
+else if((Ib_ips_termokompensat<OVERLOAD_CURR)  && (!bIBAT_SMKLBR))
+	{
+	if(overloadHndlCnt1)
+		{
+		overloadHndlCnt1--;
+		if(overloadHndlCnt1==0)
+			{
+			avar_overload_hndl(0);
+			}
+		}
+	}
+
 
 }
 
@@ -4269,8 +4149,8 @@ if(ICA_EN)u_necc+=ica_u_necc;
 #endif
 
 
-#ifndef UKU_220_IPS_TERMOKOMPENSAT
-
+//#ifndef UKU_220_IPS_TERMOKOMPENSAT
+/*
 #ifndef UKU_TELECORE2015
 #ifndef UKU_TELECORE2017
 if(unh_cnt0<10)
@@ -4364,8 +4244,8 @@ else if(b1Hz_unh)
 		}  
 	}
 #endif
-#endif
-
+#endif*/
+/*
 #ifdef UKU_TELECORE2015
 
 if(unh_cnt0<10)
@@ -4443,23 +4323,7 @@ else if(b1Hz_unh)
 			{
 			u_necc=UVZ;
 			}
-		/* 
-		u_necc=U0B;
-		
 
-	
-		u_necc=UB0;
-		u_necc=li_bat._Ub+10;
-		if((li_bat._Ub<450)||(li_bat._Ub>550))
-			{
-			lakb_error_cnt++;
-			if(lakb_error_cnt>=30)
-				{
-				lakb_error_cnt=30;
-				u_necc=U0B;
-				}
-			}
-		else lakb_error_cnt=0;*/
 		}
 	else if(BAT_TYPE==2)
 		{
@@ -4510,8 +4374,8 @@ else if(b1Hz_unh)
 		}
 	}
 
-#endif 
-
+#endif */
+/*
 #ifdef UKU_TELECORE2017
 
 if(unh_cnt0<10)
@@ -4640,8 +4504,9 @@ else if(b1Hz_unh)
 	}
 
 #endif 
+*/
 //u_necc=2356;
-#endif//gran(&u_necc,400,UMAX);
+//#endif//gran(&u_necc,400,UMAX);
 
 temp_L=(signed long) u_necc;
 temp_L*=98L;
@@ -4875,8 +4740,8 @@ else if((b1Hz_ch)&&((!bIBAT_SMKLBR)||(bps[8]._cnt>40)))
 			}*/					
 		}
 
-	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U)))/650L);
-	if(((signed long)(UOUT_-in_U))<0L)cntrl_stat_new=0;
+	cntrl_stat_new=(short)((2000L*((long)(UOUT_-in_U+30)))/650L);
+	if(((signed long)(UOUT_-in_U+30))<0L)cntrl_stat_new=0;
 	gran(&cntrl_stat_new,10,2010);			
 	cntrl_stat_old=cntrl_stat_new;
 	cntrl_stat=cntrl_stat_new;
@@ -4895,7 +4760,7 @@ else if((b1Hz_ch)&&((!bIBAT_SMKLBR)||(bps[8]._cnt>40)))
 		tempSL>>=4;
 		cntrl_stat_buff_=(signed short)tempSL;
 		}
-	if(NUMSK)cntrl_stat=cntrl_stat_buff_;
+	//if(NUMSK)cntrl_stat=cntrl_stat_buff_;
 
 	}
 
@@ -4917,6 +4782,9 @@ if(iiii==0)
      cntrl_stat_new=1200;
      }
 gran(&cntrl_stat,10,2010); 
+
+//if(main_1Hz_cnt<10)	cntrl_stat=2000;
+
 b1Hz_ch=0;
 }
 

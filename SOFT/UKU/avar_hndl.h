@@ -2,10 +2,10 @@
 
 //***********************************************
 //јварии
-extern unsigned avar_stat;	 	//"ќтображение" всех аварийных в данный момент устройств в одном месте
-extern unsigned avar_ind_stat; 	//"ќтображение" всех не просмотренных аварийных устройств в одном месте
-extern unsigned avar_stat_old;
-extern unsigned avar_stat_new,avar_stat_offed;
+extern unsigned avar_stat, avar_stat1;	 	//"ќтображение" всех аварийных в данный момент устройств в одном месте
+extern unsigned avar_ind_stat, avar_ind_stat1; 	//"ќтображение" всех не просмотренных аварийных устройств в одном месте
+extern unsigned avar_stat_old, avar_stat1_old;
+extern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 //—труктура переменных
 //1бит  - питающа€ сеть
 //2бита - батареи

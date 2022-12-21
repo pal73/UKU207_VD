@@ -570,6 +570,7 @@
 #define PAROL_TST 999 
 #define PAROL_DEFAULT 295
 #define PAROL_AUSW 949
+#define PAROL_LOG_RESET	691
 #endif                
 
 #ifdef PAROL_ALL_ZERO
@@ -584,6 +585,7 @@
 #define PAROL_TST 0
 #define PAROL_DEFAULT 0
 #define PAROL_AUSW 0
+#define PAROL_LOG_RESET	0
 #endif
 
 
@@ -694,7 +696,7 @@
 #define SHIFT_REL_VENT	     7
 #define SHIFT_REL_VVENT	     6
 #endif
-
+/*
 #ifdef UKU_TELECORE2017
 #define SHIFT_REL_AV_NET		5
 #define SHIFT_REL_AV_BAT	4
@@ -705,7 +707,7 @@
 #define SHIFT_REL_WARM		4
 #define SHIFT_REL_VENT	     7
 #define SHIFT_REL_VVENT	     6
-#endif
+#endif*/
 
 //***********************************************
 //Таймер
@@ -758,7 +760,7 @@ typedef enum {
 	iExt_set,iExt_set_3U,
 	iExt_dt,
 	iExt_sk,iExt_sk_3U,
-	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 	iEnerg3,iEnerg,
 	iVent,
 	iK_power_net3,
@@ -767,7 +769,9 @@ typedef enum {
 	iBps_list,
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
-	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+	iFWabout,
+	iCurr_overload}i_enum;
 
 typedef struct  
 {
@@ -1025,6 +1029,8 @@ extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
 extern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
 
+extern signed short OVERLOAD_CURR;
+extern signed short OVERLOAD_TIME;
 
 //***********************************************
 //Состояние батарей
@@ -1265,6 +1271,7 @@ typedef struct
 	unsigned short _vent_resurs;
 	signed short debug_info_to_uku0;
 	signed short debug_info_to_uku1;
+	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
@@ -1498,7 +1505,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 //-----------------------------------------------
 //Показания АЦП на плате измерения тока батареи
 extern signed long ibat_metr_buff_[2];
-extern short bIBAT_SMKLBR;
+extern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 extern char ibat_metr_cnt;
 
 //-----------------------------------------------
@@ -1598,7 +1605,7 @@ extern U8 tcp_connect_stat;
 
 //-----------------------------------------------
 //Авария по перегрузке
-extern short overloadHndlCnt;
+extern short overloadHndlCnt,overloadHndlCnt1;
 extern char overloadAvar;
 
 //-----------------------------------------------

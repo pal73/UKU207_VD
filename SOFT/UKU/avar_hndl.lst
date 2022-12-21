@@ -5,10 +5,10 @@ N
 N
 N//***********************************************
 N//Аварии
-Nextern unsigned avar_stat;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
-Nextern unsigned avar_ind_stat; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
-Nextern unsigned avar_stat_old;
-Nextern unsigned avar_stat_new,avar_stat_offed;
+Nextern unsigned avar_stat, avar_stat1;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
+Nextern unsigned avar_ind_stat, avar_ind_stat1; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
+Nextern unsigned avar_stat_old, avar_stat1_old;
+Nextern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 N//Структура переменных
 N//1бит  - питающая сеть
 N//2бита - батареи
@@ -238,6 +238,8 @@ N#define EE_ICA_MODBUS_TCP_UNIT_ID		SECTOR_SETS2+18
 N#define EE_PWM_START					SECTOR_SETS2+20
 N#define EE_KB_ALGORITM					SECTOR_SETS2+22
 N#define EE_REG_SPEED					SECTOR_SETS2+24
+N#define EE_OVERLOAD_CURR				SECTOR_SETS2+26
+N#define EE_OVERLOAD_TIME				SECTOR_SETS2+28
 N
 N#define SECTOR_BAT  		SECTOR_KOEF+400
 N
@@ -5186,6 +5188,7 @@ N#define PAROL_VZ 126
 N#define PAROL_TST 999 
 N#define PAROL_DEFAULT 295
 N#define PAROL_AUSW 949
+N#define PAROL_LOG_RESET	691
 N#endif                
 N
 N#ifdef PAROL_ALL_ZERO
@@ -5200,6 +5203,7 @@ S#define PAROL_VZ 0
 S#define PAROL_TST 0
 S#define PAROL_DEFAULT 0
 S#define PAROL_AUSW 0
+S#define PAROL_LOG_RESET	0
 N#endif
 N
 N
@@ -5310,18 +5314,18 @@ S#define SHIFT_REL_WARM		4
 S#define SHIFT_REL_VENT	     7
 S#define SHIFT_REL_VVENT	     6
 N#endif
-N
+N/*
 N#ifdef UKU_TELECORE2017
-S#define SHIFT_REL_AV_NET		5
-S#define SHIFT_REL_AV_BAT	4
-S#define SHIFT_REL_AV_BPS	     7
-S#define SHIFT_REL_BAT1	     8
-S#define SHIFT_REL_BAT2	     6
-S#define SHIFT_REL_LIGHT		9
-S#define SHIFT_REL_WARM		4
-S#define SHIFT_REL_VENT	     7
-S#define SHIFT_REL_VVENT	     6
-N#endif
+N#define SHIFT_REL_AV_NET		5
+N#define SHIFT_REL_AV_BAT	4
+N#define SHIFT_REL_AV_BPS	     7
+N#define SHIFT_REL_BAT1	     8
+N#define SHIFT_REL_BAT2	     6
+N#define SHIFT_REL_LIGHT		9
+N#define SHIFT_REL_WARM		4
+N#define SHIFT_REL_VENT	     7
+N#define SHIFT_REL_VVENT	     6
+N#endif*/
 N
 N//***********************************************
 N//Таймер
@@ -5374,7 +5378,7 @@ N	iK_power_net,
 N	iExt_set,iExt_set_3U,
 N	iExt_dt,
 N	iExt_sk,iExt_sk_3U,
-N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 N	iEnerg3,iEnerg,
 N	iVent,
 N	iK_power_net3,
@@ -5383,7 +5387,9 @@ N	iNpn_set,
 N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
-N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+N	iFWabout,
+N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
 N{
@@ -5642,6 +5648,8 @@ Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
 Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
 N
+Nextern signed short OVERLOAD_CURR;
+Nextern signed short OVERLOAD_TIME;
 N
 N//***********************************************
 N//Состояние батарей
@@ -5882,6 +5890,7 @@ N	char _vent_resurs_temp[4];
 N	unsigned short _vent_resurs;
 N	signed short debug_info_to_uku0;
 N	signed short debug_info_to_uku1;
+N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
@@ -6115,7 +6124,7 @@ N
 N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
-Nextern short bIBAT_SMKLBR;
+Nextern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
@@ -6215,7 +6224,7 @@ Nextern U8 tcp_connect_stat;
 N
 N//-----------------------------------------------
 N//Авария по перегрузке
-Nextern short overloadHndlCnt;
+Nextern short overloadHndlCnt,overloadHndlCnt1;
 Nextern char overloadAvar;
 N
 N//-----------------------------------------------
@@ -6289,6 +6298,7 @@ Nextern short adc_gorb_cnt,adc_zero_cnt;
 Nextern char adc_window_flag;
 Nextern short adc_window_cnt;
 Nextern short adc_net_buff_cnt;
+Nextern short rele_on_cnt;
 N
 N
 Nchar vz_start(char hour);
@@ -6689,10 +6699,10 @@ N
 N     
 N//***********************************************
 N//Аварии
-Nunsigned avar_stat;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
-Nunsigned avar_ind_stat; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
-Nunsigned avar_stat_old;
-Nunsigned avar_stat_new,avar_stat_offed;
+Nunsigned avar_stat, avar_stat1;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
+Nunsigned avar_ind_stat, avar_ind_stat1; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
+Nunsigned avar_stat_old, avar_stat1_old;
+Nunsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 N//Структура переменных
 N//1бит  - питающая сеть
 N//2бита - батареи
@@ -6745,66 +6755,52 @@ Xif(net_av)		avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<0)) | (1 << 0) )
 Nelse	   			SET_REG(avar_stat,0,0,1);
 Xelse	   			avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<0)) | (0 << 0) );
 N
-Nfor(i=0;i<2;i++)
-N	{
-N	if(bat[i]._av&1)	SET_REG(avar_stat,1,1+i,1);
-X	if(bat[i]._av&1)	avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<1+i)) | (1 << 1+i) );
-N	else	   		SET_REG(avar_stat,0,1+i,1);
-X	else	   		avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<1+i)) | (0 << 1+i) );
-N	}
-N
-Nfor(i=0;i<12;i++)
+Nfor(i=0;i<29;i++)
 N	{
 N	if(bps[i]._av&0xef)	SET_REG(avar_stat,1,3+i,1);
 X	if(bps[i]._av&0xef)	avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<3+i)) | (1 << 3+i) );
-N	else	   		SET_REG(avar_stat,0,3+i,1);
-X	else	   		avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<3+i)) | (0 << 3+i) );
+N	else	   			SET_REG(avar_stat,0,3+i,1);
+X	else	   			avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<3+i)) | (0 << 3+i) );
+N	}
+Nfor(i=29;i<32;i++)
+N	{
+N	if(bps[i]._av&0xef)	SET_REG(avar_stat1,1,i-29,1);
+X	if(bps[i]._av&0xef)	avar_stat1 = ( (avar_stat1 & ~((0xffffffff>>(32-1))<<i-29)) | (1 << i-29) );
+N	else	   			SET_REG(avar_stat1,0,i-29,1);
+X	else	   			avar_stat1 = ( (avar_stat1 & ~((0xffffffff>>(32-1))<<i-29)) | (0 << i-29) );
 N	}
 N
-Nfor(i=0;i<6;i++)
-N	{
-N	if(av_inv[i])	SET_REG(avar_stat,1,15+i,1);
-X	if(av_inv[i])	avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<15+i)) | (1 << 15+i) );
-N	else	   		SET_REG(avar_stat,0,15+i,1);
-X	else	   		avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<15+i)) | (0 << 15+i) );
-N	}
 N
-N/*for(i=0;i<4;i++)
-N	{
-N	if(av_dt[i])	SET_REG(avar_stat,1,21+i,1);
-N	else	   		SET_REG(avar_stat,0,21+i,1);
-N	}  */
-Nfor(i=0;i<4;i++)
-N	{
-N	if(sk_av_stat[i]==sasON)	SET_REG(avar_stat,1,24+i,1);
-X	if(sk_av_stat[i]==sasON)	avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<24+i)) | (1 << 24+i) );
-N	else	   		SET_REG(avar_stat,0,24+i,1);
-X	else	   		avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<24+i)) | (0 << 24+i) );
-N	}
-N
-Nif(uout_av)			SET_REG(avar_stat,1,28,1);
-Xif(uout_av)			avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<28)) | (1 << 28) );
-Nelse	   			SET_REG(avar_stat,0,28,1);
-Xelse	   			avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<28)) | (0 << 28) );
+Nif(uout_av)			SET_REG(avar_stat,1,1,1);
+Xif(uout_av)			avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<1)) | (1 << 1) );
+Nelse	   			SET_REG(avar_stat,0,1,1);
+Xelse	   			avar_stat = ( (avar_stat & ~((0xffffffff>>(32-1))<<1)) | (0 << 1) );
 N
 N
 Navar_stat_new=(avar_stat^avar_stat_old)&avar_stat;
 N
 Navar_ind_stat|=avar_stat_new;
 N
-Nif((SK_ZVUK_EN[0])) avar_ind_stat&=(~(1UL<<24));
-Nif((SK_ZVUK_EN[1])) avar_ind_stat&=(~(1UL<<25));
-Nif((SK_ZVUK_EN[2])) avar_ind_stat&=(~(1UL<<26));
-Nif((SK_ZVUK_EN[3])) avar_ind_stat&=(~(1UL<<27));	
-N
-N
 Navar_stat_offed=~((avar_stat^avar_stat_old)&avar_stat_old);
 N
-Nif(!AV_OFF_AVT)avar_stat_offed|=0xeffffffe;
+Nif(!AV_OFF_AVT)avar_stat_offed|=0x00000006;
 N
 Navar_ind_stat&=avar_stat_offed; 
 N
 Navar_stat_old=avar_stat;
+N
+N
+Navar_stat1_new=(avar_stat1^avar_stat1_old)&avar_stat1;
+N
+Navar_ind_stat1|=avar_stat1_new;
+N
+Navar_stat1_offed=~((avar_stat1^avar_stat1_old)&avar_stat1_old);
+N
+Nif(!AV_OFF_AVT)avar_stat1_offed|=0x00000000;
+N
+Navar_ind_stat1&=avar_stat1_offed; 
+N
+Navar_stat1_old=avar_stat1;
 N}
 N
 N//-----------------------------------------------
@@ -6928,9 +6924,9 @@ N	data[2]='A';
 N	data[3]=0;
 N	lc640_write_long_ptr(lc640_adr,data);
 N
-W "avar_hndl.c" 228 13 nested comment is not allowed
+W "avar_hndl.c" 218 13 nested comment is not allowed
 N	data[0]=0;//*((char*)&Unet_store);
-W "avar_hndl.c" 229 13 nested comment is not allowed
+W "avar_hndl.c" 219 13 nested comment is not allowed
 N	data[1]=0;//*(((char*)&Unet_store)+1);
 N	data[2]=0;
 N	data[3]=0;

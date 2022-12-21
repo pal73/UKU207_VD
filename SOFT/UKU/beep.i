@@ -577,9 +577,9 @@ extern BOOL snmp_set_community (const char *community);
 
 
 
-#line 574 "main.h"
+#line 575 "main.h"
 
-#line 588 "main.h"
+#line 590 "main.h"
 
 
 
@@ -592,27 +592,37 @@ extern BOOL snmp_set_community (const char *community);
  
 
 
-#line 609 "main.h"
+#line 611 "main.h"
 
-#line 619 "main.h"
+#line 621 "main.h"
 
-#line 628 "main.h"
+#line 630 "main.h"
 
-#line 637 "main.h"
+#line 639 "main.h"
 
-#line 649 "main.h"
+#line 651 "main.h"
 
-#line 659 "main.h"
+#line 661 "main.h"
 
-#line 668 "main.h"
+#line 670 "main.h"
 
-#line 676 "main.h"
+#line 678 "main.h"
 
-#line 685 "main.h"
+#line 687 "main.h"
 
-#line 697 "main.h"
+#line 699 "main.h"
 
-#line 709 "main.h"
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
@@ -665,7 +675,7 @@ typedef enum {
 	iExt_set,iExt_set_3U,
 	iExt_dt,
 	iExt_sk,iExt_sk_3U,
-	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 	iEnerg3,iEnerg,
 	iVent,
 	iK_power_net3,
@@ -674,7 +684,9 @@ typedef enum {
 	iBps_list,
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
-	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+	iFWabout,
+	iCurr_overload}i_enum;
 
 typedef struct  
 {
@@ -932,6 +944,8 @@ extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
 extern signed short I_LOAD_MODE;		
 
+extern signed short OVERLOAD_CURR;
+extern signed short OVERLOAD_TIME;
 
 
 
@@ -1172,6 +1186,7 @@ typedef struct
 	unsigned short _vent_resurs;
 	signed short debug_info_to_uku0;
 	signed short debug_info_to_uku1;
+	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
@@ -1354,11 +1369,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1458 "main.h"
+#line 1465 "main.h"
 
-#line 1469 "main.h"
+#line 1476 "main.h"
 
-#line 1485 "main.h"
+#line 1492 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1375,7 +1390,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 
 extern signed long ibat_metr_buff_[2];
-extern short bIBAT_SMKLBR;
+extern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 extern char ibat_metr_cnt;
 
 
@@ -1402,7 +1417,7 @@ extern short can_plazma;
 
 
 
-#line 1539 "main.h"
+#line 1546 "main.h"
 
 
 
@@ -1465,7 +1480,7 @@ extern U8 tcp_connect_stat;
 
 
 
-extern short overloadHndlCnt;
+extern short overloadHndlCnt,overloadHndlCnt1;
 extern char overloadAvar;
 
 
@@ -3537,10 +3552,10 @@ typedef struct
 
 
 
-extern unsigned avar_stat;	 	
-extern unsigned avar_ind_stat; 	
-extern unsigned avar_stat_old;
-extern unsigned avar_stat_new,avar_stat_offed;
+extern unsigned avar_stat, avar_stat1;	 	
+extern unsigned avar_ind_stat, avar_ind_stat1; 	
+extern unsigned avar_stat_old, avar_stat1_old;
+extern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 
 
 
@@ -3649,41 +3664,49 @@ else if(fl=='S')
 void beep_hndl(void) 
 { 
 static char bcnt;
+char i;
 bcnt++; 
 if(bcnt>9)bcnt=0;
 
-if((avar_ind_stat)||(ips_bat_av_stat))beep_init(0x33333333,'R');
+
+if((avar_ind_stat)||(avar_ind_stat1)) beep_init(0x33333333,'R');
 
 
-else if ( (((bat[0]._Ub<(USIGN*10))&&(BAT_IS_ON[0]==bisON))||((bat[1]._Ub<(USIGN*10))&&(BAT_IS_ON[1]==bisON)))) 
-	{
-	if(!bSILENT)
-		{
-		beep_init(0x01010101,'R');
-		mess_send(210,114,1,5);
-		}
 
-	
-	}
 
-else if ( (((bat[0]._Ib<(-IKB))&&(BAT_IS_ON[0]==bisON))||((bat[1]._Ib<(-IKB))&&(BAT_IS_ON[1]==bisON)))) 
-	{
-	if(!bSILENT)beep_init(0x00010001,'R');
-	
-	}
 
-else if ( ((bat[0]._temper_stat&0x03)||(bat[1]._temper_stat&0x03)) )
-	{
-	if(!bSILENT) beep_init(0x00000005,'R');
-	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 else 
 	{
 	beep_init(0x00000000,'S');
 	bSILENT=0;
-	} 
+	}
 
+
+
+
+ 
 
 
 
@@ -3711,6 +3734,6 @@ else
 
 
 bU_BAT2REL_AV_BAT=0;
-#line 135 "beep.c"
+#line 143 "beep.c"
 
 }

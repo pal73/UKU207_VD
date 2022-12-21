@@ -1485,6 +1485,7 @@ N#define PAROL_VZ 126
 N#define PAROL_TST 999 
 N#define PAROL_DEFAULT 295
 N#define PAROL_AUSW 949
+N#define PAROL_LOG_RESET	691
 N#endif                
 N
 N#ifdef PAROL_ALL_ZERO
@@ -1499,6 +1500,7 @@ S#define PAROL_VZ 0
 S#define PAROL_TST 0
 S#define PAROL_DEFAULT 0
 S#define PAROL_AUSW 0
+S#define PAROL_LOG_RESET	0
 N#endif
 N
 N
@@ -1609,18 +1611,18 @@ S#define SHIFT_REL_WARM		4
 S#define SHIFT_REL_VENT	     7
 S#define SHIFT_REL_VVENT	     6
 N#endif
-N
+N/*
 N#ifdef UKU_TELECORE2017
-S#define SHIFT_REL_AV_NET		5
-S#define SHIFT_REL_AV_BAT	4
-S#define SHIFT_REL_AV_BPS	     7
-S#define SHIFT_REL_BAT1	     8
-S#define SHIFT_REL_BAT2	     6
-S#define SHIFT_REL_LIGHT		9
-S#define SHIFT_REL_WARM		4
-S#define SHIFT_REL_VENT	     7
-S#define SHIFT_REL_VVENT	     6
-N#endif
+N#define SHIFT_REL_AV_NET		5
+N#define SHIFT_REL_AV_BAT	4
+N#define SHIFT_REL_AV_BPS	     7
+N#define SHIFT_REL_BAT1	     8
+N#define SHIFT_REL_BAT2	     6
+N#define SHIFT_REL_LIGHT		9
+N#define SHIFT_REL_WARM		4
+N#define SHIFT_REL_VENT	     7
+N#define SHIFT_REL_VVENT	     6
+N#endif*/
 N
 N//***********************************************
 N//Таймер
@@ -1673,7 +1675,7 @@ N	iK_power_net,
 N	iExt_set,iExt_set_3U,
 N	iExt_dt,
 N	iExt_sk,iExt_sk_3U,
-N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 N	iEnerg3,iEnerg,
 N	iVent,
 N	iK_power_net3,
@@ -1682,7 +1684,9 @@ N	iNpn_set,
 N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
-N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+N	iFWabout,
+N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
 N{
@@ -1941,6 +1945,8 @@ Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
 Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
 N
+Nextern signed short OVERLOAD_CURR;
+Nextern signed short OVERLOAD_TIME;
 N
 N//***********************************************
 N//Состояние батарей
@@ -2181,6 +2187,7 @@ N	char _vent_resurs_temp[4];
 N	unsigned short _vent_resurs;
 N	signed short debug_info_to_uku0;
 N	signed short debug_info_to_uku1;
+N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
@@ -2414,7 +2421,7 @@ N
 N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
-Nextern short bIBAT_SMKLBR;
+Nextern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
@@ -2514,7 +2521,7 @@ Nextern U8 tcp_connect_stat;
 N
 N//-----------------------------------------------
 N//Авария по перегрузке
-Nextern short overloadHndlCnt;
+Nextern short overloadHndlCnt,overloadHndlCnt1;
 Nextern char overloadAvar;
 N
 N//-----------------------------------------------
@@ -3296,6 +3303,8 @@ N#define EE_ICA_MODBUS_TCP_UNIT_ID		SECTOR_SETS2+18
 N#define EE_PWM_START					SECTOR_SETS2+20
 N#define EE_KB_ALGORITM					SECTOR_SETS2+22
 N#define EE_REG_SPEED					SECTOR_SETS2+24
+N#define EE_OVERLOAD_CURR				SECTOR_SETS2+26
+N#define EE_OVERLOAD_TIME				SECTOR_SETS2+28
 N
 N#define SECTOR_BAT  		SECTOR_KOEF+400
 N
@@ -3678,6 +3687,7 @@ Nextern short adc_gorb_cnt,adc_zero_cnt;
 Nextern char adc_window_flag;
 Nextern short adc_window_cnt;
 Nextern short adc_net_buff_cnt;
+Nextern short rele_on_cnt;
 N
 N
 Nchar vz_start(char hour);
@@ -3994,10 +4004,10 @@ N
 N
 N//***********************************************
 N//Аварии
-Nextern unsigned avar_stat;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
-Nextern unsigned avar_ind_stat; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
-Nextern unsigned avar_stat_old;
-Nextern unsigned avar_stat_new,avar_stat_offed;
+Nextern unsigned avar_stat, avar_stat1;	 	//"Отображение" всех аварийных в данный момент устройств в одном месте
+Nextern unsigned avar_ind_stat, avar_ind_stat1; 	//"Отображение" всех не просмотренных аварийных устройств в одном месте
+Nextern unsigned avar_stat_old, avar_stat1_old;
+Nextern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 N//Структура переменных
 N//1бит  - питающая сеть
 N//2бита - батареи
@@ -5108,6 +5118,16 @@ N
 NU16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 N
 L 45 "main.c" 2
+N#include "curr_version.h"
+L 1 "curr_version.h" 1
+Nextern const short HARDVARE_VERSION;
+Nextern const short SOFT_VERSION;
+Nextern const short BUILD;
+Nextern const short BUILD_YEAR;
+Nextern const short BUILD_MONTH;
+W "curr_version.h" 6 30 last line of file ends without a newline
+Nextern const short BUILD_DAY;
+L 46 "main.c" 2
 N
 Nextern U8 own_hw_adr[];
 Nextern U8  snmp_Community[];
@@ -5346,6 +5366,8 @@ Nsigned short MODBUS_BAUDRATE;
 Nsigned short BAT_LINK;
 Nsigned short I_LOAD_MODE;	//способ измерения выходного тока - по шунту или как сумму токов источников
 N
+Nsigned short OVERLOAD_CURR;
+Nsigned short OVERLOAD_TIME;
 N
 N
 N//***********************************************
@@ -8669,7 +8691,7 @@ N#define LPC_GPDMACH7          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH7_BASE )
 N#define LPC_USB               ((LPC_USB_TypeDef       *) LPC_USB_BASE      )
 N
 N#endif  // __LPC17xx_H__
-L 491 "main.c" 2
+L 494 "main.c" 2
 N
 N
 N
@@ -8828,7 +8850,7 @@ N
 N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nsigned long ibat_metr_buff_[2];
-Nshort bIBAT_SMKLBR;
+Nshort bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 Nchar ibat_metr_cnt=0;
 N
 N
@@ -8930,7 +8952,7 @@ NU8 tcp_connect_stat;
 N
 N//-----------------------------------------------
 N//Авария по перегрузке
-Nshort overloadHndlCnt;
+Nshort overloadHndlCnt,overloadHndlCnt1;
 Nchar overloadAvar;
 N
 N//-----------------------------------------------
@@ -9510,8 +9532,9 @@ N
 N//-----------------------------------------------
 Nvoid net_drv(void)
 N{ 
-N
-Nmax_net_slot=24;
+Nsigned short UOUT_tr;
+Nsigned short UAVT_tr;
+Nmax_net_slot=32;
 N
 N
 Nif(++cnt_net_drv>max_net_slot) 
@@ -9542,14 +9565,17 @@ N		}
 N	
 N	//bps[cnt_net_drv]._vol_u=2400;
 N	//bps[cnt_net_drv]._x_=0;
-N	//if(cntrl_stat==1000) 		   
-N	if(!bCAN_OFF)
+N	//if(cntrl_stat==1000) 
+N	//UOUT=2330;
+N	//cntrl_stat=2000;		   
+N	if((!bCAN_OFF)&&(main_1Hz_cnt>5))
 N		{
+N		UOUT_tr=UOUT+30;
 N//		if(cntrl_stat==1000)	can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),0xe8,0x03);
 N//		else 					can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),*((char*)(&bps[cnt_net_drv]._x_)),*((char*)((&bps[cnt_net_drv]._x_))+1));
 N
-N		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
-X		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
+N		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+X		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
 N
 N		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 X		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
@@ -9584,15 +9610,17 @@ N
 Nelse if(cnt_net_drv==-2)
 N	{
 N	//UAVT=4567;
-N     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&UAVT)),*((char*)((&UAVT))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
-X     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT)),*((char*)((&UAVT))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
+N	UAVT_tr=UAVT+30;
+N     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
+X     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
 N     byps._cnt++;
 N	} 
 Nelse if(cnt_net_drv==-3)
 N	{                 
 N	if(!bCAN_OFF) can1_out(GETTM_IBATMETER,GETTM_IBATMETER,0,0,0,0,0,0);
 X	if(!bCAN_OFF) mcp2515_transmit(0x1d,0x1d,0,0,0,0,0,0);
-N	ibat_metr_cnt++;
+N	if(ibat_metr_cnt<CNT_SRC_MAX)ibat_metr_cnt++;
+X	if(ibat_metr_cnt<60)ibat_metr_cnt++;
 N	}
 N	
 N	
@@ -9752,11 +9780,11 @@ N			lcd_bitmap[ptr_bitmap++]=caracter[((unsigned)lcd_buffer[x]*6)+5];
 N			} 
 N		}
 N	}	
-W "main.c" 1370 13 variable "ptr_cnt" was declared but never referenced
-W "main.c" 1370 21 variable "ptr_cnt1" was declared but never referenced
-W "main.c" 1370 30 variable "ptr_cnt2" was declared but never referenced
-W "main.c" 1370 39 variable "ptr_cnt3" was declared but never referenced
-W "main.c" 1370 48 variable "ptr_cnt4" was declared but never referenced
+W "main.c" 1378 13 variable "ptr_cnt" was declared but never referenced
+W "main.c" 1378 21 variable "ptr_cnt1" was declared but never referenced
+W "main.c" 1378 30 variable "ptr_cnt2" was declared but never referenced
+W "main.c" 1378 39 variable "ptr_cnt3" was declared but never referenced
+W "main.c" 1378 48 variable "ptr_cnt4" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9804,7 +9832,7 @@ N	{
 N	sub_ptrs[i++]=	" Авария батареи №2  ";
 N	sub_cnt_max++;	
 N	}*/
-N
+N/*
 Nif(ips_bat_av_stat)
 N	{
 N	sub_ptrs[i++]=	"  Авария батареи    ";
@@ -9870,6 +9898,399 @@ N	{
 N	sub_ptrs[i++]=	"   Авария БПС №12   ";
 N	sub_cnt_max++;	
 N	}
+N*/
+N
+Nif(bps[0]._av&0xef)//(avar_stat&(1<<(3+0)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №1    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[1]._av&0xef)//(avar_stat&(1<<(3+1)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №2    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[2]._av&0xef)//(avar_stat&(1<<(3+2)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №3    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[3]._av&0xef)//(avar_stat&(1<<(3+3)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №4    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[4]._av&0xef)//(avar_stat&(1<<(3+4)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №5    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[5]._av&0xef)//avar_stat&(1<<(3+5)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №6    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[6]._av&0xef)//avar_stat&(1<<(3+6)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №7    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[7]._av&0xef)//avar_stat&(1<<(3+7)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №8    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[8]._av&0xef)//avar_stat&(1<<(3+8)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №9    ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[9]._av&0xef)//avar_stat&(1<<(3+9)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №10   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[10]._av&0xef)//avar_stat&(1<<(3+10)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №11   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[11]._av&0xef)//avar_stat&(1<<(3+11)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №12   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[12]._av&0xef)//avar_stat&(1<<(3+12)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №13   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[13]._av&0xef)//avar_stat&(1<<(3+13)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №14   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[14]._av&0xef)//avar_stat&(1<<(3+14)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №15   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[15]._av&0xef)//avar_stat&(1<<(3+15)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №16   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[16]._av&0xef)//bps[4]._av&0xef)//avar_stat&(1<<(3+16)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №17   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[17]._av&0xef)//avar_stat&(1<<(3+17)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №18   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[18]._av&0xef)//avar_stat&(1<<(3+18)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №19   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[19]._av&0xef)//avar_stat&(1<<(3+19)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №20   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[20]._av&0xef)//avar_stat&(1<<(3+20)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №21   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[21]._av&0xef)//avar_stat&(1<<(3+21)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №22   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[22]._av&0xef)//avar_stat&(1<<(3+22)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №23   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[23]._av&0xef)//avar_stat&(1<<(3+23)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №24   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[24]._av&0xef)//avar_stat&(1<<(3+24)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №25   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[25]._av&0xef)//avar_stat&(1<<(3+25)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №26   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[26]._av&0xef)//avar_stat&(1<<(3+26)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №27   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[27]._av&0xef)//avar_stat&(1<<(3+27)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №28   ";
+N	sub_cnt_max++;	
+N	}
+Nif(bps[28]._av&0xef)//avar_stat&(1<<(3+28)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №29   ";
+N	sub_cnt_max++;	
+N	}
+W "main.c" 1661 4 subscript out of range
+Nif(bps[29]._av&0xef)//avar_stat1&(1<<(0)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №30   ";
+N	sub_cnt_max++;	
+N	}
+W "main.c" 1666 7 subscript out of range
+Nif(bps[30]._av&0xef)//avar_stat1&(1<<(1)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №31   ";
+N	sub_cnt_max++;	
+N	}
+W "main.c" 1671 7 subscript out of range
+Nif(bps[31]._av&0xef)//avar_stat1&(1<<(2)))
+N	{
+N	sub_ptrs[i++]=	"   Авария БПС №32   ";
+N	sub_cnt_max++;	
+N	}
+N
+Nif(bps[0]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС1   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[1]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС2   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[2]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС3   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[3]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС4   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[4]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС5   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[5]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС6   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[6]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС7   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[7]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС8   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[8]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС9   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[9]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС10  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[10]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС11  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[11]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС12  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[12]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС13  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[13]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС14  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[14]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС15  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[15]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС16  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[16]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС17  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[17]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС18  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[18]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС19  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[19]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС20  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[20]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС21  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[21]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС22  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[22]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС23  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[23]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС24  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[24]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС25  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[25]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС26  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[26]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС27  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[27]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС28  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+Nif(bps[28]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС29  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+W "main.c" 1880 4 subscript out of range
+Nif(bps[29]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС30  ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+W "main.c" 1887 7 subscript out of range
+Nif(bps[30]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС31   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
+W "main.c" 1894 7 subscript out of range
+Nif(bps[31]._av&(1<<4))
+N	{
+N	sub_ptrs[i++]=	"Ресурс вент. БПС32   ";
+N	sub_cnt_max++;
+N	sub_ptrs[i++]=	"     исчерпан       ";
+N	sub_cnt_max++;		
+N	}
 N
 Nif(uout_av)
 N	{
@@ -9922,6 +10343,11 @@ N	sub_ptrs[i++]=	"   Занижено Uвх.!   ";
 N	sub_cnt_max++;	
 N	}
 N
+Nif(ibat_metr_cnt>30)
+N	{
+N	sub_ptrs[i++]=	"Шунт не подключен!!!";
+N	sub_cnt_max++;	
+N	}
 Ncnt_of_slave=NUMIST+NUMINV;
 N
 N
@@ -10000,8 +10426,9 @@ N
 N	ptrs[5+NUMIST]=		" Таблица источников ";
 N	ptrs[6+NUMIST]= 	" Установки          "; 
 N    ptrs[7+NUMIST]= 	" Журнал событий     ";
-N	ptrs[8+NUMIST]= 	" Выход              ";
-N	ptrs[9+NUMIST]=	" Тест               ";
+N	ptrs[8+NUMIST]=		" Версия ПО          ";
+N	ptrs[9+NUMIST]= 	" Выход              ";
+N	ptrs[10+NUMIST]=	" Тест               ";
 N	
 N
 N    if(sub_ind==0)index_set=0;
@@ -10084,6 +10511,7 @@ N		//sub_bgnd("Iб      @А Tб    ?°C",'z',-2);
 N		if(bIBAT_SMKLBR)sub_bgnd("КЛБР. ",'$',-3);
 N		else /*if(Ib_ips_termokompensat<100)*/int2lcd_mmm(Ib_ips_termokompensat,'$',0);
 N		//else int2lcd_mmm(Ib_ips_termokompensat/10,'$',1);
+N		if(ND_EXT[0])sub_bgnd("неиспр.",'?',-3);
 N		int2lcd_mmm(t_ext[0],'?',0);
 N		//}
 N	//if(NUMBAT==0)sub_bgnd(" Работа без батарей ",'z',-2);
@@ -10113,9 +10541,11 @@ N	//int2lcd(vz_cnt_h_,'X',0);
 N
 N	//int2lcdyx(UOUT,0,3,0);
 N
-N	//int2lcdyx(UOUT_,0,8,0);
+N	//int2lcdyx(cntrl_stat,0,8,0);
 N
-N	//int2lcdyx(cnt_net_drv,0,19,0);
+N	//int2lcdyx(bps[0].debug_info_to_uku0,1,4,0);
+N	//int2lcdyx(bps[0].debug_info_to_uku1,2,4,0);
+N	//int2lcdyx(bps[0].debug_info_to_uku2,3,4,0);
 N	//int2lcdyx((short)ibat_metr_buff_[0],0,4,0);
 N	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 N	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
@@ -10387,7 +10817,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 1949 16 unrecognized character escape sequence
+W "main.c" 2353 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -10427,6 +10857,7 @@ N	//int2lcdyx(bps[sub_ind1]._av,0,4,0);
 N	//int2lcdyx(u_necc,0,4,0);
 N	//int2lcdyx(avg,0,19,0);
 N	
+N	//int2lcdyx(bps[sub_ind1]._flags_tm,0,19,0);
 N	//int2lcdyx(bps[sub_ind1]._flags_tu,1,19,0);	
 N	//int2lcdyx(bps[sub_ind1]._Uin,1,19,0);
 N	//int2lcdyx(bps[sub_ind1].debug_info_to_uku0,2,19,0);
@@ -11268,8 +11699,7 @@ N		{
 N		av_j_si_max=4;  
 N		ptrs[0]=" Авария выходного   ";
 N		ptrs[1]=" напряжения (заниж.)";
-W "main.c" 2735 6 subscript out of range
-N		if(av_head_int[2]==1)ptrs[1]=" напряжения (завыш.)";
+N		if(av_head_int[1]==1)ptrs[1]=" напряжения (завыш.)";
 N		ptrs[2]="   Начало           ";
 N		ptrs[3]="  0%[  0^ 0@:0#:0$  ";
 N		ptrs[4]="       Uвых=    <В  ";
@@ -11786,9 +12216,11 @@ N	ptrs[25]=		" MODBUS BAUDRATE    ";
 N	ptrs[26]=		"                  >0";
 N	ptrs[27]=		" Измерение тока     ";
 N	ptrs[28]=		" нагрузки          {";
-N    ptrs[29]=		" Выход              ";
-N    ptrs[30]=		" Калибровки         "; 
-N    ptrs[31]=		"                    ";        
+N	ptrs[29]=		" Перегрузка по току ";
+N    ptrs[30]=		" Выравнивание токов ";
+N    ptrs[31]=		" Выход              ";
+N    ptrs[32]=		" Калибровки         "; 
+N    ptrs[33]=		"                    ";        
 N	
 N	if((sub_ind-index_set)>2)index_set=sub_ind-2;
 X	if((a_ind . s_i-a_ind . i_s)>2)a_ind . i_s=a_ind . s_i-2;
@@ -12216,7 +12648,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3544 7 variable "sss" was declared but never referenced
+W "main.c" 3951 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -12692,8 +13124,7 @@ N
 N	//int2lcdyx(adc_buff_[0],0,4,0);
 N    //int2lcdyx(adc_buff_[1],0,9,0);	
 N	
-N	if((sub_ind==0)||(sub_ind==3))mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
-X	if((a_ind . s_i==0)||(a_ind . s_i==3))mess_send(225,229,1000,10);
+N	//if((sub_ind==0)||(sub_ind==3))mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
 N	
 N	//int2lcdyx(adc_buff_[6],0,4,0);
 N	//int2lcdyx(Ktext[0],0,9,0);	 
@@ -15186,26 +15617,54 @@ Xelse if (a_ind . i==iIps_Curr_Avg_Set)
 N	{ 
 N	if(ICA_EN==0)
 N		{
-N		ptrs[0]=		" Выключено          ";
+N		ptrs[0]=		" Ведомый            ";
 N		simax=1;
 N		}
-N	else 
+N	else if(ICA_EN==1) 
 N		{
 N		ptrs[0]=		" Включено           ";
 N		if(ICA_CH==0)
 N			{
-N			ptrs[1]=	" КАНАЛ  MODBUS-RTU  ";
+N			ptrs[1]=	" Канал  MODBUS-RTU  ";
 N			ptrs[2]=	" АДРЕС ВЕДОМОГО   ! ";
 N			simax=3;
 N			}
-N		else
+N		else if(ICA_CH==1)
 N			{
-N			ptrs[1]=	" КАНАЛ   MODBUS-TCP ";
+N			ptrs[1]=	" Канал   MODBUS-TCP ";
 N			ptrs[2]=	" IP 00@.00#.00$.00% ";
 N			ptrs[3]=	" АДРЕС ВЕДОМОГО   ^ ";
 N			simax=4;
 N			}
+N		else if(ICA_CH==2)
+N			{
+N			ptrs[1]=	" Канал   RS485-2    ";
+N			ptrs[2]=	"                    ";
+N			ptrs[3]=	"                    ";
+N			simax=2;
+N			}
+N		else 
+N			{
+N			ptrs[1]=	" Неопределенность   ";
+N			ptrs[2]=	"                    ";
+N			ptrs[3]=	"                    ";
+N			simax=2;
+N			}
 N		} 
+N	else if(ICA_EN==2) 
+N		{
+N		ptrs[0]=		" ПОД ВНЕШНИМ        ";
+N		ptrs[1]=		" УПРАВЛЕНИЕМ        ";
+N		simax=2;
+N		}
+N	else 
+N		{
+N		ptrs[0]=		" Неопределенность   ";
+N		ptrs[1]=		"                    ";
+N		ptrs[2]=		"                    ";
+N		ptrs[3]=		"                    ";
+N		simax=1;
+N		}
 N	ptrs[simax]=		" Выход              ";
 N	
 N	if(sub_ind<index_set) index_set=sub_ind;
@@ -15236,16 +15695,60 @@ N	else int2lcd(ICA_MODBUS_TCP_IP4,'%',0);
 N	int2lcd(ICA_MODBUS_TCP_UNIT_ID,'^',0);	
 N     
 N 	} 
+Nelse if(ind==iFWabout)
+Xelse if(a_ind . i==iFWabout)
+N	{
+N	bgnd_par(	" Версия             ",
+N				" Сборка  0000.00.00 ",
+N				#ifdef WG12232A
+N				"                    ",
+N				#endif
+N				#ifdef WG12232L3
+S				" WG12232L3          ",
+N				#endif
+N				"                    ");
+N	int2lcdyx(BUILD_YEAR,1,12,0);
+N	int2lcdyx(BUILD_MONTH,1,15,0);
+N	int2lcdyx(BUILD_DAY,1,18,0);
+N	
+W "main.c" 6599 2 function "sprintf" declared implicitly
+N	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
+N	}
+Nelse if(ind==iLog_reset_prl)
+Xelse if(a_ind . i==iLog_reset_prl)
+N	{
+N	ptrs[0]="Для очистки журнала ";
+N	bgnd_par(ptrs[0],"  введите  пароль   ",sm_,sm_);
+N	
+N     int2lcdyx(parol[0],2,8,0);
+N     int2lcdyx(parol[1],2,9,0);
+N     int2lcdyx(parol[2],2,10,0);
+N     lcd_buffer[68+sub_ind]='¤';	
+X     lcd_buffer[68+a_ind . s_i]='¤';	
+N	}
 N
-N/*
-Nconst char sm7[]	={" Источник N2        "}; //
-Nconst char sm8[]	={" Нагрузка           "}; //
-Nconst char sm9[]	={" Сеть               "}; //
-Nconst char sm10[]	={" Спецфункции        "}; // 
-Nconst char sm11[]	={" Журнал аварий      "}; //
-Nconst char sm12[]	=" Батарейный журнал  "}; //
-Nconst cha		=" Паспорт            "}; //
-N*/
+Nelse if(ind==iCurr_overload)
+Xelse if(a_ind . i==iCurr_overload)
+N	{
+N	ptrs[0]=" Iперегруз.      !A ";
+N	ptrs[1]=" Tвыдерж.        #с ";
+N//	ptrs[2]=" Мониторов АКБ     %";
+N//	ptrs[3]=" Сухих контактов   $";
+N	ptrs[2]=" Выход              ";
+N	
+N	if(sub_ind<index_set) index_set=sub_ind;
+X	if(a_ind . s_i<a_ind . i_s) a_ind . i_s=a_ind . s_i;
+N	else if((sub_ind-index_set)>2) index_set=sub_ind-2;
+X	else if((a_ind . s_i-a_ind . i_s)>2) a_ind . i_s=a_ind . s_i-2;
+N	bgnd_par(" ПЕРЕГРУЗКА ПО ТОКУ ",ptrs[index_set],ptrs[index_set+1],ptrs[index_set+2]);
+X	bgnd_par(" ПЕРЕГРУЗКА ПО ТОКУ ",ptrs[a_ind . i_s],ptrs[a_ind . i_s+1],ptrs[a_ind . i_s+2]);
+N	
+N	pointer_set(1);
+N
+N	int2lcd(OVERLOAD_CURR,'!',0); 
+N	int2lcd(OVERLOAD_TIME,'#',0);
+N	}    
+N
 N
 N
 N//char2lcdhyx(bat_rel_stat[0],0,10);
@@ -15278,8 +15781,8 @@ Nint2lcdyx(retcntsec,0,7,0);	*/
 N//int2lcdyx(bps[0]._vol_i,0,15,0);
 N//int2lcdyx(cntrl_stat,0,19,0); 
 N//int2lcdyx(bps[0]._Uin,0,4,0);
-W "main.c" 1403 6 variable "ii_" was declared but never referenced
-W "main.c" 1404 20 variable "cnt_ind_bat" was declared but never referenced
+W "main.c" 1411 6 variable "ii_" was declared but never referenced
+W "main.c" 1412 20 variable "cnt_ind_bat" was declared but never referenced
 N}							    
 N
 N
@@ -15630,8 +16133,8 @@ X	if(but==251)
 N		{
 N		sub_ind++;
 X		a_ind . s_i++;
-N		gran_char(&sub_ind,0,6+NUMIST);
-X		gran_char(&a_ind . s_i,0,6+NUMIST);
+N		gran_char(&sub_ind,0,7+NUMIST);
+X		gran_char(&a_ind . s_i,0,7+NUMIST);
 N		}
 N		
 N	else if(but==butU)
@@ -15639,8 +16142,8 @@ X	else if(but==253)
 N		{
 N		sub_ind--;
 X		a_ind . s_i--;
-N		gran_char(&sub_ind,0,6+NUMIST);
-X		gran_char(&a_ind . s_i,0,6+NUMIST);
+N		gran_char(&sub_ind,0,7+NUMIST);
+X		gran_char(&a_ind . s_i,0,7+NUMIST);
 N		}	
 N
 N	else if(but==butR)
@@ -15662,8 +16165,9 @@ N		}
 N	else if(but==butD_)
 X	else if(but==123)
 N		{
-N		sub_ind=0;
-X		a_ind . s_i=0;
+N		//sub_ind=0;
+N		sub_ind=(2+NUMIST);
+X		a_ind . s_i=(2+NUMIST);
 N		}
 N
 N	else if(but==butLR_)
@@ -15679,24 +16183,24 @@ N		{
 N		if(sub_ind==0)
 X		if(a_ind . s_i==0)
 N			{
-N			if(avar_ind_stat)
+N/*			if(avar_ind_stat)
 N				{
 N				//ind=iAv_view;
 N				//sub_ind=0;
 N				tree_up(iAv_view,0,0,0);
 N				while(!(avar_ind_stat&(1<<sub_ind)))
-X				while(!(avar_ind_stat&(1<<a_ind . s_i)))
 N					{
 N					sub_ind++;
-X					a_ind . s_i++;
 N					if(sub_ind>=32)
-X					if(a_ind . s_i>=32)
 N						{
 N						tree_down(0,0);
 N						avar_ind_stat=0;
 N						}
 N					}
-N				}																							
+N				}*/
+N				
+N			avar_ind_stat=0;
+N			avar_ind_stat1=0;																											
 N			}
 N
 N		else if((sub_ind>1)&&(sub_ind<=(1+NUMIST)))
@@ -15730,11 +16234,20 @@ N			}
 N		else if(sub_ind==(5+NUMIST))
 X		else if(a_ind . s_i==(5+NUMIST))
 N			{
-N			sub_ind=0;
-X			a_ind . s_i=0;
+N			if(but==butE)
+X			if(but==254)
+N		     	{
+N		     	tree_up(iFWabout,0,0,0);
+N		     	}
 N			}
 N		else if(sub_ind==(6+NUMIST))
 X		else if(a_ind . s_i==(6+NUMIST))
+N			{
+N			sub_ind=0;
+X			a_ind . s_i=0;
+N			}
+N		else if(sub_ind==(7+NUMIST))
+X		else if(a_ind . s_i==(7+NUMIST))
 N			{
 N	     	tree_up(iPrltst,0,0,0);
 N		    parol_init();
@@ -15744,7 +16257,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6564 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 7046 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -16154,8 +16667,8 @@ Nelse if((ind==iPrl_bat_in_out)||(ind==iSet_prl)||(ind==iK_prl)
 Xelse if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 N	||(ind==iAusw_prl)
 X	||(a_ind . i==iAusw_prl)
-N	||(ind==iPrltst))
-X	||(a_ind . i==iPrltst))
+N	||(ind==iPrltst)||(ind==iLog_reset_prl))
+X	||(a_ind . i==iPrltst)||(a_ind . i==iLog_reset_prl))
 N	{
 N	ret(50);
 N	if(but==butR)
@@ -16401,6 +16914,36 @@ N	          			"       Пароль       ",
 N	          			"     неверный!!!    ",
 N	          			"                    ",1000);
 N				}
+N			}
+N		else if(ind==iLog_reset_prl)
+X		else if(a_ind . i==iLog_reset_prl)
+N			{
+N			if(tempU==PAROL_LOG_RESET) 
+X			if(tempU==691) 
+N				{
+N				tree_down(0,0);
+N				lc640_write(CNT_EVENT_LOG,0);
+X				lc640_write(1024+1024+512+1024+2,0);
+N				lc640_write(PTR_EVENT_LOG,0);
+X				lc640_write(1024+1024+512+1024,0);
+N				tree_down(0,0);
+N				avar_ind_stat=0;
+N				avar_stat=0;
+N				avar_stat_old=0;
+N	    	    show_mess("                    ",
+N	          			"   Журнал событий   ",
+N	          			"      очищен!!!     ",
+N	          			"                    ",1000);
+N				//ret(1000);
+N				}
+N	  		else 
+N				{
+N		          tree_down(0,0);
+N	    	          show_mess("                    ",
+N	          			"       Пароль       ",
+N	          			"     неверный!!!    ",
+N	          			"                    ",1000);
+N				}  
 N			}
 N		}
 N	}
@@ -16669,21 +17212,21 @@ N
 N	else if(but==butE)
 X	else if(but==254)
 N		{  
-N		if(sub_ind==av_j_si_max+1)
-X		if(a_ind . s_i==av_j_si_max+1)
+N		if((sub_ind==av_j_si_max+1)&&(av_j_si_max!=0))
+X		if((a_ind . s_i==av_j_si_max+1)&&(av_j_si_max!=0))
 N			{
-N			lc640_write(CNT_EVENT_LOG,0);
-X			lc640_write(1024+1024+512+1024+2,0);
+N			tree_up(iLog_reset_prl,0,0,0);
+N			parol_init();
+N			/*lc640_write(CNT_EVENT_LOG,0);
 N			lc640_write(PTR_EVENT_LOG,0);
-X			lc640_write(1024+1024+512+1024,0);
 N			tree_down(0,0);
 N			avar_ind_stat=0;
 N			avar_stat=0;
-N			avar_stat_old=0;				
+N			avar_stat_old=0;*/				
 N			}
 N					
-N		else if(sub_ind==av_j_si_max)
-X		else if(a_ind . s_i==av_j_si_max)
+N		else if((sub_ind==av_j_si_max)||(av_j_si_max==0))
+X		else if((a_ind . s_i==av_j_si_max)||(av_j_si_max==0))
 N			{
 N			tree_down(0,0);
 N			ret(0);
@@ -17413,8 +17956,8 @@ N			sub_ind=29;
 X			a_ind . s_i=29;
 N            //index_set=19;
 N            }																			
-N		gran_char(&sub_ind,0,30);
-X		gran_char(&a_ind . s_i,0,30);
+N		gran_char(&sub_ind,0,32);
+X		gran_char(&a_ind . s_i,0,32);
 N		}
 N	else if(but==butU)
 X	else if(but==253)
@@ -17447,14 +17990,14 @@ N			sub_ind=27;
 X			a_ind . s_i=27;
 N            //index_set=19;
 N            }
-N		gran_char(&sub_ind,0,30);
-X		gran_char(&a_ind . s_i,0,30);
+N		gran_char(&sub_ind,0,32);
+X		gran_char(&a_ind . s_i,0,32);
 N		}
 N	else if(but==butD_)
 X	else if(but==123)
 N		{
-N		sub_ind=29;
-X		a_ind . s_i=29;
+N		sub_ind=30;
+X		a_ind . s_i=30;
 N		}
 N
 N	else if(but==butLR_)
@@ -17911,8 +18454,30 @@ X	     	lc640_write_int(0x10+100+78,I_LOAD_MODE);
 N	     	}
 N          }
 N
-N    else if((sub_ind==29) || (sub_ind==3))
-X    else if((a_ind . s_i==29) || (a_ind . s_i==3))
+N	else if(sub_ind==29)
+X	else if(a_ind . s_i==29)
+N		{
+N		if(but==butE)
+X		if(but==254)
+N		    {		
+N			tree_up(iCurr_overload,0,0,0);
+N			ret(500);
+N			}						
+N		}
+N
+N	else if(sub_ind==29)
+X	else if(a_ind . s_i==29)
+N	    {
+N		if(but==butE) 
+X		if(but==254) 
+N			{
+N		    tree_up(iIps_Curr_Avg_Set,0,0,0);
+N		    ret(1000);
+N		    }	     
+N	    }
+N
+N    else if((sub_ind==31) || (sub_ind==3))
+X    else if((a_ind . s_i==31) || (a_ind . s_i==3))
 N		{
 N		if(but==butE)
 X		if(but==254)
@@ -17922,8 +18487,8 @@ N		     ret(0);
 N		     }
 N		}
 N				
-N	else if(sub_ind==30)
-X	else if(a_ind . s_i==30)
+N	else if(sub_ind==32)
+X	else if(a_ind . s_i==32)
 N		{
 N		if(but==butE)
 X		if(but==254)
@@ -18448,7 +19013,7 @@ N	     if((but==butR)||(but==butR_))
 X	     if((but==239)||(but==111))
 N	     	{
 N	     	NUMIST++;
-N	     	gran(&NUMIST,0,18);
+N	     	gran(&NUMIST,0,32);
 N	     	lc640_write_int(EE_NUMIST,NUMIST);
 X	     	lc640_write_int(0x10+100+36,NUMIST);
 N			numOfForvardBps_init();
@@ -18458,7 +19023,7 @@ N	     else if((but==butL)||(but==butL_))
 X	     else if((but==247)||(but==119))
 N	     	{
 N	     	NUMIST--;
-N	     	gran(&NUMIST,0,18);
+N	     	gran(&NUMIST,0,32);
 N	     	lc640_write_int(EE_NUMIST,NUMIST);
 X	     	lc640_write_int(0x10+100+36,NUMIST);
 N			numOfForvardBps_init();
@@ -25577,11 +26142,90 @@ N		}
 N
 N
 N  	} 
+Nelse if(ind==iFWabout)
+Xelse if(a_ind . i==iFWabout)
+N	{
+N	ret(1000);
+N	if(but==butE)
+X	if(but==254)
+N	     {
+N	     tree_down(0,0);
+N	     ret(0);
+N	     }
+N	}
 N
-N		
+Nelse if(ind==iCurr_overload)
+Xelse if(a_ind . i==iCurr_overload)
+N	{
+N	if(but==butD)
+X	if(but==251)
+N		{
+N		sub_ind++;
+X		a_ind . s_i++;
+N		gran_char(&sub_ind,0,2);
+X		gran_char(&a_ind . s_i,0,2);
+N		}
+N	else if(but==butU)
+X	else if(but==253)
+N		{
+N		sub_ind--;
+X		a_ind . s_i--;
+N		gran_char(&sub_ind,0,2);
+X		gran_char(&a_ind . s_i,0,2);
+N		}
+N	else if(sub_ind==0)
+X	else if(a_ind . s_i==0)
+N		{
+N		if(but==butR)OVERLOAD_CURR++;
+X		if(but==239)OVERLOAD_CURR++;
+N		else if(but==butR_)OVERLOAD_CURR=(OVERLOAD_CURR/10+1)*10;
+X		else if(but==111)OVERLOAD_CURR=(OVERLOAD_CURR/10+1)*10;
+N		else if(but==butL)OVERLOAD_CURR--;
+X		else if(but==247)OVERLOAD_CURR--;
+N		else if(but==butL_)OVERLOAD_CURR=(OVERLOAD_CURR/10-1)*10;
+X		else if(but==119)OVERLOAD_CURR=(OVERLOAD_CURR/10-1)*10;
+N		gran(&OVERLOAD_CURR,1,2000);
+N		lc640_write_int(EE_OVERLOAD_CURR,OVERLOAD_CURR);
+X		lc640_write_int(0x10+350+26,OVERLOAD_CURR);
+N		speed=1;
+N		}
+N	else if(sub_ind==1)
+X	else if(a_ind . s_i==1)
+N		{
+N		if((but==butR)||(but==butR_))
+X		if((but==239)||(but==111))
+N			{
+N			OVERLOAD_TIME++;
+N			gran(&OVERLOAD_TIME,1,120);
+N			lc640_write_int(EE_OVERLOAD_TIME,OVERLOAD_TIME);
+X			lc640_write_int(0x10+350+28,OVERLOAD_TIME);
+N			speed=1;
+N			}
+N		if((but==butL)||(but==butL_))
+X		if((but==247)||(but==119))
+N			{
+N			OVERLOAD_TIME--;
+N			gran(&OVERLOAD_TIME,1,120);
+N			lc640_write_int(EE_OVERLOAD_TIME,OVERLOAD_TIME);
+X			lc640_write_int(0x10+350+28,OVERLOAD_TIME);
+N			speed=1;
+N			}
+N		}
+N	else if(sub_ind==2)
+X	else if(a_ind . s_i==2)
+N		{
+N		if(but==butE)
+X		if(but==254)
+N			{
+N			tree_down(0,0);
+N			ret(0);
+N			}
+N		}
+N	}
+N			
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14056 1 label "but_an_end" was declared but never referenced
+W "main.c" 14641 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -25798,6 +26442,8 @@ SSET_REG(LPC_GPIO3->FIODIR,1,SHIFT_REL_AV_NET,1);
 SSET_REG(LPC_GPIO3->FIOSET,1,SHIFT_REL_AV_NET,1);  // реле аварии сети под ток
 N#endif
 N
+N//SET_REG(LPC_GPIO0->FIODIR,1,9,1);
+N//SET_REG(LPC_GPIO0->FIOSET,1,9,1);
 N
 N
 Nad7705_reset();
@@ -25998,7 +26644,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14441 15 pointless comparison of unsigned integer with zero
+W "main.c" 15028 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26045,10 +26691,11 @@ S//cntrl_stat=500;
 S}
 N#endif
 N
+N/*
 N#ifdef UKU_220_IPS_TERMOKOMPENSAT
 Ncntrl_stat=10*PWM_START;
 Ncntrl_stat_old=10*PWM_START;
-N#endif
+N#endif */
 N
 N
 N//ind=iDeb;
@@ -26058,7 +26705,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 14499 1 function "sc16is700_init" declared implicitly
+W "main.c" 15087 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26087,7 +26734,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 14526 3 function "can_in_an1" declared implicitly
+W "main.c" 15114 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26095,7 +26742,7 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 14533 3 function "modbus_in" declared implicitly
+W "main.c" 15121 3 function "modbus_in" declared implicitly
 N		modbus_in();
 N		}
 N
@@ -26146,7 +26793,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 14583 3 function "sc16is700_uart_hndl" declared implicitly
+W "main.c" 15171 3 function "sc16is700_uart_hndl" declared implicitly
 N		sc16is700_uart_hndl();
 N		#endif		
 N		}
@@ -26169,7 +26816,7 @@ N		//#ifdef MCP2515_CAN
 N		//net_drv_mcp2515();
 N		//#endif
 N		//#ifndef MCP2515_CAN
-N		net_drv();
+N		/*if(main_1Hz_cnt>10)*/net_drv();
 N		//#endif
 N		}
 N
@@ -26219,11 +26866,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 14654 3 function "u_avar_hndl" declared implicitly
+W "main.c" 15242 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 14655 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 15243 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 14656 3 function "overload_hndl" declared implicitly
+W "main.c" 15244 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26243,7 +26890,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 14674 3 function "rele_av_hndl" declared implicitly
+W "main.c" 15262 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26281,7 +26928,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 14711 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 15299 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26309,7 +26956,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 14738 3 function "npn_hndl" declared implicitly
+W "main.c" 15326 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26325,7 +26972,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 14753 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 15341 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26335,7 +26982,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 14762 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 15350 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26352,10 +26999,10 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 14778 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 15366 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N
 N	}
 N}
-W "main.c" 791 13 function "timer_poll" was declared but never referenced
+W "main.c" 794 13 function "timer_poll" was declared but never referenced

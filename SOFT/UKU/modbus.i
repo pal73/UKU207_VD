@@ -2643,9 +2643,9 @@ extern BOOL snmp_set_community (const char *community);
 
 
 
-#line 574 "main.h"
+#line 575 "main.h"
 
-#line 588 "main.h"
+#line 590 "main.h"
 
 
 
@@ -2658,27 +2658,37 @@ extern BOOL snmp_set_community (const char *community);
  
 
 
-#line 609 "main.h"
+#line 611 "main.h"
 
-#line 619 "main.h"
+#line 621 "main.h"
 
-#line 628 "main.h"
+#line 630 "main.h"
 
-#line 637 "main.h"
+#line 639 "main.h"
 
-#line 649 "main.h"
+#line 651 "main.h"
 
-#line 659 "main.h"
+#line 661 "main.h"
 
-#line 668 "main.h"
+#line 670 "main.h"
 
-#line 676 "main.h"
+#line 678 "main.h"
 
-#line 685 "main.h"
+#line 687 "main.h"
 
-#line 697 "main.h"
+#line 699 "main.h"
 
-#line 709 "main.h"
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
@@ -2731,7 +2741,7 @@ typedef enum {
 	iExt_set,iExt_set_3U,
 	iExt_dt,
 	iExt_sk,iExt_sk_3U,
-	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 	iEnerg3,iEnerg,
 	iVent,
 	iK_power_net3,
@@ -2740,7 +2750,9 @@ typedef enum {
 	iBps_list,
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
-	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+	iFWabout,
+	iCurr_overload}i_enum;
 
 typedef struct  
 {
@@ -2998,6 +3010,8 @@ extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
 extern signed short I_LOAD_MODE;		
 
+extern signed short OVERLOAD_CURR;
+extern signed short OVERLOAD_TIME;
 
 
 
@@ -3238,6 +3252,7 @@ typedef struct
 	unsigned short _vent_resurs;
 	signed short debug_info_to_uku0;
 	signed short debug_info_to_uku1;
+	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
@@ -3420,11 +3435,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1458 "main.h"
+#line 1465 "main.h"
 
-#line 1469 "main.h"
+#line 1476 "main.h"
 
-#line 1485 "main.h"
+#line 1492 "main.h"
 
 extern char ext_can_cnt;
 
@@ -3441,7 +3456,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 
 extern signed long ibat_metr_buff_[2];
-extern short bIBAT_SMKLBR;
+extern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 extern char ibat_metr_cnt;
 
 
@@ -3468,7 +3483,7 @@ extern short can_plazma;
 
 
 
-#line 1539 "main.h"
+#line 1546 "main.h"
 
 
 
@@ -3531,7 +3546,7 @@ extern U8 tcp_connect_stat;
 
 
 
-extern short overloadHndlCnt;
+extern short overloadHndlCnt,overloadHndlCnt1;
 extern char overloadAvar;
 
 
@@ -3604,6 +3619,7 @@ extern short adc_gorb_cnt,adc_zero_cnt;
 extern char adc_window_flag;
 extern short adc_window_cnt;
 extern short adc_net_buff_cnt;
+extern short rele_on_cnt;
 
 
 char vz_start(char hour);
@@ -4175,34 +4191,34 @@ extern __declspec(__nothrow) void _membitmovewb(void *  , const void *  , int  ,
 
  
 
-#line 204 "eeprom_map.h"
+#line 206 "eeprom_map.h"
 
 
 
-#line 216 "eeprom_map.h"
+#line 218 "eeprom_map.h"
 
 
-#line 227 "eeprom_map.h"
-
-
-
-#line 238 "eeprom_map.h"
+#line 229 "eeprom_map.h"
 
 
 
-#line 294 "eeprom_map.h"
-
-
-#line 337 "eeprom_map.h"
+#line 240 "eeprom_map.h"
 
 
 
+#line 296 "eeprom_map.h"
 
+
+#line 339 "eeprom_map.h"
 
 
 
 
-#line 359 "eeprom_map.h"
+
+
+
+
+#line 361 "eeprom_map.h"
 
 
 
@@ -4493,10 +4509,10 @@ uint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 
 
 
-extern unsigned avar_stat;	 	
-extern unsigned avar_ind_stat; 	
-extern unsigned avar_stat_old;
-extern unsigned avar_stat_new,avar_stat_offed;
+extern unsigned avar_stat, avar_stat1;	 	
+extern unsigned avar_ind_stat, avar_ind_stat1; 	
+extern unsigned avar_stat_old, avar_stat1_old;
+extern unsigned avar_stat_new, avar_stat_offed, avar_stat1_new, avar_stat1_offed;
 
 
 
@@ -5768,6 +5784,168 @@ modbus_registers[109]=(signed char)	(avar_vd_stat);
 															
 															
 															
+
+
+modbus_registers[118]=(signed char)(bps[12]._Uii>>8);			
+modbus_registers[119]=(signed char)(bps[12]._Uii);
+modbus_registers[120]=(signed char)(bps[12]._Ii>>8);			
+modbus_registers[121]=(signed char)(bps[12]._Ii);
+modbus_registers[122]=(signed char)(bps[12]._Ti>>8);			
+modbus_registers[123]=(signed char)(bps[12]._Ti);
+modbus_registers[124]=(signed char)(bps[12]._av>>8);			
+modbus_registers[125]=(signed char)(bps[12]._av);
+modbus_registers[126]=(signed char)(bps[13]._Uii>>8);			
+modbus_registers[127]=(signed char)(bps[13]._Uii);
+modbus_registers[128]=(signed char)(bps[13]._Ii>>8);			
+modbus_registers[129]=(signed char)(bps[13]._Ii);
+modbus_registers[130]=(signed char)(bps[13]._Ti>>8);			
+modbus_registers[131]=(signed char)(bps[13]._Ti);
+modbus_registers[132]=(signed char)(bps[13]._av>>8);			
+modbus_registers[133]=(signed char)(bps[13]._av);
+modbus_registers[134]=(signed char)(bps[14]._Uii>>8);			
+modbus_registers[135]=(signed char)(bps[14]._Uii);
+modbus_registers[136]=(signed char)(bps[14]._Ii>>8);			
+modbus_registers[137]=(signed char)(bps[14]._Ii);
+modbus_registers[138]=(signed char)(bps[14]._Ti>>8);			
+modbus_registers[139]=(signed char)(bps[14]._Ti);
+modbus_registers[140]=(signed char)(bps[14]._av>>8);			
+modbus_registers[141]=(signed char)(bps[14]._av);
+modbus_registers[142]=(signed char)(bps[15]._Uii>>8);			
+modbus_registers[143]=(signed char)(bps[15]._Uii);
+modbus_registers[144]=(signed char)(bps[15]._Ii>>8);			
+modbus_registers[145]=(signed char)(bps[15]._Ii);
+modbus_registers[146]=(signed char)(bps[15]._Ti>>8);			
+modbus_registers[147]=(signed char)(bps[15]._Ti);
+modbus_registers[148]=(signed char)(bps[15]._av>>8);			
+modbus_registers[149]=(signed char)(bps[15]._av);
+modbus_registers[150]=(signed char)(bps[16]._Uii>>8);			
+modbus_registers[151]=(signed char)(bps[16]._Uii);
+modbus_registers[152]=(signed char)(bps[16]._Ii>>8);			
+modbus_registers[153]=(signed char)(bps[16]._Ii);
+modbus_registers[154]=(signed char)(bps[16]._Ti>>8);			
+modbus_registers[155]=(signed char)(bps[16]._Ti);
+modbus_registers[156]=(signed char)(bps[16]._av>>8);			
+modbus_registers[157]=(signed char)(bps[16]._av);
+modbus_registers[158]=(signed char)(bps[17]._Uii>>8);			
+modbus_registers[159]=(signed char)(bps[17]._Uii);
+modbus_registers[160]=(signed char)(bps[17]._Ii>>8);			
+modbus_registers[161]=(signed char)(bps[17]._Ii);
+modbus_registers[162]=(signed char)(bps[17]._Ti>>8);			
+modbus_registers[163]=(signed char)(bps[17]._Ti);
+modbus_registers[164]=(signed char)(bps[17]._av>>8);			
+modbus_registers[165]=(signed char)(bps[17]._av);
+modbus_registers[166]=(signed char)(bps[18]._Uii>>8);			
+modbus_registers[167]=(signed char)(bps[18]._Uii);
+modbus_registers[168]=(signed char)(bps[18]._Ii>>8);			
+modbus_registers[169]=(signed char)(bps[18]._Ii);
+modbus_registers[170]=(signed char)(bps[18]._Ti>>8);			
+modbus_registers[171]=(signed char)(bps[18]._Ti);
+modbus_registers[172]=(signed char)(bps[18]._av>>8);			
+modbus_registers[173]=(signed char)(bps[18]._av);
+modbus_registers[174]=(signed char)(bps[19]._Uii>>8);			
+modbus_registers[175]=(signed char)(bps[19]._Uii);
+modbus_registers[176]=(signed char)(bps[19]._Ii>>8);			
+modbus_registers[177]=(signed char)(bps[19]._Ii);
+modbus_registers[178]=(signed char)(bps[19]._Ti>>8);			
+modbus_registers[179]=(signed char)(bps[19]._Ti);
+modbus_registers[180]=(signed char)(bps[19]._av>>8);			
+modbus_registers[181]=(signed char)(bps[19]._av);
+modbus_registers[182]=(signed char)(bps[20]._Uii>>8);			
+modbus_registers[183]=(signed char)(bps[20]._Uii);
+modbus_registers[184]=(signed char)(bps[20]._Ii>>8);			
+modbus_registers[185]=(signed char)(bps[20]._Ii);
+modbus_registers[186]=(signed char)(bps[20]._Ti>>8);			
+modbus_registers[187]=(signed char)(bps[20]._Ti);
+modbus_registers[188]=(signed char)(bps[20]._av>>8);			
+modbus_registers[189]=(signed char)(bps[20]._av);
+modbus_registers[190]=(signed char)(bps[21]._Uii>>8);			
+modbus_registers[191]=(signed char)(bps[21]._Uii);
+modbus_registers[192]=(signed char)(bps[21]._Ii>>8);			
+modbus_registers[193]=(signed char)(bps[21]._Ii);
+modbus_registers[194]=(signed char)(bps[21]._Ti>>8);			
+modbus_registers[195]=(signed char)(bps[21]._Ti);
+modbus_registers[196]=(signed char)(bps[21]._av>>8);			
+modbus_registers[197]=(signed char)(bps[21]._av);
+modbus_registers[198]=(signed char)(bps[22]._Uii>>8);			
+modbus_registers[199]=(signed char)(bps[22]._Uii);
+modbus_registers[200]=(signed char)(bps[22]._Ii>>8);			
+modbus_registers[201]=(signed char)(bps[22]._Ii);
+modbus_registers[202]=(signed char)(bps[22]._Ti>>8);			
+modbus_registers[203]=(signed char)(bps[22]._Ti);
+modbus_registers[204]=(signed char)(bps[22]._av>>8);			
+modbus_registers[205]=(signed char)(bps[22]._av);
+modbus_registers[206]=(signed char)(bps[23]._Uii>>8);			
+modbus_registers[207]=(signed char)(bps[23]._Uii);
+modbus_registers[208]=(signed char)(bps[23]._Ii>>8);			
+modbus_registers[209]=(signed char)(bps[23]._Ii);
+modbus_registers[210]=(signed char)(bps[23]._Ti>>8);			
+modbus_registers[211]=(signed char)(bps[23]._Ti);
+modbus_registers[212]=(signed char)(bps[23]._av>>8);			
+modbus_registers[213]=(signed char)(bps[23]._av);
+modbus_registers[214]=(signed char)(bps[24]._Uii>>8);			
+modbus_registers[215]=(signed char)(bps[24]._Uii);
+modbus_registers[216]=(signed char)(bps[24]._Ii>>8);			
+modbus_registers[217]=(signed char)(bps[24]._Ii);
+modbus_registers[218]=(signed char)(bps[24]._Ti>>8);			
+modbus_registers[219]=(signed char)(bps[24]._Ti);
+modbus_registers[220]=(signed char)(bps[24]._av>>8);			
+modbus_registers[221]=(signed char)(bps[24]._av);
+modbus_registers[222]=(signed char)(bps[25]._Uii>>8);			
+modbus_registers[223]=(signed char)(bps[25]._Uii);
+modbus_registers[224]=(signed char)(bps[25]._Ii>>8);			
+modbus_registers[225]=(signed char)(bps[25]._Ii);
+modbus_registers[226]=(signed char)(bps[25]._Ti>>8);			
+modbus_registers[227]=(signed char)(bps[25]._Ti);
+modbus_registers[228]=(signed char)(bps[25]._av>>8);			
+modbus_registers[229]=(signed char)(bps[25]._av);
+modbus_registers[230]=(signed char)(bps[26]._Uii>>8);			
+modbus_registers[231]=(signed char)(bps[26]._Uii);
+modbus_registers[232]=(signed char)(bps[26]._Ii>>8);			
+modbus_registers[233]=(signed char)(bps[26]._Ii);
+modbus_registers[234]=(signed char)(bps[26]._Ti>>8);			
+modbus_registers[235]=(signed char)(bps[26]._Ti);
+modbus_registers[236]=(signed char)(bps[26]._av>>8);			
+modbus_registers[237]=(signed char)(bps[26]._av);
+modbus_registers[238]=(signed char)(bps[27]._Uii>>8);			
+modbus_registers[239]=(signed char)(bps[27]._Uii);
+modbus_registers[240]=(signed char)(bps[27]._Ii>>8);			
+modbus_registers[241]=(signed char)(bps[27]._Ii);
+modbus_registers[242]=(signed char)(bps[27]._Ti>>8);			
+modbus_registers[243]=(signed char)(bps[27]._Ti);
+modbus_registers[244]=(signed char)(bps[27]._av>>8);			
+modbus_registers[245]=(signed char)(bps[27]._av);
+modbus_registers[246]=(signed char)(bps[28]._Uii>>8);			
+modbus_registers[247]=(signed char)(bps[28]._Uii);
+modbus_registers[248]=(signed char)(bps[28]._Ii>>8);			
+modbus_registers[249]=(signed char)(bps[28]._Ii);
+modbus_registers[250]=(signed char)(bps[28]._Ti>>8);			
+modbus_registers[251]=(signed char)(bps[28]._Ti);
+modbus_registers[252]=(signed char)(bps[28]._av>>8);			
+modbus_registers[253]=(signed char)(bps[28]._av);
+modbus_registers[254]=(signed char)(bps[29]._Uii>>8);			
+modbus_registers[255]=(signed char)(bps[29]._Uii);
+modbus_registers[256]=(signed char)(bps[29]._Ii>>8);			
+modbus_registers[257]=(signed char)(bps[29]._Ii);
+modbus_registers[258]=(signed char)(bps[29]._Ti>>8);			
+modbus_registers[259]=(signed char)(bps[29]._Ti);
+modbus_registers[260]=(signed char)(bps[29]._av>>8);			
+modbus_registers[261]=(signed char)(bps[29]._av);
+modbus_registers[262]=(signed char)(bps[30]._Uii>>8);			
+modbus_registers[263]=(signed char)(bps[30]._Uii);
+modbus_registers[264]=(signed char)(bps[30]._Ii>>8);			
+modbus_registers[265]=(signed char)(bps[30]._Ii);
+modbus_registers[266]=(signed char)(bps[30]._Ti>>8);			
+modbus_registers[267]=(signed char)(bps[30]._Ti);
+modbus_registers[268]=(signed char)(bps[30]._av>>8);			
+modbus_registers[269]=(signed char)(bps[30]._av);
+modbus_registers[270]=(signed char)(bps[31]._Uii>>8);			
+modbus_registers[271]=(signed char)(bps[31]._Uii);
+modbus_registers[272]=(signed char)(bps[31]._Ii>>8);			
+modbus_registers[273]=(signed char)(bps[31]._Ii);
+modbus_registers[274]=(signed char)(bps[31]._Ti>>8);			
+modbus_registers[275]=(signed char)(bps[31]._Ti);
+modbus_registers[276]=(signed char)(bps[31]._av>>8);			
+modbus_registers[277]=(signed char)(bps[31]._av);
 
 
 

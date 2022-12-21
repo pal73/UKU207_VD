@@ -309,34 +309,34 @@ void snmp_cool_20_dtemper_write(int mode);
 
  
 
-#line 204 "eeprom_map.h"
+#line 206 "eeprom_map.h"
 
 
 
-#line 216 "eeprom_map.h"
+#line 218 "eeprom_map.h"
 
 
-#line 227 "eeprom_map.h"
-
-
-
-#line 238 "eeprom_map.h"
+#line 229 "eeprom_map.h"
 
 
 
-#line 294 "eeprom_map.h"
-
-
-#line 337 "eeprom_map.h"
+#line 240 "eeprom_map.h"
 
 
 
+#line 296 "eeprom_map.h"
 
+
+#line 339 "eeprom_map.h"
 
 
 
 
-#line 359 "eeprom_map.h"
+
+
+
+
+#line 361 "eeprom_map.h"
 
 
 
@@ -1043,9 +1043,9 @@ extern BOOL snmp_set_community (const char *community);
 
 
 
-#line 574 "main.h"
+#line 575 "main.h"
 
-#line 588 "main.h"
+#line 590 "main.h"
 
 
 
@@ -1058,27 +1058,37 @@ extern BOOL snmp_set_community (const char *community);
  
 
 
-#line 609 "main.h"
+#line 611 "main.h"
 
-#line 619 "main.h"
+#line 621 "main.h"
 
-#line 628 "main.h"
+#line 630 "main.h"
 
-#line 637 "main.h"
+#line 639 "main.h"
 
-#line 649 "main.h"
+#line 651 "main.h"
 
-#line 659 "main.h"
+#line 661 "main.h"
 
-#line 668 "main.h"
+#line 670 "main.h"
 
-#line 676 "main.h"
+#line 678 "main.h"
 
-#line 685 "main.h"
+#line 687 "main.h"
 
-#line 697 "main.h"
+#line 699 "main.h"
 
-#line 709 "main.h"
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
@@ -1131,7 +1141,7 @@ typedef enum {
 	iExt_set,iExt_set_3U,
 	iExt_dt,
 	iExt_sk,iExt_sk_3U,
-	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 	iEnerg3,iEnerg,
 	iVent,
 	iK_power_net3,
@@ -1140,7 +1150,9 @@ typedef enum {
 	iBps_list,
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
-	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+	iFWabout,
+	iCurr_overload}i_enum;
 
 typedef struct  
 {
@@ -1398,6 +1410,8 @@ extern signed short MODBUS_BAUDRATE;
 extern signed short BAT_LINK;
 extern signed short I_LOAD_MODE;		
 
+extern signed short OVERLOAD_CURR;
+extern signed short OVERLOAD_TIME;
 
 
 
@@ -1638,6 +1652,7 @@ typedef struct
 	unsigned short _vent_resurs;
 	signed short debug_info_to_uku0;
 	signed short debug_info_to_uku1;
+	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
@@ -1820,11 +1835,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1458 "main.h"
+#line 1465 "main.h"
 
-#line 1469 "main.h"
+#line 1476 "main.h"
 
-#line 1485 "main.h"
+#line 1492 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1841,7 +1856,7 @@ extern enum_avt_stat avt_stat[12],avt_stat_old[12];
 
 
 extern signed long ibat_metr_buff_[2];
-extern short bIBAT_SMKLBR;
+extern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 extern char ibat_metr_cnt;
 
 
@@ -1868,7 +1883,7 @@ extern short can_plazma;
 
 
 
-#line 1539 "main.h"
+#line 1546 "main.h"
 
 
 
@@ -1931,7 +1946,7 @@ extern U8 tcp_connect_stat;
 
 
 
-extern short overloadHndlCnt;
+extern short overloadHndlCnt,overloadHndlCnt1;
 extern char overloadAvar;
 
 
@@ -2400,6 +2415,7 @@ extern short adc_gorb_cnt,adc_zero_cnt;
 extern char adc_window_flag;
 extern short adc_window_cnt;
 extern short adc_net_buff_cnt;
+extern short rele_on_cnt;
 
 
 char vz_start(char hour);

@@ -4528,6 +4528,7 @@ N#define PAROL_VZ 126
 N#define PAROL_TST 999 
 N#define PAROL_DEFAULT 295
 N#define PAROL_AUSW 949
+N#define PAROL_LOG_RESET	691
 N#endif                
 N
 N#ifdef PAROL_ALL_ZERO
@@ -4542,6 +4543,7 @@ S#define PAROL_VZ 0
 S#define PAROL_TST 0
 S#define PAROL_DEFAULT 0
 S#define PAROL_AUSW 0
+S#define PAROL_LOG_RESET	0
 N#endif
 N
 N
@@ -4652,18 +4654,18 @@ S#define SHIFT_REL_WARM		4
 S#define SHIFT_REL_VENT	     7
 S#define SHIFT_REL_VVENT	     6
 N#endif
-N
+N/*
 N#ifdef UKU_TELECORE2017
-S#define SHIFT_REL_AV_NET		5
-S#define SHIFT_REL_AV_BAT	4
-S#define SHIFT_REL_AV_BPS	     7
-S#define SHIFT_REL_BAT1	     8
-S#define SHIFT_REL_BAT2	     6
-S#define SHIFT_REL_LIGHT		9
-S#define SHIFT_REL_WARM		4
-S#define SHIFT_REL_VENT	     7
-S#define SHIFT_REL_VVENT	     6
-N#endif
+N#define SHIFT_REL_AV_NET		5
+N#define SHIFT_REL_AV_BAT	4
+N#define SHIFT_REL_AV_BPS	     7
+N#define SHIFT_REL_BAT1	     8
+N#define SHIFT_REL_BAT2	     6
+N#define SHIFT_REL_LIGHT		9
+N#define SHIFT_REL_WARM		4
+N#define SHIFT_REL_VENT	     7
+N#define SHIFT_REL_VVENT	     6
+N#endif*/
 N
 N//***********************************************
 N//Таймер
@@ -4716,7 +4718,7 @@ N	iK_power_net,
 N	iExt_set,iExt_set_3U,
 N	iExt_dt,
 N	iExt_sk,iExt_sk_3U,
-N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
+N	iExt_ddv,iExt_ddi,iExt_dud,iExt_dp,iSM,iLog,iLog_,iLog_reset_prl,iBatLog,iKlimat,iKlimat_kontur,iKlimat_TELECORE,
 N	iEnerg3,iEnerg,
 N	iVent,
 N	iK_power_net3,
@@ -4725,7 +4727,9 @@ N	iNpn_set,
 N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
-N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set}i_enum;
+N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
+N	iFWabout,
+N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
 N{
@@ -4984,6 +4988,8 @@ Nextern signed short MODBUS_BAUDRATE;
 Nextern signed short BAT_LINK;
 Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту или как сумму токов источников
 N
+Nextern signed short OVERLOAD_CURR;
+Nextern signed short OVERLOAD_TIME;
 N
 N//***********************************************
 N//Состояние батарей
@@ -5224,6 +5230,7 @@ N	char _vent_resurs_temp[4];
 N	unsigned short _vent_resurs;
 N	signed short debug_info_to_uku0;
 N	signed short debug_info_to_uku1;
+N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
@@ -5457,7 +5464,7 @@ N
 N//-----------------------------------------------
 N//Показания АЦП на плате измерения тока батареи
 Nextern signed long ibat_metr_buff_[2];
-Nextern short bIBAT_SMKLBR;
+Nextern short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 Nextern char ibat_metr_cnt;
 N
 N//-----------------------------------------------
@@ -5557,7 +5564,7 @@ Nextern U8 tcp_connect_stat;
 N
 N//-----------------------------------------------
 N//Авария по перегрузке
-Nextern short overloadHndlCnt;
+Nextern short overloadHndlCnt,overloadHndlCnt1;
 Nextern char overloadAvar;
 N
 N//-----------------------------------------------

@@ -42,6 +42,7 @@
 #include "mcp2515.h"
 //#include "sc16is7xx.h"
 #include "modbus_tcp.h"
+#include "curr_version.h"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -280,6 +281,8 @@ signed short MODBUS_BAUDRATE;
 signed short BAT_LINK;
 signed short I_LOAD_MODE;	//способ измерения выходного тока - по шунту или как сумму токов источников
 
+signed short OVERLOAD_CURR;
+signed short OVERLOAD_TIME;
 
 
 //***********************************************
@@ -644,7 +647,7 @@ char max_net_slot;
 //-----------------------------------------------
 //Показания АЦП на плате измерения тока батареи
 signed long ibat_metr_buff_[2];
-short bIBAT_SMKLBR;
+short bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 char ibat_metr_cnt=0;
 
 
@@ -746,7 +749,7 @@ U8 tcp_connect_stat;
 
 //-----------------------------------------------
 //Авария по перегрузке
-short overloadHndlCnt;
+short overloadHndlCnt,overloadHndlCnt1;
 char overloadAvar;
 
 //-----------------------------------------------
@@ -1169,8 +1172,9 @@ if((((LPC_CAN1->GSR)>>16)&0x00ff)==127)bRESET=1;
 //-----------------------------------------------
 void net_drv(void)
 { 
-
-max_net_slot=24;
+signed short UOUT_tr;
+signed short UAVT_tr;
+max_net_slot=32;
 
 
 if(++cnt_net_drv>max_net_slot) 
@@ -1198,13 +1202,16 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot)) // с 1 по 12 посылки адресные
 	
 	//bps[cnt_net_drv]._vol_u=2400;
 	//bps[cnt_net_drv]._x_=0;
-	//if(cntrl_stat==1000) 		   
-	if(!bCAN_OFF)
+	//if(cntrl_stat==1000) 
+	//UOUT=2330;
+	//cntrl_stat=2000;		   
+	if((!bCAN_OFF)&&(main_1Hz_cnt>5))
 		{
+		UOUT_tr=UOUT+30;
 //		if(cntrl_stat==1000)	can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),0xe8,0x03);
 //		else 					can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),*((char*)(&bps[cnt_net_drv]._x_)),*((char*)((&bps[cnt_net_drv]._x_))+1));
 
-		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
 		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
@@ -1234,13 +1241,14 @@ else if(cnt_net_drv==-1)
 else if(cnt_net_drv==-2)
 	{
 	//UAVT=4567;
-     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&UAVT)),*((char*)((&UAVT))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
+	UAVT_tr=UAVT+30;
+     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
      byps._cnt++;
 	} 
 else if(cnt_net_drv==-3)
 	{                 
 	if(!bCAN_OFF) can1_out(GETTM_IBATMETER,GETTM_IBATMETER,0,0,0,0,0,0);
-	ibat_metr_cnt++;
+	if(ibat_metr_cnt<CNT_SRC_MAX)ibat_metr_cnt++;
 	}
 	
 	
@@ -1437,7 +1445,7 @@ if(avar_stat&0x0004)
 	sub_ptrs[i++]=	" Авария батареи №2  ";
 	sub_cnt_max++;	
 	}*/
-
+/*
 if(ips_bat_av_stat)
 	{
 	sub_ptrs[i++]=	"  Авария батареи    ";
@@ -1503,6 +1511,393 @@ if(avar_stat&(1<<(3+11)))
 	sub_ptrs[i++]=	"   Авария БПС №12   ";
 	sub_cnt_max++;	
 	}
+*/
+
+if(bps[0]._av&0xef)//(avar_stat&(1<<(3+0)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №1    ";
+	sub_cnt_max++;	
+	}
+if(bps[1]._av&0xef)//(avar_stat&(1<<(3+1)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №2    ";
+	sub_cnt_max++;	
+	}
+if(bps[2]._av&0xef)//(avar_stat&(1<<(3+2)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №3    ";
+	sub_cnt_max++;	
+	}
+if(bps[3]._av&0xef)//(avar_stat&(1<<(3+3)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №4    ";
+	sub_cnt_max++;	
+	}
+if(bps[4]._av&0xef)//(avar_stat&(1<<(3+4)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №5    ";
+	sub_cnt_max++;	
+	}
+if(bps[5]._av&0xef)//avar_stat&(1<<(3+5)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №6    ";
+	sub_cnt_max++;	
+	}
+if(bps[6]._av&0xef)//avar_stat&(1<<(3+6)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №7    ";
+	sub_cnt_max++;	
+	}
+if(bps[7]._av&0xef)//avar_stat&(1<<(3+7)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №8    ";
+	sub_cnt_max++;	
+	}
+if(bps[8]._av&0xef)//avar_stat&(1<<(3+8)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №9    ";
+	sub_cnt_max++;	
+	}
+if(bps[9]._av&0xef)//avar_stat&(1<<(3+9)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №10   ";
+	sub_cnt_max++;	
+	}
+if(bps[10]._av&0xef)//avar_stat&(1<<(3+10)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №11   ";
+	sub_cnt_max++;	
+	}
+if(bps[11]._av&0xef)//avar_stat&(1<<(3+11)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №12   ";
+	sub_cnt_max++;	
+	}
+if(bps[12]._av&0xef)//avar_stat&(1<<(3+12)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №13   ";
+	sub_cnt_max++;	
+	}
+if(bps[13]._av&0xef)//avar_stat&(1<<(3+13)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №14   ";
+	sub_cnt_max++;	
+	}
+if(bps[14]._av&0xef)//avar_stat&(1<<(3+14)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №15   ";
+	sub_cnt_max++;	
+	}
+if(bps[15]._av&0xef)//avar_stat&(1<<(3+15)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №16   ";
+	sub_cnt_max++;	
+	}
+if(bps[16]._av&0xef)//bps[4]._av&0xef)//avar_stat&(1<<(3+16)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №17   ";
+	sub_cnt_max++;	
+	}
+if(bps[17]._av&0xef)//avar_stat&(1<<(3+17)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №18   ";
+	sub_cnt_max++;	
+	}
+if(bps[18]._av&0xef)//avar_stat&(1<<(3+18)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №19   ";
+	sub_cnt_max++;	
+	}
+if(bps[19]._av&0xef)//avar_stat&(1<<(3+19)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №20   ";
+	sub_cnt_max++;	
+	}
+if(bps[20]._av&0xef)//avar_stat&(1<<(3+20)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №21   ";
+	sub_cnt_max++;	
+	}
+if(bps[21]._av&0xef)//avar_stat&(1<<(3+21)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №22   ";
+	sub_cnt_max++;	
+	}
+if(bps[22]._av&0xef)//avar_stat&(1<<(3+22)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №23   ";
+	sub_cnt_max++;	
+	}
+if(bps[23]._av&0xef)//avar_stat&(1<<(3+23)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №24   ";
+	sub_cnt_max++;	
+	}
+if(bps[24]._av&0xef)//avar_stat&(1<<(3+24)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №25   ";
+	sub_cnt_max++;	
+	}
+if(bps[25]._av&0xef)//avar_stat&(1<<(3+25)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №26   ";
+	sub_cnt_max++;	
+	}
+if(bps[26]._av&0xef)//avar_stat&(1<<(3+26)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №27   ";
+	sub_cnt_max++;	
+	}
+if(bps[27]._av&0xef)//avar_stat&(1<<(3+27)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №28   ";
+	sub_cnt_max++;	
+	}
+if(bps[28]._av&0xef)//avar_stat&(1<<(3+28)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №29   ";
+	sub_cnt_max++;	
+	}
+if(bps[29]._av&0xef)//avar_stat1&(1<<(0)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №30   ";
+	sub_cnt_max++;	
+	}
+if(bps[30]._av&0xef)//avar_stat1&(1<<(1)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №31   ";
+	sub_cnt_max++;	
+	}
+if(bps[31]._av&0xef)//avar_stat1&(1<<(2)))
+	{
+	sub_ptrs[i++]=	"   Авария БПС №32   ";
+	sub_cnt_max++;	
+	}
+
+if(bps[0]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС1   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[1]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС2   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[2]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС3   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[3]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС4   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[4]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС5   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[5]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС6   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[6]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС7   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[7]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС8   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[8]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС9   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[9]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС10  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[10]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС11  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[11]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС12  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[12]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС13  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[13]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС14  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[14]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС15  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[15]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС16  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[16]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС17  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[17]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС18  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[18]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС19  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[19]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС20  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[20]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС21  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[21]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС22  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[22]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС23  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[23]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС24  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[24]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС25  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[25]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС26  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[26]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС27  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[27]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС28  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[28]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС29  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[29]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС30  ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[30]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС31   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
+if(bps[31]._av&(1<<4))
+	{
+	sub_ptrs[i++]=	"Ресурс вент. БПС32   ";
+	sub_cnt_max++;
+	sub_ptrs[i++]=	"     исчерпан       ";
+	sub_cnt_max++;		
+	}
 
 if(uout_av)
 	{
@@ -1555,6 +1950,11 @@ if(uInAvar==2)
 	sub_cnt_max++;	
 	}
 
+if(ibat_metr_cnt>30)
+	{
+	sub_ptrs[i++]=	"Шунт не подключен!!!";
+	sub_cnt_max++;	
+	}
 cnt_of_slave=NUMIST+NUMINV;
 
 
@@ -1632,8 +2032,9 @@ else if(ind==iMn_VD)
 	ptrs[5+NUMIST]=		" Таблица источников ";
 	ptrs[6+NUMIST]= 	" Установки          "; 
     ptrs[7+NUMIST]= 	" Журнал событий     ";
-	ptrs[8+NUMIST]= 	" Выход              ";
-	ptrs[9+NUMIST]=	" Тест               ";
+	ptrs[8+NUMIST]=		" Версия ПО          ";
+	ptrs[9+NUMIST]= 	" Выход              ";
+	ptrs[10+NUMIST]=	" Тест               ";
 	
 
     if(sub_ind==0)index_set=0;
@@ -1701,6 +2102,7 @@ else if(ind==iMn_VD)
 		if(bIBAT_SMKLBR)sub_bgnd("КЛБР. ",'$',-3);
 		else /*if(Ib_ips_termokompensat<100)*/int2lcd_mmm(Ib_ips_termokompensat,'$',0);
 		//else int2lcd_mmm(Ib_ips_termokompensat/10,'$',1);
+		if(ND_EXT[0])sub_bgnd("неиспр.",'?',-3);
 		int2lcd_mmm(t_ext[0],'?',0);
 		//}
 	//if(NUMBAT==0)sub_bgnd(" Работа без батарей ",'z',-2);
@@ -1730,9 +2132,11 @@ else if(ind==iMn_VD)
 
 	//int2lcdyx(UOUT,0,3,0);
 
-	//int2lcdyx(UOUT_,0,8,0);
+	//int2lcdyx(cntrl_stat,0,8,0);
 
-	//int2lcdyx(cnt_net_drv,0,19,0);
+	//int2lcdyx(bps[0].debug_info_to_uku0,1,4,0);
+	//int2lcdyx(bps[0].debug_info_to_uku1,2,4,0);
+	//int2lcdyx(bps[0].debug_info_to_uku2,3,4,0);
 	//int2lcdyx((short)ibat_metr_buff_[0],0,4,0);
 	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
@@ -1973,6 +2377,7 @@ else if(ind==iMakb)
 	//int2lcdyx(u_necc,0,4,0);
 	//int2lcdyx(avg,0,19,0);
 	
+	//int2lcdyx(bps[sub_ind1]._flags_tm,0,19,0);
 	//int2lcdyx(bps[sub_ind1]._flags_tu,1,19,0);	
 	//int2lcdyx(bps[sub_ind1]._Uin,1,19,0);
 	//int2lcdyx(bps[sub_ind1].debug_info_to_uku0,2,19,0);
@@ -2732,7 +3137,7 @@ else if(ind==iLog_)
 		av_j_si_max=4;  
 		ptrs[0]=" Авария выходного   ";
 		ptrs[1]=" напряжения (заниж.)";
-		if(av_head_int[2]==1)ptrs[1]=" напряжения (завыш.)";
+		if(av_head_int[1]==1)ptrs[1]=" напряжения (завыш.)";
 		ptrs[2]="   Начало           ";
 		ptrs[3]="  0%[  0^ 0@:0#:0$  ";
 		ptrs[4]="       Uвых=    <В  ";
@@ -3190,9 +3595,11 @@ else if((ind==iSet_VD))
 	ptrs[26]=		"                  >0";
 	ptrs[27]=		" Измерение тока     ";
 	ptrs[28]=		" нагрузки          {";
-    ptrs[29]=		" Выход              ";
-    ptrs[30]=		" Калибровки         "; 
-    ptrs[31]=		"                    ";        
+	ptrs[29]=		" Перегрузка по току ";
+    ptrs[30]=		" Выравнивание токов ";
+    ptrs[31]=		" Выход              ";
+    ptrs[32]=		" Калибровки         "; 
+    ptrs[33]=		"                    ";        
 	
 	if((sub_ind-index_set)>2)index_set=sub_ind-2;
 	else if(sub_ind<index_set)index_set=sub_ind;
@@ -3965,7 +4372,7 @@ else if(ind==iK_VD)
 	//int2lcdyx(adc_buff_[0],0,4,0);
     //int2lcdyx(adc_buff_[1],0,9,0);	
 	
-	if((sub_ind==0)||(sub_ind==3))mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
+	//if((sub_ind==0)||(sub_ind==3))mess_send(MESS2CNTRL_HNDL,PARAM_CNTRL_STAT_SET,1000,10);
 	
 	//int2lcdyx(adc_buff_[6],0,4,0);
 	//int2lcdyx(Ktext[0],0,9,0);	 
@@ -6104,26 +6511,54 @@ else if (ind==iIps_Curr_Avg_Set)
 	{ 
 	if(ICA_EN==0)
 		{
-		ptrs[0]=		" Выключено          ";
+		ptrs[0]=		" Ведомый            ";
 		simax=1;
 		}
-	else 
+	else if(ICA_EN==1) 
 		{
 		ptrs[0]=		" Включено           ";
 		if(ICA_CH==0)
 			{
-			ptrs[1]=	" КАНАЛ  MODBUS-RTU  ";
+			ptrs[1]=	" Канал  MODBUS-RTU  ";
 			ptrs[2]=	" АДРЕС ВЕДОМОГО   ! ";
 			simax=3;
 			}
-		else
+		else if(ICA_CH==1)
 			{
-			ptrs[1]=	" КАНАЛ   MODBUS-TCP ";
+			ptrs[1]=	" Канал   MODBUS-TCP ";
 			ptrs[2]=	" IP 00@.00#.00$.00% ";
 			ptrs[3]=	" АДРЕС ВЕДОМОГО   ^ ";
 			simax=4;
 			}
+		else if(ICA_CH==2)
+			{
+			ptrs[1]=	" Канал   RS485-2    ";
+			ptrs[2]=	"                    ";
+			ptrs[3]=	"                    ";
+			simax=2;
+			}
+		else 
+			{
+			ptrs[1]=	" Неопределенность   ";
+			ptrs[2]=	"                    ";
+			ptrs[3]=	"                    ";
+			simax=2;
+			}
 		} 
+	else if(ICA_EN==2) 
+		{
+		ptrs[0]=		" ПОД ВНЕШНИМ        ";
+		ptrs[1]=		" УПРАВЛЕНИЕМ        ";
+		simax=2;
+		}
+	else 
+		{
+		ptrs[0]=		" Неопределенность   ";
+		ptrs[1]=		"                    ";
+		ptrs[2]=		"                    ";
+		ptrs[3]=		"                    ";
+		simax=1;
+		}
 	ptrs[simax]=		" Выход              ";
 	
 	if(sub_ind<index_set) index_set=sub_ind;
@@ -6146,16 +6581,52 @@ else if (ind==iIps_Curr_Avg_Set)
 	int2lcd(ICA_MODBUS_TCP_UNIT_ID,'^',0);	
      
  	} 
+else if(ind==iFWabout)
+	{
+	bgnd_par(	" Версия             ",
+				" Сборка  0000.00.00 ",
+				#ifdef WG12232A
+				"                    ",
+				#endif
+				#ifdef WG12232L3
+				" WG12232L3          ",
+				#endif
+				"                    ");
+	int2lcdyx(BUILD_YEAR,1,12,0);
+	int2lcdyx(BUILD_MONTH,1,15,0);
+	int2lcdyx(BUILD_DAY,1,18,0);
+	
+	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
+	}
+else if(ind==iLog_reset_prl)
+	{
+	ptrs[0]="Для очистки журнала ";
+	bgnd_par(ptrs[0],"  введите  пароль   ",sm_,sm_);
+	
+     int2lcdyx(parol[0],2,8,0);
+     int2lcdyx(parol[1],2,9,0);
+     int2lcdyx(parol[2],2,10,0);
+     lcd_buffer[68+sub_ind]='¤';	
+	}
 
-/*
-const char sm7[]	={" Источник N2        "}; //
-const char sm8[]	={" Нагрузка           "}; //
-const char sm9[]	={" Сеть               "}; //
-const char sm10[]	={" Спецфункции        "}; // 
-const char sm11[]	={" Журнал аварий      "}; //
-const char sm12[]	=" Батарейный журнал  "}; //
-const cha		=" Паспорт            "}; //
-*/
+else if(ind==iCurr_overload)
+	{
+	ptrs[0]=" Iперегруз.      !A ";
+	ptrs[1]=" Tвыдерж.        #с ";
+//	ptrs[2]=" Мониторов АКБ     %";
+//	ptrs[3]=" Сухих контактов   $";
+	ptrs[2]=" Выход              ";
+	
+	if(sub_ind<index_set) index_set=sub_ind;
+	else if((sub_ind-index_set)>2) index_set=sub_ind-2;
+	bgnd_par(" ПЕРЕГРУЗКА ПО ТОКУ ",ptrs[index_set],ptrs[index_set+1],ptrs[index_set+2]);
+	
+	pointer_set(1);
+
+	int2lcd(OVERLOAD_CURR,'!',0); 
+	int2lcd(OVERLOAD_TIME,'#',0);
+	}    
+
 
 
 //char2lcdhyx(bat_rel_stat[0],0,10);
@@ -6473,13 +6944,13 @@ else if(ind==iMn_VD)
 	if(but==butD)
 		{
 		sub_ind++;
-		gran_char(&sub_ind,0,6+NUMIST);
+		gran_char(&sub_ind,0,7+NUMIST);
 		}
 		
 	else if(but==butU)
 		{
 		sub_ind--;
-		gran_char(&sub_ind,0,6+NUMIST);
+		gran_char(&sub_ind,0,7+NUMIST);
 		}	
 
 	else if(but==butR)
@@ -6496,7 +6967,8 @@ else if(ind==iMn_VD)
 		}
 	else if(but==butD_)
 		{
-		sub_ind=0;
+		//sub_ind=0;
+		sub_ind=(2+NUMIST);
 		}
 
 	else if(but==butLR_)
@@ -6509,7 +6981,7 @@ else if(ind==iMn_VD)
 		{
 		if(sub_ind==0)
 			{
-			if(avar_ind_stat)
+/*			if(avar_ind_stat)
 				{
 				//ind=iAv_view;
 				//sub_ind=0;
@@ -6523,7 +6995,10 @@ else if(ind==iMn_VD)
 						avar_ind_stat=0;
 						}
 					}
-				}																							
+				}*/
+				
+			avar_ind_stat=0;
+			avar_ind_stat1=0;																											
 			}
 
 		else if((sub_ind>1)&&(sub_ind<=(1+NUMIST)))
@@ -6550,9 +7025,16 @@ else if(ind==iMn_VD)
 			}
 		else if(sub_ind==(5+NUMIST))
 			{
-			sub_ind=0;
+			if(but==butE)
+		     	{
+		     	tree_up(iFWabout,0,0,0);
+		     	}
 			}
 		else if(sub_ind==(6+NUMIST))
+			{
+			sub_ind=0;
+			}
+		else if(sub_ind==(7+NUMIST))
 			{
 	     	tree_up(iPrltst,0,0,0);
 		    parol_init();
@@ -6861,7 +7343,7 @@ else if(ind==iEnerg3)
 
 else if((ind==iPrl_bat_in_out)||(ind==iSet_prl)||(ind==iK_prl)
 	||(ind==iAusw_prl)
-	||(ind==iPrltst))
+	||(ind==iPrltst)||(ind==iLog_reset_prl))
 	{
 	ret(50);
 	if(but==butR)
@@ -7059,6 +7541,32 @@ else if((ind==iPrl_bat_in_out)||(ind==iSet_prl)||(ind==iK_prl)
 	          			"                    ",1000);
 				}
 			}
+		else if(ind==iLog_reset_prl)
+			{
+			if(tempU==PAROL_LOG_RESET) 
+				{
+				tree_down(0,0);
+				lc640_write(CNT_EVENT_LOG,0);
+				lc640_write(PTR_EVENT_LOG,0);
+				tree_down(0,0);
+				avar_ind_stat=0;
+				avar_stat=0;
+				avar_stat_old=0;
+	    	    show_mess("                    ",
+	          			"   Журнал событий   ",
+	          			"      очищен!!!     ",
+	          			"                    ",1000);
+				//ret(1000);
+				}
+	  		else 
+				{
+		          tree_down(0,0);
+	    	          show_mess("                    ",
+	          			"       Пароль       ",
+	          			"     неверный!!!    ",
+	          			"                    ",1000);
+				}  
+			}
 		}
 	}
 
@@ -7249,17 +7757,19 @@ else if(ind==iLog)
 		
 	else if(but==butE)
 		{  
-		if(sub_ind==av_j_si_max+1)
+		if((sub_ind==av_j_si_max+1)&&(av_j_si_max!=0))
 			{
-			lc640_write(CNT_EVENT_LOG,0);
+			tree_up(iLog_reset_prl,0,0,0);
+			parol_init();
+			/*lc640_write(CNT_EVENT_LOG,0);
 			lc640_write(PTR_EVENT_LOG,0);
 			tree_down(0,0);
 			avar_ind_stat=0;
 			avar_stat=0;
-			avar_stat_old=0;				
+			avar_stat_old=0;*/				
 			}
 					
-		else if(sub_ind==av_j_si_max)
+		else if((sub_ind==av_j_si_max)||(av_j_si_max==0))
 			{
 			tree_down(0,0);
 			ret(0);
@@ -7803,7 +8313,7 @@ else if(ind==iSet_VD)
 			sub_ind=29;
             //index_set=19;
             }																			
-		gran_char(&sub_ind,0,30);
+		gran_char(&sub_ind,0,32);
 		}
 	else if(but==butU)
 		{
@@ -7826,11 +8336,11 @@ else if(ind==iSet_VD)
 			sub_ind=27;
             //index_set=19;
             }
-		gran_char(&sub_ind,0,30);
+		gran_char(&sub_ind,0,32);
 		}
 	else if(but==butD_)
 		{
-		sub_ind=29;
+		sub_ind=30;
 		}
 
 	else if(but==butLR_)
@@ -8151,7 +8661,25 @@ else if(ind==iSet_VD)
 	     	}
           }
 
-    else if((sub_ind==29) || (sub_ind==3))
+	else if(sub_ind==29)
+		{
+		if(but==butE)
+		    {		
+			tree_up(iCurr_overload,0,0,0);
+			ret(500);
+			}						
+		}
+
+	else if(sub_ind==29)
+	    {
+		if(but==butE) 
+			{
+		    tree_up(iIps_Curr_Avg_Set,0,0,0);
+		    ret(1000);
+		    }	     
+	    }
+
+    else if((sub_ind==31) || (sub_ind==3))
 		{
 		if(but==butE)
 		     {
@@ -8160,7 +8688,7 @@ else if(ind==iSet_VD)
 		     }
 		}
 				
-	else if(sub_ind==30)
+	else if(sub_ind==32)
 		{
 		if(but==butE)
 		     {		
@@ -8548,7 +9076,7 @@ else if(ind==iStr_VD)
 	     if((but==butR)||(but==butR_))
 	     	{
 	     	NUMIST++;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,32);
 	     	lc640_write_int(EE_NUMIST,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -8556,7 +9084,7 @@ else if(ind==iStr_VD)
 	     else if((but==butL)||(but==butL_))
 	     	{
 	     	NUMIST--;
-	     	gran(&NUMIST,0,18);
+	     	gran(&NUMIST,0,32);
 	     	lc640_write_int(EE_NUMIST,NUMIST);
 			numOfForvardBps_init();
 	     	}
@@ -14051,8 +14579,65 @@ else if (ind==iIps_Curr_Avg_Set)
 
 
   	} 
+else if(ind==iFWabout)
+	{
+	ret(1000);
+	if(but==butE)
+	     {
+	     tree_down(0,0);
+	     ret(0);
+	     }
+	}
 
-		
+else if(ind==iCurr_overload)
+	{
+	if(but==butD)
+		{
+		sub_ind++;
+		gran_char(&sub_ind,0,2);
+		}
+	else if(but==butU)
+		{
+		sub_ind--;
+		gran_char(&sub_ind,0,2);
+		}
+	else if(sub_ind==0)
+		{
+		if(but==butR)OVERLOAD_CURR++;
+		else if(but==butR_)OVERLOAD_CURR=(OVERLOAD_CURR/10+1)*10;
+		else if(but==butL)OVERLOAD_CURR--;
+		else if(but==butL_)OVERLOAD_CURR=(OVERLOAD_CURR/10-1)*10;
+		gran(&OVERLOAD_CURR,1,2000);
+		lc640_write_int(EE_OVERLOAD_CURR,OVERLOAD_CURR);
+		speed=1;
+		}
+	else if(sub_ind==1)
+		{
+		if((but==butR)||(but==butR_))
+			{
+			OVERLOAD_TIME++;
+			gran(&OVERLOAD_TIME,1,120);
+			lc640_write_int(EE_OVERLOAD_TIME,OVERLOAD_TIME);
+			speed=1;
+			}
+		if((but==butL)||(but==butL_))
+			{
+			OVERLOAD_TIME--;
+			gran(&OVERLOAD_TIME,1,120);
+			lc640_write_int(EE_OVERLOAD_TIME,OVERLOAD_TIME);
+			speed=1;
+			}
+		}
+	else if(sub_ind==2)
+		{
+		if(but==butE)
+			{
+			tree_down(0,0);
+			ret(0);
+			}
+		}
+	}
+			
 but_an_end:
 n_but=0;
 }
@@ -14254,6 +14839,8 @@ SET_REG(LPC_GPIO3->FIODIR,1,SHIFT_REL_AV_NET,1);
 SET_REG(LPC_GPIO3->FIOSET,1,SHIFT_REL_AV_NET,1);  // реле аварии сети под ток
 #endif
 
+//SET_REG(LPC_GPIO0->FIODIR,1,9,1);
+//SET_REG(LPC_GPIO0->FIOSET,1,9,1);
 
 
 ad7705_reset();
@@ -14483,10 +15070,11 @@ cntrl_stat_old=0;
 }
 #endif
 
+/*
 #ifdef UKU_220_IPS_TERMOKOMPENSAT
 cntrl_stat=10*PWM_START;
 cntrl_stat_old=10*PWM_START;
-#endif
+#endif */
 
 
 //ind=iDeb;
@@ -14602,7 +15190,7 @@ while (1)
 		//net_drv_mcp2515();
 		//#endif
 		//#ifndef MCP2515_CAN
-		net_drv();
+		/*if(main_1Hz_cnt>10)*/net_drv();
 		//#endif
 		}
 
