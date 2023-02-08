@@ -483,8 +483,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>4869</TopLine>
-      <CurrentLine>4882</CurrentLine>
+      <TopLine>2403</TopLine>
+      <CurrentLine>2403</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\control.c</PathWithFileName>
       <FilenameWithoutPath>control.c</FilenameWithoutPath>
@@ -537,10 +537,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>5</ColumnNumber>
+      <ColumnNumber>26</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>742</TopLine>
-      <CurrentLine>747</CurrentLine>
+      <TopLine>78</TopLine>
+      <CurrentLine>106</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\avar_hndl.c</PathWithFileName>
       <FilenameWithoutPath>avar_hndl.c</FilenameWithoutPath>
@@ -579,10 +579,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>23</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>13884</TopLine>
-      <CurrentLine>13913</CurrentLine>
+      <TopLine>2110</TopLine>
+      <CurrentLine>2110</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -656,10 +656,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>34</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>15</TopLine>
-      <CurrentLine>30</CurrentLine>
+      <TopLine>140</TopLine>
+      <CurrentLine>151</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\memo.c</PathWithFileName>
       <FilenameWithoutPath>memo.c</FilenameWithoutPath>
@@ -705,10 +705,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>13</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>48</TopLine>
+      <CurrentLine>72</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\beep.c</PathWithFileName>
       <FilenameWithoutPath>beep.c</FilenameWithoutPath>
@@ -783,15 +783,8 @@
       <PathWithFileName>.\lcd_WG12232L3.c</PathWithFileName>
       <FilenameWithoutPath>lcd_WG12232L3.c</FilenameWithoutPath>
     </File>
-  </Group>
-
-  <Group>
-    <GroupName>Connecting</GroupName>
-    <tvExp>1</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
     <File>
-      <GroupNumber>6</GroupNumber>
+      <GroupNumber>5</GroupNumber>
       <FileNumber>26</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
@@ -801,9 +794,16 @@
       <TopLine>0</TopLine>
       <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\full_can.c</PathWithFileName>
-      <FilenameWithoutPath>full_can.c</FilenameWithoutPath>
+      <PathWithFileName>.\curr_version.c</PathWithFileName>
+      <FilenameWithoutPath>curr_version.c</FilenameWithoutPath>
     </File>
+  </Group>
+
+  <Group>
+    <GroupName>Connecting</GroupName>
+    <tvExp>1</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
     <File>
       <GroupNumber>6</GroupNumber>
       <FileNumber>27</FileNumber>
@@ -812,11 +812,11 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1176</TopLine>
+      <CurrentLine>1176</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\uart0.c</PathWithFileName>
-      <FilenameWithoutPath>uart0.c</FilenameWithoutPath>
+      <PathWithFileName>.\full_can.c</PathWithFileName>
+      <FilenameWithoutPath>full_can.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
@@ -824,13 +824,13 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>7</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>148</TopLine>
+      <CurrentLine>148</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\modbus.c</PathWithFileName>
-      <FilenameWithoutPath>modbus.c</FilenameWithoutPath>
+      <PathWithFileName>.\uart0.c</PathWithFileName>
+      <FilenameWithoutPath>uart0.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
@@ -840,15 +840,29 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1221</TopLine>
+      <CurrentLine>1221</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\modbus.c</PathWithFileName>
+      <FilenameWithoutPath>modbus.c</FilenameWithoutPath>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>30</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>7</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>71</TopLine>
+      <CurrentLine>71</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\uart2.c</PathWithFileName>
       <FilenameWithoutPath>uart2.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
-      <FileNumber>30</FileNumber>
+      <FileNumber>31</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -862,31 +876,17 @@
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
-      <FileNumber>31</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
-      <bDave2>0</bDave2>
-      <PathWithFileName>.\mcp2515.c</PathWithFileName>
-      <FilenameWithoutPath>mcp2515.c</FilenameWithoutPath>
-    </File>
-    <File>
-      <GroupNumber>6</GroupNumber>
       <FileNumber>32</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>9</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>7</TopLine>
+      <CurrentLine>17</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\sacred_sun.c</PathWithFileName>
-      <FilenameWithoutPath>sacred_sun.c</FilenameWithoutPath>
+      <PathWithFileName>.\mcp2515.c</PathWithFileName>
+      <FilenameWithoutPath>mcp2515.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
@@ -894,13 +894,13 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>15</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>4</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\sc16is7xx.c</PathWithFileName>
-      <FilenameWithoutPath>sc16is7xx.c</FilenameWithoutPath>
+      <PathWithFileName>.\sacred_sun.c</PathWithFileName>
+      <FilenameWithoutPath>sacred_sun.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
@@ -910,11 +910,11 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>2</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\ztt.c</PathWithFileName>
-      <FilenameWithoutPath>ztt.c</FilenameWithoutPath>
+      <PathWithFileName>.\sc16is7xx.c</PathWithFileName>
+      <FilenameWithoutPath>sc16is7xx.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
@@ -922,10 +922,24 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>23</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>133</TopLine>
+      <CurrentLine>143</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\ztt.c</PathWithFileName>
+      <FilenameWithoutPath>ztt.c</FilenameWithoutPath>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>36</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>7</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>235</TopLine>
+      <CurrentLine>245</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\MODBUS_TCP.c</PathWithFileName>
       <FilenameWithoutPath>MODBUS_TCP.c</FilenameWithoutPath>
@@ -946,7 +960,7 @@
     <cbSel>0</cbSel>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>36</FileNumber>
+      <FileNumber>37</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -960,7 +974,7 @@
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>37</FileNumber>
+      <FileNumber>38</FileNumber>
       <FileType>4</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -976,7 +990,7 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\sc16is7xx.h</PathWithFilename>
-    <TopLine>9</TopLine>
+    <TopLine>1</TopLine>
     <CurrentLine>48</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
@@ -1004,32 +1018,6 @@
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\mcp2515.h</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>3</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
-    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\avar_hndl.h</PathWithFilename>
-    <TopLine>1</TopLine>
-    <CurrentLine>28</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -1235,32 +1223,6 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\control.h</PathWithFilename>
-    <TopLine>141</TopLine>
-    <CurrentLine>151</CurrentLine>
-    <Constant>0</Constant>
-    <WindowPosition>
-      <length>0</length>
-      <flags>0</flags>
-      <showCmd>0</showCmd>
-      <MinPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MinPosition>
-      <MaxPosition>
-        <xPos>0</xPos>
-        <yPos>0</yPos>
-      </MaxPosition>
-      <NormalPosition>
-        <Top>0</Top>
-        <Left>0</Left>
-        <Right>0</Right>
-        <Bottom>0</Bottom>
-      </NormalPosition>
-    </WindowPosition>
-  </AlienFiles>
-
-  <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\modbus.h</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>25</CurrentLine>
@@ -1366,8 +1328,8 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\eeprom_map.h</PathWithFilename>
-    <TopLine>476</TopLine>
-    <CurrentLine>495</CurrentLine>
+    <TopLine>179</TopLine>
+    <CurrentLine>205</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -1418,8 +1380,60 @@
 
   <AlienFiles>
     <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\main.h</PathWithFilename>
-    <TopLine>747</TopLine>
-    <CurrentLine>774</CurrentLine>
+    <TopLine>754</TopLine>
+    <CurrentLine>772</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
+  <AlienFiles>
+    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\avar_hndl.h</PathWithFilename>
+    <TopLine>1</TopLine>
+    <CurrentLine>8</CurrentLine>
+    <Constant>0</Constant>
+    <WindowPosition>
+      <length>0</length>
+      <flags>0</flags>
+      <showCmd>0</showCmd>
+      <MinPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MinPosition>
+      <MaxPosition>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
+      </MaxPosition>
+      <NormalPosition>
+        <Top>0</Top>
+        <Left>0</Left>
+        <Right>0</Right>
+        <Bottom>0</Bottom>
+      </NormalPosition>
+    </WindowPosition>
+  </AlienFiles>
+
+  <AlienFiles>
+    <PathWithFilename>E:\Users\Pal\DEVICES\UKU207_VD\SOFT\UKU\control.h</PathWithFilename>
+    <TopLine>22</TopLine>
+    <CurrentLine>41</CurrentLine>
     <Constant>0</Constant>
     <WindowPosition>
       <length>0</length>
@@ -1447,13 +1461,55 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>8</ActiveTab>
+      <ActiveTab>4</ActiveTab>
       <Documents>
         <Doc>
+          <Name>.\main.c</Name>
+          <ColumnNumber>19</ColumnNumber>
+          <TopLine>2110</TopLine>
+          <CurrentLine>2110</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\modbus.c</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>1221</TopLine>
+          <CurrentLine>1221</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\control.c</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>2403</TopLine>
+          <CurrentLine>2403</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>control.h</Name>
+          <ColumnNumber>13</ColumnNumber>
+          <TopLine>22</TopLine>
+          <CurrentLine>41</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>avar_hndl.h</Name>
+          <ColumnNumber>81</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>8</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\avar_hndl.c</Name>
+          <ColumnNumber>26</ColumnNumber>
+          <TopLine>78</TopLine>
+          <CurrentLine>106</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\beep.c</Name>
+          <ColumnNumber>13</ColumnNumber>
+          <TopLine>48</TopLine>
+          <CurrentLine>72</CurrentLine>
+        </Doc>
+        <Doc>
           <Name>main.h</Name>
-          <ColumnNumber>1</ColumnNumber>
-          <TopLine>747</TopLine>
-          <CurrentLine>774</CurrentLine>
+          <ColumnNumber>45</ColumnNumber>
+          <TopLine>754</TopLine>
+          <CurrentLine>772</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\startup_LPC17xx.s</Name>
@@ -1493,15 +1549,9 @@
         </Doc>
         <Doc>
           <Name>eeprom_map.h</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>476</TopLine>
-          <CurrentLine>495</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\main.c</Name>
-          <ColumnNumber>19</ColumnNumber>
-          <TopLine>14567</TopLine>
-          <CurrentLine>14587</CurrentLine>
+          <ColumnNumber>43</ColumnNumber>
+          <TopLine>179</TopLine>
+          <CurrentLine>205</CurrentLine>
         </Doc>
         <Doc>
           <Name>C:\Keil\ARM\RV31\INC\RTL.h</Name>
@@ -1510,16 +1560,10 @@
           <CurrentLine>363</CurrentLine>
         </Doc>
         <Doc>
-          <Name>.\control.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>4869</TopLine>
-          <CurrentLine>4882</CurrentLine>
-        </Doc>
-        <Doc>
           <Name>.\memo.c</Name>
-          <ColumnNumber>0</ColumnNumber>
+          <ColumnNumber>34</ColumnNumber>
           <TopLine>140</TopLine>
-          <CurrentLine>152</CurrentLine>
+          <CurrentLine>151</CurrentLine>
         </Doc>
         <Doc>
           <Name>common_func.h</Name>
@@ -1538,18 +1582,6 @@
           <ColumnNumber>28</ColumnNumber>
           <TopLine>858</TopLine>
           <CurrentLine>872</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\avar_hndl.c</Name>
-          <ColumnNumber>5</ColumnNumber>
-          <TopLine>742</TopLine>
-          <CurrentLine>747</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>.\modbus.c</Name>
-          <ColumnNumber>37</ColumnNumber>
-          <TopLine>1244</TopLine>
-          <CurrentLine>1254</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\MODBUS_TCP.c</Name>
@@ -1616,12 +1648,6 @@
           <ColumnNumber>0</ColumnNumber>
           <TopLine>7</TopLine>
           <CurrentLine>16</CurrentLine>
-        </Doc>
-        <Doc>
-          <Name>control.h</Name>
-          <ColumnNumber>28</ColumnNumber>
-          <TopLine>141</TopLine>
-          <CurrentLine>151</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\ztt.c</Name>
@@ -1696,12 +1722,6 @@
           <CurrentLine>89</CurrentLine>
         </Doc>
         <Doc>
-          <Name>avar_hndl.h</Name>
-          <ColumnNumber>32</ColumnNumber>
-          <TopLine>1</TopLine>
-          <CurrentLine>28</CurrentLine>
-        </Doc>
-        <Doc>
           <Name>mcp2515.h</Name>
           <ColumnNumber>8</ColumnNumber>
           <TopLine>1</TopLine>
@@ -1710,7 +1730,7 @@
         <Doc>
           <Name>sc16is7xx.h</Name>
           <ColumnNumber>0</ColumnNumber>
-          <TopLine>9</TopLine>
+          <TopLine>1</TopLine>
           <CurrentLine>48</CurrentLine>
         </Doc>
       </Documents>

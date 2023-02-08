@@ -9577,8 +9577,8 @@ N
 N		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 X		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
 N
-N		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
-X		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
+N		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+X		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 N
 N     	}
 N	if(cnt_net_drv<=max_net_slot)
@@ -9603,8 +9603,8 @@ N	}
 N
 Nelse if(cnt_net_drv==-1)
 N	{
-N     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),0);
-X     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x62,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),0);
+N     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),(MODBUS_ADRESS%2));
+X     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x62,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),(MODBUS_ADRESS%2));
 N     } 
 N     
 Nelse if(cnt_net_drv==-2)
@@ -10543,9 +10543,9 @@ N	//int2lcdyx(UOUT,0,3,0);
 N
 N	//int2lcdyx(cntrl_stat,0,8,0);
 N
-N	//int2lcdyx(bps[0].debug_info_to_uku0,1,4,0);
-N	//int2lcdyx(bps[0].debug_info_to_uku1,2,4,0);
-N	//int2lcdyx(bps[0].debug_info_to_uku2,3,4,0);
+N	int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
+N	int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
+N	int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
 N	//int2lcdyx((short)ibat_metr_buff_[0],0,4,0);
 N	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 N	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
@@ -14016,80 +14016,21 @@ N
 N    	else if(sub_ind==1) 
 X    	else if(a_ind . s_i==1) 
 N     	{
-N     	bgnd_par("Б                   ",
+N     	bgnd_par("                    ",
 N     	         "                    ",
 N     	         "                    ",
 N     	         "                    ");
 N
-N		//int2lcdyx(bAVG,0,0,0);
-N		//int2lcdyx(LPC_CAN1->GSR,0,6,0);
-N		//int2lcdyx((LPC_CAN1->GSR)>>16,0,16,0);
-N		//int2lcdyx(avg,0,19,0);
-N
-N				//int2lcdyx((((LPC_CAN1->GSR)&(0xff000000))>>24),0,19,0);
-N		//int2lcdyx((((LPC_CAN1->GSR)&(0x00ff0000))>>16),0,15,0);
-N
-N /*         int2lcdyx(bat[0]._Ubm,1,7,0); 	int2lcdyx(bat[0]._av,1,10,0);
-N		int2lcdyx(bat[0]._dUbm,2,7,0);
-N		int2lcdyx(bat[0]._cnt_as,3,7,0);
-N		
-N 
-N		int2lcdyx(bat[1]._Ub,0,14,0);
-N          int2lcdyx(bat[1]._Ubm,1,14,0);	int2lcdyx(bat[1]._av,1,17,0);
-N		int2lcdyx(bat[1]._dUbm,2,14,0);
-N		int2lcdyx(bat[1]._cnt_as,3,14,0);*/
-N
-N		int2lcdyx(sub_ind1+0,1,0,0);
-X		int2lcdyx(a_ind . s_i1+0,1,0,0);
-N		int2lcdyx(sub_ind1+1,2,0,0);
-X		int2lcdyx(a_ind . s_i1+1,2,0,0);
-N		int2lcdyx(sub_ind1+2,3,0,0);
-X		int2lcdyx(a_ind . s_i1+2,3,0,0);
-N		
-N		
-N		int2lcdyx(bps[sub_ind1  ]._cnt,1,2,0);
-X		int2lcdyx(bps[a_ind . s_i1  ]._cnt,1,2,0);
-N		int2lcdyx(bps[sub_ind1+1]._cnt,2,2,0);
-X		int2lcdyx(bps[a_ind . s_i1+1]._cnt,2,2,0);
-N		int2lcdyx(bps[sub_ind1+2]._cnt,3,2,0);		
-X		int2lcdyx(bps[a_ind . s_i1+2]._cnt,3,2,0);		
-N		
-N	/*	int2lcdyx(bps[sub_ind1  ]._ist_blok_cnt,1,5,0);
-N		int2lcdyx(bps[sub_ind1+1]._ist_blok_cnt,2,5,0);
-N		int2lcdyx(bps[sub_ind1+2]._ist_blok_cnt,3,5,0);*/			
-N		
-N	/*	char2lcdhyx(bps[sub_ind1  ]._flags_tu,1,8);
-N		char2lcdhyx(bps[sub_ind1+1]._flags_tu,2,8);
-N		char2lcdhyx(bps[sub_ind1+2]._flags_tu,3,8);
-N
-N		int2lcdyx(bps[sub_ind1  ]._vol_u,1,12,0);
-N		int2lcdyx(bps[sub_ind1+1]._vol_u,2,12,0);
-N		int2lcdyx(bps[sub_ind1+2]._vol_u,3,12,0);		
-N
-N
-N		char2lcdhyx(bps[sub_ind1]._flags_tm,1,15);
-N		char2lcdhyx(bps[sub_ind1+1]._flags_tm,2,15);
-N		char2lcdhyx(bps[sub_ind1+2]._flags_tm,3,15);	
-N		*/
-N		int2lcdyx(bps[sub_ind1]._Ii,1,15,0);
-X		int2lcdyx(bps[a_ind . s_i1]._Ii,1,15,0);
-N		int2lcdyx(bps[sub_ind1+1]._Ii,2,15,0);
-X		int2lcdyx(bps[a_ind . s_i1+1]._Ii,2,15,0);
-N		int2lcdyx(bps[sub_ind1+2]._Ii,3,15,0);
-X		int2lcdyx(bps[a_ind . s_i1+2]._Ii,3,15,0);
-N	/*
-N		char2lcdhyx(bps[sub_ind1]._rotor>>8,1,15);
-N		char2lcdhyx(bps[sub_ind1+1]._rotor>>8,2,15);
-N		char2lcdhyx(bps[sub_ind1+2]._rotor>>8,3,15);		
-N		*/
-N		
-N		int2lcdyx(bps[sub_ind1]._rotor,1,19,0);
-X		int2lcdyx(bps[a_ind . s_i1]._rotor,1,19,0);
-N		int2lcdyx(bps[sub_ind1+1]._rotor,2,19,0);
-X		int2lcdyx(bps[a_ind . s_i1+1]._rotor,2,19,0);
-N		int2lcdyx(bps[sub_ind1+2]._rotor,3,19,0);
-X		int2lcdyx(bps[a_ind . s_i1+2]._rotor,3,19,0);
-N
+N		int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
+N		int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
+N		int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
+N		int2lcdyx(bps[1].debug_info_to_uku0,1,4,0);
+N		int2lcdyx(bps[1].debug_info_to_uku1,1,10,0);
+N		int2lcdyx(bps[1].debug_info_to_uku2,1,19,0);
+N		int2lcdyx(bps[0]._flags_tu,2,4,0);
+N		int2lcdyx(bps[0]._flags_tm,2,10,0);
+N		int2lcdyx(bps[1]._flags_tu,3,4,0);
+N		int2lcdyx(bps[1]._flags_tm,3,10,0);
 N
 N 		}
 N
@@ -15701,17 +15642,17 @@ N	{
 N	bgnd_par(	" Версия             ",
 N				" Сборка  0000.00.00 ",
 N				#ifdef WG12232A
-N				"                    ",
+S				"                    ",
 N				#endif
 N				#ifdef WG12232L3
-S				" WG12232L3          ",
+N				" WG12232L3          ",
 N				#endif
 N				"                    ");
 N	int2lcdyx(BUILD_YEAR,1,12,0);
 N	int2lcdyx(BUILD_MONTH,1,15,0);
 N	int2lcdyx(BUILD_DAY,1,18,0);
 N	
-W "main.c" 6599 2 function "sprintf" declared implicitly
+W "main.c" 6552 2 function "sprintf" declared implicitly
 N	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
 N	}
 Nelse if(ind==iLog_reset_prl)
@@ -15940,7 +15881,7 @@ N     if(ind!=iDeb)
 X     if(a_ind . i!=iDeb)
 N          {
 N		c_ind=a_ind;
-N		tree_up(iDeb,5,0,0);
+N		tree_up(iDeb,1,0,0);
 N		
 N          }
 N     else 
@@ -16257,7 +16198,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 7046 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6999 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -26225,7 +26166,7 @@ N	}
 N			
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14641 1 label "but_an_end" was declared but never referenced
+W "main.c" 14594 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -26644,7 +26585,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 15028 15 pointless comparison of unsigned integer with zero
+W "main.c" 14981 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26705,7 +26646,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 15087 1 function "sc16is700_init" declared implicitly
+W "main.c" 15040 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26734,7 +26675,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 15114 3 function "can_in_an1" declared implicitly
+W "main.c" 15067 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26742,7 +26683,7 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 15121 3 function "modbus_in" declared implicitly
+W "main.c" 15074 3 function "modbus_in" declared implicitly
 N		modbus_in();
 N		}
 N
@@ -26793,7 +26734,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 15171 3 function "sc16is700_uart_hndl" declared implicitly
+W "main.c" 15124 3 function "sc16is700_uart_hndl" declared implicitly
 N		sc16is700_uart_hndl();
 N		#endif		
 N		}
@@ -26866,11 +26807,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 15242 3 function "u_avar_hndl" declared implicitly
+W "main.c" 15195 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 15243 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 15196 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 15244 3 function "overload_hndl" declared implicitly
+W "main.c" 15197 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26890,7 +26831,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 15262 3 function "rele_av_hndl" declared implicitly
+W "main.c" 15215 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26928,7 +26869,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 15299 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 15252 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26956,7 +26897,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 15326 3 function "npn_hndl" declared implicitly
+W "main.c" 15279 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26972,7 +26913,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 15341 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 15294 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26982,7 +26923,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 15350 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 15303 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26999,7 +26940,7 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 15366 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 15319 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N

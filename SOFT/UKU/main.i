@@ -6745,7 +6745,7 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot))
 
 		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
 
-		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8) );
+		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -6767,7 +6767,7 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot))
 
 else if(cnt_net_drv==-1)
 	{
-     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x62,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),0);
+     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x62,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),(MODBUS_ADRESS%2));
      } 
      
 else if(cnt_net_drv==-2)
@@ -7666,9 +7666,9 @@ else if(a_ind . i==iMn_VD)
 
 	
 
-	
-	
-	
+	int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
+	int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
+	int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
 	
 	
 	
@@ -10618,68 +10618,21 @@ if(a_ind . i==iDeb)
 
     	else if(a_ind . s_i==1) 
      	{
-     	bgnd_par("Б                   ",
+     	bgnd_par("                    ",
      	         "                    ",
      	         "                    ",
      	         "                    ");
 
-		
-		
-		
-		
-
-				
-		
-
- 
-
-
-
-
-
-
-
- 
-
-		int2lcdyx(a_ind . s_i1+0,1,0,0);
-		int2lcdyx(a_ind . s_i1+1,2,0,0);
-		int2lcdyx(a_ind . s_i1+2,3,0,0);
-		
-		
-		int2lcdyx(bps[a_ind . s_i1  ]._cnt,1,2,0);
-		int2lcdyx(bps[a_ind . s_i1+1]._cnt,2,2,0);
-		int2lcdyx(bps[a_ind . s_i1+2]._cnt,3,2,0);		
-		
-	
-
- 			
-		
-	
-
-
-
-
-
-
-
-
-
-
-
- 
-		int2lcdyx(bps[a_ind . s_i1]._Ii,1,15,0);
-		int2lcdyx(bps[a_ind . s_i1+1]._Ii,2,15,0);
-		int2lcdyx(bps[a_ind . s_i1+2]._Ii,3,15,0);
-	
-
-
-
- 
-		
-		int2lcdyx(bps[a_ind . s_i1]._rotor,1,19,0);
-		int2lcdyx(bps[a_ind . s_i1+1]._rotor,2,19,0);
-		int2lcdyx(bps[a_ind . s_i1+2]._rotor,3,19,0);
-
+		int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
+		int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
+		int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
+		int2lcdyx(bps[1].debug_info_to_uku0,1,4,0);
+		int2lcdyx(bps[1].debug_info_to_uku1,1,10,0);
+		int2lcdyx(bps[1].debug_info_to_uku2,1,19,0);
+		int2lcdyx(bps[0]._flags_tu,2,4,0);
+		int2lcdyx(bps[0]._flags_tm,2,10,0);
+		int2lcdyx(bps[1]._flags_tu,3,4,0);
+		int2lcdyx(bps[1]._flags_tm,3,10,0);
 
  		}
 
@@ -10980,7 +10933,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5494 "main.c"
+#line 5447 "main.c"
     	}
 
 
@@ -11587,7 +11540,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 6233 "main.c"
+#line 6186 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11944,10 +11897,10 @@ else if(a_ind . i==iFWabout)
 	bgnd_par(	" Версия             ",
 				" Сборка  0000.00.00 ",
 
-				"                    ",
 
 
 
+				" WG12232L3          ",
 
 				"                    ");
 	int2lcdyx(BUILD_YEAR,1,12,0);
@@ -12020,12 +11973,12 @@ else if(a_ind . i==iCurr_overload)
 }							    
 
 
-#line 6671 "main.c"
+#line 6624 "main.c"
 
 
 
 
-#line 6694 "main.c"
+#line 6647 "main.c"
 
 
 
@@ -12136,7 +12089,7 @@ if(but==249)
      if(a_ind . i!=iDeb)
           {
 		c_ind=a_ind;
-		tree_up(iDeb,5,0,0);
+		tree_up(iDeb,1,0,0);
 		
           }
      else 
@@ -13208,7 +13161,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7888 "main.c"
+#line 7841 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -13230,7 +13183,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7934 "main.c"
+#line 7887 "main.c"
 
 
 
@@ -18172,9 +18125,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 13121 "main.c"
+#line 13074 "main.c"
 
-#line 13331 "main.c"
+#line 13284 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -18500,7 +18453,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 14036 "main.c"
+#line 13989 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -19423,7 +19376,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14964 "main.c"
+#line 14917 "main.c"
 
 
 
@@ -19514,7 +19467,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 15072 "main.c"
+#line 15025 "main.c"
 
 
 

@@ -1213,7 +1213,7 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot)) // с 1 по 12 посылки адресные
 
 		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
-		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(cntrl_stat+bps[cnt_net_drv]._x_),(char)((cntrl_stat+bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -1235,7 +1235,7 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot)) // с 1 по 12 посылки адресные
 
 else if(cnt_net_drv==-1)
 	{
-     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),0);
+     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),(MODBUS_ADRESS%2));
      } 
      
 else if(cnt_net_drv==-2)
@@ -2134,9 +2134,9 @@ else if(ind==iMn_VD)
 
 	//int2lcdyx(cntrl_stat,0,8,0);
 
-	//int2lcdyx(bps[0].debug_info_to_uku0,1,4,0);
-	//int2lcdyx(bps[0].debug_info_to_uku1,2,4,0);
-	//int2lcdyx(bps[0].debug_info_to_uku2,3,4,0);
+	int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
+	int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
+	int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
 	//int2lcdyx((short)ibat_metr_buff_[0],0,4,0);
 	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
@@ -5086,68 +5086,21 @@ if(ind==iDeb)
 
     	else if(sub_ind==1) 
      	{
-     	bgnd_par("Ѕ                   ",
+     	bgnd_par("                    ",
      	         "                    ",
      	         "                    ",
      	         "                    ");
 
-		//int2lcdyx(bAVG,0,0,0);
-		//int2lcdyx(LPC_CAN1->GSR,0,6,0);
-		//int2lcdyx((LPC_CAN1->GSR)>>16,0,16,0);
-		//int2lcdyx(avg,0,19,0);
-
-				//int2lcdyx((((LPC_CAN1->GSR)&(0xff000000))>>24),0,19,0);
-		//int2lcdyx((((LPC_CAN1->GSR)&(0x00ff0000))>>16),0,15,0);
-
- /*         int2lcdyx(bat[0]._Ubm,1,7,0); 	int2lcdyx(bat[0]._av,1,10,0);
-		int2lcdyx(bat[0]._dUbm,2,7,0);
-		int2lcdyx(bat[0]._cnt_as,3,7,0);
-		
- 
-		int2lcdyx(bat[1]._Ub,0,14,0);
-          int2lcdyx(bat[1]._Ubm,1,14,0);	int2lcdyx(bat[1]._av,1,17,0);
-		int2lcdyx(bat[1]._dUbm,2,14,0);
-		int2lcdyx(bat[1]._cnt_as,3,14,0);*/
-
-		int2lcdyx(sub_ind1+0,1,0,0);
-		int2lcdyx(sub_ind1+1,2,0,0);
-		int2lcdyx(sub_ind1+2,3,0,0);
-		
-		
-		int2lcdyx(bps[sub_ind1  ]._cnt,1,2,0);
-		int2lcdyx(bps[sub_ind1+1]._cnt,2,2,0);
-		int2lcdyx(bps[sub_ind1+2]._cnt,3,2,0);		
-		
-	/*	int2lcdyx(bps[sub_ind1  ]._ist_blok_cnt,1,5,0);
-		int2lcdyx(bps[sub_ind1+1]._ist_blok_cnt,2,5,0);
-		int2lcdyx(bps[sub_ind1+2]._ist_blok_cnt,3,5,0);*/			
-		
-	/*	char2lcdhyx(bps[sub_ind1  ]._flags_tu,1,8);
-		char2lcdhyx(bps[sub_ind1+1]._flags_tu,2,8);
-		char2lcdhyx(bps[sub_ind1+2]._flags_tu,3,8);
-
-		int2lcdyx(bps[sub_ind1  ]._vol_u,1,12,0);
-		int2lcdyx(bps[sub_ind1+1]._vol_u,2,12,0);
-		int2lcdyx(bps[sub_ind1+2]._vol_u,3,12,0);		
-
-
-		char2lcdhyx(bps[sub_ind1]._flags_tm,1,15);
-		char2lcdhyx(bps[sub_ind1+1]._flags_tm,2,15);
-		char2lcdhyx(bps[sub_ind1+2]._flags_tm,3,15);	
-		*/
-		int2lcdyx(bps[sub_ind1]._Ii,1,15,0);
-		int2lcdyx(bps[sub_ind1+1]._Ii,2,15,0);
-		int2lcdyx(bps[sub_ind1+2]._Ii,3,15,0);
-	/*
-		char2lcdhyx(bps[sub_ind1]._rotor>>8,1,15);
-		char2lcdhyx(bps[sub_ind1+1]._rotor>>8,2,15);
-		char2lcdhyx(bps[sub_ind1+2]._rotor>>8,3,15);		
-		*/
-		
-		int2lcdyx(bps[sub_ind1]._rotor,1,19,0);
-		int2lcdyx(bps[sub_ind1+1]._rotor,2,19,0);
-		int2lcdyx(bps[sub_ind1+2]._rotor,3,19,0);
-
+		int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
+		int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
+		int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
+		int2lcdyx(bps[1].debug_info_to_uku0,1,4,0);
+		int2lcdyx(bps[1].debug_info_to_uku1,1,10,0);
+		int2lcdyx(bps[1].debug_info_to_uku2,1,19,0);
+		int2lcdyx(bps[0]._flags_tu,2,4,0);
+		int2lcdyx(bps[0]._flags_tm,2,10,0);
+		int2lcdyx(bps[1]._flags_tu,3,4,0);
+		int2lcdyx(bps[1]._flags_tm,3,10,0);
 
  		}
 
@@ -6801,7 +6754,7 @@ if(but==butUD)
      if(ind!=iDeb)
           {
 		c_ind=a_ind;
-		tree_up(iDeb,5,0,0);
+		tree_up(iDeb,1,0,0);
 		
           }
      else 

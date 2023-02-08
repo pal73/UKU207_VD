@@ -1,3 +1,13 @@
 *.i
 *.lst
 *.o
+/SOFT/UKU/EXE/*.d
+/SOFT/UKU/EXE/*.fed
+/SOFT/UKU/*.map
+/SOFT/UKU/EXE/*.plg
+/SOFT/UKU/EXE/*.tra
+/SOFT/UKU/EXE/*.sct
+/SOFT/UKU/EXE/*.axf
+/SOFT/UKU/*.dep
+/SOFT/UKU/EXE/*.crf
+/SOFT/UKU/EXE/*.lnp
