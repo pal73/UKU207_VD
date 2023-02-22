@@ -13,3 +13,4 @@
 .\EXE\full_can.o: eeprom_map.h
 .\EXE\full_can.o: control.h
 .\EXE\full_can.o: 25lc640.h
+.\EXE\full_can.o: C:\Keil\ARM\RV31\INC\string.h

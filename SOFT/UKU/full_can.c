@@ -8,6 +8,7 @@
 #include "eeprom_map.h"
 #include "control.h"
 #include "25lc640.h"
+#include <string.h>
 
 // Counts number of filters (CAN message objects) used so far
 short volatile gCANFilter = 0;
