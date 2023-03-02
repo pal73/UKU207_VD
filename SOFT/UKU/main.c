@@ -43,6 +43,7 @@
 //#include "sc16is7xx.h"
 #include "modbus_tcp.h"
 #include "curr_version.h"
+#include "MODBUS_RTU.h"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -327,7 +328,7 @@ char can_slot[12][16];
 
 //***********************************************
 //Состояние источников
-BPS_STAT bps[29];
+BPS_STAT bps[32];
 
 //***********************************************
 //Состояние инверторов
@@ -14685,6 +14686,23 @@ b1000Hz=1;
 	if(bFF!=bFF_) hz_out++;
 	bFF_=bFF;
 
+//o_1_s
+if(modbus_timeout_cnt<modbusTimeoutInMills)
+	{
+	modbus_timeout_cnt++;
+	if(modbus_timeout_cnt>=modbusTimeoutInMills)
+		{
+		bMODBUS_TIMEOUT=1;
+		//modbus_plazma3++;
+		}
+	}
+else if (modbus_timeout_cnt>modbusTimeoutInMills)
+	{
+	modbus_timeout_cnt=0;
+	bMODBUS_TIMEOUT=0;
+	}
+//o_1_e
+
 
 if(++t0cnt5>=60)
      {
@@ -14754,7 +14772,7 @@ if(++t0cnt>=10)
 
 	}
 
-
+/*
 if(modbus_timeout_cnt<6)
 	{
 	modbus_timeout_cnt++;
@@ -14768,7 +14786,7 @@ else if (modbus_timeout_cnt>6)
 	modbus_timeout_cnt=0;
 	bMODBUS_TIMEOUT=0;
 	}
-
+ */
 //LPC_GPIO0->FIOCLR|=0x00000001;
   return;          
 
@@ -15118,14 +15136,15 @@ while (1)
 		{
 		bMODBUS_TIMEOUT=0;
 		//modbus_plazma++;;
-		modbus_in();
+		//modbus_in();
+		modbus_puts();
 		}
 
 	if(bRXIN0) 
 		{
 		bRXIN0=0;
 	
-		uart_in0();
+		//uart_in0();
 		} 
 
 /*	if(bRXIN_SC16IS700) 
@@ -15168,7 +15187,7 @@ while (1)
 		#endif
 
 		#ifdef SC16IS740_UART
-		sc16is700_uart_hndl();
+		sc16is700_uart_hndl_mb();
 		#endif		
 		}
 	

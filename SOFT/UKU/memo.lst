@@ -2361,7 +2361,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -3171,7 +3171,29 @@ Nvoid gran(signed short *adr, signed short min, signed short max);
 Nvoid gran_ring(signed short *adr, signed short min, signed short max);
 Nvoid gran_long(signed long *adr, signed long min, signed long max); 
 L 8 "memo.c" 2
+N#include "MODBUS_RTU.h" //o_1
+L 1 "MODBUS_RTU.h" 1
+Nextern unsigned char NULL_0;
+Nextern unsigned char mb_rtu_func;
+Nextern unsigned long mb_rtu_start_adr;
+Nextern unsigned char mb_rtu_num, mb_rtu_num_send;
+Nextern unsigned short mb_data_1, mb_data_2, crc_f;
+Nextern char modbus_timeout_cnt;
+N//extern char bMODBUS_TIMEOUT;
+N//extern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
+N//extern unsigned char modbus_rx_buffer_ptr;	//Указатель на текущую позицию принимающего буфера
+Nextern char sc16is700RecieveDisableFlag;
+Nextern signed short modbusTimeoutInMills;
 N
+Nvoid analiz_func6(unsigned short mbadr, unsigned short mbdat);
+Nchar lc640_write_int(short ADR,short in);
+Nvoid putchar_sc16is700(char out_byte);
+Nvoid crc_calc_f( unsigned short data);
+Nvoid modbus_puts (void);
+Nunsigned short CRC16_MB(char* buf, short len);
+Nvoid sc16is700_uart_hndl_mb(void);
+Nvoid sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+L 9 "memo.c" 2
 N//-----------------------------------------------
 Nvoid memo_read (void)
 N{
@@ -3677,6 +3699,11 @@ NETH_SNMP_PORT_WRITE=lc640_read_int(EE_ETH_SNMP_PORT_WRITE);
 XETH_SNMP_PORT_WRITE=lc640_read_int(0x10+500+200+62);
 NMODBUS_ADRESS=lc640_read_int(EE_MODBUS_ADRESS);
 XMODBUS_ADRESS=lc640_read_int(0x10+500+200+72);
+N//o_1_s		//задержка ответа
+NmodbusTimeoutInMills=3000/MODBUS_BAUDRATE;
+Nif(modbusTimeoutInMills<2)modbusTimeoutInMills=2;
+NmodbusTimeoutInMills+=2;
+N//o_1_e
 NMODBUS_BAUDRATE=lc640_read_int(EE_MODBUS_BAUDRATE);
 XMODBUS_BAUDRATE=lc640_read_int(0x10+500+200+74);
 NRELE_SET_MASK[0]=lc640_read_int(EE_RELE_SET_MASK0);

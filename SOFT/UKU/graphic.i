@@ -3225,7 +3225,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 

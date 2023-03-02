@@ -5205,7 +5205,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -6329,7 +6329,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа
@@ -6525,6 +6525,7 @@ N
 Nshort rs232_data_out_buff[30];
 N
 N//char UOB__[60];
+Nextern char modbus_timeout_cnt; //o_1
 N
 N//-----------------------------------------------
 Nchar crc_87(char* ptr,char num)
@@ -6709,7 +6710,7 @@ Nputchar0(t);
 N
 Nputchar0(0x0a);
 N	
-W "uart0.c" 208 15 variable "UOB" was declared but never referenced
+W "uart0.c" 209 15 variable "UOB" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -7060,7 +7061,7 @@ N	if(data==0x0d)
 N		{
 N		if(BAT_TYPE==2)
 N			{
-W "uart0.c" 567 33 function "mem_copy" declared implicitly
+W "uart0.c" 568 33 function "mem_copy" declared implicitly
 N			if(sacredSunRequestPhase==0)	mem_copy (liBatteryInBuff, bat_drv_rx_buff,  bat_drv_rx_cnt);
 N			else if(sacredSunRequestPhase==1)	mem_copy (&liBatteryInBuff[150], bat_drv_rx_buff,  bat_drv_rx_cnt);
 N			sacredSunSilentCnt=0;
@@ -7073,7 +7074,7 @@ N		   	if(numOfPacks_<0)numOfPacks_=0;
 N			if(numOfPacks_>NUMBAT)numOfPacks_=0;
 N			zTTSilentCnt[numOfPacks_]=50;
 N
-W "uart0.c" 579 27 function "mem_copy" declared implicitly
+W "uart0.c" 580 27 function "mem_copy" declared implicitly
 N			if(zTTRequestPhase==0)	mem_copy (liBatteryInBuff, bat_drv_rx_buff,  bat_drv_rx_cnt);
 N			else if(zTTRequestPhase==1)	mem_copy (&liBatteryInBuff[150], bat_drv_rx_buff,  bat_drv_rx_cnt);
 N			//zTTSilentCnt=0;

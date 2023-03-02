@@ -2191,7 +2191,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -4861,7 +4861,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа
@@ -5128,6 +5128,29 @@ Nextern const short BUILD_MONTH;
 W "curr_version.h" 6 30 last line of file ends without a newline
 Nextern const short BUILD_DAY;
 L 46 "main.c" 2
+N#include "MODBUS_RTU.h"
+L 1 "MODBUS_RTU.h" 1
+Nextern unsigned char NULL_0;
+Nextern unsigned char mb_rtu_func;
+Nextern unsigned long mb_rtu_start_adr;
+Nextern unsigned char mb_rtu_num, mb_rtu_num_send;
+Nextern unsigned short mb_data_1, mb_data_2, crc_f;
+Nextern char modbus_timeout_cnt;
+N//extern char bMODBUS_TIMEOUT;
+N//extern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
+N//extern unsigned char modbus_rx_buffer_ptr;	//Указатель на текущую позицию принимающего буфера
+Nextern char sc16is700RecieveDisableFlag;
+Nextern signed short modbusTimeoutInMills;
+N
+Nvoid analiz_func6(unsigned short mbadr, unsigned short mbdat);
+Nchar lc640_write_int(short ADR,short in);
+Nvoid putchar_sc16is700(char out_byte);
+Nvoid crc_calc_f( unsigned short data);
+Nvoid modbus_puts (void);
+Nunsigned short CRC16_MB(char* buf, short len);
+Nvoid sc16is700_uart_hndl_mb(void);
+Nvoid sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+L 47 "main.c" 2
 N
 Nextern U8 own_hw_adr[];
 Nextern U8  snmp_Community[];
@@ -5412,7 +5435,7 @@ N
 N
 N//***********************************************
 N//Состояние источников
-NBPS_STAT bps[29];
+NBPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -8691,7 +8714,7 @@ N#define LPC_GPDMACH7          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH7_BASE )
 N#define LPC_USB               ((LPC_USB_TypeDef       *) LPC_USB_BASE      )
 N
 N#endif  // __LPC17xx_H__
-L 494 "main.c" 2
+L 495 "main.c" 2
 N
 N
 N
@@ -9780,11 +9803,11 @@ N			lcd_bitmap[ptr_bitmap++]=caracter[((unsigned)lcd_buffer[x]*6)+5];
 N			} 
 N		}
 N	}	
-W "main.c" 1378 13 variable "ptr_cnt" was declared but never referenced
-W "main.c" 1378 21 variable "ptr_cnt1" was declared but never referenced
-W "main.c" 1378 30 variable "ptr_cnt2" was declared but never referenced
-W "main.c" 1378 39 variable "ptr_cnt3" was declared but never referenced
-W "main.c" 1378 48 variable "ptr_cnt4" was declared but never referenced
+W "main.c" 1379 13 variable "ptr_cnt" was declared but never referenced
+W "main.c" 1379 21 variable "ptr_cnt1" was declared but never referenced
+W "main.c" 1379 30 variable "ptr_cnt2" was declared but never referenced
+W "main.c" 1379 39 variable "ptr_cnt3" was declared but never referenced
+W "main.c" 1379 48 variable "ptr_cnt4" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -10045,19 +10068,16 @@ N	{
 N	sub_ptrs[i++]=	"   Авария БПС №29   ";
 N	sub_cnt_max++;	
 N	}
-W "main.c" 1661 4 subscript out of range
 Nif(bps[29]._av&0xef)//avar_stat1&(1<<(0)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №30   ";
 N	sub_cnt_max++;	
 N	}
-W "main.c" 1666 7 subscript out of range
 Nif(bps[30]._av&0xef)//avar_stat1&(1<<(1)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №31   ";
 N	sub_cnt_max++;	
 N	}
-W "main.c" 1671 7 subscript out of range
 Nif(bps[31]._av&0xef)//avar_stat1&(1<<(2)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №32   ";
@@ -10267,7 +10287,6 @@ N	sub_cnt_max++;
 N	sub_ptrs[i++]=	"     исчерпан       ";
 N	sub_cnt_max++;		
 N	}
-W "main.c" 1880 4 subscript out of range
 Nif(bps[29]._av&(1<<4))
 N	{
 N	sub_ptrs[i++]=	"Ресурс вент. БПС30  ";
@@ -10275,7 +10294,6 @@ N	sub_cnt_max++;
 N	sub_ptrs[i++]=	"     исчерпан       ";
 N	sub_cnt_max++;		
 N	}
-W "main.c" 1887 7 subscript out of range
 Nif(bps[30]._av&(1<<4))
 N	{
 N	sub_ptrs[i++]=	"Ресурс вент. БПС31   ";
@@ -10283,7 +10301,6 @@ N	sub_cnt_max++;
 N	sub_ptrs[i++]=	"     исчерпан       ";
 N	sub_cnt_max++;		
 N	}
-W "main.c" 1894 7 subscript out of range
 Nif(bps[31]._av&(1<<4))
 N	{
 N	sub_ptrs[i++]=	"Ресурс вент. БПС32   ";
@@ -10817,7 +10834,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 2353 16 unrecognized character escape sequence
+W "main.c" 2354 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -12648,7 +12665,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3951 7 variable "sss" was declared but never referenced
+W "main.c" 3952 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -15701,17 +15718,17 @@ N	{
 N	bgnd_par(	" Версия             ",
 N				" Сборка  0000.00.00 ",
 N				#ifdef WG12232A
-N				"                    ",
+S				"                    ",
 N				#endif
 N				#ifdef WG12232L3
-S				" WG12232L3          ",
+N				" WG12232L3          ",
 N				#endif
 N				"                    ");
 N	int2lcdyx(BUILD_YEAR,1,12,0);
 N	int2lcdyx(BUILD_MONTH,1,15,0);
 N	int2lcdyx(BUILD_DAY,1,18,0);
 N	
-W "main.c" 6599 2 function "sprintf" declared implicitly
+W "main.c" 6600 2 function "sprintf" declared implicitly
 N	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
 N	}
 Nelse if(ind==iLog_reset_prl)
@@ -15781,8 +15798,8 @@ Nint2lcdyx(retcntsec,0,7,0);	*/
 N//int2lcdyx(bps[0]._vol_i,0,15,0);
 N//int2lcdyx(cntrl_stat,0,19,0); 
 N//int2lcdyx(bps[0]._Uin,0,4,0);
-W "main.c" 1411 6 variable "ii_" was declared but never referenced
-W "main.c" 1412 20 variable "cnt_ind_bat" was declared but never referenced
+W "main.c" 1412 6 variable "ii_" was declared but never referenced
+W "main.c" 1413 20 variable "cnt_ind_bat" was declared but never referenced
 N}							    
 N
 N
@@ -16257,7 +16274,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 7046 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 7047 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -26225,7 +26242,7 @@ N	}
 N			
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14641 1 label "but_an_end" was declared but never referenced
+W "main.c" 14642 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -26280,6 +26297,23 @@ N	bFF=(char)(GET_REG(LPC_GPIO0->FIOPIN, 27, 1));
 X	bFF=(char)(( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOPIN & ((0xffffffff>>(32-1))<<27)) >> 27));
 N	if(bFF!=bFF_) hz_out++;
 N	bFF_=bFF;
+N
+N//o_1_s
+Nif(modbus_timeout_cnt<modbusTimeoutInMills)
+N	{
+N	modbus_timeout_cnt++;
+N	if(modbus_timeout_cnt>=modbusTimeoutInMills)
+N		{
+N		bMODBUS_TIMEOUT=1;
+N		//modbus_plazma3++;
+N		}
+N	}
+Nelse if (modbus_timeout_cnt>modbusTimeoutInMills)
+N	{
+N	modbus_timeout_cnt=0;
+N	bMODBUS_TIMEOUT=0;
+N	}
+N//o_1_e
 N
 N
 Nif(++t0cnt5>=60)
@@ -26350,7 +26384,7 @@ N     }
 N
 N	}
 N
-N
+N/*
 Nif(modbus_timeout_cnt<6)
 N	{
 N	modbus_timeout_cnt++;
@@ -26364,7 +26398,7 @@ N	{
 N	modbus_timeout_cnt=0;
 N	bMODBUS_TIMEOUT=0;
 N	}
-N
+N */
 N//LPC_GPIO0->FIOCLR|=0x00000001;
 N  return;          
 N
@@ -26644,7 +26678,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 15028 15 pointless comparison of unsigned integer with zero
+W "main.c" 15046 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26705,7 +26739,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 15087 1 function "sc16is700_init" declared implicitly
+W "main.c" 15105 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26734,7 +26768,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 15114 3 function "can_in_an1" declared implicitly
+W "main.c" 15132 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26742,15 +26776,15 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 15121 3 function "modbus_in" declared implicitly
-N		modbus_in();
+N		//modbus_in();
+N		modbus_puts();
 N		}
 N
 N	if(bRXIN0) 
 N		{
 N		bRXIN0=0;
 N	
-N		uart_in0();
+N		//uart_in0();
 N		} 
 N
 N/*	if(bRXIN_SC16IS700) 
@@ -26793,8 +26827,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 15171 3 function "sc16is700_uart_hndl" declared implicitly
-N		sc16is700_uart_hndl();
+N		sc16is700_uart_hndl_mb();
 N		#endif		
 N		}
 N	
@@ -26866,11 +26899,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 15242 3 function "u_avar_hndl" declared implicitly
+W "main.c" 15261 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 15243 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 15262 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 15244 3 function "overload_hndl" declared implicitly
+W "main.c" 15263 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26890,7 +26923,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 15262 3 function "rele_av_hndl" declared implicitly
+W "main.c" 15281 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26928,7 +26961,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 15299 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 15318 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26956,7 +26989,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 15326 3 function "npn_hndl" declared implicitly
+W "main.c" 15345 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26972,7 +27005,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 15341 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 15360 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26982,7 +27015,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 15350 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 15369 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26999,10 +27032,10 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 15366 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 15385 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N
 N	}
 N}
-W "main.c" 794 13 function "timer_poll" was declared but never referenced
+W "main.c" 795 13 function "timer_poll" was declared but never referenced

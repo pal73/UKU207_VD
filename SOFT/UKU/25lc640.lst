@@ -5234,7 +5234,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов

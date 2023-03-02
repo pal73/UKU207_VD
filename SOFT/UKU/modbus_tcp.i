@@ -3216,7 +3216,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 
@@ -3784,6 +3784,28 @@ char lc640_write_int(short ADR,short in);
 char lc640_write_long(int ADR,long in);
 char lc640_write_long_ptr(int ADR,char* in);
 #line 8 "MODBUS_TCP.c"
+#line 1 "MODBUS_func4.h"
+
+extern unsigned char *const reg_func4 [];
+
+
+
+
+#line 9 "MODBUS_TCP.c"
+#line 1 "MODBUS_func3.h"
+
+extern unsigned char *const reg_func3[];
+
+
+int lc640_read_int(int ADR);
+
+
+#line 10 "MODBUS_TCP.c"
+#line 1 "MODBUS_func6.h"
+
+extern void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+
+#line 11 "MODBUS_TCP.c"
 
 char plazma_modbus_tcp[20];
 
@@ -3792,6 +3814,8 @@ char modbus_tcp_unit;
 short modbus_tcp_rx_arg0;
 short modbus_tcp_rx_arg1;
 
+unsigned long start_adr_tcp_mb;
+unsigned char start_num_tcp_mb;
 
 
 char* modbus_tcp_out_ptr;
@@ -3839,41 +3863,64 @@ switch (evt)
 
 	if(modbus_tcp_unit==MODBUS_ADRESS)
 		{
-		char modbus_tcp_tx_buff[200];
+		
+		start_adr_tcp_mb=modbus_tcp_rx_arg0*2; 
+		start_num_tcp_mb=modbus_tcp_rx_arg1*2; 
 
 		if(modbus_tcp_func==3)		
 			{
 			U8 *sendbuf;
 			
 
-			modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,1);
-
-			sendbuf = tcp_get_buf((modbus_tcp_rx_arg1*2)+9);
+			unsigned char io;
+			sendbuf = tcp_get_buf(start_num_tcp_mb+9);
 			sendbuf[0]=ptr[0];
 			sendbuf[1]=ptr[1];
 			sendbuf[2]=ptr[2];
 			sendbuf[3]=ptr[3];
-			sendbuf[4]=((modbus_tcp_rx_arg1*2)+3)/256;
-			sendbuf[5]=((modbus_tcp_rx_arg1*2)+3)%256;;
+			sendbuf[4]=(start_num_tcp_mb+3)/256;
+			sendbuf[5]=(start_num_tcp_mb+3)%256;;
 			sendbuf[6]=modbus_tcp_unit;
 			sendbuf[7]=modbus_tcp_func;
-			sendbuf[8]=(U8)(modbus_tcp_rx_arg1*2);
-			mem_copy((char*)&sendbuf[9],modbus_tcp_out_ptr,(modbus_tcp_rx_arg1*2));
+			sendbuf[8]=(U8)start_num_tcp_mb;
 			
-			
-          	tcp_send (socket_tcp, sendbuf, ((modbus_tcp_rx_arg1*2)+9));
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			for(io=0;io<sendbuf[8];++io) {
+				unsigned long adrr_reg;
+				adrr_reg=start_adr_tcp_mb+io;
+				if(adrr_reg<160) sendbuf[9+io]=*reg_func3[adrr_reg];
+				else sendbuf[9+io]=0;
+			}	 
+	 		tcp_send (socket_tcp, sendbuf, (start_num_tcp_mb+9));
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 			}
 
@@ -3881,24 +3928,45 @@ switch (evt)
 			{
 			U8 *sendbuf;
 
-			modbus_input_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,1);
-
-			sendbuf = tcp_get_buf((modbus_tcp_rx_arg1*2)+9);
+			unsigned char io;
+			sendbuf = tcp_get_buf(start_num_tcp_mb+9);
 			sendbuf[0]=ptr[0];
 			sendbuf[1]=ptr[1];
 			sendbuf[2]=ptr[2];
 			sendbuf[3]=ptr[3];
-			sendbuf[4]=((modbus_tcp_rx_arg1*2)+3)/256;
-			sendbuf[5]=((modbus_tcp_rx_arg1*2)+3)%256;;
+			sendbuf[4]=(start_num_tcp_mb+3)/256;
+			sendbuf[5]=(start_num_tcp_mb+3)%256;;
 			sendbuf[6]=modbus_tcp_unit;
 			sendbuf[7]=modbus_tcp_func;
-			sendbuf[8]=(U8)(modbus_tcp_rx_arg1*2);
-			mem_copy((char*)&sendbuf[9],modbus_tcp_out_ptr,(modbus_tcp_rx_arg1*2));
+			sendbuf[8]=(U8)start_num_tcp_mb;
 			
-			
-          	tcp_send (socket_tcp, sendbuf, ((modbus_tcp_rx_arg1*2)+9));
-			
-			
+			for(io=0;io<sendbuf[8];++io) {
+				unsigned long adrr_reg;
+				adrr_reg=start_adr_tcp_mb+io;
+				if(adrr_reg<300) sendbuf[9+io]=*reg_func4[adrr_reg];
+				else sendbuf[9+io]=0;
+			}	 
+          	tcp_send (socket_tcp, sendbuf, (start_num_tcp_mb+9));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
 			
 			
 			
@@ -3912,208 +3980,10 @@ switch (evt)
 
 		else if(modbus_tcp_func==6) 	
 			{
-			U8 *sendbuf;
 
-			
-			if(modbus_tcp_rx_arg0==11)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==12)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==13)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==14)		
-				{
-				plazma_modbus_tcp[0]++;
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->HOUR=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==15)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MIN=(uint16_t)modbus_tcp_rx_arg1;
-				}
-				if(modbus_tcp_rx_arg0==16)		
-					{
-					((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->SEC=(uint16_t)modbus_tcp_rx_arg1;
-					}
-				if(modbus_tcp_rx_arg0==20)		
-					{
-					if((modbus_tcp_rx_arg1>0)&&(modbus_tcp_rx_arg1<=18))
-					lc640_write_int(0x10+100+36,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==21)		
-					{
-					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-					lc640_write_int(0x10+100+86,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==22)		
-					{
-					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-					lc640_write_int(0x10+100+18,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==23)		
-					{
-					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-					lc640_write_int(0x10+100+126,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==24)		
-					{
-					if((modbus_tcp_rx_arg1>=0)||(modbus_tcp_rx_arg1<=20))
-					lc640_write_int(0x10+500+96,modbus_tcp_rx_arg1);  
-					}
-	
-	
-				if(modbus_tcp_rx_arg0==30)		
-					{
-					if(modbus_tcp_rx_arg1<0)TBAT=0;
-					else if((modbus_tcp_rx_arg1>0)&&(modbus_tcp_rx_arg1<=5))modbus_tcp_rx_arg1=0;
-					else if(modbus_tcp_rx_arg1>=60)TBAT=60;
-					else TBAT=modbus_tcp_rx_arg1;
-					lc640_write_int(0x10+100+78,TBAT);
-		     		}
-				if(modbus_tcp_rx_arg0==31)		
-					{
-					lc640_write_int(0x10+100+4,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==32)		
-					{
-				
-		     		}
-				if(modbus_tcp_rx_arg0==33)		
-					{
-			
-		     		}
-				if(modbus_tcp_rx_arg0==34)		
-					{
-			
-		     		}
-				if(modbus_tcp_rx_arg0==35)		
-					{
-					lc640_write_int(0x10+100+14,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==36)		
-					{
-					lc640_write_int(0x10+100+16,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==37)		
-					{
-					lc640_write_int(0x10+100+32,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==38)		
-					{
-					lc640_write_int(0x10+100+20,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==39)		
-					{
-					lc640_write_int(0x10+100+30,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==40)		
-					{
-					lc640_write_int(0x10+100+24,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==41)		
-					{
-					lc640_write_int(0x10+100+26,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==42)		
-					{
-					
-		     		}
-				if(modbus_tcp_rx_arg0==43)		
-					{
-					lc640_write_int(0x10+100+34,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==44)		
-					{
-					lc640_write_int(0x10+100+10,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==45)		
-					{
-					lc640_write_int(0x10+100+82,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==46)		
-					{
-					lc640_write_int(0x10+100+88,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==47)		
-					{
-					lc640_write_int(0x10+100+90,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==48)		
-					{
-					lc640_write_int(0x10+100+162,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==49)		
-					{
-					lc640_write_int(0x10+100+164,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==50)		
-					{
-					lc640_write_int(0x10+100+166,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==51)		
-					{
-					lc640_write_int(0x10+100+182,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==52)		
-					{
-					lc640_write_int(0x10+100+184,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==53)		
-					{
-					lc640_write_int(0x10+100+186,modbus_tcp_rx_arg1);
-		     		}
-	
-				if(modbus_tcp_rx_arg0==19)		
-					{
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-					}
-				if(modbus_tcp_rx_arg0==20)		
-					{
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-					}
-				modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,1,1);
-	
-				sendbuf = tcp_get_buf(11);
+				U8 *sendbuf;
+				analiz_func6(modbus_tcp_rx_arg0, modbus_tcp_rx_arg1);
+				sendbuf = tcp_get_buf(12);
 				sendbuf[0]=ptr[0];
 				sendbuf[1]=ptr[1];
 				sendbuf[2]=ptr[2];
@@ -4124,28 +3994,11 @@ switch (evt)
 				sendbuf[7]=modbus_tcp_func;
 				sendbuf[8]=modbus_tcp_rx_arg0/256;
 				sendbuf[9]=modbus_tcp_rx_arg0%256;
-				mem_copy((char*)&sendbuf[10],modbus_tcp_out_ptr,2);
-				
-				
+				sendbuf[10]=modbus_tcp_rx_arg1/256;
+				sendbuf[11]=modbus_tcp_rx_arg1%256;
 	          	tcp_send (socket_tcp, sendbuf, 12);
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-
-
-
-
-
-
 				}
+			 
 
 
 			

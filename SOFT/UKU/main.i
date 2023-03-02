@@ -1485,7 +1485,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 
@@ -3642,7 +3642,7 @@ uint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 
 extern unsigned char modbus_buf[20];
 extern short modbus_crc16;
-extern char modbus_timeout_cnt;
+
 extern char bMODBUS_TIMEOUT;
 extern unsigned char modbus_rx_buffer[30];	
 extern unsigned char modbus_an_buffer[30];	
@@ -3797,6 +3797,28 @@ extern const short BUILD_YEAR;
 extern const short BUILD_MONTH;
 extern const short BUILD_DAY;
 #line 46 "main.c"
+#line 1 "MODBUS_RTU.h"
+extern unsigned char NULL_0;
+extern unsigned char mb_rtu_func;
+extern unsigned long mb_rtu_start_adr;
+extern unsigned char mb_rtu_num, mb_rtu_num_send;
+extern unsigned short mb_data_1, mb_data_2, crc_f;
+extern char modbus_timeout_cnt;
+
+
+
+extern char sc16is700RecieveDisableFlag;
+extern signed short modbusTimeoutInMills;
+
+void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+char lc640_write_int(short ADR,short in);
+void putchar_sc16is700(char out_byte);
+void crc_calc_f( unsigned short data);
+void modbus_puts (void);
+unsigned short CRC16_MB(char* buf, short len);
+void sc16is700_uart_hndl_mb(void);
+void sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+#line 47 "main.c"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -4081,7 +4103,7 @@ char can_slot[12][16];
 
 
 
-BPS_STAT bps[29];
+BPS_STAT bps[32];
 
 
 
@@ -6055,7 +6077,7 @@ typedef struct
  
 #line 1031 "C:\\Keil\\ARM\\INC\\NXP\\LPC17xx\\LPC17xx.H"
 
-#line 494 "main.c"
+#line 495 "main.c"
 
 
 
@@ -6164,11 +6186,11 @@ enum_av_tbox_stat av_tbox_stat=atsOFF;
 signed short av_tbox_cnt;
 char tbatdisable_cmnd=20,tloaddisable_cmnd=22;
 short tbatdisable_cnt,tloaddisable_cnt;
-#line 608 "main.c"
+#line 609 "main.c"
 
-#line 617 "main.c"
+#line 618 "main.c"
 
-#line 630 "main.c"
+#line 631 "main.c"
 
 
 
@@ -6195,7 +6217,7 @@ char ibat_metr_cnt=0;
 
 
 
-#line 667 "main.c"
+#line 668 "main.c"
 
 
 
@@ -10980,7 +11002,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5494 "main.c"
+#line 5495 "main.c"
     	}
 
 
@@ -11587,7 +11609,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 6233 "main.c"
+#line 6234 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11944,10 +11966,10 @@ else if(a_ind . i==iFWabout)
 	bgnd_par(	" Версия             ",
 				" Сборка  0000.00.00 ",
 
-				"                    ",
 
 
 
+				" WG12232L3          ",
 
 				"                    ");
 	int2lcdyx(BUILD_YEAR,1,12,0);
@@ -12020,12 +12042,12 @@ else if(a_ind . i==iCurr_overload)
 }							    
 
 
-#line 6671 "main.c"
+#line 6672 "main.c"
 
 
 
 
-#line 6694 "main.c"
+#line 6695 "main.c"
 
 
 
@@ -13208,7 +13230,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7888 "main.c"
+#line 7889 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -13230,7 +13252,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7934 "main.c"
+#line 7935 "main.c"
 
 
 
@@ -18172,9 +18194,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 13121 "main.c"
+#line 13122 "main.c"
 
-#line 13331 "main.c"
+#line 13332 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -18500,7 +18522,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 14036 "main.c"
+#line 14037 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -19154,6 +19176,23 @@ b1000Hz=1;
 	bFF_=bFF;
 
 
+if(modbus_timeout_cnt<modbusTimeoutInMills)
+	{
+	modbus_timeout_cnt++;
+	if(modbus_timeout_cnt>=modbusTimeoutInMills)
+		{
+		bMODBUS_TIMEOUT=1;
+		
+		}
+	}
+else if (modbus_timeout_cnt>modbusTimeoutInMills)
+	{
+	modbus_timeout_cnt=0;
+	bMODBUS_TIMEOUT=0;
+	}
+
+
+
 if(++t0cnt5>=60)
      {
      t0cnt5=0;
@@ -19223,20 +19262,20 @@ if(++t0cnt>=10)
 	}
 
 
-if(modbus_timeout_cnt<6)
-	{
-	modbus_timeout_cnt++;
-	if(modbus_timeout_cnt>=6)
-		{
-		bMODBUS_TIMEOUT=1;
-		}
-	}
-else if (modbus_timeout_cnt>6)
-	{
-	modbus_timeout_cnt=0;
-	bMODBUS_TIMEOUT=0;
-	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
   return;          
 
@@ -19423,7 +19462,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14964 "main.c"
+#line 14982 "main.c"
 
 
 
@@ -19514,7 +19553,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 15072 "main.c"
+#line 15090 "main.c"
 
 
 
@@ -19564,14 +19603,15 @@ while (1)
 		{
 		bMODBUS_TIMEOUT=0;
 		
-		modbus_in();
+		
+		modbus_puts();
 		}
 
 	if(bRXIN0) 
 		{
 		bRXIN0=0;
 	
-		uart_in0();
+		
 		} 
 
 
@@ -19614,7 +19654,7 @@ while (1)
 
 
 
-		sc16is700_uart_hndl();
+		sc16is700_uart_hndl_mb();
 
 		}
 	

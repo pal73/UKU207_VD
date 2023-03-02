@@ -2623,7 +2623,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -3598,7 +3598,7 @@ Nextern char tx_rd_index_sc16is700;//указатель чтения из программного буфера пер
 Nextern char sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 Nextern char sc16is700TxPossibleFlag;//Флаг возможности передачи
 N
-N
+Nvoid sc16is700_spi_init(void);//o_1
 Nvoid sc16is700_init(uint32_t baudrate);
 Nvoid sc16is700_wr_byte(char reg_num,char data);
 Nchar sc16is700_rd_byte(char reg_num);
@@ -3614,7 +3614,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа

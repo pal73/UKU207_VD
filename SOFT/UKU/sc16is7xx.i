@@ -250,7 +250,7 @@ extern char tx_rd_index_sc16is700;
 extern char sc16is700TxFifoEmptyCnt; 
 extern char sc16is700TxPossibleFlag;
 
-
+void sc16is700_spi_init(void);
 void sc16is700_init(uint32_t baudrate);
 void sc16is700_wr_byte(char reg_num,char data);
 char sc16is700_rd_byte(char reg_num);
@@ -3253,7 +3253,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 
@@ -3579,7 +3579,7 @@ extern short pvlk;
 
 extern unsigned char modbus_buf[20];
 extern short modbus_crc16;
-extern char modbus_timeout_cnt;
+
 extern char bMODBUS_TIMEOUT;
 extern unsigned char modbus_rx_buffer[30];	
 extern unsigned char modbus_an_buffer[30];	
@@ -3615,6 +3615,74 @@ void modbus_input_registers_transmit(unsigned char adr,unsigned char func,unsign
 
 
 #line 6 "sc16is7xx.c"
+#line 1 "MODBUS_RTU.h"
+extern unsigned char NULL_0;
+extern unsigned char mb_rtu_func;
+extern unsigned long mb_rtu_start_adr;
+extern unsigned char mb_rtu_num, mb_rtu_num_send;
+extern unsigned short mb_data_1, mb_data_2, crc_f;
+extern char modbus_timeout_cnt;
+
+
+
+extern char sc16is700RecieveDisableFlag;
+extern signed short modbusTimeoutInMills;
+
+void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+char lc640_write_int(short ADR,short in);
+void putchar_sc16is700(char out_byte);
+void crc_calc_f( unsigned short data);
+void modbus_puts (void);
+unsigned short CRC16_MB(char* buf, short len);
+void sc16is700_uart_hndl_mb(void);
+void sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+#line 7 "sc16is7xx.c"
+#line 1 "MODBUS_func3.h"
+
+extern unsigned char *const reg_func3[];
+
+
+int lc640_read_int(int ADR);
+
+
+#line 8 "sc16is7xx.c"
+#line 1 "MODBUS_func4.h"
+
+extern unsigned char *const reg_func4 [];
+
+
+
+
+#line 9 "sc16is7xx.c"
+#line 1 "25lc640.h"
+
+
+
+
+
+
+
+
+
+
+
+
+char spi1(char in);
+void spi1_config(void);
+void spi1_config_mcp2515(void);
+void spi1_unconfig(void);
+void lc640_wren(void);
+char lc640_rdsr(void);
+int lc640_read(int ADR);
+int lc640_read_int(int ADR);
+long lc640_read_long(int ADR);
+void lc640_read_long_ptr(int ADR,char* out_ptr);
+void lc640_read_str(int ADR, char* ram_ptr, char num);
+char lc640_write(int ADR,char in);
+char lc640_write_int(short ADR,short in);
+char lc640_write_long(int ADR,long in);
+char lc640_write_long_ptr(int ADR,char* in);
+#line 10 "sc16is7xx.c"
 
 char sc16is700ByteAvailable;
 char sc16is700TxFifoLevel;
@@ -3623,7 +3691,7 @@ char tx_wr_index_sc16is700;
 char tx_rd_index_sc16is700;
 char sc16is700TxFifoEmptyCnt; 
 char sc16is700TxPossibleFlag;
-char sc16is700RecieveDisableFlag;
+char sc16is700RecieveDisableFlag;	
 
 
 
@@ -3703,8 +3771,11 @@ void sc16is700_init(uint32_t baudrate)
 
 unsigned char baud_h,baud_l;
 
-baud_h = (char)((10000000U/16U/baudrate)>>8);
-baud_l = (char)((10000000U/16U/baudrate)); 
+
+
+
+baud_h = (char)((30000000U/16U/baudrate)>>8);  
+baud_l = (char)((30000000U/16U/baudrate)); 	   
 
 sc16is700_wr_byte(0x03, 0x80);
 sc16is700_wr_byte(0x00, baud_l);
@@ -3750,55 +3821,57 @@ if (++tx_wr_index_sc16is700 == 32) tx_wr_index_sc16is700=0;
 
 
 
-void sc16is700_uart_hndl(void)
-{
-
-sc16is700ByteAvailable=sc16is700_rd_byte(0x09); 
-
-if(sc16is700ByteAvailable) 
-	{
-	char i;
-	for(i=0;(i<sc16is700ByteAvailable)&&(i<5);i++) 
-		{
-		if(!sc16is700RecieveDisableFlag)
-			{
-			modbus_rx_buffer[modbus_rx_buffer_ptr]=sc16is700_rd_byte(0x00);
-			modbus_rx_buffer_ptr++;
-			modbus_timeout_cnt=0;   
-			
-			}
-		else sc16is700_rd_byte(0x00);
-		}
-	}
 
 
 
-sc16is700TxFifoLevel=sc16is700_rd_byte(0x08);
-
-if(sc16is700TxFifoLevel!=64) sc16is700TxFifoEmptyCnt=0;
-if(sc16is700TxFifoLevel==64) 
-	{
-	if(sc16is700TxFifoEmptyCnt<5)sc16is700TxFifoEmptyCnt++;
-	}
-if(sc16is700TxFifoEmptyCnt==5) sc16is700TxPossibleFlag=1;
-else sc16is700TxPossibleFlag=0;
 
 
-if((tx_wr_index_sc16is700)&&(tx_wr_index_sc16is700!=tx_rd_index_sc16is700)) 
-	{
-	if(sc16is700TxPossibleFlag)
-		{
-		
-		
-			
-		sc16is700RecieveDisableFlag=1;
-		sc16is700_wr_buff(0x00, tx_wr_index_sc16is700);
-			
-		tx_wr_index_sc16is700=0;
-		}
-	}
-
-if((sc16is700_rd_byte(0x05))&0x40)	sc16is700RecieveDisableFlag=0;
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

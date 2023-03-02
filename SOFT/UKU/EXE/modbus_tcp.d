@@ -8,3 +8,6 @@
 .\EXE\modbus_tcp.o: modbus_tcp.h
 .\EXE\modbus_tcp.o: eeprom_map.h
 .\EXE\modbus_tcp.o: 25lc640.h
+.\EXE\modbus_tcp.o: MODBUS_func4.h
+.\EXE\modbus_tcp.o: MODBUS_func3.h
+.\EXE\modbus_tcp.o: MODBUS_func6.h

@@ -2039,7 +2039,7 @@ typedef struct
 
 extern unsigned char modbus_buf[20];
 extern short modbus_crc16;
-extern char modbus_timeout_cnt;
+
 extern char bMODBUS_TIMEOUT;
 extern unsigned char modbus_rx_buffer[30];	
 extern unsigned char modbus_an_buffer[30];	
@@ -3256,7 +3256,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 
@@ -4433,7 +4433,7 @@ extern char tx_rd_index_sc16is700;
 extern char sc16is700TxFifoEmptyCnt; 
 extern char sc16is700TxPossibleFlag;
 
-
+void sc16is700_spi_init(void);
 void sc16is700_init(uint32_t baudrate);
 void sc16is700_wr_byte(char reg_num,char data);
 char sc16is700_rd_byte(char reg_num);
@@ -4544,7 +4544,7 @@ extern int  mem_copy (void *dp, void *sp, int len);
 
 unsigned char modbus_buf[20];
 short modbus_crc16;
-char modbus_timeout_cnt;
+
 char bMODBUS_TIMEOUT;
 unsigned char modbus_rx_buffer[30];	
 unsigned char modbus_an_buffer[30];    	

@@ -1417,7 +1417,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 
@@ -2184,7 +2184,28 @@ void gran(signed short *adr, signed short min, signed short max);
 void gran_ring(signed short *adr, signed short min, signed short max);
 void gran_long(signed long *adr, signed long min, signed long max); 
 #line 8 "memo.c"
+#line 1 "MODBUS_RTU.h"
+extern unsigned char NULL_0;
+extern unsigned char mb_rtu_func;
+extern unsigned long mb_rtu_start_adr;
+extern unsigned char mb_rtu_num, mb_rtu_num_send;
+extern unsigned short mb_data_1, mb_data_2, crc_f;
+extern char modbus_timeout_cnt;
 
+
+
+extern char sc16is700RecieveDisableFlag;
+extern signed short modbusTimeoutInMills;
+
+void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+char lc640_write_int(short ADR,short in);
+void putchar_sc16is700(char out_byte);
+void crc_calc_f( unsigned short data);
+void modbus_puts (void);
+unsigned short CRC16_MB(char* buf, short len);
+void sc16is700_uart_hndl_mb(void);
+void sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+#line 9 "memo.c"
 
 void memo_read (void)
 {
@@ -2458,6 +2479,11 @@ ETH_TRAP5_IP_4=lc640_read_int(0x10+500+200+58);
 ETH_SNMP_PORT_READ=lc640_read_int(0x10+500+200+60);
 ETH_SNMP_PORT_WRITE=lc640_read_int(0x10+500+200+62);
 MODBUS_ADRESS=lc640_read_int(0x10+500+200+72);
+
+modbusTimeoutInMills=3000/MODBUS_BAUDRATE;
+if(modbusTimeoutInMills<2)modbusTimeoutInMills=2;
+modbusTimeoutInMills+=2;
+
 MODBUS_BAUDRATE=lc640_read_int(0x10+500+200+74);
 RELE_SET_MASK[0]=lc640_read_int(0x10+100+216);
 RELE_SET_MASK[1]=lc640_read_int(0x10+100+218);

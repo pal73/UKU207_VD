@@ -5206,7 +5206,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -6118,6 +6118,31 @@ Nchar lc640_write_int(short ADR,short in);
 Nchar lc640_write_long(int ADR,long in);
 Nchar lc640_write_long_ptr(int ADR,char* in);
 L 8 "MODBUS_TCP.c" 2
+N#include "MODBUS_func4.h" //o_1
+L 1 "MODBUS_func4.h" 1
+N
+Nextern unsigned char *const reg_func4 [];
+N
+N#define MODBUS_FUNC_4_LENGTH 300 
+N
+N
+L 9 "MODBUS_TCP.c" 2
+N#include "MODBUS_func3.h" //o_1
+L 1 "MODBUS_func3.h" 1
+N
+Nextern unsigned char *const reg_func3[];
+N#define MODBUS_FUNC_3_LENGTH 160
+N
+Nint lc640_read_int(int ADR);
+N
+N
+L 10 "MODBUS_TCP.c" 2
+N#include "MODBUS_func6.h" //o_1
+L 1 "MODBUS_func6.h" 1
+N
+Nextern void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+N
+L 11 "MODBUS_TCP.c" 2
 N
 Nchar plazma_modbus_tcp[20];
 N
@@ -6126,6 +6151,8 @@ Nchar modbus_tcp_unit;
 Nshort modbus_tcp_rx_arg0;
 Nshort modbus_tcp_rx_arg1;
 N
+Nunsigned long start_adr_tcp_mb;//o_1
+Nunsigned char start_num_tcp_mb;//o_1
 N//#define MODBUS_TCP_PROT	1
 N
 Nchar* modbus_tcp_out_ptr;
@@ -6174,16 +6201,38 @@ N	modbus_tcp_rx_arg1=(((unsigned short)ptr[10])*((unsigned short)256))+((unsigne
 N
 N	if(modbus_tcp_unit==MODBUS_ADRESS)
 N		{
-N		char modbus_tcp_tx_buff[200];
+N		//char modbus_tcp_tx_buff[200];
+N		start_adr_tcp_mb=modbus_tcp_rx_arg0*2; //o_1
+N		start_num_tcp_mb=modbus_tcp_rx_arg1*2; //o_1
 N
 N		if(modbus_tcp_func==3)		//чтение произвольного кол-ва регистров хранения
 N			{
 N			U8 *sendbuf;
 N			
-N
-W "MODBUS_TCP.c" 70 4 function "modbus_hold_registers_transmit" declared implicitly
+N//o_1_s
+N			unsigned char io;
+N			sendbuf = tcp_get_buf(start_num_tcp_mb+9);
+N			sendbuf[0]=ptr[0];
+N			sendbuf[1]=ptr[1];
+N			sendbuf[2]=ptr[2];
+N			sendbuf[3]=ptr[3];
+N			sendbuf[4]=(start_num_tcp_mb+3)/256;
+N			sendbuf[5]=(start_num_tcp_mb+3)%256;;
+N			sendbuf[6]=modbus_tcp_unit;
+N			sendbuf[7]=modbus_tcp_func;
+N			sendbuf[8]=(U8)start_num_tcp_mb;
+N			//wr_reg_func3(start_adr_tcp_mb, start_adr_tcp_mb+start_num_tcp_mb);
+N			for(io=0;io<sendbuf[8];++io) {
+N				unsigned long adrr_reg;
+N				adrr_reg=start_adr_tcp_mb+io;
+N				if(adrr_reg<MODBUS_FUNC_3_LENGTH) sendbuf[9+io]=*reg_func3[adrr_reg];
+X				if(adrr_reg<160) sendbuf[9+io]=*reg_func3[adrr_reg];
+N				else sendbuf[9+io]=0;
+N			}	 
+N	 		tcp_send (socket_tcp, sendbuf, (start_num_tcp_mb+9));
+N//o_1_e
+N/* o_1
 N			modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,MODBUS_TCP_PROT);
-X			modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,1);
 N
 N			sendbuf = tcp_get_buf((modbus_tcp_rx_arg1*2)+9);
 N			sendbuf[0]=ptr[0];
@@ -6195,7 +6244,6 @@ N			sendbuf[5]=((modbus_tcp_rx_arg1*2)+3)%256;;
 N			sendbuf[6]=modbus_tcp_unit;
 N			sendbuf[7]=modbus_tcp_func;
 N			sendbuf[8]=(U8)(modbus_tcp_rx_arg1*2);
-W "MODBUS_TCP.c" 82 4 function "mem_copy" declared implicitly
 N			mem_copy((char*)&sendbuf[9],modbus_tcp_out_ptr,(modbus_tcp_rx_arg1*2));
 N			//sendbuf[9]=3;
 N			//sendbuf[10]=4;
@@ -6211,17 +6259,37 @@ N			//mem_copy((char*)&modbus_tcp_tx_buff[9],modbus_tcp_out_ptr,2);
 N			//modbus_tcp_tx_buff[9]=2;
 N			//modbus_tcp_tx_buff[10]=3;
 N			//tcp_send (socket_tcp, modbus_tcp_tx_buff, 11);
-N
+N */ //o_1
 N
 N			}
 N
 N		if(modbus_tcp_func==4)		//чтение произвольного кол-ва регистров	входов
 N			{
 N			U8 *sendbuf;
-N
-W "MODBUS_TCP.c" 105 4 function "modbus_input_registers_transmit" declared implicitly
+N//o_1_s
+N			unsigned char io;
+N			sendbuf = tcp_get_buf(start_num_tcp_mb+9);
+N			sendbuf[0]=ptr[0];
+N			sendbuf[1]=ptr[1];
+N			sendbuf[2]=ptr[2];
+N			sendbuf[3]=ptr[3];
+N			sendbuf[4]=(start_num_tcp_mb+3)/256;
+N			sendbuf[5]=(start_num_tcp_mb+3)%256;;
+N			sendbuf[6]=modbus_tcp_unit;
+N			sendbuf[7]=modbus_tcp_func;
+N			sendbuf[8]=(U8)start_num_tcp_mb;
+N			//wr_reg_func4();		 
+N			for(io=0;io<sendbuf[8];++io) {
+N				unsigned long adrr_reg;
+N				adrr_reg=start_adr_tcp_mb+io;
+N				if(adrr_reg<MODBUS_FUNC_4_LENGTH) sendbuf[9+io]=*reg_func4[adrr_reg];
+X				if(adrr_reg<300) sendbuf[9+io]=*reg_func4[adrr_reg];
+N				else sendbuf[9+io]=0;
+N			}	 
+N          	tcp_send (socket_tcp, sendbuf, (start_num_tcp_mb+9));
+N//o_1_e
+N/* //o_1
 N			modbus_input_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,MODBUS_TCP_PROT);
-X			modbus_input_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,1);
 N
 N			sendbuf = tcp_get_buf((modbus_tcp_rx_arg1*2)+9);
 N			sendbuf[0]=ptr[0];
@@ -6233,13 +6301,12 @@ N			sendbuf[5]=((modbus_tcp_rx_arg1*2)+3)%256;;
 N			sendbuf[6]=modbus_tcp_unit;
 N			sendbuf[7]=modbus_tcp_func;
 N			sendbuf[8]=(U8)(modbus_tcp_rx_arg1*2);
-W "MODBUS_TCP.c" 117 4 function "mem_copy" declared implicitly
 N			mem_copy((char*)&sendbuf[9],modbus_tcp_out_ptr,(modbus_tcp_rx_arg1*2));
 N			//sendbuf[9]=3;
 N			//sendbuf[10]=4;
 N          	tcp_send (socket_tcp, sendbuf, ((modbus_tcp_rx_arg1*2)+9));
 N			//
-N			
+N*/  //o_1			
 N			//modbus_tcp_tx_buff[4]=0;
 N			//modbus_tcp_tx_buff[5]=5;
 N			//modbus_tcp_tx_buff[6]=1;//modbus_tcp_unit;
@@ -6253,241 +6320,10 @@ N			}
 N
 N		else if(modbus_tcp_func==6) 	//запись регистров хранения
 N			{
-N			U8 *sendbuf;
-N
-N			
-N			if(modbus_tcp_rx_arg0==11)		//Установка времени 
-N				{
-N				LPC_RTC->YEAR=(uint16_t)modbus_tcp_rx_arg1;
-X				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR=(uint16_t)modbus_tcp_rx_arg1;
-N				}
-N			if(modbus_tcp_rx_arg0==12)		//Установка времени 
-N				{
-N				LPC_RTC->MONTH=(uint16_t)modbus_tcp_rx_arg1;
-X				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH=(uint16_t)modbus_tcp_rx_arg1;
-N				}
-N			if(modbus_tcp_rx_arg0==13)		//Установка времени 
-N				{
-N				LPC_RTC->DOM=(uint16_t)modbus_tcp_rx_arg1;
-X				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM=(uint16_t)modbus_tcp_rx_arg1;
-N				}
-N			if(modbus_tcp_rx_arg0==14)		//Установка времени 
-N				{
-N				plazma_modbus_tcp[0]++;
-N				LPC_RTC->HOUR=(uint16_t)modbus_tcp_rx_arg1;
-X				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->HOUR=(uint16_t)modbus_tcp_rx_arg1;
-N				}
-N			if(modbus_tcp_rx_arg0==15)		//Установка времени 
-N				{
-N				LPC_RTC->MIN=(uint16_t)modbus_tcp_rx_arg1;
-X				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MIN=(uint16_t)modbus_tcp_rx_arg1;
-N				}
-N				if(modbus_tcp_rx_arg0==16)		//Установка времени 
-N					{
-N					LPC_RTC->SEC=(uint16_t)modbus_tcp_rx_arg1;
-X					((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->SEC=(uint16_t)modbus_tcp_rx_arg1;
-N					}
-N				if(modbus_tcp_rx_arg0==20)		//ток стабилизации для режима стабилизации тока
-N					{
-N					if((modbus_tcp_rx_arg1>0)&&(modbus_tcp_rx_arg1<=18))
-N					lc640_write_int(EE_NUMIST,modbus_tcp_rx_arg1);  
-X					lc640_write_int(0x10+100+36,modbus_tcp_rx_arg1);  
-N					}
-N				if(modbus_tcp_rx_arg0==21)		//ток стабилизации для режима стабилизации тока
-N					{
-N					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-N					lc640_write_int(EE_PAR,modbus_tcp_rx_arg1);  
-X					lc640_write_int(0x10+100+86,modbus_tcp_rx_arg1);  
-N					}
-N				if(modbus_tcp_rx_arg0==22)		//ток стабилизации для режима стабилизации тока
-N					{
-N					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-N					lc640_write_int(EE_ZV_ON,modbus_tcp_rx_arg1);  
-X					lc640_write_int(0x10+100+18,modbus_tcp_rx_arg1);  
-N					}
-N				if(modbus_tcp_rx_arg0==23)		//ток стабилизации для режима стабилизации тока
-N					{
-N					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-N					lc640_write_int(EE_TERMOKOMP,modbus_tcp_rx_arg1);  
-X					lc640_write_int(0x10+100+126,modbus_tcp_rx_arg1);  
-N					}
-N				if(modbus_tcp_rx_arg0==24)		//ток стабилизации для режима стабилизации тока
-N					{
-N					if((modbus_tcp_rx_arg1>=0)||(modbus_tcp_rx_arg1<=20))
-N					lc640_write_int(EE_UBM_AV,modbus_tcp_rx_arg1);  
-X					lc640_write_int(0x10+500+96,modbus_tcp_rx_arg1);  
-N					}
-N	
-N	
-N				if(modbus_tcp_rx_arg0==30)		//напряжение стабилизации для режима стабилизации напряжения
-N					{
-N					if(modbus_tcp_rx_arg1<0)TBAT=0;
-N					else if((modbus_tcp_rx_arg1>0)&&(modbus_tcp_rx_arg1<=5))modbus_tcp_rx_arg1=0;
-N					else if(modbus_tcp_rx_arg1>=60)TBAT=60;
-N					else TBAT=modbus_tcp_rx_arg1;
-N					lc640_write_int(EE_TBAT,TBAT);
-X					lc640_write_int(0x10+100+78,TBAT);
-N		     		}
-N				if(modbus_tcp_rx_arg0==31)		//
-N					{
-N					lc640_write_int(EE_UMAX,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+4,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==32)		//
-N					{
-N				//	lc640_write_int(EE_DU,UB20-modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==33)		//
-N					{
-N			//		lc640_write_int(EE_UB0,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==34)		//
-N					{
-N			//		lc640_write_int(EE_UB20,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==35)		//
-N					{
-N					lc640_write_int(EE_USIGN,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+14,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==36)		//
-N					{
-N					lc640_write_int(EE_UMN,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+16,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==37)		//
-N					{
-N					lc640_write_int(EE_U0B,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+32,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==38)		//
-N					{
-N					lc640_write_int(EE_IKB,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+20,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==39)		//
-N					{
-N					lc640_write_int(EE_IZMAX,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+30,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==40)		//
-N					{
-N					lc640_write_int(EE_IMAX,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+24,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==41)		//
-N					{
-N					lc640_write_int(EE_IMIN,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+26,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==42)		//
-N					{
-N					//lc640_write_int(EE_UVZ,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==43)		//
-N					{
-N					lc640_write_int(EE_TZAS,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+34,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==44)		//
-N					{
-N					lc640_write_int(EE_TMAX,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+10,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==45)		//
-N					{
-N					lc640_write_int(EE_TSIGN,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+82,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==46)		//
-N					{
-N					lc640_write_int(EE_TBATMAX,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+88,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==47)		//
-N					{
-N					lc640_write_int(EE_TBATSIGN,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+90,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==48)		//
-N					{
-N					lc640_write_int(EE_SPEED_CHRG_CURR,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+162,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==49)		//
-N					{
-N					lc640_write_int(EE_SPEED_CHRG_VOLT,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+164,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==50)		//
-N					{
-N					lc640_write_int(EE_SPEED_CHRG_TIME,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+166,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==51)		//
-N					{
-N					lc640_write_int(EE_U_OUT_KONTR_MAX,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+182,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==52)		//
-N					{
-N					lc640_write_int(EE_U_OUT_KONTR_MIN,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+184,modbus_tcp_rx_arg1);
-N		     		}
-N				if(modbus_tcp_rx_arg0==53)		//
-N					{
-N					lc640_write_int(EE_U_OUT_KONTR_DELAY,modbus_tcp_rx_arg1);
-X					lc640_write_int(0x10+100+186,modbus_tcp_rx_arg1);
-N		     		}
-N	
-N				if(modbus_tcp_rx_arg0==19)		//вкл/выкл источника напр.
-N					{
-N		/*			if(modbus_tcp_rx_arg1==1)
-N						{
-N						if(work_stat!=wsPS)
-N							{
-N							work_stat=wsPS;
-N							time_proc=0;
-N							time_proc_remain=T_PROC_PS;
-N							restart_on_PS();
-N							lc640_write_int(EE_MAIN_MENU_MODE,mmmIN);
-N							}
-N						}
-N					if(modbus_tcp_rx_arg1==0)
-N						{
-N						if(work_stat==wsPS)
-N							{
-N							work_stat=wsOFF;
-N							restart_off();
-N							}
-N						} */
-N					}
-N				if(modbus_tcp_rx_arg0==20)		//вкл/выкл источника тока
-N					{
-N	/*				if(modbus_tcp_rx_arg1==1)
-N						{
-N						if(work_stat!=wsGS)
-N							{
-N							work_stat=wsGS;
-N							time_proc=0;
-N							time_proc_remain=T_PROC_GS;
-N							lc640_write_int(EE_MAIN_MENU_MODE,mmmIT);
-N							}
-N						}
-N					if(modbus_tcp_rx_arg1==0)
-N						{
-N						if(work_stat==wsGS)
-N							{
-N							work_stat=wsOFF;
-N							restart_off();
-N							}
-N						}*/
-N					}
-W "MODBUS_TCP.c" 335 5 function "modbus_hold_registers_transmit" declared implicitly
-N				modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,1,MODBUS_TCP_PROT);
-X				modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,1,1);
-N	
-N				sendbuf = tcp_get_buf(11);
+N//o_1_s   обработку функции 6 заменить полностью,
+N				U8 *sendbuf;
+N				analiz_func6(modbus_tcp_rx_arg0, modbus_tcp_rx_arg1);
+N				sendbuf = tcp_get_buf(12);
 N				sendbuf[0]=ptr[0];
 N				sendbuf[1]=ptr[1];
 N				sendbuf[2]=ptr[2];
@@ -6498,33 +6334,14 @@ N				sendbuf[6]=modbus_tcp_unit;
 N				sendbuf[7]=modbus_tcp_func;
 N				sendbuf[8]=modbus_tcp_rx_arg0/256;
 N				sendbuf[9]=modbus_tcp_rx_arg0%256;
-W "MODBUS_TCP.c" 348 5 function "mem_copy" declared implicitly
-N				mem_copy((char*)&sendbuf[10],modbus_tcp_out_ptr,2);
-N				//sendbuf[9]=3;
-N				//sendbuf[10]=4;
+N				sendbuf[10]=modbus_tcp_rx_arg1/256;
+N				sendbuf[11]=modbus_tcp_rx_arg1%256;
 N	          	tcp_send (socket_tcp, sendbuf, 12);
-N				//
-N				
-N				//modbus_tcp_tx_buff[4]=0;
-N				//modbus_tcp_tx_buff[5]=5;
-N				//modbus_tcp_tx_buff[6]=1;//modbus_tcp_unit;
-N				//modbus_tcp_tx_buff[7]=3;//modbus_tcp_func;
-N				//modbus_tcp_tx_buff[8]=2;
-N				//mem_copy((char*)&modbus_tcp_tx_buff[9],modbus_tcp_out_ptr,2);
-N				//modbus_tcp_tx_buff[9]=2;
-N				//modbus_tcp_tx_buff[10]=3;
-N				//tcp_send (socket_tcp, modbus_tcp_tx_buff, 11);
-N
-N
-N
-N
-N
-N
 N				}
+N			 //o_1_e
 N
 N
 N			
-W "MODBUS_TCP.c" 63 8 variable "modbus_tcp_tx_buff" was declared but never referenced
 N			} 
 N      	break;
 N
@@ -6549,5 +6366,5 @@ N			//ica_plazma[7]++;
 N      		return (1);
 N  		}
 N  	return (0);
-W "MODBUS_TCP.c" 394 2 last line of file ends without a newline
+W "MODBUS_TCP.c" 228 2 last line of file ends without a newline
 N}

@@ -73,6 +73,7 @@ volatile uint32_t UART0Count = 0;
 short rs232_data_out_buff[30];
 
 //char UOB__[60];
+extern char modbus_timeout_cnt; //o_1
 
 //-----------------------------------------------
 char crc_87(char* ptr,char num)

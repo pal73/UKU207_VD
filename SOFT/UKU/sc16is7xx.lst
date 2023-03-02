@@ -310,7 +310,7 @@ Nextern char tx_rd_index_sc16is700;//указатель чтения из программного буфера пер
 Nextern char sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 Nextern char sc16is700TxPossibleFlag;//Флаг возможности передачи
 N
-N
+Nvoid sc16is700_spi_init(void);//o_1
 Nvoid sc16is700_init(uint32_t baudrate);
 Nvoid sc16is700_wr_byte(char reg_num,char data);
 Nchar sc16is700_rd_byte(char reg_num);
@@ -5256,7 +5256,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -5623,7 +5623,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа
@@ -5659,6 +5659,78 @@ N
 N
 N
 L 6 "sc16is7xx.c" 2
+N#include "MODBUS_RTU.h"	 //o_1
+L 1 "MODBUS_RTU.h" 1
+Nextern unsigned char NULL_0;
+Nextern unsigned char mb_rtu_func;
+Nextern unsigned long mb_rtu_start_adr;
+Nextern unsigned char mb_rtu_num, mb_rtu_num_send;
+Nextern unsigned short mb_data_1, mb_data_2, crc_f;
+Nextern char modbus_timeout_cnt;
+N//extern char bMODBUS_TIMEOUT;
+N//extern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
+N//extern unsigned char modbus_rx_buffer_ptr;	//Указатель на текущую позицию принимающего буфера
+Nextern char sc16is700RecieveDisableFlag;
+Nextern signed short modbusTimeoutInMills;
+N
+Nvoid analiz_func6(unsigned short mbadr, unsigned short mbdat);
+Nchar lc640_write_int(short ADR,short in);
+Nvoid putchar_sc16is700(char out_byte);
+Nvoid crc_calc_f( unsigned short data);
+Nvoid modbus_puts (void);
+Nunsigned short CRC16_MB(char* buf, short len);
+Nvoid sc16is700_uart_hndl_mb(void);
+Nvoid sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+L 7 "sc16is7xx.c" 2
+N#include "MODBUS_func3.h"  //o_1
+L 1 "MODBUS_func3.h" 1
+N
+Nextern unsigned char *const reg_func3[];
+N#define MODBUS_FUNC_3_LENGTH 160
+N
+Nint lc640_read_int(int ADR);
+N
+N
+L 8 "sc16is7xx.c" 2
+N#include "MODBUS_func4.h"  //o_1
+L 1 "MODBUS_func4.h" 1
+N
+Nextern unsigned char *const reg_func4 [];
+N
+N#define MODBUS_FUNC_4_LENGTH 300 
+N
+N
+L 9 "sc16is7xx.c" 2
+N#include "25lc640.h" //o_1
+L 1 "25lc640.h" 1
+N
+N#define LC640_CS 20
+N#define CS_ON       LPC_GPIO0->FIODIR|=(1UL<<LC640_CS);LPC_GPIO0->FIOCLR|=(1UL<<LC640_CS);
+N#define CS_OFF      LPC_GPIO0->FIODIR|=(1UL<<LC640_CS);LPC_GPIO0->FIOSET|=(1UL<<LC640_CS);
+N
+N
+N
+N
+N
+N
+N
+N
+Nchar spi1(char in);
+Nvoid spi1_config(void);
+Nvoid spi1_config_mcp2515(void);
+Nvoid spi1_unconfig(void);
+Nvoid lc640_wren(void);
+Nchar lc640_rdsr(void);
+Nint lc640_read(int ADR);
+Nint lc640_read_int(int ADR);
+Nlong lc640_read_long(int ADR);
+Nvoid lc640_read_long_ptr(int ADR,char* out_ptr);
+Nvoid lc640_read_str(int ADR, char* ram_ptr, char num);
+Nchar lc640_write(int ADR,char in);
+Nchar lc640_write_int(short ADR,short in);
+Nchar lc640_write_long(int ADR,long in);
+Nchar lc640_write_long_ptr(int ADR,char* in);
+L 10 "sc16is7xx.c" 2
 N
 Nchar sc16is700ByteAvailable;
 Nchar sc16is700TxFifoLevel;
@@ -5668,7 +5740,7 @@ Nchar tx_wr_index_sc16is700;//указатель записи в программный буфер передачи
 Nchar tx_rd_index_sc16is700;//указатель чтения из программного буфера передачи
 Nchar sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 Nchar sc16is700TxPossibleFlag;//Флаг возможности передачи
-Nchar sc16is700RecieveDisableFlag;
+Nchar sc16is700RecieveDisableFlag;	//o_1
 N
 N//----------------------------------------------- 
 N//настройка SPI1
@@ -5676,8 +5748,8 @@ Nvoid sc16is700_spi_init(void)
 N{
 NSET_REG( LPC_PINCON->PINSEL0, 0, 0*2, 2);
 X((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 = ( (((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 & ~((0xffffffff>>(32-2))<<0*2)) | (0 << 0*2) );
-W "sc16is7xx.c" 21 1 integer operation result is out of range
-W "sc16is7xx.c" 21 1 integer conversion resulted in a change of sign
+W "sc16is7xx.c" 25 1 integer operation result is out of range
+W "sc16is7xx.c" 25 1 integer conversion resulted in a change of sign
 NSET_REG( LPC_PINCON->PINSEL0, 3, 15*2, 2);
 X((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 = ( (((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 & ~((0xffffffff>>(32-2))<<15*2)) | (3 << 15*2) );
 NSET_REG( LPC_PINCON->PINSEL1, 0, (16-16)*2, 2);
@@ -5706,7 +5778,6 @@ Ndelay_us(2);
 X{long xx; xx=(unsigned long)2 * 12UL; while(xx)xx--;};
 Nsc16is700_CS_ON 
 X((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR|=(1<<0);((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR|=(1<<0); 
-W "sc16is7xx.c" 41 1 function "spi1" declared implicitly
 Nspi1((reg_num&0x0f)<<3);
 Nfor (i=0;i<num;i++)spi1(tx_buffer_sc16is700[i]);
 Nsc16is700_CS_OFF
@@ -5720,7 +5791,6 @@ Ndelay_us(2);
 X{long xx; xx=(unsigned long)2 * 12UL; while(xx)xx--;};
 Nsc16is700_CS_ON
 X((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR|=(1<<0);((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR|=(1<<0);
-W "sc16is7xx.c" 51 1 function "spi1" declared implicitly
 Nspi1((reg_num&0x0f)<<3);
 Nspi1(data);
 Nsc16is700_CS_OFF
@@ -5736,7 +5806,6 @@ Ndelay_us(2);
 X{long xx; xx=(unsigned long)2 * 12UL; while(xx)xx--;};
 Nsc16is700_CS_ON
 X((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR|=(1<<0);((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR|=(1<<0);
-W "sc16is7xx.c" 63 1 function "spi1" declared implicitly
 Nspi1(((reg_num&0x0f)<<3)|0x80);
 Nout = spi1(0xff);
 Nsc16is700_CS_OFF
@@ -5778,8 +5847,11 @@ N{
 N
 Nunsigned char baud_h,baud_l;
 N
-Nbaud_h = (char)((10000000U/16U/baudrate)>>8);
-Nbaud_l = (char)((10000000U/16U/baudrate)); 
+N//baud_h = (char)((10000000U/16U/baudrate)>>8);
+N//baud_l = (char)((10000000U/16U/baudrate)); 
+N
+Nbaud_h = (char)((30000000U/16U/baudrate)>>8);  //o_1
+Nbaud_l = (char)((30000000U/16U/baudrate)); 	   //o_1
 N
 Nsc16is700_wr_byte(CS16IS7xx_LCR, 0x80);
 Xsc16is700_wr_byte(0x03, 0x80);
@@ -5835,11 +5907,11 @@ N
 N
 N//----------------------------------------------- 
 N//Обработчик sc16is700
+N/* //o_1_s
 Nvoid sc16is700_uart_hndl(void)
 N{
 N
 Nsc16is700ByteAvailable=sc16is700_rd_byte(CS16IS7xx_RXLVL); //Читаем состояние ФИФО приема микросхемы
-Xsc16is700ByteAvailable=sc16is700_rd_byte(0x09); 
 N
 Nif(sc16is700ByteAvailable) //Если в приемном ФИФО	микросхемы есть данные
 N	{
@@ -5849,29 +5921,24 @@ N		{
 N		if(!sc16is700RecieveDisableFlag)
 N			{
 N			modbus_rx_buffer[modbus_rx_buffer_ptr]=sc16is700_rd_byte(CS16IS7xx_RHR);
-X			modbus_rx_buffer[modbus_rx_buffer_ptr]=sc16is700_rd_byte(0x00);
 N			modbus_rx_buffer_ptr++;
 N			modbus_timeout_cnt=0;   //Запускаем таймер опознавания конца посылки 
 N			//pvlk++;
 N			}
 N		else sc16is700_rd_byte(CS16IS7xx_RHR);
-X		else sc16is700_rd_byte(0x00);
 N		}
 N	}
 N
 N
 N
 Nsc16is700TxFifoLevel=sc16is700_rd_byte(CS16IS7xx_TXLVL);//Читаем состояние ФИФО передачи
-Xsc16is700TxFifoLevel=sc16is700_rd_byte(0x08);
 N
 Nif(sc16is700TxFifoLevel!=64) sc16is700TxFifoEmptyCnt=0;//Если ФИФО не пустой обнуляем счетчик свободности ФИФО передачи
 Nif(sc16is700TxFifoLevel==64) //если ФИФО пустой то плюсуем счетчик если он меньше константы
 N	{
 N	if(sc16is700TxFifoEmptyCnt<SC16IS700TXFIFOEMPTYCNTMAX)sc16is700TxFifoEmptyCnt++;
-X	if(sc16is700TxFifoEmptyCnt<5)sc16is700TxFifoEmptyCnt++;
 N	}
 Nif(sc16is700TxFifoEmptyCnt==SC16IS700TXFIFOEMPTYCNTMAX) sc16is700TxPossibleFlag=1;//Если счетчик сравнялся с константой поднимаем флаг возможности передачи
-Xif(sc16is700TxFifoEmptyCnt==5) sc16is700TxPossibleFlag=1;
 Nelse sc16is700TxPossibleFlag=0;//Если не сравнялся - флаг сбрасываем.
 N
 N
@@ -5884,14 +5951,13 @@ N		//for(;tx_rd_index_sc16is700++;tx_rd_index_sc16is700<=tx_wr_index_sc16is700)
 N			//{
 N		sc16is700RecieveDisableFlag=1;
 N		sc16is700_wr_buff(CS16IS7xx_THR, tx_wr_index_sc16is700);
-X		sc16is700_wr_buff(0x00, tx_wr_index_sc16is700);
 N			//}
 N		tx_wr_index_sc16is700=0;
 N		}
 N	}
 N
 Nif((sc16is700_rd_byte(CS16IS7xx_LSR))&0x40)	sc16is700RecieveDisableFlag=0;
-Xif((sc16is700_rd_byte(0x05))&0x40)	sc16is700RecieveDisableFlag=0;
 N
 N
 N}
+N*/ //o_1_e

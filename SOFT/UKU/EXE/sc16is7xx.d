@@ -7,3 +7,7 @@
 .\EXE\sc16is7xx.o: main.h
 .\EXE\sc16is7xx.o: C:\Keil\ARM\RV31\INC\rtl.h
 .\EXE\sc16is7xx.o: modbus.h
+.\EXE\sc16is7xx.o: MODBUS_RTU.h
+.\EXE\sc16is7xx.o: MODBUS_func3.h
+.\EXE\sc16is7xx.o: MODBUS_func4.h
+.\EXE\sc16is7xx.o: 25lc640.h

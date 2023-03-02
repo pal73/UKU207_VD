@@ -3390,7 +3390,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа
@@ -5247,7 +5247,7 @@ N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];
 N
 N//***********************************************
 N//Состояние инверторов
@@ -6901,7 +6901,7 @@ Nextern char tx_rd_index_sc16is700;//указатель чтения из программного буфера пер
 Nextern char sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 Nextern char sc16is700TxPossibleFlag;//Флаг возможности передачи
 N
-N
+Nvoid sc16is700_spi_init(void);//o_1
 Nvoid sc16is700_init(uint32_t baudrate);
 Nvoid sc16is700_wr_byte(char reg_num,char data);
 Nchar sc16is700_rd_byte(char reg_num);
@@ -7023,7 +7023,7 @@ Nextern int  mem_copy (void *dp, void *sp, int len);
 N
 Nunsigned char modbus_buf[20];
 Nshort modbus_crc16;
-Nchar modbus_timeout_cnt;
+N//char modbus_timeout_cnt;
 Nchar bMODBUS_TIMEOUT;
 Nunsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа 
 Nunsigned char modbus_an_buffer[30];    	//Буфер, куда они потом копируются для анализа
@@ -8453,53 +8453,29 @@ Nmodbus_registers[250]=(signed char)(bps[28]._Ti>>8);			//Рег126	Температура рад
 Nmodbus_registers[251]=(signed char)(bps[28]._Ti);
 Nmodbus_registers[252]=(signed char)(bps[28]._av>>8);			//Рег127	Байт флагов выпрямителя №29, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
 Nmodbus_registers[253]=(signed char)(bps[28]._av);
-W "modbus.c" 1401 37 subscript out of range
 Nmodbus_registers[254]=(signed char)(bps[29]._Uii>>8);			//Рег128	Выходное напряжение выпрямителя №30, 0.1В
-W "modbus.c" 1402 37 subscript out of range
 Nmodbus_registers[255]=(signed char)(bps[29]._Uii);
-W "modbus.c" 1403 37 subscript out of range
 Nmodbus_registers[256]=(signed char)(bps[29]._Ii>>8);			//Рег129	Выходной ток выпрямителя №30, 0.1А
-W "modbus.c" 1404 37 subscript out of range
 Nmodbus_registers[257]=(signed char)(bps[29]._Ii);
-W "modbus.c" 1405 37 subscript out of range
 Nmodbus_registers[258]=(signed char)(bps[29]._Ti>>8);			//Рег130	Температура радиатора выпрямителя №30, 1гЦ
-W "modbus.c" 1406 37 subscript out of range
 Nmodbus_registers[259]=(signed char)(bps[29]._Ti);
-W "modbus.c" 1407 37 subscript out of range
 Nmodbus_registers[260]=(signed char)(bps[29]._av>>8);			//Рег131	Байт флагов выпрямителя №30, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-W "modbus.c" 1408 37 subscript out of range
 Nmodbus_registers[261]=(signed char)(bps[29]._av);
-W "modbus.c" 1409 40 subscript out of range
 Nmodbus_registers[262]=(signed char)(bps[30]._Uii>>8);			//Рег132	Выходное напряжение выпрямителя №31, 0.1В
-W "modbus.c" 1410 40 subscript out of range
 Nmodbus_registers[263]=(signed char)(bps[30]._Uii);
-W "modbus.c" 1411 40 subscript out of range
 Nmodbus_registers[264]=(signed char)(bps[30]._Ii>>8);			//Рег133	Выходной ток выпрямителя №31, 0.1А
-W "modbus.c" 1412 40 subscript out of range
 Nmodbus_registers[265]=(signed char)(bps[30]._Ii);
-W "modbus.c" 1413 40 subscript out of range
 Nmodbus_registers[266]=(signed char)(bps[30]._Ti>>8);			//Рег134	Температура радиатора выпрямителя №31, 1гЦ
-W "modbus.c" 1414 40 subscript out of range
 Nmodbus_registers[267]=(signed char)(bps[30]._Ti);
-W "modbus.c" 1415 40 subscript out of range
 Nmodbus_registers[268]=(signed char)(bps[30]._av>>8);			//Рег135	Байт флагов выпрямителя №31, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-W "modbus.c" 1416 40 subscript out of range
 Nmodbus_registers[269]=(signed char)(bps[30]._av);
-W "modbus.c" 1417 40 subscript out of range
 Nmodbus_registers[270]=(signed char)(bps[31]._Uii>>8);			//Рег136	Выходное напряжение выпрямителя №32, 0.1В
-W "modbus.c" 1418 40 subscript out of range
 Nmodbus_registers[271]=(signed char)(bps[31]._Uii);
-W "modbus.c" 1419 40 subscript out of range
 Nmodbus_registers[272]=(signed char)(bps[31]._Ii>>8);			//Рег137	Выходной ток выпрямителя №32, 0.1А
-W "modbus.c" 1420 40 subscript out of range
 Nmodbus_registers[273]=(signed char)(bps[31]._Ii);
-W "modbus.c" 1421 40 subscript out of range
 Nmodbus_registers[274]=(signed char)(bps[31]._Ti>>8);			//Рег138	Температура радиатора выпрямителя №32, 1гЦ
-W "modbus.c" 1422 40 subscript out of range
 Nmodbus_registers[275]=(signed char)(bps[31]._Ti);
-W "modbus.c" 1423 40 subscript out of range
 Nmodbus_registers[276]=(signed char)(bps[31]._av>>8);			//Рег139	Байт флагов выпрямителя №32, 0x01 - перегрев, 0x02 завышено Uвых, 0x04 занижено Uвых, 0x08 - отсутствует связь с выпрямителем
-W "modbus.c" 1424 40 subscript out of range
 Nmodbus_registers[277]=(signed char)(bps[31]._av);
 N
 N

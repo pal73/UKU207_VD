@@ -5,7 +5,7 @@
 #include "snmp_data_file.h"
 #include "control.h"
 #include "gran.h"
-
+#include "MODBUS_RTU.h" //o_1
 //-----------------------------------------------
 void memo_read (void)
 {
@@ -288,6 +288,11 @@ ETH_TRAP5_IP_4=lc640_read_int(EE_ETH_TRAP5_IP_4);
 ETH_SNMP_PORT_READ=lc640_read_int(EE_ETH_SNMP_PORT_READ);
 ETH_SNMP_PORT_WRITE=lc640_read_int(EE_ETH_SNMP_PORT_WRITE);
 MODBUS_ADRESS=lc640_read_int(EE_MODBUS_ADRESS);
+//o_1_s		//задержка ответа
+modbusTimeoutInMills=3000/MODBUS_BAUDRATE;
+if(modbusTimeoutInMills<2)modbusTimeoutInMills=2;
+modbusTimeoutInMills+=2;
+//o_1_e
 MODBUS_BAUDRATE=lc640_read_int(EE_MODBUS_BAUDRATE);
 RELE_SET_MASK[0]=lc640_read_int(EE_RELE_SET_MASK0);
 RELE_SET_MASK[1]=lc640_read_int(EE_RELE_SET_MASK1);

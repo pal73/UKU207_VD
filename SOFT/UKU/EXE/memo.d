@@ -7,3 +7,4 @@
 .\EXE\memo.o: snmp_data_file.h
 .\EXE\memo.o: control.h
 .\EXE\memo.o: gran.h
+.\EXE\memo.o: MODBUS_RTU.h

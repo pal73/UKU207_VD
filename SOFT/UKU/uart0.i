@@ -3215,7 +3215,7 @@ typedef struct
 	signed short _avg;
 	signed short _cntrl_stat;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
 
 
 
@@ -3973,7 +3973,7 @@ void avar_bat_ips_hndl(char in);
 
 extern unsigned char modbus_buf[20];
 extern short modbus_crc16;
-extern char modbus_timeout_cnt;
+
 extern char bMODBUS_TIMEOUT;
 extern unsigned char modbus_rx_buffer[30];	
 extern unsigned char modbus_an_buffer[30];	
@@ -4155,6 +4155,7 @@ volatile uint32_t UART0Count = 0;
 short rs232_data_out_buff[30];
 
 
+extern char modbus_timeout_cnt; 
 
 
 char crc_87(char* ptr,char num)
