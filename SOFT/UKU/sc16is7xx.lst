@@ -5013,6 +5013,7 @@ N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
 N
+Nextern short RS485_QWARZ_DIGIT;
 N//***********************************************
 N//Состояние батарей
 Ntypedef struct
@@ -5847,11 +5848,29 @@ N{
 N
 Nunsigned char baud_h,baud_l;
 N
-N//baud_h = (char)((10000000U/16U/baudrate)>>8);
-N//baud_l = (char)((10000000U/16U/baudrate)); 
+Nbaud_h = (char)((10000000U/16U/baudrate)>>8);
+Nbaud_l = (char)((10000000U/16U/baudrate)); 
 N
-Nbaud_h = (char)((30000000U/16U/baudrate)>>8);  //o_1
-Nbaud_l = (char)((30000000U/16U/baudrate)); 	   //o_1
+Nif(baudrate==57600U)baud_l=11;
+N//if(baudrate==115200U)baud_l=6;
+N
+N
+Nbaud_h = (char)((10000000U/16U/baudrate)>>8);
+Nbaud_l = (char)((10000000U/16U/baudrate));
+N
+Nif(RS485_QWARZ_DIGIT==40)
+N	{
+N	baud_h = (char)((40000000U/16U/baudrate)>>8);
+N	baud_l = (char)((40000000U/16U/baudrate));
+N	} 
+Nif(RS485_QWARZ_DIGIT==30)
+N	{
+N	baud_h = (char)((30000000U/16U/baudrate)>>8);
+N	baud_l = (char)((30000000U/16U/baudrate));
+N	}
+N
+N//	baud_h = (char)((30000000U/16U/baudrate)>>8);
+N//	baud_l = (char)((30000000U/16U/baudrate));
 N
 Nsc16is700_wr_byte(CS16IS7xx_LCR, 0x80);
 Xsc16is700_wr_byte(0x03, 0x80);
@@ -5877,7 +5896,6 @@ N//sc16is700_wr_byte(CS16IS7xx_DLH, 0x04);
 N//sc16is700_wr_byte(CS16IS7xx_DLH, 0x04);
 N//sc16is700_wr_byte(CS16IS7xx_DLH, 0x04);
 N}
-N
 N/*
 NVoid SC16IS752_Init_ChA (void) // program channel A for SPI-UART
 N{ // set 115200 baud, 8N1

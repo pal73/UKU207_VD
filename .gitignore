@@ -1,3 +1,6 @@
 *.i
 *.lst
 *.o
+/SOFT/UKU/EXE/*.sct
+/SOFT/UKU/EXE/*.axf
+/SOFT/UKU/EXE/*.d

@@ -5038,6 +5038,7 @@ N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
 N
+Nextern short RS485_QWARZ_DIGIT;
 N//***********************************************
 N//Состояние батарей
 Ntypedef struct

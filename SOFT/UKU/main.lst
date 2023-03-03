@@ -1948,6 +1948,7 @@ N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
 N
+Nextern short RS485_QWARZ_DIGIT;
 N//***********************************************
 N//Состояние батарей
 Ntypedef struct
@@ -3305,6 +3306,7 @@ N#define EE_KB_ALGORITM					SECTOR_SETS2+22
 N#define EE_REG_SPEED					SECTOR_SETS2+24
 N#define EE_OVERLOAD_CURR				SECTOR_SETS2+26
 N#define EE_OVERLOAD_TIME				SECTOR_SETS2+28
+N#define EE_RS485_QWARZ_DIGIT			SECTOR_SETS2+30
 N
 N#define SECTOR_BAT  		SECTOR_KOEF+400
 N
@@ -5391,6 +5393,8 @@ Nsigned short I_LOAD_MODE;	//способ измерения выходного тока - по шунту или как 
 N
 Nsigned short OVERLOAD_CURR;
 Nsigned short OVERLOAD_TIME;
+Nshort RS485_QWARZ_DIGIT;
+N
 N
 N
 N//***********************************************
@@ -8714,7 +8718,7 @@ N#define LPC_GPDMACH7          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH7_BASE )
 N#define LPC_USB               ((LPC_USB_TypeDef       *) LPC_USB_BASE      )
 N
 N#endif  // __LPC17xx_H__
-L 495 "main.c" 2
+L 497 "main.c" 2
 N
 N
 N
@@ -9803,11 +9807,11 @@ N			lcd_bitmap[ptr_bitmap++]=caracter[((unsigned)lcd_buffer[x]*6)+5];
 N			} 
 N		}
 N	}	
-W "main.c" 1379 13 variable "ptr_cnt" was declared but never referenced
-W "main.c" 1379 21 variable "ptr_cnt1" was declared but never referenced
-W "main.c" 1379 30 variable "ptr_cnt2" was declared but never referenced
-W "main.c" 1379 39 variable "ptr_cnt3" was declared but never referenced
-W "main.c" 1379 48 variable "ptr_cnt4" was declared but never referenced
+W "main.c" 1381 13 variable "ptr_cnt" was declared but never referenced
+W "main.c" 1381 21 variable "ptr_cnt1" was declared but never referenced
+W "main.c" 1381 30 variable "ptr_cnt2" was declared but never referenced
+W "main.c" 1381 39 variable "ptr_cnt3" was declared but never referenced
+W "main.c" 1381 48 variable "ptr_cnt4" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -10834,7 +10838,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 2354 16 unrecognized character escape sequence
+W "main.c" 2356 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -12665,7 +12669,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3952 7 variable "sss" was declared but never referenced
+W "main.c" 3954 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -13116,6 +13120,7 @@ N	ptrs[i++]=" БПС                ";
 N	ptrs[i++]=" Uв.д.         #В   ";
 N    ptrs[i++]=" Tсистемы  =   ^°C  ";;
 N    ptrs[i++]=" Выход              ";
+N	ptrs[i++]=" Кварц RS485   (МГЦ ";
 N    ptrs[i++]="                    ";
 N    ptrs[i++]="                    ";
 N
@@ -13137,6 +13142,7 @@ N	int2lcd(out_U,'!',1);
 N	int2lcd(out_I,'@',0);
 N	int2lcd(vd_U,'#',1);
 N	int2lcd(sys_T,'^',0);
+N	int2lcd(RS485_QWARZ_DIGIT,'(',0);
 N	
 N	//int2lcdyx(adc_buff_[0],0,4,0);
 N    //int2lcdyx(adc_buff_[1],0,9,0);	
@@ -15718,17 +15724,17 @@ N	{
 N	bgnd_par(	" Версия             ",
 N				" Сборка  0000.00.00 ",
 N				#ifdef WG12232A
-S				"                    ",
+N				"                    ",
 N				#endif
 N				#ifdef WG12232L3
-N				" WG12232L3          ",
+S				" WG12232L3          ",
 N				#endif
 N				"                    ");
 N	int2lcdyx(BUILD_YEAR,1,12,0);
 N	int2lcdyx(BUILD_MONTH,1,15,0);
 N	int2lcdyx(BUILD_DAY,1,18,0);
 N	
-W "main.c" 6600 2 function "sprintf" declared implicitly
+W "main.c" 6604 2 function "sprintf" declared implicitly
 N	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
 N	}
 Nelse if(ind==iLog_reset_prl)
@@ -15798,8 +15804,8 @@ Nint2lcdyx(retcntsec,0,7,0);	*/
 N//int2lcdyx(bps[0]._vol_i,0,15,0);
 N//int2lcdyx(cntrl_stat,0,19,0); 
 N//int2lcdyx(bps[0]._Uin,0,4,0);
-W "main.c" 1412 6 variable "ii_" was declared but never referenced
-W "main.c" 1413 20 variable "cnt_ind_bat" was declared but never referenced
+W "main.c" 1414 6 variable "ii_" was declared but never referenced
+W "main.c" 1415 20 variable "cnt_ind_bat" was declared but never referenced
 N}							    
 N
 N
@@ -16274,7 +16280,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 7047 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 7051 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -21288,16 +21294,16 @@ X	if(but==251)
 N		{
 N		sub_ind++;
 X		a_ind . s_i++;
-N		gran_char(&sub_ind,0,4+(NUMIST!=0));
-X		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+N		gran_char(&sub_ind,0,5+(NUMIST!=0));
+X		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 N		}
 N	else if(but==butU)
 X	else if(but==253)
 N		{
 N		sub_ind--;
 X		a_ind . s_i--;
-N		gran_char(&sub_ind,0,4+(NUMIST!=0));
-X		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+N		gran_char(&sub_ind,0,5+(NUMIST!=0));
+X		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 N		}
 N	else if(but==butD_)
 X	else if(but==123)
@@ -21431,6 +21437,28 @@ N		{
 N	    tree_down(0,0);
 N	    ret(0);
 N        }
+N	else if(sub_ind==(5+(NUMIST!=0)))
+X	else if(a_ind . s_i==(5+(NUMIST!=0)))
+N		{
+N		if((but==butR)||(but==butR_))
+X		if((but==239)||(but==111))
+N			{
+N			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=30;
+N			else if(RS485_QWARZ_DIGIT==30)RS485_QWARZ_DIGIT=40;
+N			else RS485_QWARZ_DIGIT=10;
+N			}
+N		else if((but==butL)||(but==butL_))
+X		else if((but==247)||(but==119))
+N			{
+N			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=40;
+N			else if(RS485_QWARZ_DIGIT==40)RS485_QWARZ_DIGIT=30;
+N			else RS485_QWARZ_DIGIT=10;
+N			}
+N		gran(&RS485_QWARZ_DIGIT,10,40);
+N		lc640_write_int(EE_RS485_QWARZ_DIGIT,RS485_QWARZ_DIGIT);
+X		lc640_write_int(0x10+350+30,RS485_QWARZ_DIGIT);
+N		speed=0;
+N		}		
 N	}
 N
 N
@@ -26242,7 +26270,7 @@ N	}
 N			
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14642 1 label "but_an_end" was declared but never referenced
+W "main.c" 14664 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -26678,7 +26706,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 15046 15 pointless comparison of unsigned integer with zero
+W "main.c" 15068 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26739,7 +26767,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 15105 1 function "sc16is700_init" declared implicitly
+W "main.c" 15127 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26768,7 +26796,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 15132 3 function "can_in_an1" declared implicitly
+W "main.c" 15154 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26899,11 +26927,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 15261 3 function "u_avar_hndl" declared implicitly
+W "main.c" 15283 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 15262 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 15284 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 15263 3 function "overload_hndl" declared implicitly
+W "main.c" 15285 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26923,7 +26951,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 15281 3 function "rele_av_hndl" declared implicitly
+W "main.c" 15303 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26961,7 +26989,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 15318 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 15340 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26989,7 +27017,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 15345 3 function "npn_hndl" declared implicitly
+W "main.c" 15367 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -27005,7 +27033,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 15360 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 15382 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -27015,7 +27043,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 15369 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 15391 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -27032,10 +27060,10 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 15385 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 15407 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N
 N	}
 N}
-W "main.c" 795 13 function "timer_poll" was declared but never referenced
+W "main.c" 797 13 function "timer_poll" was declared but never referenced

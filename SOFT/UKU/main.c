@@ -284,6 +284,8 @@ signed short I_LOAD_MODE;	//способ измерения выходного тока - по шунту или как с
 
 signed short OVERLOAD_CURR;
 signed short OVERLOAD_TIME;
+short RS485_QWARZ_DIGIT;
+
 
 
 //***********************************************
@@ -4353,6 +4355,7 @@ else if(ind==iK_VD)
 	ptrs[i++]=" Uв.д.         #В   ";
     ptrs[i++]=" Tсистемы  =   ^°C  ";;
     ptrs[i++]=" Выход              ";
+	ptrs[i++]=" Кварц RS485   (МГЦ ";
     ptrs[i++]="                    ";
     ptrs[i++]="                    ";
 
@@ -4369,6 +4372,7 @@ else if(ind==iK_VD)
 	int2lcd(out_I,'@',0);
 	int2lcd(vd_U,'#',1);
 	int2lcd(sys_T,'^',0);
+	int2lcd(RS485_QWARZ_DIGIT,'(',0);
 	
 	//int2lcdyx(adc_buff_[0],0,4,0);
     //int2lcdyx(adc_buff_[1],0,9,0);	
@@ -10730,12 +10734,12 @@ else if(ind==iK_VD)
 	if(but==butD)
 		{
 		sub_ind++;
-		gran_char(&sub_ind,0,4+(NUMIST!=0));
+		gran_char(&sub_ind,0,5+(NUMIST!=0));
 		}
 	else if(but==butU)
 		{
 		sub_ind--;
-		gran_char(&sub_ind,0,4+(NUMIST!=0));
+		gran_char(&sub_ind,0,5+(NUMIST!=0));
 		}
 	else if(but==butD_)
 		{
@@ -10839,6 +10843,24 @@ else if(ind==iK_VD)
 	    tree_down(0,0);
 	    ret(0);
         }
+	else if(sub_ind==(5+(NUMIST!=0)))
+		{
+		if((but==butR)||(but==butR_))
+			{
+			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=30;
+			else if(RS485_QWARZ_DIGIT==30)RS485_QWARZ_DIGIT=40;
+			else RS485_QWARZ_DIGIT=10;
+			}
+		else if((but==butL)||(but==butL_))
+			{
+			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=40;
+			else if(RS485_QWARZ_DIGIT==40)RS485_QWARZ_DIGIT=30;
+			else RS485_QWARZ_DIGIT=10;
+			}
+		gran(&RS485_QWARZ_DIGIT,10,40);
+		lc640_write_int(EE_RS485_QWARZ_DIGIT,RS485_QWARZ_DIGIT);
+		speed=0;
+		}		
 	}
 
 

@@ -70,34 +70,34 @@ void memo_read (void);
 
  
 
-#line 206 "eeprom_map.h"
+#line 207 "eeprom_map.h"
 
 
 
-#line 218 "eeprom_map.h"
+#line 219 "eeprom_map.h"
 
 
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
+#line 230 "eeprom_map.h"
 
 
 
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
+#line 241 "eeprom_map.h"
 
 
 
+#line 297 "eeprom_map.h"
 
+
+#line 340 "eeprom_map.h"
 
 
 
 
-#line 361 "eeprom_map.h"
+
+
+
+
+#line 362 "eeprom_map.h"
 
 
 
@@ -1174,6 +1174,7 @@ extern signed short I_LOAD_MODE;
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
 
+extern short RS485_QWARZ_DIGIT;
 
 
 typedef struct
@@ -1596,11 +1597,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1466 "main.h"
 
-#line 1476 "main.h"
+#line 1477 "main.h"
 
-#line 1492 "main.h"
+#line 1493 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1644,7 +1645,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1547 "main.h"
 
 
 
@@ -2351,7 +2352,8 @@ KB_ALGORITM=lc640_read_int(0x10+350+22);
 REG_SPEED=lc640_read_int(0x10+350+24);
 OVERLOAD_CURR=lc640_read_int(0x10+350+26);
 OVERLOAD_TIME=lc640_read_int(0x10+350+28);
-#line 164 "memo.c"
+RS485_QWARZ_DIGIT=lc640_read_int(0x10+350+30);
+
 BAT_IS_ON[0]=(enum_bat_is_on)lc640_read_int(0x10+400);
 BAT_IS_ON[1]=(enum_bat_is_on)lc640_read_int(0x10+400+30);
 NUMBAT=0;

@@ -1576,6 +1576,7 @@ N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
 N
+Nextern short RS485_QWARZ_DIGIT;
 N//***********************************************
 N//Состояние батарей
 Ntypedef struct
@@ -6036,6 +6037,7 @@ N#define EE_KB_ALGORITM					SECTOR_SETS2+22
 N#define EE_REG_SPEED					SECTOR_SETS2+24
 N#define EE_OVERLOAD_CURR				SECTOR_SETS2+26
 N#define EE_OVERLOAD_TIME				SECTOR_SETS2+28
+N#define EE_RS485_QWARZ_DIGIT			SECTOR_SETS2+30
 N
 N#define SECTOR_BAT  		SECTOR_KOEF+400
 N

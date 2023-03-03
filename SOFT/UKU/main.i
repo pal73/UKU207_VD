@@ -1242,6 +1242,7 @@ extern signed short I_LOAD_MODE;
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
 
+extern short RS485_QWARZ_DIGIT;
 
 
 typedef struct
@@ -1664,11 +1665,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1466 "main.h"
 
-#line 1476 "main.h"
+#line 1477 "main.h"
 
-#line 1492 "main.h"
+#line 1493 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1712,7 +1713,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1547 "main.h"
 
 
 
@@ -2289,34 +2290,34 @@ void ret_hndl(void);
 
  
 
-#line 206 "eeprom_map.h"
+#line 207 "eeprom_map.h"
 
 
 
-#line 218 "eeprom_map.h"
+#line 219 "eeprom_map.h"
 
 
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
+#line 230 "eeprom_map.h"
 
 
 
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
+#line 241 "eeprom_map.h"
 
 
 
+#line 297 "eeprom_map.h"
 
+
+#line 340 "eeprom_map.h"
 
 
 
 
-#line 361 "eeprom_map.h"
+
+
+
+
+#line 362 "eeprom_map.h"
 
 
 
@@ -4059,6 +4060,8 @@ signed short I_LOAD_MODE;
 
 signed short OVERLOAD_CURR;
 signed short OVERLOAD_TIME;
+short RS485_QWARZ_DIGIT;
+
 
 
 
@@ -6077,7 +6080,7 @@ typedef struct
  
 #line 1031 "C:\\Keil\\ARM\\INC\\NXP\\LPC17xx\\LPC17xx.H"
 
-#line 495 "main.c"
+#line 497 "main.c"
 
 
 
@@ -6186,11 +6189,11 @@ enum_av_tbox_stat av_tbox_stat=atsOFF;
 signed short av_tbox_cnt;
 char tbatdisable_cmnd=20,tloaddisable_cmnd=22;
 short tbatdisable_cnt,tloaddisable_cnt;
-#line 609 "main.c"
+#line 611 "main.c"
 
-#line 618 "main.c"
+#line 620 "main.c"
 
-#line 631 "main.c"
+#line 633 "main.c"
 
 
 
@@ -6217,7 +6220,7 @@ char ibat_metr_cnt=0;
 
 
 
-#line 668 "main.c"
+#line 670 "main.c"
 
 
 
@@ -9906,6 +9909,7 @@ else if(a_ind . i==iK_VD)
 	ptrs[i++]=" Uв.д.         #В   ";
     ptrs[i++]=" Tсистемы  =   ^°C  ";;
     ptrs[i++]=" Выход              ";
+	ptrs[i++]=" Кварц RS485   (МГЦ ";
     ptrs[i++]="                    ";
     ptrs[i++]="                    ";
 
@@ -9922,6 +9926,7 @@ else if(a_ind . i==iK_VD)
 	int2lcd(out_I,'@',0);
 	int2lcd(vd_U,'#',1);
 	int2lcd(sys_T,'^',0);
+	int2lcd(RS485_QWARZ_DIGIT,'(',0);
 	
 	
     
@@ -11002,7 +11007,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5495 "main.c"
+#line 5499 "main.c"
     	}
 
 
@@ -11609,7 +11614,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 6234 "main.c"
+#line 6238 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11966,10 +11971,10 @@ else if(a_ind . i==iFWabout)
 	bgnd_par(	" Версия             ",
 				" Сборка  0000.00.00 ",
 
+				"                    ",
 
 
 
-				" WG12232L3          ",
 
 				"                    ");
 	int2lcdyx(BUILD_YEAR,1,12,0);
@@ -12042,12 +12047,12 @@ else if(a_ind . i==iCurr_overload)
 }							    
 
 
-#line 6672 "main.c"
+#line 6676 "main.c"
 
 
 
 
-#line 6695 "main.c"
+#line 6699 "main.c"
 
 
 
@@ -13230,7 +13235,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7889 "main.c"
+#line 7893 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -13252,7 +13257,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7935 "main.c"
+#line 7939 "main.c"
 
 
 
@@ -16051,12 +16056,12 @@ else if(a_ind . i==iK_VD)
 	if(but==251)
 		{
 		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 		}
 	else if(but==253)
 		{
 		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 		}
 	else if(but==123)
 		{
@@ -16160,6 +16165,24 @@ else if(a_ind . i==iK_VD)
 	    tree_down(0,0);
 	    ret(0);
         }
+	else if(a_ind . s_i==(5+(NUMIST!=0)))
+		{
+		if((but==239)||(but==111))
+			{
+			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=30;
+			else if(RS485_QWARZ_DIGIT==30)RS485_QWARZ_DIGIT=40;
+			else RS485_QWARZ_DIGIT=10;
+			}
+		else if((but==247)||(but==119))
+			{
+			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=40;
+			else if(RS485_QWARZ_DIGIT==40)RS485_QWARZ_DIGIT=30;
+			else RS485_QWARZ_DIGIT=10;
+			}
+		gran(&RS485_QWARZ_DIGIT,10,40);
+		lc640_write_int(0x10+350+30,RS485_QWARZ_DIGIT);
+		speed=0;
+		}		
 	}
 
 
@@ -18194,9 +18217,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 13122 "main.c"
+#line 13144 "main.c"
 
-#line 13332 "main.c"
+#line 13354 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -18522,7 +18545,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 14037 "main.c"
+#line 14059 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -19462,7 +19485,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14982 "main.c"
+#line 15004 "main.c"
 
 
 
@@ -19553,7 +19576,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 15090 "main.c"
+#line 15112 "main.c"
 
 
 

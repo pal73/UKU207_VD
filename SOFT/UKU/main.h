@@ -1032,6 +1032,7 @@ extern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту и
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
 
+extern short RS485_QWARZ_DIGIT;
 //***********************************************
 //Состояние батарей
 typedef struct

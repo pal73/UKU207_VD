@@ -952,6 +952,7 @@ extern signed short I_LOAD_MODE;
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
 
+extern short RS485_QWARZ_DIGIT;
 
 
 typedef struct
@@ -1374,11 +1375,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1466 "main.h"
 
-#line 1476 "main.h"
+#line 1477 "main.h"
 
-#line 1492 "main.h"
+#line 1493 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1422,7 +1423,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1547 "main.h"
 
 
 
