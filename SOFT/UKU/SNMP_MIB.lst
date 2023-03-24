@@ -5148,7 +5148,7 @@ N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
 N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-N	iFWabout,
+N	iFWabout,iFWaboutBPS,
 N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
@@ -5410,6 +5410,7 @@ Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту 
 N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
+Nextern signed short RS485_QWARZ_DIGIT;
 N
 N//***********************************************
 N//Состояние батарей
@@ -5495,101 +5496,11 @@ N	//signed short   _min_cell_volt;
 N	} LI_BAT_STAT; 
 Nextern LI_BAT_STAT li_bat;
 N//#endif
-N//***********************************************
-N//Состояние байпаса
-Ntypedef struct
-N     {
-N	signed short 	_Iout;
-N	signed short 	_Uout;
-N	signed short 	_Pout;
-N	signed short 	_Unet; 	
-N	signed short 	_Uin;
-N	char			_T;
-N	char 		_flags;
-N	char			_cnt;
-N	char 		_adress;
-N	} BYPS_STAT; 
-Nextern BYPS_STAT byps;
 N
-N//***********************************************
-N//Мониторы АКБ
-Ntypedef struct
-N     {
-N	signed short	_U[5];
-N	signed short	_Ub[5];
-N	signed short	_T[5];
-N	signed short	_T_nd[5];
-N	signed short 	_cnt; 	
-N	} MAKB_STAT; 
-Nextern MAKB_STAT makb[4];
 N
-N//***********************************************
-N//Литиевые АКБ
-Ntypedef struct
-N     {
-N	signed short	_max_cell_volt;
-N	signed short	_min_cell_volt;
-N	signed short	_max_cell_temp;
-N	signed short	_min_cell_temp;
-N	signed short	_tot_bat_volt;
-N	signed short	_ch_curr;
-N	signed short	_dsch_curr;
-N	signed short	_rat_cap;
-N	signed short	_s_o_h;
-N	signed short	_s_o_c;
-N	signed short	_c_c_l_v;
-N	signed short	_r_b_t;
-N	signed short	_b_p_ser_num;
-N	signed short   _flags1;
-N	signed short 	_flags2;
-N	signed short 	_communication2lvlErrorStat; 	//флаг аварийности низовой связи с батареей, вычисляется в плате расширения
-N	signed short	_communication2lvlErrorCnt;  	//счетчик аварийности низовой связи с батареей
-N	signed short 	_cnt;
-N	signed short 	_communicationFullErrorStat;	//флаг аварийности всего канала связи с батареей, 0 - норма, 1 - отсутствует связь с промежуточной платой, 2 - отсутствует связь промежуточной платы и батареи  	
-N	signed short   _battIsOn;		//0 - отсутствует, 1 - присутствует
-N	char 		_plazma[8];		//переменные для отладки
-N	signed short 	_isOnCnt;
-N	signed short	_s_o_c_abs;		//остаточный заряд в абсолютном выражении
-N	signed short 	_s_o_c_percent; //остаточный заряд в процентном выражении
-N	signed short	_plazma_ss;
-N	signed short	_zar_percent;	//заряд батареи в процетах
-N	signed char		_cell_temp_1;	//температура 1-го датчика батареи(ZTT)
-N	signed char		_cell_temp_2;	//температура 2-го датчика батареи(ZTT)
-N	signed char		_cell_temp_3;	//температура 3-го датчика батареи(ZTT)
-N	signed char		_cell_temp_4;	//температура 4-го датчика батареи(ZTT)
-N	signed char		_cell_temp_ambient;	//температура датчика окружающей среды батареи(ZTT)
-N	signed char		_cell_temp_power;	//температура датчика силовой части батареи(ZTT)
-N	//signed char 	_pack_volt_state;	//статус аварии по напряжениям батареи(ZTT)
-N	//signed char 	_pack_temper_state;	//статус аварии по температурам батареи(ZTT)
-N	//signed char 	_pack_alarm_state;	//статус аварий батареи(ZTT)
-N	signed char		_charge_and_discharge_current_alarm_status;	 	//(ZTT)
-N	signed char 	_battery_total_voltage_alarm_status;			//(ZTT)
-N	signed char		_custom_alarm_quantity;							//(ZTT)
-N	signed char		_balanced_event_code;							//(ZTT)
-N	signed char 	_voltage_event_code;							//(ZTT)
-N	signed char 	_temperature_event_code;						//(ZTT)
-N	signed char		_current_event_code;							//(ZTT)
-N	signed char		_fet_status_code;								//(ZTT)
-N	signed short	_balanced_status_code;							//(ZTT)
-N	signed char 	_system_status_code;							//(ZTT)
 N
-N	} LAKB_STAT; 
-Nextern LAKB_STAT lakb[3];
-Nextern char lakb_damp[1][42];
-Nextern char bLAKB_KONF_CH;
-Nextern char bLAKB_KONF_CH_old;
-Nextern char lakb_ison_mass[7];
-Nextern short lakb_mn_ind_cnt;
-Nextern char bLAKB_KONF_CH_EN;
-Nextern char bRS485ERR;
-Nextern short LBAT_STRUKT;
-Nextern char lakb_error_cnt;	//счетчик неправильного показания ннапряжения батареи
-Nextern short numOfPacks,numOfPacks_;
-Nextern short numOfCells, numOfTemperCells, baseOfData;
-Nextern short lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-Nextern short lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-Nextern short lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-Nextern short lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
+N
+N
 N
 N
 N
@@ -5643,7 +5554,9 @@ N     signed short _temp_av_cnt;
 N     signed short _umax_av_cnt;
 N     signed short _umin_av_cnt;
 N     signed _rotor;
-N     signed  short _x_; 
+N     signed  short _x_;		//передаваемые БПСам корректоры
+N
+N	 signed  short _x_avg; 	//выравнивание токов
 N     char _adr_ee;
 N	char _last_avar;
 N	char _vent_resurs_temp[4];
@@ -5653,8 +5566,15 @@ N	signed short debug_info_to_uku1;
 N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
+N	signed short _build_year;
+N	signed short _build_month;
+N	signed short _build_day;
+N	signed short _hardvare_version;
+N	signed short _soft_version;
+N	signed short _build;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];//o_1
+N
 N
 N//***********************************************
 N//Состояние инверторов
@@ -5709,6 +5629,8 @@ Nextern INV_STAT inv[20];
 N#endif
 Nextern char first_inv_slot;
 N
+N
+N
 N//***********************************************
 N//Состояние нагрузки
 Nextern signed short load_U;
@@ -5734,6 +5656,7 @@ Nextern char net_av;
 N
 N
 Nextern char plazma_plazma_plazma;
+Nextern char plazma_PUTTM31,plazma_PUTTM32;
 N
 Nvoid bitmap_hndl(void);
 Nvoid ind_hndl(void);
@@ -5966,6 +5889,9 @@ N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
 Nextern short plazma_numOfPacks;
+Nextern signed  short _x_reg;		//точная регулировка выходного напряжения системы
+Nextern signed  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
+N
 N
 Nextern char plazma_ztt[2];
 Nextern char plazma1809;
@@ -6028,7 +5954,7 @@ N//Работа с БПСами
 Nextern char num_of_wrks_bps;
 Nextern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 Nextern char bps_hndl_2sec_cnt;
-Nextern unsigned short bps_on_mask,bps_off_mask;
+Nextern unsigned int bps_on_mask,bps_off_mask;
 Nextern char num_necc_up,num_necc_down;
 Nextern unsigned char sh_cnt0,b1Hz_sh;
 N
@@ -7632,87 +7558,6 @@ N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, D
 X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,15, 6},  				sizeof(snmp_lakb_flags2[1]), (void *)&snmp_lakb_flags2[1],  		((void *) 0)},	
 N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_FLAGS2, 7},  				MIB_INT(snmp_lakb_flags2[0]),  		NULL},	//Второй флаг состояния ЛАКБ
 X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,15, 7},  				sizeof(snmp_lakb_flags2[0]), (void *)&snmp_lakb_flags2[0],  		((void *) 0)},	
-N#endif
-N
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CHARGE_AND_DISCHARGE_CURRENT_ALARM_STATUS, 1},  				MIB_INT(lakb[0]._charge_and_discharge_current_alarm_status),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,22, 1},  				sizeof(lakb[0]. _charge_and_discharge_current_alarm_status), (void *)&lakb[0]. _charge_and_discharge_current_alarm_status,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CHARGE_AND_DISCHARGE_CURRENT_ALARM_STATUS, 2},  				MIB_INT(lakb[1]._charge_and_discharge_current_alarm_status),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,22, 2},  				sizeof(lakb[1]. _charge_and_discharge_current_alarm_status), (void *)&lakb[1]. _charge_and_discharge_current_alarm_status,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CHARGE_AND_DISCHARGE_CURRENT_ALARM_STATUS, 3},  				MIB_INT(lakb[2]._charge_and_discharge_current_alarm_status),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,22, 3},  				sizeof(lakb[2]. _charge_and_discharge_current_alarm_status), (void *)&lakb[2]. _charge_and_discharge_current_alarm_status,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BATTERY_TOTAL_VOLTAGE_ALARM_STATUS, 1},  						MIB_INT(lakb[0]._battery_total_voltage_alarm_status),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,23, 1},  						sizeof(lakb[0]. _battery_total_voltage_alarm_status), (void *)&lakb[0]. _battery_total_voltage_alarm_status,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BATTERY_TOTAL_VOLTAGE_ALARM_STATUS, 2},  						MIB_INT(lakb[1]._battery_total_voltage_alarm_status),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,23, 2},  						sizeof(lakb[1]. _battery_total_voltage_alarm_status), (void *)&lakb[1]. _battery_total_voltage_alarm_status,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BATTERY_TOTAL_VOLTAGE_ALARM_STATUS, 3},  						MIB_INT(lakb[2]._battery_total_voltage_alarm_status),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,23, 3},  						sizeof(lakb[2]. _battery_total_voltage_alarm_status), (void *)&lakb[2]. _battery_total_voltage_alarm_status,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CUSTOM_ALARM_QUANTITY, 1},  									MIB_INT(lakb[0]._custom_alarm_quantity),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,24, 1},  									sizeof(lakb[0]. _custom_alarm_quantity), (void *)&lakb[0]. _custom_alarm_quantity,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CUSTOM_ALARM_QUANTITY, 2},  									MIB_INT(lakb[1]._custom_alarm_quantity),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,24, 2},  									sizeof(lakb[1]. _custom_alarm_quantity), (void *)&lakb[1]. _custom_alarm_quantity,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CUSTOM_ALARM_QUANTITY, 3},  									MIB_INT(lakb[2]._custom_alarm_quantity),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,24, 3},  									sizeof(lakb[2]. _custom_alarm_quantity), (void *)&lakb[2]. _custom_alarm_quantity,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BALANCED_EVENT_CODE, 1},  										MIB_INT(lakb[0]._balanced_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,25, 1},  										sizeof(lakb[0]. _balanced_event_code), (void *)&lakb[0]. _balanced_event_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BALANCED_EVENT_CODE, 2},  										MIB_INT(lakb[1]._balanced_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,25, 2},  										sizeof(lakb[1]. _balanced_event_code), (void *)&lakb[1]. _balanced_event_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BALANCED_EVENT_CODE, 3},  										MIB_INT(lakb[2]._balanced_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,25, 3},  										sizeof(lakb[2]. _balanced_event_code), (void *)&lakb[2]. _balanced_event_code,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_VOLTAGE_EVENT_CODE, 1},  										MIB_INT(lakb[0]._voltage_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,26, 1},  										sizeof(lakb[0]. _voltage_event_code), (void *)&lakb[0]. _voltage_event_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_VOLTAGE_EVENT_CODE, 2},  										MIB_INT(lakb[1]._voltage_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,26, 2},  										sizeof(lakb[1]. _voltage_event_code), (void *)&lakb[1]. _voltage_event_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_VOLTAGE_EVENT_CODE, 3},  										MIB_INT(lakb[2]._voltage_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,26, 3},  										sizeof(lakb[2]. _voltage_event_code), (void *)&lakb[2]. _voltage_event_code,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_TEMPERATURE_EVENT_CODE, 1},  									MIB_INT(lakb[0]._temperature_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,27, 1},  									sizeof(lakb[0]. _temperature_event_code), (void *)&lakb[0]. _temperature_event_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_TEMPERATURE_EVENT_CODE, 2},  									MIB_INT(lakb[1]._temperature_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,27, 2},  									sizeof(lakb[1]. _temperature_event_code), (void *)&lakb[1]. _temperature_event_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_TEMPERATURE_EVENT_CODE, 3},  									MIB_INT(lakb[2]._temperature_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,27, 3},  									sizeof(lakb[2]. _temperature_event_code), (void *)&lakb[2]. _temperature_event_code,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CURRENT_EVENT_CODE, 1},  										MIB_INT(lakb[0]._current_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,28, 1},  										sizeof(lakb[0]. _current_event_code), (void *)&lakb[0]. _current_event_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CURRENT_EVENT_CODE, 2},  										MIB_INT(lakb[1]._current_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,28, 2},  										sizeof(lakb[1]. _current_event_code), (void *)&lakb[1]. _current_event_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_CURRENT_EVENT_CODE, 3},  										MIB_INT(lakb[2]._current_event_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,28, 3},  										sizeof(lakb[2]. _current_event_code), (void *)&lakb[2]. _current_event_code,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_FET_STATUS_CODE, 1},  											MIB_INT(lakb[0]._fet_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,29, 1},  											sizeof(lakb[0]. _fet_status_code), (void *)&lakb[0]. _fet_status_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_FET_STATUS_CODE, 2},  											MIB_INT(lakb[1]._fet_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,29, 2},  											sizeof(lakb[1]. _fet_status_code), (void *)&lakb[1]. _fet_status_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_FET_STATUS_CODE, 3},  											MIB_INT(lakb[2]._fet_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,29, 3},  											sizeof(lakb[2]. _fet_status_code), (void *)&lakb[2]. _fet_status_code,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BALANCED_STATUS_CODE, 1},  										MIB_INT(lakb[0]._balanced_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,30, 1},  										sizeof(lakb[0]. _balanced_status_code), (void *)&lakb[0]. _balanced_status_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BALANCED_STATUS_CODE, 2},  										MIB_INT(lakb[1]._balanced_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,30, 2},  										sizeof(lakb[1]. _balanced_status_code), (void *)&lakb[1]. _balanced_status_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_BALANCED_STATUS_CODE, 3},  										MIB_INT(lakb[2]._balanced_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,30, 3},  										sizeof(lakb[2]. _balanced_status_code), (void *)&lakb[2]. _balanced_status_code,  		((void *) 0)},	
-N#endif
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_SYSTEM_STATUS_CODE, 1},  										MIB_INT(lakb[0]._system_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,31, 1},  										sizeof(lakb[0]. _system_status_code), (void *)&lakb[0]. _system_status_code,  		((void *) 0)},	
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_SYSTEM_STATUS_CODE, 2},  										MIB_INT(lakb[1]._system_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,31, 2},  										sizeof(lakb[1]. _system_status_code), (void *)&lakb[1]. _system_status_code,  		((void *) 0)},	
-N#ifndef UKU_TELECORE2017
-N	{ MIB_INTEGER | MIB_ATR_RO,  	13, {OID_ENTERPRISE, OID_DEVICE, DISPLAY_LAKB, DISPLAY_LAKB_SYSTEM_STATUS_CODE, 3},  										MIB_INT(lakb[2]._system_status_code),  		NULL},	
-X	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,31, 3},  										sizeof(lakb[2]. _system_status_code), (void *)&lakb[2]. _system_status_code,  		((void *) 0)},	
 N#endif
 N
 N#ifndef UKU_TELECORE2017

@@ -24,7 +24,7 @@ for(i=0;i<MESS_DEEP;i++)
 }
 
 //-----------------------------------------------
-void mess_send(char _mess, short par0, short par1, char _time)
+void mess_send(char _mess, int par0, int par1, char _time)
 {
 char i;
 i=0;

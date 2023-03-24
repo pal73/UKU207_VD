@@ -82,19 +82,11 @@ void ret_hndl(void);
 
 
 
-#line 161 "eeprom_map.h"
+#line 114 "eeprom_map.h"
 
-#line 172 "eeprom_map.h"
+#line 154 "eeprom_map.h"
 
-
-
-
-
-
- 
-
-
-
+#line 165 "eeprom_map.h"
 
 
 
@@ -103,25 +95,6 @@ void ret_hndl(void);
 
  
 
-#line 206 "eeprom_map.h"
-
-
-
-#line 218 "eeprom_map.h"
-
-
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
-
-
-
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
 
 
 
@@ -130,7 +103,36 @@ void ret_hndl(void);
 
 
 
-#line 361 "eeprom_map.h"
+ 
+
+#line 199 "eeprom_map.h"
+
+
+
+#line 211 "eeprom_map.h"
+
+
+#line 222 "eeprom_map.h"
+
+
+
+#line 233 "eeprom_map.h"
+
+
+
+#line 289 "eeprom_map.h"
+
+
+#line 332 "eeprom_map.h"
+
+
+
+
+
+
+
+
+#line 354 "eeprom_map.h"
 
 
 
@@ -974,7 +976,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -1235,6 +1237,7 @@ extern signed short I_LOAD_MODE;
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -1322,99 +1325,9 @@ extern LI_BAT_STAT li_bat;
 
 
 
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
 
 
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
-
-
-
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	
-	signed short	_communication2lvlErrorCnt;  	
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	
-	signed short   _battIsOn;		
-	char 		_plazma[8];		
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		
-	signed short 	_s_o_c_percent; 
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	
-	signed char		_cell_temp_1;	
-	signed char		_cell_temp_2;	
-	signed char		_cell_temp_3;	
-	signed char		_cell_temp_4;	
-	signed char		_cell_temp_ambient;	
-	signed char		_cell_temp_power;	
-	
-	
-	
-	signed char		_charge_and_discharge_current_alarm_status;	 	
-	signed char 	_battery_total_voltage_alarm_status;			
-	signed char		_custom_alarm_quantity;							
-	signed char		_balanced_event_code;							
-	signed char 	_voltage_event_code;							
-	signed char 	_temperature_event_code;						
-	signed char		_current_event_code;							
-	signed char		_fet_status_code;								
-	signed short	_balanced_status_code;							
-	signed char 	_system_status_code;							
-
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	
-extern short lakbNotErrorNum;		
-extern short lakbKanErrorCnt;		
-extern short lakbKanErrorStat;		
 
 
 
@@ -1468,7 +1381,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		
+
+	 signed  short _x_avg; 	
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -1478,8 +1393,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
+
 
 
 
@@ -1536,6 +1458,8 @@ extern char first_inv_slot;
 
 
 
+
+
 extern signed short load_U;
 extern signed short load_I;
 
@@ -1559,6 +1483,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -1658,11 +1583,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1388 "main.h"
 
-#line 1476 "main.h"
+#line 1399 "main.h"
 
-#line 1492 "main.h"
+#line 1415 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1706,7 +1631,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1469 "main.h"
 
 
 
@@ -1751,6 +1676,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		
+extern signed  short _x_reg_cnt;	
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;

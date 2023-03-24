@@ -35,7 +35,7 @@ extern char tx_rd_index_sc16is700;//указатель чтения из программного буфера пере
 extern char sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 extern char sc16is700TxPossibleFlag;//Флаг возможности передачи
 
-
+void sc16is700_spi_init(void);//o_1
 void sc16is700_init(uint32_t baudrate);
 void sc16is700_wr_byte(char reg_num,char data);
 char sc16is700_rd_byte(char reg_num);

@@ -1313,7 +1313,7 @@ N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
 N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-N	iFWabout,
+N	iFWabout,iFWaboutBPS,
 N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
@@ -1575,6 +1575,7 @@ Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту 
 N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
+Nextern signed short RS485_QWARZ_DIGIT;
 N
 N//***********************************************
 N//Состояние батарей
@@ -1660,101 +1661,11 @@ N	//signed short   _min_cell_volt;
 N	} LI_BAT_STAT; 
 Nextern LI_BAT_STAT li_bat;
 N//#endif
-N//***********************************************
-N//Состояние байпаса
-Ntypedef struct
-N     {
-N	signed short 	_Iout;
-N	signed short 	_Uout;
-N	signed short 	_Pout;
-N	signed short 	_Unet; 	
-N	signed short 	_Uin;
-N	char			_T;
-N	char 		_flags;
-N	char			_cnt;
-N	char 		_adress;
-N	} BYPS_STAT; 
-Nextern BYPS_STAT byps;
 N
-N//***********************************************
-N//Мониторы АКБ
-Ntypedef struct
-N     {
-N	signed short	_U[5];
-N	signed short	_Ub[5];
-N	signed short	_T[5];
-N	signed short	_T_nd[5];
-N	signed short 	_cnt; 	
-N	} MAKB_STAT; 
-Nextern MAKB_STAT makb[4];
 N
-N//***********************************************
-N//Литиевые АКБ
-Ntypedef struct
-N     {
-N	signed short	_max_cell_volt;
-N	signed short	_min_cell_volt;
-N	signed short	_max_cell_temp;
-N	signed short	_min_cell_temp;
-N	signed short	_tot_bat_volt;
-N	signed short	_ch_curr;
-N	signed short	_dsch_curr;
-N	signed short	_rat_cap;
-N	signed short	_s_o_h;
-N	signed short	_s_o_c;
-N	signed short	_c_c_l_v;
-N	signed short	_r_b_t;
-N	signed short	_b_p_ser_num;
-N	signed short   _flags1;
-N	signed short 	_flags2;
-N	signed short 	_communication2lvlErrorStat; 	//флаг аварийности низовой связи с батареей, вычисляется в плате расширения
-N	signed short	_communication2lvlErrorCnt;  	//счетчик аварийности низовой связи с батареей
-N	signed short 	_cnt;
-N	signed short 	_communicationFullErrorStat;	//флаг аварийности всего канала связи с батареей, 0 - норма, 1 - отсутствует связь с промежуточной платой, 2 - отсутствует связь промежуточной платы и батареи  	
-N	signed short   _battIsOn;		//0 - отсутствует, 1 - присутствует
-N	char 		_plazma[8];		//переменные для отладки
-N	signed short 	_isOnCnt;
-N	signed short	_s_o_c_abs;		//остаточный заряд в абсолютном выражении
-N	signed short 	_s_o_c_percent; //остаточный заряд в процентном выражении
-N	signed short	_plazma_ss;
-N	signed short	_zar_percent;	//заряд батареи в процетах
-N	signed char		_cell_temp_1;	//температура 1-го датчика батареи(ZTT)
-N	signed char		_cell_temp_2;	//температура 2-го датчика батареи(ZTT)
-N	signed char		_cell_temp_3;	//температура 3-го датчика батареи(ZTT)
-N	signed char		_cell_temp_4;	//температура 4-го датчика батареи(ZTT)
-N	signed char		_cell_temp_ambient;	//температура датчика окружающей среды батареи(ZTT)
-N	signed char		_cell_temp_power;	//температура датчика силовой части батареи(ZTT)
-N	//signed char 	_pack_volt_state;	//статус аварии по напряжениям батареи(ZTT)
-N	//signed char 	_pack_temper_state;	//статус аварии по температурам батареи(ZTT)
-N	//signed char 	_pack_alarm_state;	//статус аварий батареи(ZTT)
-N	signed char		_charge_and_discharge_current_alarm_status;	 	//(ZTT)
-N	signed char 	_battery_total_voltage_alarm_status;			//(ZTT)
-N	signed char		_custom_alarm_quantity;							//(ZTT)
-N	signed char		_balanced_event_code;							//(ZTT)
-N	signed char 	_voltage_event_code;							//(ZTT)
-N	signed char 	_temperature_event_code;						//(ZTT)
-N	signed char		_current_event_code;							//(ZTT)
-N	signed char		_fet_status_code;								//(ZTT)
-N	signed short	_balanced_status_code;							//(ZTT)
-N	signed char 	_system_status_code;							//(ZTT)
 N
-N	} LAKB_STAT; 
-Nextern LAKB_STAT lakb[3];
-Nextern char lakb_damp[1][42];
-Nextern char bLAKB_KONF_CH;
-Nextern char bLAKB_KONF_CH_old;
-Nextern char lakb_ison_mass[7];
-Nextern short lakb_mn_ind_cnt;
-Nextern char bLAKB_KONF_CH_EN;
-Nextern char bRS485ERR;
-Nextern short LBAT_STRUKT;
-Nextern char lakb_error_cnt;	//счетчик неправильного показания ннапряжения батареи
-Nextern short numOfPacks,numOfPacks_;
-Nextern short numOfCells, numOfTemperCells, baseOfData;
-Nextern short lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-Nextern short lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-Nextern short lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-Nextern short lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
+N
+N
 N
 N
 N
@@ -1808,7 +1719,9 @@ N     signed short _temp_av_cnt;
 N     signed short _umax_av_cnt;
 N     signed short _umin_av_cnt;
 N     signed _rotor;
-N     signed  short _x_; 
+N     signed  short _x_;		//передаваемые БПСам корректоры
+N
+N	 signed  short _x_avg; 	//выравнивание токов
 N     char _adr_ee;
 N	char _last_avar;
 N	char _vent_resurs_temp[4];
@@ -1818,8 +1731,15 @@ N	signed short debug_info_to_uku1;
 N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
+N	signed short _build_year;
+N	signed short _build_month;
+N	signed short _build_day;
+N	signed short _hardvare_version;
+N	signed short _soft_version;
+N	signed short _build;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];//o_1
+N
 N
 N//***********************************************
 N//Состояние инверторов
@@ -1874,6 +1794,8 @@ Nextern INV_STAT inv[20];
 N#endif
 Nextern char first_inv_slot;
 N
+N
+N
 N//***********************************************
 N//Состояние нагрузки
 Nextern signed short load_U;
@@ -1899,6 +1821,7 @@ Nextern char net_av;
 N
 N
 Nextern char plazma_plazma_plazma;
+Nextern char plazma_PUTTM31,plazma_PUTTM32;
 N
 Nvoid bitmap_hndl(void);
 Nvoid ind_hndl(void);
@@ -2131,6 +2054,9 @@ N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
 Nextern short plazma_numOfPacks;
+Nextern signed  short _x_reg;		//точная регулировка выходного напряжения системы
+Nextern signed  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
+N
 N
 Nextern char plazma_ztt[2];
 Nextern char plazma1809;
@@ -5725,15 +5651,16 @@ N#define PUTID 0x91
 N#define PUTTM1 0xDA
 N#define PUTTM2 0xDB
 N#define PUTTM3 0xDC
-N#define PUTTM1INV2 0xDD
-N#define PUTTM2INV2 0xDE
-N#define PUTTM3INV2 0xDf
+N#define PUTTM31 	0xDD
+N#define PUTTM32 	0xD5
 N#define PUTTM_NET 0xEA
 N#define PUTTM_NET1 0xEB
 N#define PUTTM_IBATMETER 0xD1
 N#define GETTM_IBATMETER 0x1d
 N#define PUTTM 0xDE
 N#define GETTM 0xED 
+N#define GETTM1 	0xEb
+N#define GETTM2		0xEc
 N#define GETTM_INV 0xFD 
 N#define GET_MAKB 0xE1 
 N#define PUTTM_MAKB1		0xE2
@@ -5781,7 +5708,7 @@ N
 N
 N
 Nvoid mess_hndl(void);
-Nvoid mess_send(char _mess, short par0, short par1, char _time);
+Nvoid mess_send(char _mess, int par0, int par1, char _time);
 Nchar mess_find(char _mess);
 Nchar mess_find_unvol(char _mess);
 N
@@ -5943,15 +5870,8 @@ N#define EE_UINMAX			SECTOR_SETS+144
 N#define EE_UINMIN			SECTOR_SETS+146
 N#define EE_UOUTMAX			SECTOR_SETS+148
 N#define EE_UOUTMIN			SECTOR_SETS+150
-N#define EE_TELECORE2015_KLIMAT_WARM_SIGNAL	SECTOR_SETS+144
-N#define EE_TELECORE2015_KLIMAT_WARM_ON		SECTOR_SETS+146
-N#define EE_TELECORE2015_KLIMAT_WARM_OFF		SECTOR_SETS+148
-N#define EE_TELECORE2015_KLIMAT_CAP			SECTOR_SETS+150
-N#define EE_TELECORE2015_KLIMAT_VENT_ON		SECTOR_SETS+152
-N#define EE_TELECORE2015_KLIMAT_VENT_OFF		SECTOR_SETS+154
-N#define EE_TELECORE2015_KLIMAT_VVENT_ON		SECTOR_SETS+156
-N#define EE_TELECORE2015_KLIMAT_VVENT_OFF	SECTOR_SETS+158
-N#define EE_TELECORE2015_KLIMAT_VENT_SIGNAL	SECTOR_SETS+160
+N#define EE_RS485_QWARZ_DIGIT		 		SECTOR_SETS+152
+N
 N#define EE_SPEED_CHRG_CURR		 			SECTOR_SETS+162
 N#define EE_SPEED_CHRG_VOLT		 			SECTOR_SETS+164
 N#define EE_SPEED_CHRG_TIME					SECTOR_SETS+166
@@ -6342,7 +6262,7 @@ N//Работа с БПСами
 Nextern char num_of_wrks_bps;
 Nextern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 Nextern char bps_hndl_2sec_cnt;
-Nextern unsigned short bps_on_mask,bps_off_mask;
+Nextern unsigned int bps_on_mask,bps_off_mask;
 Nextern char num_necc_up,num_necc_down;
 Nextern unsigned char sh_cnt0,b1Hz_sh;
 N
@@ -8292,70 +8212,20 @@ N
 N   	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_num,3,0); 
 N	can_reset_cnt=0;
 N   	}
-N
-Nif((RXBUFF[1]==PUTTM1INV2)&&((RXBUFF[0]&0x1f)>=MINIM_INV_ADRESS)&&((RXBUFF[0]&0x1f)<MINIM_INV_ADRESS+NUMINV))
-Xif((RXBUFF[1]==0xDD)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
-N     {
-N	//can_debug_plazma[1][2]++;
-N     slave_num=RXBUFF[0]&0x1f;
-N
-N	plazma_can_inv[0]++;
-N     
-N    if((RXBUFF[0]&0xe0)==0)bps[slave_num]._device=dSRC;
-N    else if((RXBUFF[0]&0xe0)==0x40)bps[slave_num]._device=dINV;
-N     	
-N	bps[slave_num]._buff[0]=RXBUFF[2]; 
-N	bps[slave_num]._buff[1]=RXBUFF[3];
-N	bps[slave_num]._buff[2]=RXBUFF[4];
-N	bps[slave_num]._buff[3]=RXBUFF[5];
-N	bps[slave_num]._buff[4]=RXBUFF[6];
-N	bps[slave_num]._buff[5]=RXBUFF[7];
-N
-N
-N/*	can_slot[slave_num,0]=RXBUFF[0];
-N	can_slot[slave_num,1]=RXBUFF[1];
-N	can_slot[slave_num,2]=RXBUFF[2];
-N	can_slot[slave_num,3]=RXBUFF[3];
-N	can_slot[slave_num,4]=RXBUFF[4];
-N	can_slot[slave_num,5]=RXBUFF[5];
-N	can_slot[slave_num,6]=RXBUFF[6];
-N	can_slot[slave_num,7]=RXBUFF[7]; */
-N	
-N	bps[slave_num]._cnt=0;
-N	bps[slave_num]._is_on_cnt=10;
-N	
-N 	if((bps[slave_num]._cnt==0)&&(bps[slave_num]._av&(1<<3))) avar_bps_hndl(slave_num,3,0);
-N
-N	can_reset_cnt=0;
-N     }
-N
-Nif((RXBUFF[1]==PUTTM2INV2)&&((RXBUFF[0]&0x1f)>=MINIM_INV_ADRESS)&&((RXBUFF[0]&0x1f)<MINIM_INV_ADRESS+NUMINV))
-Xif((RXBUFF[1]==0xDE)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
+Nif((RXBUFF[1]==PUTTM31)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
+Xif((RXBUFF[1]==0xDD)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
 N 	{
-N     slave_num=RXBUFF[0]&0x1f;
-N	
-N	plazma_can_inv[1]++;  
+N     slave_num=RXBUFF[0]&0x1f;  
+N
+N	plazma_PUTTM31++;
 N
 N    if((RXBUFF[0]&0xe0)==0)bps[slave_num]._device=dSRC;
 N    else if((RXBUFF[0]&0xe0)==0x40)bps[slave_num]._device=dINV;
 N     
-N	bps[slave_num]._buff[6]=RXBUFF[2]; 
-N	bps[slave_num]._buff[7]=RXBUFF[3];
-N	bps[slave_num]._buff[8]=RXBUFF[4];
-N	bps[slave_num]._buff[9]=RXBUFF[5];
-N	bps[slave_num]._buff[10]=RXBUFF[6];
-N	bps[slave_num]._buff[11]=RXBUFF[7];	
+N	bps[slave_num]._hardvare_version=RXBUFF[2]+(RXBUFF[3]*256); 
+N	bps[slave_num]._soft_version=RXBUFF[4]+(RXBUFF[5]*256); 
+N	bps[slave_num]._build=RXBUFF[6]+(RXBUFF[7]*256); 
 N
-N
-N/*	can_slot[slave_num,8]=RXBUFF[0];
-N	can_slot[slave_num,9]=RXBUFF[1];
-N	can_slot[slave_num,10]=RXBUFF[2];
-N	can_slot[slave_num,11]=RXBUFF[3];
-N	can_slot[slave_num,12]=RXBUFF[4];
-N	can_slot[slave_num,13]=RXBUFF[5];
-N	can_slot[slave_num,14]=RXBUFF[6];
-N	can_slot[slave_num,15]=RXBUFF[7]; */
-N	
 N	bps[slave_num]._cnt=0;
 N	bps[slave_num]._is_on_cnt=10; 
 N
@@ -8363,63 +8233,25 @@ N   	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_
 N	can_reset_cnt=0;
 N   	}
 N
-Nif((RXBUFF[1]==PUTTM3INV2)&&((RXBUFF[0]&0x1f)>=MINIM_INV_ADRESS)&&((RXBUFF[0]&0x1f)<MINIM_INV_ADRESS+NUMINV))
-Xif((RXBUFF[1]==0xDf)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
+Nif((RXBUFF[1]==PUTTM32)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
+Xif((RXBUFF[1]==0xD5)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
 N 	{
-N     slave_num=RXBUFF[0]&0x1f; 
-N
-N	plazma_can_inv[2]++; 
+N     slave_num=RXBUFF[0]&0x1f;
+N	 
+N	 plazma_PUTTM32++;  
 N
 N    if((RXBUFF[0]&0xe0)==0)bps[slave_num]._device=dSRC;
 N    else if((RXBUFF[0]&0xe0)==0x40)bps[slave_num]._device=dINV;
 N     
-N	bps[slave_num]._buff[12]=RXBUFF[2]; 
-N	bps[slave_num]._buff[13]=RXBUFF[3];
-N	bps[slave_num]._buff[14]=RXBUFF[4];
-N	bps[slave_num]._buff[15]=RXBUFF[5];
-N	bps[slave_num]._buff[16]=RXBUFF[6];
-N	bps[slave_num]._buff[17]=RXBUFF[7];	
+N	bps[slave_num]._build_year=RXBUFF[2]+(RXBUFF[3]*256); 
+N	bps[slave_num]._build_month=RXBUFF[4]+(RXBUFF[5]*256); 
+N	bps[slave_num]._build_day=RXBUFF[6]+(RXBUFF[7]*256); 
 N
-N
-N/*	can_slot[slave_num,8]=RXBUFF[0];
-N	can_slot[slave_num,9]=RXBUFF[1];
-N	can_slot[slave_num,10]=RXBUFF[2];
-N	can_slot[slave_num,11]=RXBUFF[3];
-N	can_slot[slave_num,12]=RXBUFF[4];
-N	can_slot[slave_num,13]=RXBUFF[5];
-N	can_slot[slave_num,14]=RXBUFF[6];
-N	can_slot[slave_num,15]=RXBUFF[7]; */
-N	
 N	bps[slave_num]._cnt=0;
 N	bps[slave_num]._is_on_cnt=10; 
 N
 N   	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_num,3,0); 
 N	can_reset_cnt=0;
-N   	}
-N
-Nif((RXBUFF[1]==PUTTM1BYPS))
-Xif((RXBUFF[1]==0xD8))
-N     {
-N	//can_debug_plazma[1][2]++;
-N     byps._adress=RXBUFF[0]&0x1f;
-N     
-N     	
-N	byps._Iout=(signed short)RXBUFF[2]+(((signed short)RXBUFF[3])*256);
-N	byps._Pout=(signed short)RXBUFF[4]+(((signed short)RXBUFF[5])*256);
-N	byps._Uout=(signed short)RXBUFF[6]+(((signed short)RXBUFF[7])*256);
-N	
-N	byps._cnt=0;
-N     }
-N
-Nif((RXBUFF[1]==PUTTM2BYPS))
-Xif((RXBUFF[1]==0xD9))
-N 	{
-N	byps._T=(char)RXBUFF[2];
-N	byps._flags=(char)RXBUFF[3];
-N	byps._Unet=(signed short)RXBUFF[4]+(((signed short)RXBUFF[5])*256);
-N	byps._Uin=(signed short)RXBUFF[6]+(((signed short)RXBUFF[7])*256);
-N
-N	byps._cnt=0;
 N   	}
 N
 Nif((RXBUFF[0]==PUTTM_IBATMETER)&&(RXBUFF[1]==PUTTM_IBATMETER))
@@ -8433,515 +8265,10 @@ N
 N
 N	ibat_metr_cnt=0;
 N   	}
-N
-Nif((RXBUFF[1]==PUTTM_NET)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-Xif((RXBUFF[1]==0xEA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-N 	{
-N    slave_num=RXBUFF[0]&0x1f;  
-N
-N    bps[slave_num]._device=dNET_METR;
-N         
-N	bps[slave_num]._buff[0]=RXBUFF[2]; 
-N	bps[slave_num]._buff[1]=RXBUFF[3];
-N	bps[slave_num]._buff[2]=RXBUFF[4];
-N	bps[slave_num]._buff[3]=RXBUFF[5];
-N	bps[slave_num]._buff[4]=RXBUFF[6];
-N	bps[slave_num]._buff[5]=RXBUFF[7];	
-N
-N
-N/*	can_slot[slave_num,8]=RXBUFF[0];
-N	can_slot[slave_num,9]=RXBUFF[1];
-N	can_slot[slave_num,10]=RXBUFF[2];
-N	can_slot[slave_num,11]=RXBUFF[3];
-N	can_slot[slave_num,12]=RXBUFF[4];
-N	can_slot[slave_num,13]=RXBUFF[5];
-N	can_slot[slave_num,14]=RXBUFF[6];
-N	can_slot[slave_num,15]=RXBUFF[7]; */
-N	
-N	bps[slave_num]._cnt=0;
-N	bps[slave_num]._is_on_cnt=10; 
-N
-N   	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_num,3,0); 
-N	can_reset_cnt=0;
-N   	}
-N
-N
-Nif((RXBUFF[1]==PUTTM_NET1)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-Xif((RXBUFF[1]==0xEB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
-N 	{
-N    slave_num=RXBUFF[0]&0x1f;  
-N
-N    bps[slave_num]._device=dNET_METR;
-N         
-N	bps[slave_num]._buff[6]=RXBUFF[2]; 
-N	bps[slave_num]._buff[7]=RXBUFF[3];
-N	
-N	//net_F= RXBUFF[2]+ (RXBUFF[3]*256);
-N
-N	bps[slave_num]._cnt=0;
-N	bps[slave_num]._is_on_cnt=10; 
-N
-N   	//if((src[slave_num]._cnt==0)&&(src[slave_num]._av_net)) avar_s_hndl(slave_num,3,0); 
-N	can_reset_cnt=0;
-N   	}
-N
-Nif( (RXBUFF[0]==MEM_KF)&&(RXBUFF[1]==1)&&(RXBUFF[2]==1))
-Xif( (RXBUFF[0]==0x62)&&(RXBUFF[1]==1)&&(RXBUFF[2]==1))
-N     {
-N     power_summary_tempo=*((signed short*)&RXBUFF[3]);
-N     power_current_tempo=*((signed short*)&RXBUFF[5]);
-N	//ext_can_cnt++;
-N	can_reset_cnt=0;
-N     }
-N
-N
-Nif( ((RXBUFF[0]&0x1f)==8)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==8)&&((RXBUFF[1])==0xDE) )
-N     {
-N     adc_buff_ext_[0]=*((short*)&RXBUFF[2]);
-N     adc_buff_ext_[1]=*((short*)&RXBUFF[4]);
-N     adc_buff_ext_[2]=*((short*)&RXBUFF[6]);
-W "full_can.c" 1416 22 pointless comparison of unsigned integer with a negative constant
-N	if((adc_buff_ext_[2]>=-50) && (adc_buff_ext_[2]<=100))
-N		{
-N		t_ext_can=adc_buff_ext_[2];
-N		t_ext_can_nd=0;
-N		}
-N		t_ext_can=adc_buff_ext_[2];
-N	//ext_can_cnt++;
-N	can_reset_cnt=0;
-N     }
-N
-Nif( ((RXBUFF[0]&0x1f)==9)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==9)&&((RXBUFF[1])==0xDE) )
-N     {
-N     vvod_pos=RXBUFF[2];
-N	ext_can_cnt=RXBUFF[3];
-N	if(ext_can_cnt<10)bRESET_EXT=0;
-N	can_reset_cnt=0;
-N     }
-N
-Nif( ((RXBUFF[0]&0x1f)==10)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==10)&&((RXBUFF[1])==0xDE) )
-N     {
-N     power_current=*((signed short*)&RXBUFF[2]);
-N     power_summary=*((signed long*)&RXBUFF[4]);
-N	//ext_can_cnt++;
-N	can_reset_cnt=0;
-N     }
-N
-N
-Nif( ((RXBUFF[0]&0x1f)==20)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==20)&&((RXBUFF[1])==0xDE) )
-N     {
-N     eb2_data[0]=RXBUFF[2];
-N	eb2_data[1]=RXBUFF[3];
-N     eb2_data[2]=RXBUFF[4];
-N	eb2_data[3]=RXBUFF[5];
-N	eb2_data[4]=RXBUFF[6];
-N	eb2_data[5]=RXBUFF[7];
-N     power_current=*((signed short*)&RXBUFF[2]);
-N     power_summary=*((signed long*)&RXBUFF[4]);
-N
-N	 can_reset_cnt=0;
-N     }
-N
-Nif( ((RXBUFF[0]&0x1f)==21)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==21)&&((RXBUFF[1])==0xDE) )
-N     {
-N     eb2_data[6]=RXBUFF[2];
-N	eb2_data[7]=RXBUFF[3];
-N     eb2_data[8]=RXBUFF[4];
-N	eb2_data[9]=RXBUFF[5];
-N	eb2_data[10]=RXBUFF[6];
-N	eb2_data[11]=RXBUFF[7];
-N	eb2_data_short[6]=*((short*)&eb2_data[6]);
-N
-N	can_reset_cnt=0;
-N     }
-N
-Nif( ((RXBUFF[0]&0x1f)==22)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==22)&&((RXBUFF[1])==0xDE) )
-N     {
-N     eb2_data[12]=RXBUFF[2];
-N	eb2_data[13]=RXBUFF[3];
-N     eb2_data[14]=RXBUFF[4];
-N	eb2_data[15]=RXBUFF[5];
-N	eb2_data[16]=RXBUFF[6];
-N	eb2_data[17]=RXBUFF[7];
-N	eb2_data_short[0]=*((short*)&eb2_data[12]);
-N	eb2_data_short[1]=*((short*)&eb2_data[14]);
-N	eb2_data_short[2]=*((short*)&eb2_data[16]);
-N
-N	can_reset_cnt=0;
-N     }
-N
-Nif( ((RXBUFF[0]&0x1f)==23)&&((RXBUFF[1])==PUTTM) )
-Xif( ((RXBUFF[0]&0x1f)==23)&&((RXBUFF[1])==0xDE) )
-N     {
-N     eb2_data[18]=RXBUFF[2];
-N	eb2_data[19]=RXBUFF[3];
-N     eb2_data[20]=RXBUFF[4];
-N	eb2_data[21]=RXBUFF[5];
-N	eb2_data[22]=RXBUFF[6];
-N	eb2_data[23]=RXBUFF[7];
-N	eb2_data_short[3]=*((short*)&eb2_data[18]);
-N	eb2_data_short[4]=*((short*)&eb2_data[20]);
-N	eb2_data_short[5]=*((short*)&eb2_data[22]);
-N
-N	can_reset_cnt=0;
-N     }
-N
-W "full_can.c" 1500 41 pointless comparison of unsigned integer with zero
-Nif( (RXBUFF[1]==PUTTM_MAKB1)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-Xif( (RXBUFF[1]==0xE2)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-N     {
-N	makb[RXBUFF[0]]._U[0]=*((short*)&RXBUFF[2]);
-N	makb[RXBUFF[0]]._U[1]=*((short*)&RXBUFF[4]);
-N	makb[RXBUFF[0]]._U[2]=*((short*)&RXBUFF[6]);
-N
-N	makb[RXBUFF[0]]._Ub[0]=makb[RXBUFF[0]]._U[0];
-N	if(makb[RXBUFF[0]]._Ub[0]<0)makb[RXBUFF[0]]._Ub[0]=0;
-N	makb[RXBUFF[0]]._Ub[1]=makb[RXBUFF[0]]._U[1]-makb[RXBUFF[0]]._U[0];
-N	if(makb[RXBUFF[0]]._Ub[1]<0)makb[RXBUFF[0]]._Ub[1]=0;
-N	makb[RXBUFF[0]]._Ub[2]=makb[RXBUFF[0]]._U[2]-makb[RXBUFF[0]]._U[1];
-N	if(makb[RXBUFF[0]]._Ub[2]<0)makb[RXBUFF[0]]._Ub[2]=0;
-N
-N	makb[RXBUFF[0]]._cnt=0;
-N     }
-N
-W "full_can.c" 1516 41 pointless comparison of unsigned integer with zero
-Nif( (RXBUFF[1]==PUTTM_MAKB2)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-Xif( (RXBUFF[1]==0xE3)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-N     {
-N	makb[RXBUFF[0]]._U[3]=*((short*)&RXBUFF[2]);
-N	makb[RXBUFF[0]]._U[4]=*((short*)&RXBUFF[4]);
-N	makb[RXBUFF[0]]._T[0]=(signed short)(*((signed char*)&RXBUFF[6]));
-N	makb[RXBUFF[0]]._T[1]=(signed short)(*((signed char*)&RXBUFF[7]));
-N
-N	makb[RXBUFF[0]]._Ub[3]=makb[RXBUFF[0]]._U[3]-makb[RXBUFF[0]]._U[2];
-N	if(makb[RXBUFF[0]]._Ub[3]<0)makb[RXBUFF[0]]._Ub[3]=0;
-N	makb[RXBUFF[0]]._Ub[4]=makb[RXBUFF[0]]._U[4]-makb[RXBUFF[0]]._U[3];
-N	if(makb[RXBUFF[0]]._Ub[4]<0)makb[RXBUFF[0]]._Ub[4]=0;
-N
-N	makb[RXBUFF[0]]._cnt=0;
-N     }
-N
-W "full_can.c" 1531 41 pointless comparison of unsigned integer with zero
-Nif( (RXBUFF[1]==PUTTM_MAKB3)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-Xif( (RXBUFF[1]==0xE4)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-N     {
-N	makb[RXBUFF[0]]._T[2]=(signed short)(*((signed char*)&RXBUFF[2]));
-N	makb[RXBUFF[0]]._T[3]=(signed short)(*((signed char*)&RXBUFF[3]));
-N	makb[RXBUFF[0]]._T[4]=(signed short)(*((signed char*)&RXBUFF[4]));
-N
-N	if(RXBUFF[5]&0x01)makb[RXBUFF[0]]._T_nd[0]=1;
-N	else makb[RXBUFF[0]]._T_nd[0]=0;
-N	if(RXBUFF[5]&0x02)makb[RXBUFF[0]]._T_nd[1]=1;
-N	else makb[RXBUFF[0]]._T_nd[1]=0;
-N	if(RXBUFF[5]&0x04)makb[RXBUFF[0]]._T_nd[2]=1;
-N	else makb[RXBUFF[0]]._T_nd[2]=0;
-N	if(RXBUFF[5]&0x08)makb[RXBUFF[0]]._T_nd[3]=1;
-N	else makb[RXBUFF[0]]._T_nd[3]=0;
-N	if(RXBUFF[5]&0x10)makb[RXBUFF[0]]._T_nd[4]=1;
-N	else makb[RXBUFF[0]]._T_nd[4]=0;
-N
-N	makb[RXBUFF[0]]._cnt=0;
-N     }
-N
-N/*if(RXBUFF[0]==PUT_LB_TM1)
-N     {
-N	lakb[0]._max_cell_volt=(unsigned short)(*((unsigned short*)&RXBUFF[1]));
-N	lakb[0]._min_cell_volt=(unsigned short)(*((unsigned short*)&RXBUFF[3]));
-N	lakb[0]._tot_bat_volt=(unsigned short)(*((unsigned short*)&RXBUFF[5]));
-N	lakb[0]._max_cell_temp=(unsigned short)RXBUFF[7];
-N	lakb[0]._cnt=0;
-N	lakb[0]._plazma[0]++;
-N     }
-Nif(RXBUFF[0]==PUT_LB_TM2)
-N     {
-N	lakb[0]._ch_curr=(unsigned short)(*((unsigned short*)&RXBUFF[1]));
-N	lakb[0]._dsch_curr=(unsigned short)(*((unsigned short*)&RXBUFF[3]));
-N	lakb[0]._rat_cap=(unsigned short)(*((unsigned short*)&RXBUFF[5]));
-N	lakb[0]._min_cell_temp=(unsigned short)RXBUFF[7];
-N	lakb[0]._cnt=0;
-N	lakb[0]._plazma[1]++;
-N     }
-Nif(RXBUFF[0]==PUT_LB_TM3)
-N     {
-N	lakb[0]._s_o_h=(unsigned short)RXBUFF[1];
-N	lakb[0]._s_o_c=(unsigned short)RXBUFF[2];
-N	lakb[0]._c_c_l_v=(unsigned short)(*((unsigned short*)&RXBUFF[3]));
-N	lakb[0]._r_b_t=(unsigned short)RXBUFF[5];
-N	lakb[0]._flags1=(unsigned short)RXBUFF[6];
-N	lakb[0]._flags2=(unsigned short)RXBUFF[7];
-N	lakb[0]._cnt=0;
-N	lakb[0]._plazma[2]++;
-N     }
-Nif(RXBUFF[0]==PUT_LB_TM4)
-N     {
-N	lakb[0]._bRS485ERR=(unsigned short)RXBUFF[1];
-N	lakb[0]._rs485_cnt=(unsigned short)RXBUFF[2];
-N	lakb[0]._cnt=0;
-N	lakb[0]._plazma[3]++;
-N     }*/
-N	
-Nif((RXBUFF[1]&0xf8)==PUT_LB_TM1)
-Xif((RXBUFF[1]&0xf8)==0x18)
-N     {
-N	char temp;
-N	temp=RXBUFF[1]&0x07;
-N	
-N	if(temp==0) //у нас только одна батарея
-N		{	
-N		lakb_damp[temp][0]=RXBUFF[0];
-W "full_can.c" 1596 3 function "mem_copy" declared implicitly
-N		mem_copy(&lakb_damp[temp][1],&RXBUFF[2],6);
-N	
-N		ccc_plazma[0]++;
-N		ccc_plazma[7]=temp;
-N		li_bat._canErrorCnt=0;
-N		li_bat._canError=0;
-N		}
-N	}	
-N
-Nif((RXBUFF[1]&0xf8)==PUT_LB_TM2)
-Xif((RXBUFF[1]&0xf8)==0x78)
-N     {
-N	char temp;
-N	temp=RXBUFF[1]&0x07;
-N	
-N	if(temp==0) //у нас только одна батарея
-N		{		
-N		lakb_damp[temp][7]=RXBUFF[0];
-W "full_can.c" 1613 3 function "mem_copy" declared implicitly
-N		mem_copy(&lakb_damp[temp][8],&RXBUFF[2],6);
-N		
-N		ccc_plazma[1]++;
-N		ccc_plazma[8]=temp;
-N		li_bat._canErrorCnt=0;
-N		li_bat._canError=0;
-N		}
-N	}
-N
-Nif((RXBUFF[1]&0xf8)==PUT_LB_TM3)
-Xif((RXBUFF[1]&0xf8)==0x38)
-N     {
-N	char temp;
-N	temp=RXBUFF[1]&0x07;
-N
-N	if(temp==0) //у нас только одна батарея
-N		{
-N		lakb_damp[temp][14]=RXBUFF[0];
-W "full_can.c" 1630 3 function "mem_copy" declared implicitly
-N		mem_copy(&lakb_damp[temp][15],&RXBUFF[2],6);
-N		
-N		ccc_plazma[2]++;
-N		ccc_plazma[9]=temp;
-N		li_bat._canErrorCnt=0;
-N		li_bat._canError=0;
-N		}
-N	}	
-N
-Nif((RXBUFF[1]&0xf8)==PUT_LB_TM4)
-Xif((RXBUFF[1]&0xf8)==0x48)
-N     {
-N	char temp;
-N	temp=RXBUFF[1]&0x07;
-N	
-N	if(temp==0) //у нас только одна батарея
-N		{
-N		lakb_damp[temp][21]=RXBUFF[0];
-W "full_can.c" 1647 3 function "mem_copy" declared implicitly
-N		mem_copy(&lakb_damp[temp][22],&RXBUFF[2],6);
-N		
-N		ccc_plazma[3]++;
-N		ccc_plazma[10]=temp;
-N		li_bat._canErrorCnt=0;
-N		li_bat._canError=0;
-N		}
-N	}
-N
-Nif((RXBUFF[1]&0xf8)==PUT_LB_TM5)
-Xif((RXBUFF[1]&0xf8)==0x58)
-N     {
-N	char temp;
-N	temp=RXBUFF[1]&0x07;
-N
-N	if(temp==0) //у нас только одна батарея
-N		{		
-N		lakb_damp[temp][28]=RXBUFF[0];
-W "full_can.c" 1664 3 function "mem_copy" declared implicitly
-N		mem_copy(&lakb_damp[temp][29],&RXBUFF[2],6);
-N
-N		ccc_plazma[4]++;
-N		ccc_plazma[11]=temp;
-N		li_bat._canErrorCnt=0;
-N		li_bat._canError=0;
-N		}
-N	}
-N
-Nif((RXBUFF[1]&0xf8)==PUT_LB_TM6)
-Xif((RXBUFF[1]&0xf8)==0x68)
-N     {
-N	char temp;
-N	temp=RXBUFF[1]&0x07;
-N		
-N	if(temp==0) //у нас только одна батарея
-N		{
-N		lakb_damp[temp][35]=RXBUFF[0];
-W "full_can.c" 1681 3 function "mem_copy" declared implicitly
-N		mem_copy(&lakb_damp[temp][36],&RXBUFF[2],6);
-N		
-N		ccc_plazma[5]++;
-N		ccc_plazma[12]=temp;
-N		li_bat._canErrorCnt=0;
-N		li_bat._canError=0;	
-N		}
-N	}
-N
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM1)
-Xif(RXBUFF[1]==0xC1)
-N    {
-N	lakb[0]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-N	lakb[0]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-N	lakb[0]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-N	lakb[0]._cell_temp_1=(signed char)(RXBUFF[6]);
-N	lakb[0]._cell_temp_2=(signed char)(RXBUFF[7]);
-N	
-N	//lakb[0]._cell_temp_1=37;
-N	//lakb[0]._cell_temp_2=38;
-N	plazma_ztt[0]++;
-N
-N	}
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM2)
-Xif(RXBUFF[1]==0xC2)
-N    {
-N	lakb[0]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-N	lakb[0]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-N	lakb[0]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-N	lakb[0]._cell_temp_3=(signed char)(RXBUFF[6]);
-N	lakb[0]._cell_temp_4=(signed char)(RXBUFF[7]);
-N	//lakb[0]._cell_temp_3=39;
-N	//lakb[0]._cell_temp_4=40;
-N	
-N	plazma_ztt[1]++;
-N	}		
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM3)
-Xif(RXBUFF[1]==0xC3)
-N    {
-N	lakb[1]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-N	lakb[1]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-N	lakb[1]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-N	lakb[1]._cell_temp_1=(signed char)(RXBUFF[6]);
-N	lakb[1]._cell_temp_2=(signed char)(RXBUFF[7]);
-N	
-N	}
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM4)
-Xif(RXBUFF[1]==0xC4)
-N    {
-N	lakb[1]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-N	lakb[1]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-N	lakb[1]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-N	lakb[1]._cell_temp_3=(signed char)(RXBUFF[6]);
-N	lakb[1]._cell_temp_4=(signed char)(RXBUFF[7]);
-N	
-N	}	
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM5)
-Xif(RXBUFF[1]==0xC5)
-N    {
-N	lakb[2]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-N	lakb[2]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-N	lakb[2]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-N	lakb[2]._cell_temp_1=(signed char)(RXBUFF[6]);
-N	lakb[2]._cell_temp_2=(signed char)(RXBUFF[7]);
-N	
-N	}
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM6)
-Xif(RXBUFF[1]==0xC6)
-N    {
-N	lakb[2]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-N	lakb[2]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-N	lakb[2]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-N	lakb[2]._cell_temp_3=(signed char)(RXBUFF[6]);
-N	lakb[2]._cell_temp_3=(signed char)(RXBUFF[7]);	
-N	}	
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM7)
-Xif(RXBUFF[1]==0xC7)
-N    {
-N	lakb[0]._cell_temp_ambient=(signed char)(RXBUFF[0]);
-N	lakb[0]._cell_temp_power=(signed char)(RXBUFF[2]);
-N	lakb[1]._cell_temp_ambient=(signed char)(RXBUFF[3]);
-N	lakb[1]._cell_temp_power=(signed char)(RXBUFF[4]);
-N	lakb[2]._cell_temp_ambient=(signed char)(RXBUFF[5]);
-N	lakb[2]._cell_temp_power=(signed char)(RXBUFF[6]);	
-N	//lakb[0]._cell_temp_ambient=41;
-N	//lakb[0]._cell_temp_power=42;
-N	}	
-N
-Nif(RXBUFF[1]==PUT_ZTT_TM8)
-Xif(RXBUFF[1]==0xC8)
-N    {
-N	if(RXBUFF[0]==0)
-N		{
-N		lakb[0]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[2]);
-N		lakb[0]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[3]);
-N		lakb[1]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[4]);
-N		lakb[1]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[5]);
-N		lakb[2]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[6]);
-N		lakb[2]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[7]);
-N		}
-N	if(RXBUFF[0]==1)
-N		{
-N		lakb[0]._custom_alarm_quantity=(signed char)(RXBUFF[2]);
-N		lakb[0]._balanced_event_code=(signed char)(RXBUFF[3]);
-N		lakb[1]._custom_alarm_quantity=(signed char)(RXBUFF[4]);
-N		lakb[1]._balanced_event_code=(signed char)(RXBUFF[5]);
-N		lakb[2]._custom_alarm_quantity=(signed char)(RXBUFF[6]);
-N		lakb[2]._balanced_event_code=(signed char)(RXBUFF[7]);
-N		}
-N	if(RXBUFF[0]==2)
-N		{
-N		lakb[0]._voltage_event_code=(signed char)(RXBUFF[2]);
-N		lakb[0]._temperature_event_code=(signed char)(RXBUFF[3]);
-N		lakb[1]._voltage_event_code=(signed char)(RXBUFF[4]);
-N		lakb[1]._temperature_event_code=(signed char)(RXBUFF[5]);
-N		lakb[2]._voltage_event_code=(signed char)(RXBUFF[6]);
-N		lakb[2]._temperature_event_code=(signed char)(RXBUFF[7]);
-N		}
-N	if(RXBUFF[0]==3)
-N		{
-N		lakb[0]._current_event_code=(signed char)(RXBUFF[2]);
-N		lakb[0]._fet_status_code=(signed char)(RXBUFF[3]);
-N		lakb[1]._current_event_code=(signed char)(RXBUFF[4]);
-N		lakb[1]._fet_status_code=(signed char)(RXBUFF[5]);
-N		lakb[2]._current_event_code=(signed char)(RXBUFF[6]);
-N		lakb[2]._fet_status_code=(signed char)(RXBUFF[7]);
-N		}
-N	if(RXBUFF[0]==4)
-N		{
-N		lakb[0]._balanced_status_code=(signed short)(RXBUFF[2])+(((signed char)(RXBUFF[3]))<<8);
-N		lakb[1]._balanced_status_code=(signed short)(RXBUFF[4])+(((signed char)(RXBUFF[5]))<<8);
-N		lakb[2]._balanced_status_code=(signed short)(RXBUFF[6])+(((signed char)(RXBUFF[7]))<<8);
-N		}
-N	if(RXBUFF[0]==5)
-N		{
-N		lakb[0]._system_status_code=(signed char)(RXBUFF[2]);
-N		lakb[1]._system_status_code=(signed char)(RXBUFF[4]);
-N		lakb[2]._system_status_code=(signed char)(RXBUFF[6]);
-N		}
-N	}	
 N	
 NCAN_IN_AN1_end:
 NbIN2=0;
-W "full_can.c" 1821 1 label "CAN_IN_AN1_end" was declared but never referenced
+W "full_can.c" 1268 1 label "CAN_IN_AN1_end" was declared but never referenced
 N}
 N
 N
@@ -9173,8 +8500,8 @@ N  		}
 N
 NLPC_CAN2->CMR = 0x04; // release receive buffer
 X((LPC_CAN_TypeDef *) ((0x40000000UL) + 0x48000) )->CMR = 0x04; 
-W "full_can.c" 1905 7 variable "ptr" was declared but never referenced
-W "full_can.c" 1905 11 variable "j" was declared but never referenced
+W "full_can.c" 1352 7 variable "ptr" was declared but never referenced
+W "full_can.c" 1352 11 variable "j" was declared but never referenced
 N}
 N/**************************************************************************
 NDOES:    Interrupt Service Routine for CAN receive on CAN interface 1
@@ -9215,7 +8542,7 @@ Nelse bOUT_FREE=1;
 Ntemp=LPC_CAN1->ICR;
 Xtemp=((LPC_CAN_TypeDef *) ((0x40000000UL) + 0x44000) )->ICR;
 N
-W "full_can.c" 2027 6 variable "temp" was set but never used
+W "full_can.c" 1474 6 variable "temp" was set but never used
 N}
 N
 N/***************************************************************************/
@@ -9244,7 +8571,7 @@ N	}
 Nelse bOUT_FREE2=1;
 Ntemp=LPC_CAN2->ICR;
 Xtemp=((LPC_CAN_TypeDef *) ((0x40000000UL) + 0x48000) )->ICR;
-W "full_can.c" 2054 6 variable "temp" was set but never used
+W "full_can.c" 1501 6 variable "temp" was set but never used
 N}
 N
 N/**************************************************************************

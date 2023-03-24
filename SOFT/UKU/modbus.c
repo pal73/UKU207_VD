@@ -20,7 +20,7 @@ extern int  mem_copy (void *dp, void *sp, int len);
 
 unsigned char modbus_buf[20];
 short modbus_crc16;
-char modbus_timeout_cnt;
+//char modbus_timeout_cnt; //o_1
 char bMODBUS_TIMEOUT;
 unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа 
 unsigned char modbus_an_buffer[30];    	//Буфер, куда они потом копируются для анализа

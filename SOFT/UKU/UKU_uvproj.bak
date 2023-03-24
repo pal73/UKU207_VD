@@ -627,6 +627,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>curr_version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\curr_version.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1402,6 +1407,11 @@
               <FileName>lcd_WG12232L3.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lcd_WG12232L3.c</FilePath>
+            </File>
+            <File>
+              <FileName>curr_version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\curr_version.c</FilePath>
             </File>
           </Files>
         </Group>

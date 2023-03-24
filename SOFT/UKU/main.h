@@ -770,7 +770,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -1031,6 +1031,7 @@ extern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту и
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 //***********************************************
 //Состояние батарей
@@ -1116,101 +1117,11 @@ typedef struct
 	} LI_BAT_STAT; 
 extern LI_BAT_STAT li_bat;
 //#endif
-//***********************************************
-//Состояние байпаса
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
-//***********************************************
-//Мониторы АКБ
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
 
-//***********************************************
-//Литиевые АКБ
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	//флаг аварийности низовой связи с батареей, вычисляется в плате расширения
-	signed short	_communication2lvlErrorCnt;  	//счетчик аварийности низовой связи с батареей
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	//флаг аварийности всего канала связи с батареей, 0 - норма, 1 - отсутствует связь с промежуточной платой, 2 - отсутствует связь промежуточной платы и батареи  	
-	signed short   _battIsOn;		//0 - отсутствует, 1 - присутствует
-	char 		_plazma[8];		//переменные для отладки
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		//остаточный заряд в абсолютном выражении
-	signed short 	_s_o_c_percent; //остаточный заряд в процентном выражении
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	//заряд батареи в процетах
-	signed char		_cell_temp_1;	//температура 1-го датчика батареи(ZTT)
-	signed char		_cell_temp_2;	//температура 2-го датчика батареи(ZTT)
-	signed char		_cell_temp_3;	//температура 3-го датчика батареи(ZTT)
-	signed char		_cell_temp_4;	//температура 4-го датчика батареи(ZTT)
-	signed char		_cell_temp_ambient;	//температура датчика окружающей среды батареи(ZTT)
-	signed char		_cell_temp_power;	//температура датчика силовой части батареи(ZTT)
-	//signed char 	_pack_volt_state;	//статус аварии по напряжениям батареи(ZTT)
-	//signed char 	_pack_temper_state;	//статус аварии по температурам батареи(ZTT)
-	//signed char 	_pack_alarm_state;	//статус аварий батареи(ZTT)
-	signed char		_charge_and_discharge_current_alarm_status;	 	//(ZTT)
-	signed char 	_battery_total_voltage_alarm_status;			//(ZTT)
-	signed char		_custom_alarm_quantity;							//(ZTT)
-	signed char		_balanced_event_code;							//(ZTT)
-	signed char 	_voltage_event_code;							//(ZTT)
-	signed char 	_temperature_event_code;						//(ZTT)
-	signed char		_current_event_code;							//(ZTT)
-	signed char		_fet_status_code;								//(ZTT)
-	signed short	_balanced_status_code;							//(ZTT)
-	signed char 	_system_status_code;							//(ZTT)
 
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	//счетчик неправильного показания ннапряжения батареи
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-extern short lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-extern short lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-extern short lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
+
+
 
 
 
@@ -1264,7 +1175,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		//передаваемые БПСам корректоры
+
+	 signed  short _x_avg; 	//выравнивание токов
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -1274,8 +1187,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];//o_1
+
 
 //***********************************************
 //Состояние инверторов
@@ -1330,6 +1250,8 @@ extern INV_STAT inv[20];
 #endif
 extern char first_inv_slot;
 
+
+
 //***********************************************
 //Состояние нагрузки
 extern signed short load_U;
@@ -1355,6 +1277,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -1587,6 +1510,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		//точная регулировка выходного напряжения системы
+extern signed  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;

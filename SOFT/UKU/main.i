@@ -980,7 +980,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -1241,6 +1241,7 @@ extern signed short I_LOAD_MODE;
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -1328,99 +1329,9 @@ extern LI_BAT_STAT li_bat;
 
 
 
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
 
 
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
-
-
-
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	
-	signed short	_communication2lvlErrorCnt;  	
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	
-	signed short   _battIsOn;		
-	char 		_plazma[8];		
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		
-	signed short 	_s_o_c_percent; 
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	
-	signed char		_cell_temp_1;	
-	signed char		_cell_temp_2;	
-	signed char		_cell_temp_3;	
-	signed char		_cell_temp_4;	
-	signed char		_cell_temp_ambient;	
-	signed char		_cell_temp_power;	
-	
-	
-	
-	signed char		_charge_and_discharge_current_alarm_status;	 	
-	signed char 	_battery_total_voltage_alarm_status;			
-	signed char		_custom_alarm_quantity;							
-	signed char		_balanced_event_code;							
-	signed char 	_voltage_event_code;							
-	signed char 	_temperature_event_code;						
-	signed char		_current_event_code;							
-	signed char		_fet_status_code;								
-	signed short	_balanced_status_code;							
-	signed char 	_system_status_code;							
-
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	
-extern short lakbNotErrorNum;		
-extern short lakbKanErrorCnt;		
-extern short lakbKanErrorStat;		
 
 
 
@@ -1474,7 +1385,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		
+
+	 signed  short _x_avg; 	
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -1484,8 +1397,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
+
 
 
 
@@ -1542,6 +1462,8 @@ extern char first_inv_slot;
 
 
 
+
+
 extern signed short load_U;
 extern signed short load_I;
 
@@ -1565,6 +1487,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -1664,11 +1587,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1388 "main.h"
 
-#line 1476 "main.h"
+#line 1399 "main.h"
 
-#line 1492 "main.h"
+#line 1415 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1712,7 +1635,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1469 "main.h"
 
 
 
@@ -1757,6 +1680,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		
+extern signed  short _x_reg_cnt;	
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;
@@ -2268,19 +2194,11 @@ void ret_hndl(void);
 
 
 
-#line 161 "eeprom_map.h"
+#line 114 "eeprom_map.h"
 
-#line 172 "eeprom_map.h"
+#line 154 "eeprom_map.h"
 
-
-
-
-
-
- 
-
-
-
+#line 165 "eeprom_map.h"
 
 
 
@@ -2289,25 +2207,6 @@ void ret_hndl(void);
 
  
 
-#line 206 "eeprom_map.h"
-
-
-
-#line 218 "eeprom_map.h"
-
-
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
-
-
-
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
 
 
 
@@ -2316,7 +2215,36 @@ void ret_hndl(void);
 
 
 
-#line 361 "eeprom_map.h"
+ 
+
+#line 199 "eeprom_map.h"
+
+
+
+#line 211 "eeprom_map.h"
+
+
+#line 222 "eeprom_map.h"
+
+
+
+#line 233 "eeprom_map.h"
+
+
+
+#line 289 "eeprom_map.h"
+
+
+#line 332 "eeprom_map.h"
+
+
+
+
+
+
+
+
+#line 354 "eeprom_map.h"
 
 
 
@@ -2511,7 +2439,7 @@ void community2lcd(char* in,
 extern char num_of_wrks_bps;
 extern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 extern char bps_hndl_2sec_cnt;
-extern unsigned short bps_on_mask,bps_off_mask;
+extern unsigned int bps_on_mask,bps_off_mask;
 extern char num_necc_up,num_necc_down;
 extern unsigned char sh_cnt0,b1Hz_sh;
 
@@ -2677,7 +2605,7 @@ void outVoltContrHndl(void);
 
 
 void mess_hndl(void);
-void mess_send(char _mess, short par0, short par1, char _time);
+void mess_send(char _mess, int par0, int par1, char _time);
 char mess_find(char _mess);
 char mess_find_unvol(char _mess);
 
@@ -3642,7 +3570,7 @@ uint32_t UARTInit( uint32_t PortNum, uint32_t baudrate );
 
 extern unsigned char modbus_buf[20];
 extern short modbus_crc16;
-extern char modbus_timeout_cnt;
+
 extern char bMODBUS_TIMEOUT;
 extern unsigned char modbus_rx_buffer[30];	
 extern unsigned char modbus_an_buffer[30];	
@@ -3797,6 +3725,28 @@ extern const short BUILD_YEAR;
 extern const short BUILD_MONTH;
 extern const short BUILD_DAY;
 #line 46 "main.c"
+#line 1 "MODBUS_RTU.h"
+extern unsigned char NULL_0;
+extern unsigned char mb_rtu_func;
+extern unsigned long mb_rtu_start_adr;
+extern unsigned char mb_rtu_num, mb_rtu_num_send;
+extern unsigned short mb_data_1, mb_data_2, crc_f;
+extern char modbus_timeout_cnt;
+
+
+
+extern char sc16is700RecieveDisableFlag;
+extern signed short modbusTimeoutInMills;
+
+void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+char lc640_write_int(short ADR,short in);
+void putchar_sc16is700(char out_byte);
+void crc_calc_f( unsigned short data);
+void modbus_puts (void);
+unsigned short CRC16_MB(char* buf, short len);
+void sc16is700_uart_hndl_mb(void);
+void sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+#line 47 "main.c"
 
 extern U8 own_hw_adr[];
 extern U8  snmp_Community[];
@@ -4037,6 +3987,7 @@ signed short I_LOAD_MODE;
 
 signed short OVERLOAD_CURR;
 signed short OVERLOAD_TIME;
+signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -4046,27 +3997,6 @@ signed short		bat_u_old_cnt;
 signed short 		Ib_ips_termokompensat;
 
 
-
-MAKB_STAT makb[4];
-
-
-
-LAKB_STAT lakb[3];
-char lakb_damp[1][42];
-char bLAKB_KONF_CH=0;
-char bLAKB_KONF_CH_old=0;
-char lakb_ison_mass[7];
-short lakb_mn_ind_cnt;
-char bLAKB_KONF_CH_EN;
-
-short LBAT_STRUKT;
-char lakb_error_cnt;		
-short numOfPacks,numOfPacks_;
-short numOfCells, numOfTemperCells, baseOfData;
-short lakb_stat_comm_error;	
-short lakbNotErrorNum;		
-short lakbKanErrorCnt;		
-short lakbKanErrorStat;		
 
 
 
@@ -4081,7 +4011,7 @@ char can_slot[12][16];
 
 
 
-BPS_STAT bps[29];
+BPS_STAT bps[32];
 
 
 
@@ -4093,9 +4023,6 @@ INV_STAT inv[20];
 
 char first_inv_slot=20;
 
-
-
-BYPS_STAT byps;
 
 
 
@@ -6055,7 +5982,7 @@ typedef struct
  
 #line 1031 "C:\\Keil\\ARM\\INC\\NXP\\LPC17xx\\LPC17xx.H"
 
-#line 494 "main.c"
+#line 472 "main.c"
 
 
 
@@ -6117,6 +6044,7 @@ char superviser_cnt;
 
 
 char plazma_plazma_plazma;
+char plazma_PUTTM31,plazma_PUTTM32;
 
 char bRESET=0;
 char bRESET_EXT=0;
@@ -6164,11 +6092,11 @@ enum_av_tbox_stat av_tbox_stat=atsOFF;
 signed short av_tbox_cnt;
 char tbatdisable_cmnd=20,tloaddisable_cmnd=22;
 short tbatdisable_cnt,tloaddisable_cnt;
-#line 608 "main.c"
+#line 587 "main.c"
 
-#line 617 "main.c"
+#line 596 "main.c"
 
-#line 630 "main.c"
+#line 609 "main.c"
 
 
 
@@ -6194,8 +6122,6 @@ char ibat_metr_cnt=0;
 
 
 
-
-#line 667 "main.c"
 
 
 
@@ -6254,6 +6180,8 @@ char vd_is_work_cnt;
 short plazma_numOfCells;
 short plazma_numOfTemperCells;
 short plazma_numOfPacks;
+signed  short _x_reg;		
+signed  short _x_reg_cnt;	
 
 
 
@@ -6402,275 +6330,37 @@ else
 }
 
 
-void def_set(int umax__,int ub0__,int ub20__,int usign__,int imax__,int uob__,int numi,int _uvz)
+void def_set(void)
 {
-;
-lc640_write_int(0x10+100+36,numi);
-lc640_write_int(0x10+100+38,0);
-
-
-lc640_write_int(0x10+100+2,0);
-lc640_write_int(0x10+100+86,1);
-lc640_write_int(0x10+100+78,60);
-lc640_write_int(0x10+100+4,umax__);
-lc640_write_int(0x10+100+84,ub20__/2);
-
-
-lc640_write_int(0x10+100+82,70);
-lc640_write_int(0x10+100+10,80);
-
-lc640_write_int(0x10+100+14,usign__);
-lc640_write_int(0x10+100+16,187);
-lc640_write_int(0x10+100+18,0);
-lc640_write_int(0x10+100+20,10);
-
-
-lc640_write_int(0x10+100+24,imax__);
-lc640_write_int(0x10+100+26,(imax__*8)/10);
-
+lc640_write_int(0x10+100+18,1);
+lc640_write_int(0x10+100+12,1);
 lc640_write_int(0x10+100+44,apvON);
 lc640_write_int(0x10+100+46,apvON);
 lc640_write_int(0x10+100+48,1);
-lc640_write_int(0x10+100+30,160);
-lc640_write_int(0x10+100+32,uob__);
-lc640_write_int(0x10+100+34,3);
-lc640_write_int(0x10+100+88,50);  
-lc640_write_int(0x10+100+90,40);
-lc640_write_int(0x10+100+72,mnON);
-lc640_write_int(0x10+100+74,30);	
-lc640_write_int(0x10+100+12,1);
+lc640_write_int(0x10+100+6,2300);
+lc640_write_int(0x10+100+8,2300);
+lc640_write_int(0x10+100+82,70);
+lc640_write_int(0x10+100+10,80);
+lc640_write_int(0x10+100+106,50);	
+lc640_write_int(0x10+100+84,200);
+lc640_write_int(0x10+100+4,750);
+lc640_write_int(0x10+100+146,1650);
+lc640_write_int(0x10+100+144,2500);
+lc640_write_int(0x10+100+148,2500);
+lc640_write_int(0x10+100+150,2200);
+lc640_write_int(0x10+100+34,5);
 
+lc640_write_int(ADR_EE_RELE_SET_MASK[0],0x0001);
+lc640_write_int(ADR_EE_RELE_SET_MASK[1],0x0078);
+lc640_write_int(ADR_EE_RELE_SET_MASK[2],0x0002);
+lc640_write_int(ADR_EE_RELE_SET_MASK[3],0x0084);
 
-
-
-lc640_write_int(0x10+100+92,70);
-lc640_write_int(0x10+100+96,60);
-lc640_write_int(0x10+100+94,25);
-lc640_write_int(0x10+100+98,80);
-lc640_write_int(0x10+100+100,70);
-lc640_write_int(0x10+100+102,91);
-lc640_write_int(0x10+100+104,80);
-
-lc640_write_int(ADR_SK_SIGN[0],0);
-lc640_write_int(ADR_SK_REL_EN[0],0);
-lc640_write_int(ADR_SK_LCD_EN[0],0xffff);
-
-lc640_write_int(ADR_SK_SIGN[1],0);
-lc640_write_int(ADR_SK_REL_EN[1],0);
-lc640_write_int(ADR_SK_LCD_EN[1],0xffff);
-
-lc640_write_int(ADR_SK_SIGN[2],0);
-lc640_write_int(ADR_SK_REL_EN[2],0);
-lc640_write_int(ADR_SK_LCD_EN[2],0xffff);
-
-lc640_write_int(ADR_SK_SIGN[3],0);
-lc640_write_int(ADR_SK_REL_EN[3],0);
-lc640_write_int(ADR_SK_LCD_EN[3],0xffff);
-
-lc640_write_int(0x10+500+96,10);
-
-lc640_write_int(0x10+500+92,11);
 }
 
 
 
 void def_ips_set(short voltage)
 {
-if(voltage==24)
-	{
-	def_set(300,voltage,voltage,22,150,240,7,0);
-	}
-if(voltage==48)
-	{
-	def_set(600,voltage,voltage,44,100,480,7,0);
-	}
-if(voltage==60)
-	{
-	def_set(750,voltage,voltage,55,100,600,7,0);
-	}
-
-if(voltage==220)
-	{
-	def_set(2450,2366,2315,187,100,2200,2,2346);
-
-	lc640_write_int(0x10+100+36,2);
-	lc640_write_int(0x10+100+38,0);
-
-
-	lc640_write_int(0x10+100+2,0);
-	lc640_write_int(0x10+100+86,1);
-	lc640_write_int(0x10+100+78,60);
-	lc640_write_int(0x10+100+4,2450);
-	lc640_write_int(0x10+100+84,2315/2);
-	
-	
-	lc640_write_int(0x10+100+82,70);
-	lc640_write_int(0x10+100+10,80);
-
-	lc640_write_int(0x10+100+14,187);
-	lc640_write_int(0x10+100+16,187);
-	lc640_write_int(0x10+100+18,0);
-	lc640_write_int(0x10+100+20,20);
-
-	
-	lc640_write_int(0x10+100+24,80);
-	lc640_write_int(0x10+100+26,50);
-
-	lc640_write_int(0x10+100+44,apvON);
-	lc640_write_int(0x10+100+46,apvON);
-	lc640_write_int(0x10+100+48,1);
-	lc640_write_int(0x10+100+30,160);
-	lc640_write_int(0x10+100+32,2200);
-	lc640_write_int(0x10+100+34,3);
-	lc640_write_int(0x10+100+88,50);  
-	lc640_write_int(0x10+100+90,40);
-	lc640_write_int(0x10+100+72,mnON);
-	lc640_write_int(0x10+100+74,30);	
-	lc640_write_int(0x10+100+12,1);
-
-
-
-
-	lc640_write_int(0x10+100+92,70);
-	lc640_write_int(0x10+100+96,60);
-	lc640_write_int(0x10+100+94,25);
-	lc640_write_int(0x10+100+98,80);
-	lc640_write_int(0x10+100+100,70);
-	lc640_write_int(0x10+100+102,91);
-	lc640_write_int(0x10+100+104,80);
-
-	lc640_write_int(ADR_SK_SIGN[0],0);
-	lc640_write_int(ADR_SK_REL_EN[0],0);
-	lc640_write_int(ADR_SK_LCD_EN[0],0xffff);
-
-	lc640_write_int(ADR_SK_SIGN[1],0);
-	lc640_write_int(ADR_SK_REL_EN[1],0);
-	lc640_write_int(ADR_SK_LCD_EN[1],0xffff);
-
-	lc640_write_int(ADR_SK_SIGN[2],0);
-	lc640_write_int(ADR_SK_REL_EN[2],0);
-	lc640_write_int(ADR_SK_LCD_EN[2],0xffff);
-
-	lc640_write_int(ADR_SK_SIGN[3],0);
-	lc640_write_int(ADR_SK_REL_EN[3],0);
-	lc640_write_int(ADR_SK_LCD_EN[3],0xffff);
-
-	lc640_write_int(0x10+500+96,10);
-
-	lc640_write_int(0x10+500+92,11);
-
-
-	lc640_write_int(0x10+100+84,2315-1870);
-	lc640_write_int(0x10+100+80,2200);
-	lc640_write_int(0x10+100+30,20);
-	lc640_write_int(0x10+100+224,22033);
-	lc640_write_int(0x10+100+86,1);
-	lc640_write_int(0x10+100+72,mnOFF);
-	}
-
-if(voltage==110)
-	{
-	def_set(1350,1270,1225,99,20,1220,2,1290);
-
-	lc640_write_int(0x10+100+36,2);
-	lc640_write_int(0x10+100+38,0);
-
-
-	lc640_write_int(0x10+100+2,0);
-	lc640_write_int(0x10+100+86,1);
-	lc640_write_int(0x10+100+78,60);
-	lc640_write_int(0x10+100+4,1350);
-	lc640_write_int(0x10+100+84,1350/2);
-	
-	
-	lc640_write_int(0x10+100+82,70);
-	lc640_write_int(0x10+100+10,80);
-
-	lc640_write_int(0x10+100+14,99);
-	lc640_write_int(0x10+100+16,187);
-	lc640_write_int(0x10+100+18,0);
-	lc640_write_int(0x10+100+20,20);
-
-	
-	lc640_write_int(0x10+100+24,80);
-	lc640_write_int(0x10+100+26,50);
-
-	lc640_write_int(0x10+100+44,apvON);
-	lc640_write_int(0x10+100+46,apvON);
-	lc640_write_int(0x10+100+48,1);
-	lc640_write_int(0x10+100+30,160);
-	lc640_write_int(0x10+100+32,1220);
-	lc640_write_int(0x10+100+34,3);
-	lc640_write_int(0x10+100+88,50);  
-	lc640_write_int(0x10+100+90,40);
-	lc640_write_int(0x10+100+72,mnON);
-	lc640_write_int(0x10+100+74,30);	
-	lc640_write_int(0x10+100+12,1);
-
-
-
-
-	lc640_write_int(0x10+100+92,70);
-	lc640_write_int(0x10+100+96,60);
-	lc640_write_int(0x10+100+94,25);
-	lc640_write_int(0x10+100+98,80);
-	lc640_write_int(0x10+100+100,70);
-	lc640_write_int(0x10+100+102,91);
-	lc640_write_int(0x10+100+104,80);
-
-	lc640_write_int(ADR_SK_SIGN[0],0);
-	lc640_write_int(ADR_SK_REL_EN[0],0);
-	lc640_write_int(ADR_SK_LCD_EN[0],0xffff);
-
-	lc640_write_int(ADR_SK_SIGN[1],0);
-	lc640_write_int(ADR_SK_REL_EN[1],0);
-	lc640_write_int(ADR_SK_LCD_EN[1],0xffff);
-
-	lc640_write_int(ADR_SK_SIGN[2],0);
-	lc640_write_int(ADR_SK_REL_EN[2],0);
-	lc640_write_int(ADR_SK_LCD_EN[2],0xffff);
-
-	lc640_write_int(ADR_SK_SIGN[3],0);
-	lc640_write_int(ADR_SK_REL_EN[3],0);
-	lc640_write_int(ADR_SK_LCD_EN[3],0xffff);
-
-	lc640_write_int(0x10+500+96,10);
-
-	lc640_write_int(0x10+500+92,11);
-
-
-	lc640_write_int(0x10+100+84,1220-600);
-	lc640_write_int(0x10+100+80,1220);
-	lc640_write_int(0x10+100+30,20);
-	lc640_write_int(0x10+100+224,22033);
-	lc640_write_int(0x10+100+86,1);
-	lc640_write_int(0x10+100+72,mnOFF);
-	}
-
-lc640_write_int(ADR_EE_BAT_IS_ON[0],bisOFF);
-lc640_write_int(ADR_EE_BAT_DAY_OF_ON[0],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM);
-lc640_write_int(ADR_EE_BAT_MONTH_OF_ON[0],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH);
-lc640_write_int(ADR_EE_BAT_YEAR_OF_ON[0],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR);
-lc640_write_int(ADR_EE_BAT_C_NOM[0],0);
-lc640_write_int(ADR_EE_BAT_RESURS[0],0);
-
-lc640_write_int(ADR_EE_BAT_IS_ON[1],bisOFF);
-lc640_write_int(ADR_EE_BAT_DAY_OF_ON[1],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM);
-lc640_write_int(ADR_EE_BAT_MONTH_OF_ON[1],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH);
-lc640_write_int(ADR_EE_BAT_YEAR_OF_ON[1],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR);
-lc640_write_int(ADR_EE_BAT_C_NOM[1],0);
-lc640_write_int(ADR_EE_BAT_RESURS[1],0);
-
-
-lc640_write_int(0x10+100+164,2400);
-lc640_write_int(0x10+100+162,20);
-lc640_write_int(0x10+100+166,1);
-lc640_write_int(0x10+100+168,0);
-lc640_write_int(0x10+100+172,0);
-lc640_write_int(0x10+100+174,0);
-lc640_write_int(0x10+100+170,40);
-lc640_write_int(0x10+100+182,1310);
-lc640_write_int(0x10+100+184,1100);
 
 
 }
@@ -6739,13 +6429,22 @@ if((cnt_net_drv>=0)&&(cnt_net_drv<=max_net_slot))
 	
 	if((!bCAN_OFF)&&(main_1Hz_cnt>5))
 		{
+		char GETTM_tr=0xED;
 		UOUT_tr=UOUT+30;
 
 
 
-		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
+		
 
-		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
+		
+		if(a_ind . i==iFWaboutBPS)
+			{
+			static char gettm_cnt[32];
+			if(++gettm_cnt[cnt_net_drv]>=3)gettm_cnt[cnt_net_drv]=0;
+			if(gettm_cnt[cnt_net_drv]==1) GETTM_tr=0xEb;
+			if(gettm_cnt[cnt_net_drv]==2) GETTM_tr=0xEc; 
+			}
+		mcp2515_transmit(cnt_net_drv,cnt_net_drv,GETTM_tr,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 
      	}
 	if(cnt_net_drv<=max_net_slot)
@@ -6770,19 +6469,17 @@ else if(cnt_net_drv==-1)
      if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x62,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),(MODBUS_ADRESS%2));
      } 
      
+
 else if(cnt_net_drv==-2)
-	{
-	
-	UAVT_tr=UAVT+30;
-     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
-     byps._cnt++;
-	} 
+	{                 
+	if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT)),*((char*)((&UAVT))+1),*((char*)(&TMAX)),*((char*)(&TSIGN)),0);
+
+	}
 else if(cnt_net_drv==-3)
 	{                 
 	if(!bCAN_OFF) mcp2515_transmit(0x1d,0x1d,0,0,0,0,0,0);
 	if(ibat_metr_cnt<60)ibat_metr_cnt++;
-	}
-	
+	}	
 	
 
 	
@@ -6876,19 +6573,6 @@ if(cnt_net_drv<=17)
  	
 	
 
-else if(cnt_net_drv==19)
-	{
-     if(!bCAN_OFF)
-		{
-		mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,BAT_TYPE,NUMBAT,0,0,0);
-		lakb[0]._cnt++;
-		if(lakb[0]._cnt>20)lakb[0]._cnt=20;
-		lakb[1]._cnt++;
-		if(lakb[1]._cnt>20)lakb[1]._cnt=20;
-		}
-     }
-	
-	
 
 }
 
@@ -7666,9 +7350,8 @@ else if(a_ind . i==iMn_VD)
 
 	
 
-	int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
-	int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
-	int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
+
+	
 	
 	
 	
@@ -7678,64 +7361,6 @@ else if(a_ind . i==iMn_VD)
 	}
 
 
-
-else if(a_ind . i==iMakb)
-	{
-	const char* ptr[12];
- 
-	simax=10;
-
-	ptr[0]=			" Uá1    =     @Â    ";
-	ptr[1]=			" Uá2    =     #Â    ";
-	ptr[2]=			" Uá3    =     $Â    ";
-	ptr[3]=			" Uá4    =     %Â    ";
-	ptr[4]=			" Uá5    =     ^Â    ";
-	ptr[5]=			" tá1    =     &°Ñ   ";
-	ptr[6]=			" tá2    =     *°Ñ   ";
-	ptr[7]=			" tá3    =     (°Ñ   ";
-	ptr[8]=			" tá4    =     )°Ñ   ";
-	ptr[9]=			" tá5    =     +°Ñ   ";
-	ptr[10]=			sm_exit;
-
- 	if(makb[a_ind . s_i1]._cnt>=5)
-	 	{
-		bgnd_par(		"   ÌÎÍÈÒÎĞ ÀÊÁ N<   ",
-					"   ÍÅ ÏÎÄÊËŞ×ÅÍ!!!  ",
-					"                    ",
-					"                    ");
-		}
-
-
-	else 
-		{
-		bgnd_par(		"   ÌÎÍÈÒÎĞ ÀÊÁ N<   ",
-					ptr[a_ind . i_s],
-					ptr[a_ind . i_s+1],
-					ptr[a_ind . i_s+2]);
-
-		if(a_ind . s_i-a_ind . i_s>2)a_ind . i_s=a_ind . s_i-2;
-		else if (a_ind . s_i<a_ind . i_s)a_ind . i_s=a_ind . s_i;
-
-		if(a_ind . s_i>=simax)	pointer_set(1);
-		
-		int2lcd(makb[a_ind . s_i1]._Ub[0],'@',1);
-		int2lcd(makb[a_ind . s_i1]._Ub[1],'#',1);
-		int2lcd(makb[a_ind . s_i1]._Ub[2],'$',1);
-		int2lcd(makb[a_ind . s_i1]._Ub[3],'%',1);
-		int2lcd(makb[a_ind . s_i1]._Ub[4],'^',1);
-		if(makb[a_ind . s_i1]._T_nd[0])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'&',-5);
-		else int2lcd_mmm(makb[a_ind . s_i1]._T[0],'&',0); 
- 		if(makb[a_ind . s_i1]._T_nd[1])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'*',-5);
-		else int2lcd_mmm(makb[a_ind . s_i1]._T[1],'*',0); 
-		if(makb[a_ind . s_i1]._T_nd[2])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'(',-5);
-		else int2lcd_mmm(makb[a_ind . s_i1]._T[2],'(',0); 
-		if(makb[a_ind . s_i1]._T_nd[3])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",')',-5);
-		else int2lcd_mmm(makb[a_ind . s_i1]._T[3],')',0); 
-		if(makb[a_ind . s_i1]._T_nd[4])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'+',-5);
-		else int2lcd_mmm(makb[a_ind . s_i1]._T[4],'+',0); 
-		}
-	int2lcd(a_ind . s_i1+1,'<',0);
-    }
 
  else if(a_ind . i==iBps)
 	{
@@ -7824,7 +7449,7 @@ else if(a_ind . i==iMakb)
 	{
 	const char* ptr[11];
  
-	simax=9;
+	simax=10;
 
 	ptr[1]=			" Uèñò.=        (Â   ";
 	ptr[2]=			" Uâûõ.=        )Â   ";
@@ -7835,6 +7460,7 @@ else if(a_ind . i==iMakb)
 	ptr[7]=			" Ñáğîñ àâàğèé       ";
 	ptr[8]=			sm_exit;
  	ptr[9]=			" Ñáğîñ íàğàáîòêè    ";
+	ptr[10]=		" Âåğñèÿ ÏÎ ÁÏÑ      ";
 
 	if(bps[a_ind . s_i1]._state==bsWRK)
 		{
@@ -7905,6 +7531,7 @@ else if(a_ind . i==iMakb)
     
     
    	
+	
 	
 	
 	
@@ -8969,13 +8596,14 @@ else if(a_ind . i==iBatLogWrk)
 	} 
 	
 else if((a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
-	||(a_ind . i==iAusw_prl)||(a_ind . i==iPrltst))
+	||(a_ind . i==iAusw_prl)||(a_ind . i==iPrltst)||(a_ind . i==iSet_st_prl)||(a_ind . i==iSet_st_prl))
 	{
 	bgnd_par("  Ââåäèòå  ïàğîëü   ",sm_,sm_,sm_);
 	int2lcdyx(parol[0],1,8,0);
-     int2lcdyx(parol[1],1,9,0);
-     int2lcdyx(parol[2],1,10,0);
-     lcd_buffer[48+a_ind . s_i]='¤';
+    int2lcdyx(parol[1],1,9,0);
+    int2lcdyx(parol[2],1,10,0);
+    lcd_buffer[48+a_ind . s_i]='¤';
+	
 	}	
 		
 else if(a_ind . i==iPrl_bat_in_out)
@@ -9884,6 +9512,7 @@ else if(a_ind . i==iK_VD)
 	ptrs[i++]=" Uâ.ä.         #Â   ";
     ptrs[i++]=" Tñèñòåìû  =   ^°C  ";;
     ptrs[i++]=" Âûõîä              ";
+	ptrs[i++]=" Êâàğö RS485   }ÌÃÖ ";
     ptrs[i++]="                    ";
     ptrs[i++]="                    ";
 
@@ -9900,6 +9529,7 @@ else if(a_ind . i==iK_VD)
 	int2lcd(out_I,'@',0);
 	int2lcd(vd_U,'#',1);
 	int2lcd(sys_T,'^',0);
+	int2lcd(RS485_QWARZ_DIGIT,'}',0);
 	
 	
     
@@ -10257,53 +9887,6 @@ else if(a_ind . i==iK_makb_sel)
 	
      }     
 
-else if(a_ind . i==iK_makb)
-	{
-	ptrs[0]=						" U1  =    !Â        ";
-	ptrs[1]=						" U2  =    @Â        ";
-	ptrs[2]=						" U3  =    #Â        ";
-	ptrs[3]=						" U4  =    $Â        ";
-	ptrs[4]=						" U5  =    %Â        ";
-	ptrs[5]=						" t1  =    ^°C       ";
-	ptrs[6]=						" t2  =    &°C       ";
-	ptrs[7]=						" t3  =    *°C       ";
-	ptrs[8]=						" t4  =    (°C       ";
-	ptrs[9]=						" t5  =    )°C       ";
-	ptrs[10]=						" Âûõîä              ";
-	ptrs[11]=						"                    ";
-
-	if((a_ind . s_i-a_ind . i_s)>1)a_ind . i_s=a_ind . s_i-1;
-	else if(a_ind . s_i<a_ind . i_s)a_ind . i_s=a_ind . s_i;
-	bgnd_par("     ÊÀËÈÁĞÎÂÊÀ     ","   ÌÎÍÈÒÎĞ ÀÊÁ N<   ",ptrs[a_ind . i_s],ptrs[a_ind . i_s+1]);
-	pointer_set(2);
-	simax=10;
-
-	int2lcd(a_ind . s_i1+1,'<',0);
-	int2lcd(makb[a_ind . s_i1]._U[0],'!',1);
-	int2lcd(makb[a_ind . s_i1]._U[1],'@',1);
-	int2lcd(makb[a_ind . s_i1]._U[2],'#',1);
-	int2lcd(makb[a_ind . s_i1]._U[3],'$',1);
-	int2lcd(makb[a_ind . s_i1]._U[4],'%',1);
-
-	if(makb[a_ind . s_i1]._T_nd[0])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'^',-5);
-	else int2lcd_mmm(makb[a_ind . s_i1]._T[0],'^',0); 
-	if(makb[a_ind . s_i1]._T_nd[1])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'&',-5);
-	else int2lcd_mmm(makb[a_ind . s_i1]._T[1],'&',0); 
-	if(makb[a_ind . s_i1]._T_nd[2])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'*',-5);
-	else int2lcd_mmm(makb[a_ind . s_i1]._T[2],'*',0); 
-	if(makb[a_ind . s_i1]._T_nd[3])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",'(',-5);
-	else int2lcd_mmm(makb[a_ind . s_i1]._T[3],'(',0); 
-	if(makb[a_ind . s_i1]._T_nd[4])sub_bgnd("ÍÅÏÎÄÊËŞ×ÅÍ",')',-5);
-	else int2lcd_mmm(makb[a_ind . s_i1]._T[4],')',0); 
-
-
-
-
-
-
- 
-	
-     }   
 
 else if(a_ind . i==iK_bps_sel)
 	{
@@ -10328,10 +9911,21 @@ else if(a_ind . i==iK_bps_sel)
     ptrs[18]=						" ÁÏÑ N19            ";
 	ptrs[19]=						" ÁÏÑ N20            ";
     ptrs[20]=						" ÁÏÑ N21            ";
-    ptrs[21]=						" ÁÏÑ N22            ";	               
+    ptrs[21]=						" ÁÏÑ N22            ";
+    ptrs[22]=						" ÁÏÑ N23            ";
+	ptrs[23]=						" ÁÏÑ N24            ";
+    ptrs[24]=						" ÁÏÑ N25            ";
+    ptrs[25]=						" ÁÏÑ N26            ";
+	ptrs[26]=						" ÁÏÑ N27            ";
+    ptrs[27]=						" ÁÏÑ N28            ";
+    ptrs[28]=						" ÁÏÑ N29            ";
+	ptrs[29]=						" ÁÏÑ N30            ";
+    ptrs[30]=						" ÁÏÑ N31            ";
+    ptrs[31]=						" ÁÏÑ N32            ";	               
+		               
 	ptrs[NUMIST]=					" Âûõîä              ";
-	ptrs[1+NUMIST]=				"                    ";
-	ptrs[2+NUMIST]=				"                    ";
+	ptrs[1+NUMIST]=					"                    ";
+	ptrs[2+NUMIST]=					"                    ";
 
 	if((a_ind . s_i-a_ind . i_s)>2)a_ind . i_s=a_ind . s_i-2;
 	else if(a_ind . s_i<a_ind . i_s)a_ind . i_s=a_ind . s_i;
@@ -10807,15 +10401,6 @@ if(a_ind . i==iDeb)
 		int2lcdyx(cntrl_stat,1,11,0);
 		int2lcdyx(load_U,1,19,0);
 			
-		int2lcdyx(lakb[0]._balanced_event_code ,2,2,0);
-	   	int2lcdyx(lakb[1]._balanced_event_code ,3,2,0);
-		
-	 	int2lcd_mmm(lakb[0]._ch_curr/10,'!',0);
-		int2lcd_mmm(lakb[1]._ch_curr/10,'@',0);		
-		
-	 	int2lcd_mmm(bat[0]._Ib/10,'#',0);
-		int2lcd_mmm(bat[1]._Ib/10,'$',0);
-
 
 
 
@@ -10824,8 +10409,6 @@ if(a_ind . i==iDeb)
 
 		int2lcdyx(IMAX,0,13,0);
 		
-		int2lcdyx(lakb[0]._voltage_event_code,2,15,0); 
-		int2lcdyx(lakb[1]._voltage_event_code,3,15,0);
 
 
 
@@ -10933,7 +10516,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5447 "main.c"
+#line 5071 "main.c"
     	}
 
 
@@ -10991,26 +10574,7 @@ if(a_ind . i==iDeb)
      		    "                    ",
      		    "                    ");
 
-     	int2lcdyx(a_ind . s_i1+1,0,3,0);
-		int2lcdyx(lakb[a_ind . s_i1]._cnt,0,6,0);
-
-		int2lcdyx(lakb[a_ind . s_i1]._max_cell_temp,0,14,0);
-		int2lcdyx(lakb[a_ind . s_i1]._min_cell_temp,0,19,0);
-
-		int2lcdyx(lakb[a_ind . s_i1]._max_cell_volt,1,4,0);
-		int2lcdyx(lakb[a_ind . s_i1]._min_cell_volt,1,9,0);
-		int2lcdyx(lakb[a_ind . s_i1]._tot_bat_volt,1,14,0);
-		int2lcdyx(lakb[a_ind . s_i1]._s_o_h,1,19,0);
-
-		int2lcdyx(lakb[a_ind . s_i1]._ch_curr,2,4,0);
-		int2lcdyx(lakb[a_ind . s_i1]._dsch_curr,2,9,0);
-		int2lcdyx(lakb[a_ind . s_i1]._rat_cap,2,14,0);
-		int2lcdyx(lakb[a_ind . s_i1]._s_o_c,2,19,0);
-
-		int2lcdyx(lakb[a_ind . s_i1]._c_c_l_v,3,4,0);
-		int2lcdyx(lakb[a_ind . s_i1]._r_b_t,3,9,0);
-		int2lcdyx(lakb[a_ind . s_i1]._b_p_ser_num,3,14,0);
-		
+ 		
 		
 		
      	}	
@@ -11033,17 +10597,7 @@ if(a_ind . i==iDeb)
 		int2lcdyx(li_bat._Ub,1,3,0);
 
 
-		int2lcdyx(lakb[0]._tot_bat_volt,1,8,0);   
-
 		int2lcdyx(cntrl_stat,1,19,0);
-		
-		int2lcdyx(lakb_error_cnt,3,19,0);
-
-
-
-		
-		
-		
 		
 
 		int2lcdyx(li_bat._canErrorCnt,2,5,0);
@@ -11333,7 +10887,27 @@ else if(a_ind . i==iTst_VD)
     ptrs[16]=						" ÁÏÑ N9             ";               
 	ptrs[17]=						" ÁÏÑ N10            ";
     ptrs[18]=						" ÁÏÑ N11            ";
-    ptrs[19]=						" ÁÏÑ N12            ";               
+    ptrs[19]=						" ÁÏÑ N12            "; 
+    ptrs[20]=						" ÁÏÑ N13            ";
+	ptrs[21]=						" ÁÏÑ N14            ";
+    ptrs[22]=						" ÁÏÑ N15            ";
+    ptrs[23]=						" ÁÏÑ N16            ";
+	ptrs[24]=						" ÁÏÑ N17            ";
+    ptrs[25]=						" ÁÏÑ N18            ";
+    ptrs[26]=						" ÁÏÑ N19            ";               
+	ptrs[27]=						" ÁÏÑ N20            ";
+    ptrs[28]=						" ÁÏÑ N21            ";
+	ptrs[29]=						" ÁÏÑ N22            ";
+    ptrs[30]=						" ÁÏÑ N23            ";
+	ptrs[31]=						" ÁÏÑ N24            ";
+    ptrs[32]=						" ÁÏÑ N25            ";
+    ptrs[33]=						" ÁÏÑ N26            ";
+	ptrs[34]=						" ÁÏÑ N27            ";
+    ptrs[35]=						" ÁÏÑ N28            ";
+    ptrs[36]=						" ÁÏÑ N29            ";               
+	ptrs[37]=						" ÁÏÑ N30            ";
+    ptrs[38]=						" ÁÏÑ N31            ";
+    ptrs[39]=						" ÁÏÑ N32            ";	              
 	ptrs[8+NUMIST]=					" Âûõîä              ";
 	ptrs[9+NUMIST]=					" Ïğîâåğêà WDT(âíóòğ)";
 	ptrs[10+NUMIST]=				" Ïğîâåğêà WDT(âíåøí)";
@@ -11540,7 +11114,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 6186 "main.c"
+#line 5801 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11673,9 +11247,9 @@ else if(a_ind . i==iBps_list)
 	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2].debug_info_to_uku0,'&',0);
 	else sub_bgnd(" ",'&',0);
 
-	int2lcd(bps[a_ind . s_i1]._x_+50,'(',0);
-	int2lcd(bps[a_ind . s_i1+1]._x_+50,'(',0);
-	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._x_+50,'(',0);
+	int2lcd(bps[a_ind . s_i1]._x_avg+50,'(',0);
+	int2lcd(bps[a_ind . s_i1+1]._x_avg+50,'(',0);
+	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._x_avg+50,'(',0);
 	else sub_bgnd(" ",'(',0);
 
 	int2lcd(bps[a_ind . s_i1]._avg,')',0);
@@ -11909,6 +11483,22 @@ else if(a_ind . i==iFWabout)
 	
 	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
 	}
+else if(a_ind . i==iFWaboutBPS)
+	{
+	bgnd_par(	" Âåğñèÿ             ",
+				" Ñáîğêà  0000.00.00 ",
+				"                    ",
+				"                    ");
+	int2lcdyx(bps[a_ind . s_i1]._build_year,1,12,0);
+	int2lcdyx(bps[a_ind . s_i1]._build_month,1,15,0);
+	int2lcdyx(bps[a_ind . s_i1]._build_day,1,18,0);
+	
+	sprintf(&lcd_buffer[9],"%d.%d.%d",bps[a_ind . s_i1]._hardvare_version,bps[a_ind . s_i1]._soft_version,bps[a_ind . s_i1]._build);
+
+	
+	
+	int2lcdyx(a_ind . s_i1,3,19,0);
+	}
 else if(a_ind . i==iLog_reset_prl)
 	{
 	ptrs[0]="Äëÿ î÷èñòêè æóğíàëà ";
@@ -11973,12 +11563,12 @@ else if(a_ind . i==iCurr_overload)
 }							    
 
 
-#line 6624 "main.c"
+#line 6255 "main.c"
 
 
 
 
-#line 6647 "main.c"
+#line 6278 "main.c"
 
 
 
@@ -12438,10 +12028,14 @@ else if(a_ind . i==iBps_elteh)
 	     tree_down(0,0);
 	     ret(0);
 		}	
-	else if((but==254)&&(a_ind . s_i==9))
+	else if((but==126)&&(a_ind . s_i==9))
 		{
 		mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0x16,0x64,0,0,0,0);
-		}			
+		}
+	else if((but==254)&&(a_ind . s_i==10))
+		{
+		tree_up(iFWaboutBPS,0,0,a_ind . s_i1);
+		}					
 	}			
 else if(a_ind . i==iNet)
 	{
@@ -12631,7 +12225,7 @@ else if(a_ind . i==iEnerg3)
 
 else if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 	||(a_ind . i==iAusw_prl)
-	||(a_ind . i==iPrltst)||(a_ind . i==iLog_reset_prl))
+	||(a_ind . i==iPrltst)||(a_ind . i==iLog_reset_prl)||(a_ind . i==iSet_st_prl))
 	{
 	ret(50);
 	if(but==239)
@@ -12772,7 +12366,7 @@ else if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 			else 
 				{
 		          tree_down(0,0);
-	    	          show_mess("                    ",
+	    	      show_mess("                    ",
 	          			"       Ïàğîëü       ",
 	          			"     íåâåğíûé!!!    ",
 	          			"                    ",1000);
@@ -12783,10 +12377,16 @@ else if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 			{
 	     	if(tempU==295) 
 				{
-	
-				a_ind . s_i=1;
-				a_ind . i_s=0;
-				default_temp=10;
+				
+				
+				def_set();
+		        tree_down(0,0);
+	    	    show_mess(
+						"     Óñòàíîâêà      ",
+	          			"    ïàğàìåòğîâ      ",
+	          			"    ïğîèçâåäåíà     ",
+	          			"                    ",1000);
+
 				}
 			else 
 				{
@@ -13161,7 +12761,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7841 "main.c"
+#line 7482 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -13183,7 +12783,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7887 "main.c"
+#line 7528 "main.c"
 
 
 
@@ -13598,46 +13198,23 @@ else if(a_ind . i==iSet_VD)
 
 	else if(but==103)
 		{
-		lc640_write_int(0x10+100+162,20);
-		lc640_write_int(0x10+100+164,2400);
-		lc640_write_int(0x10+100+166,1);
-		lc640_write_int(0x10+100+170,50);
-		lc640_write_int(0x10+100+168,0);
-		lc640_write_int(0x10+100+172,1);
-		lc640_write_int(0x10+100+174,1);
-		lc640_write_int(0x10+100+226,20000);
+		
+
+
+
+
+
+
+ 
 		}
 		
 	else if(a_ind . s_i==0)
 	     {
 	     if(but==254)
 	        {
-	          
-	          
-	          
-
-			lc640_write_int(0x10+100+18,1);
-			lc640_write_int(0x10+100+12,1);
-			lc640_write_int(0x10+100+44,apvON);
-			lc640_write_int(0x10+100+46,apvON);
-			lc640_write_int(0x10+100+48,1);
-			lc640_write_int(0x10+100+6,2300);
-			lc640_write_int(0x10+100+8,2300);
-			lc640_write_int(0x10+100+82,70);
-			lc640_write_int(0x10+100+10,80);
-			lc640_write_int(0x10+100+106,50);
-			lc640_write_int(0x10+100+84,200);
-			lc640_write_int(0x10+100+4,700);
-			lc640_write_int(0x10+100+144,2500);
-			lc640_write_int(0x10+100+146,1700);
-			lc640_write_int(0x10+100+148,2500);
-			lc640_write_int(0x10+100+150,2200);
-			lc640_write_int(0x10+100+34,5);
-			lc640_write_int(0x10+350+2,6000);
-			lc640_write_int(ADR_EE_RELE_SET_MASK[0],0x01);
-			lc640_write_int(ADR_EE_RELE_SET_MASK[1],0x78);
-			lc640_write_int(ADR_EE_RELE_SET_MASK[2],0x02);
-			lc640_write_int(ADR_EE_RELE_SET_MASK[3],0x84);
+	        tree_up(iSet_st_prl,0,0,0);
+			parol_init();	 
+			ret(1000);
 
 	        }
 		}	
@@ -15982,12 +15559,12 @@ else if(a_ind . i==iK_VD)
 	if(but==251)
 		{
 		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 		}
 	else if(but==253)
 		{
 		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 		}
 	else if(but==123)
 		{
@@ -16091,6 +15668,24 @@ else if(a_ind . i==iK_VD)
 	    tree_down(0,0);
 	    ret(0);
         }
+	else if(a_ind . s_i==(5+(NUMIST!=0)))
+		{
+		if((but==239)||(but==111))
+			{
+			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=30;
+			else if(RS485_QWARZ_DIGIT==30)RS485_QWARZ_DIGIT=40;
+			else RS485_QWARZ_DIGIT=10;
+			}
+		else if((but==247)||(but==119))
+			{
+			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=40;
+			else if(RS485_QWARZ_DIGIT==40)RS485_QWARZ_DIGIT=30;
+			else RS485_QWARZ_DIGIT=10;
+			}
+		gran(&RS485_QWARZ_DIGIT,10,40);
+		lc640_write_int(0x10+100+152,RS485_QWARZ_DIGIT);
+		speed=0;
+		}
 	}
 
 
@@ -17247,87 +16842,6 @@ else if(a_ind . i==iInv_set)
 		}
 	}
 	
-else if(a_ind . i==iK_makb_sel)
-	{
-	ret(1000);
-	if(but==251)
-		{
-		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,NUMMAKB);
-		}
-	else if(but==253)
-		{
-		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,NUMMAKB);
-		}
-	else if(but==123)
-		{
-		a_ind . s_i=NUMMAKB;
-		}	
-	else if((but==254)&&(NUMMAKB)&&(a_ind . s_i<NUMMAKB))
-		{
-		if(makb[a_ind . s_i]._cnt<5)
-			{
-			tree_up(iK_makb,0,0,a_ind . s_i);
-			ret(1000);
-			}
-		else show_mess(
-					"                    ",
-	          		"   ÍÅ ÏÎÄÊËŞ×ÅÍ!!!  ",
-	          		"                    ",
-	          		"                    ",1000);	
-		}	
-	else if(a_ind . s_i==(NUMMAKB))
-		{
-		if(but==254)
-			{
-			tree_down(0,0);
-			ret(0);
-			}
-		}				
-	}
-
-else if(a_ind . i==iK_makb)
-	{
-	ret(1000);
-	if (but==253)
-		{      
-		a_ind . s_i--;
-		
-		
-		gran_char(&a_ind . s_i,0,simax);
-		}
-		
-	else if (but==251)
-		{
-		a_ind . s_i++;
-		
-		gran_char(&a_ind . s_i,0,simax);
-		}
-	else if(but==123)
-		{
-		a_ind . s_i=10;
-		}
-	else if ((a_ind . s_i >= 0) && (a_ind . s_i <= 9))
-		{
-		if(but==231) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,		(a_ind . s_i*16)+1,(a_ind . s_i*16)+1,0,0,0);
-	     else if(but==239) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+2,(a_ind . s_i*16)+2,0,0,0);
-		else if(but==111)	mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+3,(a_ind . s_i*16)+3,0,0,0);
-    		else if(but==247) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+4,(a_ind . s_i*16)+4,0,0,0); 
-		else if(but==119) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+5,(a_ind . s_i*16)+5,0,0,0);
-		speed=1;
-		}	
-		
-	else if(a_ind . s_i==10)
-		{
-		if(but==254)
-			{
-			tree_down(0,1);
-			ret(0);
-			}
-		}			
-	}
-
 
 
 
@@ -18125,9 +17639,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 13074 "main.c"
+#line 12629 "main.c"
 
-#line 13284 "main.c"
+#line 12839 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -18453,7 +17967,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13989 "main.c"
+#line 13544 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -19000,7 +18514,7 @@ else if (a_ind . i==iIps_Curr_Avg_Set)
 
 
   	} 
-else if(a_ind . i==iFWabout)
+else if((a_ind . i==iFWabout)||(a_ind . i==iFWaboutBPS))
 	{
 	ret(1000);
 	if(but==254)
@@ -19107,6 +18621,22 @@ b1000Hz=1;
 	bFF_=bFF;
 
 
+if(modbus_timeout_cnt<modbusTimeoutInMills)
+	{
+	modbus_timeout_cnt++;
+	if(modbus_timeout_cnt>=modbusTimeoutInMills)
+		{
+		bMODBUS_TIMEOUT=1;
+		
+		}
+	}
+else if (modbus_timeout_cnt>modbusTimeoutInMills)
+	{
+	modbus_timeout_cnt=0;
+	bMODBUS_TIMEOUT=0;
+	}
+
+
 if(++t0cnt5>=60)
      {
      t0cnt5=0;
@@ -19176,20 +18706,21 @@ if(++t0cnt>=10)
 	}
 
 
-if(modbus_timeout_cnt<6)
-	{
-	modbus_timeout_cnt++;
-	if(modbus_timeout_cnt>=6)
-		{
-		bMODBUS_TIMEOUT=1;
-		}
-	}
-else if (modbus_timeout_cnt>6)
-	{
-	modbus_timeout_cnt=0;
-	bMODBUS_TIMEOUT=0;
-	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
   return;          
 
@@ -19376,7 +18907,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14917 "main.c"
+#line 14489 "main.c"
 
 
 
@@ -19467,7 +18998,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 15025 "main.c"
+#line 14597 "main.c"
 
 
 
@@ -19517,14 +19048,15 @@ while (1)
 		{
 		bMODBUS_TIMEOUT=0;
 		
-		modbus_in();
+		
+		modbus_puts(); 
 		}
 
 	if(bRXIN0) 
 		{
 		bRXIN0=0;
 	
-		uart_in0();
+		
 		} 
 
 
@@ -19567,7 +19099,7 @@ while (1)
 
 
 
-		sc16is700_uart_hndl();
+		sc16is700_uart_hndl_mb();
 
 		}
 	

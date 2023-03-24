@@ -1685,7 +1685,7 @@ N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
 N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-N	iFWabout,
+N	iFWabout,iFWaboutBPS,
 N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
@@ -1947,6 +1947,7 @@ Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту 
 N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
+Nextern signed short RS485_QWARZ_DIGIT;
 N
 N//***********************************************
 N//Состояние батарей
@@ -2032,101 +2033,11 @@ N	//signed short   _min_cell_volt;
 N	} LI_BAT_STAT; 
 Nextern LI_BAT_STAT li_bat;
 N//#endif
-N//***********************************************
-N//Состояние байпаса
-Ntypedef struct
-N     {
-N	signed short 	_Iout;
-N	signed short 	_Uout;
-N	signed short 	_Pout;
-N	signed short 	_Unet; 	
-N	signed short 	_Uin;
-N	char			_T;
-N	char 		_flags;
-N	char			_cnt;
-N	char 		_adress;
-N	} BYPS_STAT; 
-Nextern BYPS_STAT byps;
 N
-N//***********************************************
-N//Мониторы АКБ
-Ntypedef struct
-N     {
-N	signed short	_U[5];
-N	signed short	_Ub[5];
-N	signed short	_T[5];
-N	signed short	_T_nd[5];
-N	signed short 	_cnt; 	
-N	} MAKB_STAT; 
-Nextern MAKB_STAT makb[4];
 N
-N//***********************************************
-N//Литиевые АКБ
-Ntypedef struct
-N     {
-N	signed short	_max_cell_volt;
-N	signed short	_min_cell_volt;
-N	signed short	_max_cell_temp;
-N	signed short	_min_cell_temp;
-N	signed short	_tot_bat_volt;
-N	signed short	_ch_curr;
-N	signed short	_dsch_curr;
-N	signed short	_rat_cap;
-N	signed short	_s_o_h;
-N	signed short	_s_o_c;
-N	signed short	_c_c_l_v;
-N	signed short	_r_b_t;
-N	signed short	_b_p_ser_num;
-N	signed short   _flags1;
-N	signed short 	_flags2;
-N	signed short 	_communication2lvlErrorStat; 	//флаг аварийности низовой связи с батареей, вычисляется в плате расширения
-N	signed short	_communication2lvlErrorCnt;  	//счетчик аварийности низовой связи с батареей
-N	signed short 	_cnt;
-N	signed short 	_communicationFullErrorStat;	//флаг аварийности всего канала связи с батареей, 0 - норма, 1 - отсутствует связь с промежуточной платой, 2 - отсутствует связь промежуточной платы и батареи  	
-N	signed short   _battIsOn;		//0 - отсутствует, 1 - присутствует
-N	char 		_plazma[8];		//переменные для отладки
-N	signed short 	_isOnCnt;
-N	signed short	_s_o_c_abs;		//остаточный заряд в абсолютном выражении
-N	signed short 	_s_o_c_percent; //остаточный заряд в процентном выражении
-N	signed short	_plazma_ss;
-N	signed short	_zar_percent;	//заряд батареи в процетах
-N	signed char		_cell_temp_1;	//температура 1-го датчика батареи(ZTT)
-N	signed char		_cell_temp_2;	//температура 2-го датчика батареи(ZTT)
-N	signed char		_cell_temp_3;	//температура 3-го датчика батареи(ZTT)
-N	signed char		_cell_temp_4;	//температура 4-го датчика батареи(ZTT)
-N	signed char		_cell_temp_ambient;	//температура датчика окружающей среды батареи(ZTT)
-N	signed char		_cell_temp_power;	//температура датчика силовой части батареи(ZTT)
-N	//signed char 	_pack_volt_state;	//статус аварии по напряжениям батареи(ZTT)
-N	//signed char 	_pack_temper_state;	//статус аварии по температурам батареи(ZTT)
-N	//signed char 	_pack_alarm_state;	//статус аварий батареи(ZTT)
-N	signed char		_charge_and_discharge_current_alarm_status;	 	//(ZTT)
-N	signed char 	_battery_total_voltage_alarm_status;			//(ZTT)
-N	signed char		_custom_alarm_quantity;							//(ZTT)
-N	signed char		_balanced_event_code;							//(ZTT)
-N	signed char 	_voltage_event_code;							//(ZTT)
-N	signed char 	_temperature_event_code;						//(ZTT)
-N	signed char		_current_event_code;							//(ZTT)
-N	signed char		_fet_status_code;								//(ZTT)
-N	signed short	_balanced_status_code;							//(ZTT)
-N	signed char 	_system_status_code;							//(ZTT)
 N
-N	} LAKB_STAT; 
-Nextern LAKB_STAT lakb[3];
-Nextern char lakb_damp[1][42];
-Nextern char bLAKB_KONF_CH;
-Nextern char bLAKB_KONF_CH_old;
-Nextern char lakb_ison_mass[7];
-Nextern short lakb_mn_ind_cnt;
-Nextern char bLAKB_KONF_CH_EN;
-Nextern char bRS485ERR;
-Nextern short LBAT_STRUKT;
-Nextern char lakb_error_cnt;	//счетчик неправильного показания ннапряжения батареи
-Nextern short numOfPacks,numOfPacks_;
-Nextern short numOfCells, numOfTemperCells, baseOfData;
-Nextern short lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-Nextern short lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-Nextern short lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-Nextern short lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
+N
+N
 N
 N
 N
@@ -2180,7 +2091,9 @@ N     signed short _temp_av_cnt;
 N     signed short _umax_av_cnt;
 N     signed short _umin_av_cnt;
 N     signed _rotor;
-N     signed  short _x_; 
+N     signed  short _x_;		//передаваемые БПСам корректоры
+N
+N	 signed  short _x_avg; 	//выравнивание токов
 N     char _adr_ee;
 N	char _last_avar;
 N	char _vent_resurs_temp[4];
@@ -2190,8 +2103,15 @@ N	signed short debug_info_to_uku1;
 N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
+N	signed short _build_year;
+N	signed short _build_month;
+N	signed short _build_day;
+N	signed short _hardvare_version;
+N	signed short _soft_version;
+N	signed short _build;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];//o_1
+N
 N
 N//***********************************************
 N//Состояние инверторов
@@ -2246,6 +2166,8 @@ Nextern INV_STAT inv[20];
 N#endif
 Nextern char first_inv_slot;
 N
+N
+N
 N//***********************************************
 N//Состояние нагрузки
 Nextern signed short load_U;
@@ -2271,6 +2193,7 @@ Nextern char net_av;
 N
 N
 Nextern char plazma_plazma_plazma;
+Nextern char plazma_PUTTM31,plazma_PUTTM32;
 N
 Nvoid bitmap_hndl(void);
 Nvoid ind_hndl(void);
@@ -2503,6 +2426,9 @@ N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
 Nextern short plazma_numOfPacks;
+Nextern signed  short _x_reg;		//точная регулировка выходного напряжения системы
+Nextern signed  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
+N
 N
 Nextern char plazma_ztt[2];
 Nextern char plazma1809;
@@ -3032,15 +2958,16 @@ N#define PUTID 0x91
 N#define PUTTM1 0xDA
 N#define PUTTM2 0xDB
 N#define PUTTM3 0xDC
-N#define PUTTM1INV2 0xDD
-N#define PUTTM2INV2 0xDE
-N#define PUTTM3INV2 0xDf
+N#define PUTTM31 	0xDD
+N#define PUTTM32 	0xD5
 N#define PUTTM_NET 0xEA
 N#define PUTTM_NET1 0xEB
 N#define PUTTM_IBATMETER 0xD1
 N#define GETTM_IBATMETER 0x1d
 N#define PUTTM 0xDE
 N#define GETTM 0xED 
+N#define GETTM1 	0xEb
+N#define GETTM2		0xEc
 N#define GETTM_INV 0xFD 
 N#define GET_MAKB 0xE1 
 N#define PUTTM_MAKB1		0xE2
@@ -3212,15 +3139,8 @@ N#define EE_UINMAX			SECTOR_SETS+144
 N#define EE_UINMIN			SECTOR_SETS+146
 N#define EE_UOUTMAX			SECTOR_SETS+148
 N#define EE_UOUTMIN			SECTOR_SETS+150
-N#define EE_TELECORE2015_KLIMAT_WARM_SIGNAL	SECTOR_SETS+144
-N#define EE_TELECORE2015_KLIMAT_WARM_ON		SECTOR_SETS+146
-N#define EE_TELECORE2015_KLIMAT_WARM_OFF		SECTOR_SETS+148
-N#define EE_TELECORE2015_KLIMAT_CAP			SECTOR_SETS+150
-N#define EE_TELECORE2015_KLIMAT_VENT_ON		SECTOR_SETS+152
-N#define EE_TELECORE2015_KLIMAT_VENT_OFF		SECTOR_SETS+154
-N#define EE_TELECORE2015_KLIMAT_VVENT_ON		SECTOR_SETS+156
-N#define EE_TELECORE2015_KLIMAT_VVENT_OFF	SECTOR_SETS+158
-N#define EE_TELECORE2015_KLIMAT_VENT_SIGNAL	SECTOR_SETS+160
+N#define EE_RS485_QWARZ_DIGIT		 		SECTOR_SETS+152
+N
 N#define EE_SPEED_CHRG_CURR		 			SECTOR_SETS+162
 N#define EE_SPEED_CHRG_VOLT		 			SECTOR_SETS+164
 N#define EE_SPEED_CHRG_TIME					SECTOR_SETS+166
@@ -3657,7 +3577,7 @@ N//Работа с БПСами
 Nextern char num_of_wrks_bps;
 Nextern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 Nextern char bps_hndl_2sec_cnt;
-Nextern unsigned short bps_on_mask,bps_off_mask;
+Nextern unsigned int bps_on_mask,bps_off_mask;
 Nextern char num_necc_up,num_necc_down;
 Nextern unsigned char sh_cnt0,b1Hz_sh;
 N
@@ -3824,7 +3744,7 @@ N
 N
 N
 Nvoid mess_hndl(void);
-Nvoid mess_send(char _mess, short par0, short par1, char _time);
+Nvoid mess_send(char _mess, int par0, int par1, char _time);
 Nchar mess_find(char _mess);
 Nchar mess_find_unvol(char _mess);
 N
@@ -4861,7 +4781,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;//o_1
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа
@@ -5128,6 +5048,29 @@ Nextern const short BUILD_MONTH;
 W "curr_version.h" 6 30 last line of file ends without a newline
 Nextern const short BUILD_DAY;
 L 46 "main.c" 2
+N#include "MODBUS_RTU.h"  //o_1
+L 1 "MODBUS_RTU.h" 1
+Nextern unsigned char NULL_0;
+Nextern unsigned char mb_rtu_func;
+Nextern unsigned long mb_rtu_start_adr;
+Nextern unsigned char mb_rtu_num, mb_rtu_num_send;
+Nextern unsigned short mb_data_1, mb_data_2, crc_f;
+Nextern char modbus_timeout_cnt;
+N//extern char bMODBUS_TIMEOUT;
+N//extern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
+N//extern unsigned char modbus_rx_buffer_ptr;	//Указатель на текущую позицию принимающего буфера
+Nextern char sc16is700RecieveDisableFlag;
+Nextern signed short modbusTimeoutInMills;
+N
+Nvoid analiz_func6(unsigned short mbadr, unsigned short mbdat);
+Nchar lc640_write_int(short ADR,short in);
+Nvoid putchar_sc16is700(char out_byte);
+Nvoid crc_calc_f( unsigned short data);
+Nvoid modbus_puts (void);
+Nunsigned short CRC16_MB(char* buf, short len);
+Nvoid sc16is700_uart_hndl_mb(void);
+Nvoid sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+L 47 "main.c" 2
 N
 Nextern U8 own_hw_adr[];
 Nextern U8  snmp_Community[];
@@ -5368,6 +5311,7 @@ Nsigned short I_LOAD_MODE;	//способ измерения выходного тока - по шунту или как 
 N
 Nsigned short OVERLOAD_CURR;
 Nsigned short OVERLOAD_TIME;
+Nsigned short RS485_QWARZ_DIGIT;
 N
 N
 N//***********************************************
@@ -5376,28 +5320,7 @@ NBAT_STAT bat[2],bat_ips;
 Nsigned short		bat_u_old_cnt;
 Nsigned short 		Ib_ips_termokompensat;
 N
-N//***********************************************
-N//Мониторы АКБ
-NMAKB_STAT makb[4];
 N
-N//***********************************************
-N//Литиевые АКБ
-NLAKB_STAT lakb[3];
-Nchar lakb_damp[1][42];
-Nchar bLAKB_KONF_CH=0;
-Nchar bLAKB_KONF_CH_old=0;
-Nchar lakb_ison_mass[7];
-Nshort lakb_mn_ind_cnt;
-Nchar bLAKB_KONF_CH_EN;
-N//char bRS485ERR;
-Nshort LBAT_STRUKT;
-Nchar lakb_error_cnt;		//счетчик неправильного показания ннапряжения батареи
-Nshort numOfPacks,numOfPacks_;
-Nshort numOfCells, numOfTemperCells, baseOfData;
-Nshort lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-Nshort lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-Nshort lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-Nshort lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
 N
 N//#ifdef UKU_TELECORE2015
 N//***********************************************
@@ -5412,7 +5335,7 @@ N
 N
 N//***********************************************
 N//Состояние источников
-NBPS_STAT bps[29];
+NBPS_STAT bps[32];//o_1
 N
 N//***********************************************
 N//Состояние инверторов
@@ -5425,9 +5348,6 @@ N#endif
 Nchar first_inv_slot=MINIM_INV_ADRESS;
 Xchar first_inv_slot=20;
 N
-N//***********************************************
-N//Состояние байпаса
-NBYPS_STAT byps;
 N
 N//***********************************************
 N//Состояние нагрузки
@@ -8691,7 +8611,7 @@ N#define LPC_GPDMACH7          ((LPC_GPDMACH_TypeDef   *) LPC_GPDMACH7_BASE )
 N#define LPC_USB               ((LPC_USB_TypeDef       *) LPC_USB_BASE      )
 N
 N#endif  // __LPC17xx_H__
-L 494 "main.c" 2
+L 472 "main.c" 2
 N
 N
 N
@@ -8755,6 +8675,7 @@ Nchar superviser_cnt;
 N
 N
 Nchar plazma_plazma_plazma;
+Nchar plazma_PUTTM31,plazma_PUTTM32;
 N
 Nchar bRESET=0;
 Nchar bRESET_EXT=0;
@@ -8854,19 +8775,7 @@ Nshort bIBAT_SMKLBR, bIBAT_SMKLBR_CNT;
 Nchar ibat_metr_cnt=0;
 N
 N
-N//-----------------------------------------------
-N//Климатконтроль TELECORE2015	
-N#ifdef UKU_TELECORE2015
-Ssigned short TELECORE2015_KLIMAT_WARM_SIGNAL;
-Ssigned short TELECORE2015_KLIMAT_VENT_SIGNAL;
-Ssigned short TELECORE2015_KLIMAT_WARM_ON;
-Ssigned short TELECORE2015_KLIMAT_WARM_OFF;
-Ssigned short TELECORE2015_KLIMAT_CAP;
-Ssigned short TELECORE2015_KLIMAT_VENT_ON;
-Ssigned short TELECORE2015_KLIMAT_VENT_OFF;
-Ssigned short TELECORE2015_KLIMAT_VVENT_ON;
-Ssigned short TELECORE2015_KLIMAT_VVENT_OFF;
-N#endif  
+N
 N
 N//-----------------------------------------------
 N//Управление низкоприоритетной нагрузкой
@@ -8925,6 +8834,8 @@ N
 Nshort plazma_numOfCells;
 Nshort plazma_numOfTemperCells;
 Nshort plazma_numOfPacks;
+Nsigned  short _x_reg;		//точная регулировка выходного напряжения системы
+Nsigned  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
 N
 N#ifdef MCP2515_CAN
 N#define can1_out	mcp2515_transmit
@@ -9091,407 +9002,54 @@ N			if(AD_last>adc_buff_max[adc_ch])adc_buff_max[adc_ch]=AD_last;*/
 N}
 N
 N//-----------------------------------------------
-Nvoid def_set(int umax__,int ub0__,int ub20__,int usign__,int imax__,int uob__,int numi,int _uvz)
+Nvoid def_set(void)
 N{
-N;
-Nlc640_write_int(EE_NUMIST,numi);
-Xlc640_write_int(0x10+100+36,numi);
-Nlc640_write_int(EE_NUMINV,0);
-Xlc640_write_int(0x10+100+38,0);
-N//lc640_write_int(EE_NUMDT,0);
-N//lc640_write_int(EE_NUMSK,0);
-Nlc640_write_int(EE_MAIN_IST,0);
-Xlc640_write_int(0x10+100+2,0);
-Nlc640_write_int(EE_PAR,1);
-Xlc640_write_int(0x10+100+86,1);
-Nlc640_write_int(EE_TBAT,60);
-Xlc640_write_int(0x10+100+78,60);
-Nlc640_write_int(EE_UMAX,umax__);
-Xlc640_write_int(0x10+100+4,umax__);
-Nlc640_write_int(EE_DU,ub20__/2);
-Xlc640_write_int(0x10+100+84,ub20__/2);
-N//lc640_write_int(EE_UB0,ub0__);
-N//lc640_write_int(EE_UB20,ub20__);
-Nlc640_write_int(EE_TSIGN,70);
-Xlc640_write_int(0x10+100+82,70);
-Nlc640_write_int(EE_TMAX,80);
-Xlc640_write_int(0x10+100+10,80);
-N//lc640_write_int(EE_C_BAT,180);
-Nlc640_write_int(EE_USIGN,usign__);
-Xlc640_write_int(0x10+100+14,usign__);
-Nlc640_write_int(EE_UMN,187);
-Xlc640_write_int(0x10+100+16,187);
-Nlc640_write_int(EE_ZV_ON,0);
-Xlc640_write_int(0x10+100+18,0);
-Nlc640_write_int(EE_IKB,10);
-Xlc640_write_int(0x10+100+20,10);
-N//lc640_write_int(EE_KVZ,1030);
-N//lc640_write_int(EE_UVZ,_uvz);
-Nlc640_write_int(EE_IMAX,imax__);
-Xlc640_write_int(0x10+100+24,imax__);
-Nlc640_write_int(EE_IMIN,(imax__*8)/10);
-Xlc640_write_int(0x10+100+26,(imax__*8)/10);
-N//lc640_write_int(EE_APV_ON,apvON);
+Nlc640_write_int(EE_ZV_ON,1);
+Xlc640_write_int(0x10+100+18,1);
+Nlc640_write_int(EE_AV_OFF_AVT,1);
+Xlc640_write_int(0x10+100+12,1);
 Nlc640_write_int(EE_APV_ON1,apvON);
 Xlc640_write_int(0x10+100+44,apvON);
 Nlc640_write_int(EE_APV_ON2,apvON);
 Xlc640_write_int(0x10+100+46,apvON);
 Nlc640_write_int(EE_APV_ON2_TIME,1);
 Xlc640_write_int(0x10+100+48,1);
-Nlc640_write_int(EE_IZMAX,160);
-Xlc640_write_int(0x10+100+30,160);
-Nlc640_write_int(EE_U0B,uob__);
-Xlc640_write_int(0x10+100+32,uob__);
-Nlc640_write_int(EE_TZAS,3);
-Xlc640_write_int(0x10+100+34,3);
-Nlc640_write_int(EE_TBATMAX,50);  
-Xlc640_write_int(0x10+100+88,50);  
-Nlc640_write_int(EE_TBATSIGN,40);
-Xlc640_write_int(0x10+100+90,40);
-Nlc640_write_int(EE_MNEMO_ON,mnON);
-Xlc640_write_int(0x10+100+72,mnON);
-Nlc640_write_int(EE_MNEMO_TIME,30);	
-Xlc640_write_int(0x10+100+74,30);	
-Nlc640_write_int(EE_AV_OFF_AVT,1);
-Xlc640_write_int(0x10+100+12,1);
-N//lc640_write_int(EE_APV_ON1,apvOFF);
+Nlc640_write_int(EE_UOUT,2300);
+Xlc640_write_int(0x10+100+6,2300);
+Nlc640_write_int(EE_UAVT,2300);
+Xlc640_write_int(0x10+100+8,2300);
+Nlc640_write_int(EE_TSIGN,70);
+Xlc640_write_int(0x10+100+82,70);
+Nlc640_write_int(EE_TMAX,80);
+Xlc640_write_int(0x10+100+10,80);
+Nlc640_write_int(EE_TSYSMAX,50);	
+Xlc640_write_int(0x10+100+106,50);	
+Nlc640_write_int(EE_DU,200);
+Xlc640_write_int(0x10+100+84,200);
+Nlc640_write_int(EE_UMAX,750);
+Xlc640_write_int(0x10+100+4,750);
+Nlc640_write_int(EE_UINMIN,1650);
+Xlc640_write_int(0x10+100+146,1650);
+Nlc640_write_int(EE_UINMAX,2500);
+Xlc640_write_int(0x10+100+144,2500);
+Nlc640_write_int(EE_UOUTMAX,2500);
+Xlc640_write_int(0x10+100+148,2500);
+Nlc640_write_int(EE_UOUTMIN,2200);
+Xlc640_write_int(0x10+100+150,2200);
+Nlc640_write_int(EE_TZAS,5);
+Xlc640_write_int(0x10+100+34,5);
 N
+Nlc640_write_int(ADR_EE_RELE_SET_MASK[0],0x0001);
+Nlc640_write_int(ADR_EE_RELE_SET_MASK[1],0x0078);
+Nlc640_write_int(ADR_EE_RELE_SET_MASK[2],0x0002);
+Nlc640_write_int(ADR_EE_RELE_SET_MASK[3],0x0084);
 N
-N
-Nlc640_write_int(EE_TBOXMAX,70);
-Xlc640_write_int(0x10+100+92,70);
-Nlc640_write_int(EE_TBOXVENTMAX,60);
-Xlc640_write_int(0x10+100+96,60);
-Nlc640_write_int(EE_TBOXREG,25);
-Xlc640_write_int(0x10+100+94,25);
-Nlc640_write_int(EE_TLOADDISABLE,80);
-Xlc640_write_int(0x10+100+98,80);
-Nlc640_write_int(EE_TLOADENABLE,70);
-Xlc640_write_int(0x10+100+100,70);
-Nlc640_write_int(EE_TBATDISABLE,91);
-Xlc640_write_int(0x10+100+102,91);
-Nlc640_write_int(EE_TBATENABLE,80);
-Xlc640_write_int(0x10+100+104,80);
-N
-Nlc640_write_int(ADR_SK_SIGN[0],0);
-Nlc640_write_int(ADR_SK_REL_EN[0],0);
-Nlc640_write_int(ADR_SK_LCD_EN[0],0xffff);
-N
-Nlc640_write_int(ADR_SK_SIGN[1],0);
-Nlc640_write_int(ADR_SK_REL_EN[1],0);
-Nlc640_write_int(ADR_SK_LCD_EN[1],0xffff);
-N
-Nlc640_write_int(ADR_SK_SIGN[2],0);
-Nlc640_write_int(ADR_SK_REL_EN[2],0);
-Nlc640_write_int(ADR_SK_LCD_EN[2],0xffff);
-N
-Nlc640_write_int(ADR_SK_SIGN[3],0);
-Nlc640_write_int(ADR_SK_REL_EN[3],0);
-Nlc640_write_int(ADR_SK_LCD_EN[3],0xffff);
-N
-Nlc640_write_int(EE_UBM_AV,10);
-Xlc640_write_int(0x10+500+96,10);
-N
-Nlc640_write_int(EE_POS_VENT,11);
-Xlc640_write_int(0x10+500+92,11);
 N}
 N
 N
 N//-----------------------------------------------
 Nvoid def_ips_set(short voltage)
 N{
-Nif(voltage==24)
-N	{
-N	def_set(300,voltage,voltage,22,150,240,7,0);
-N	}
-Nif(voltage==48)
-N	{
-N	def_set(600,voltage,voltage,44,100,480,7,0);
-N	}
-Nif(voltage==60)
-N	{
-N	def_set(750,voltage,voltage,55,100,600,7,0);
-N	}
-N
-Nif(voltage==220)
-N	{
-N	def_set(2450,2366,2315,187,100,2200,2,2346);
-N
-N	lc640_write_int(EE_NUMIST,2);
-X	lc640_write_int(0x10+100+36,2);
-N	lc640_write_int(EE_NUMINV,0);
-X	lc640_write_int(0x10+100+38,0);
-N//lc640_write_int(EE_NUMDT,0);
-N//lc640_write_int(EE_NUMSK,0);
-N	lc640_write_int(EE_MAIN_IST,0);
-X	lc640_write_int(0x10+100+2,0);
-N	lc640_write_int(EE_PAR,1);
-X	lc640_write_int(0x10+100+86,1);
-N	lc640_write_int(EE_TBAT,60);
-X	lc640_write_int(0x10+100+78,60);
-N	lc640_write_int(EE_UMAX,2450);
-X	lc640_write_int(0x10+100+4,2450);
-N	lc640_write_int(EE_DU,2315/2);
-X	lc640_write_int(0x10+100+84,2315/2);
-N	//lc640_write_int(EE_UB0,2366);
-N	//lc640_write_int(EE_UB20,2315);
-N	lc640_write_int(EE_TSIGN,70);
-X	lc640_write_int(0x10+100+82,70);
-N	lc640_write_int(EE_TMAX,80);
-X	lc640_write_int(0x10+100+10,80);
-N//lc640_write_int(EE_C_BAT,180);
-N	lc640_write_int(EE_USIGN,187);
-X	lc640_write_int(0x10+100+14,187);
-N	lc640_write_int(EE_UMN,187);
-X	lc640_write_int(0x10+100+16,187);
-N	lc640_write_int(EE_ZV_ON,0);
-X	lc640_write_int(0x10+100+18,0);
-N	lc640_write_int(EE_IKB,20);
-X	lc640_write_int(0x10+100+20,20);
-N//lc640_write_int(EE_KVZ,1030);
-N	//lc640_write_int(EE_UVZ,2346);
-N	lc640_write_int(EE_IMAX,80);
-X	lc640_write_int(0x10+100+24,80);
-N	lc640_write_int(EE_IMIN,50);
-X	lc640_write_int(0x10+100+26,50);
-N//lc640_write_int(EE_APV_ON,apvON);
-N	lc640_write_int(EE_APV_ON1,apvON);
-X	lc640_write_int(0x10+100+44,apvON);
-N	lc640_write_int(EE_APV_ON2,apvON);
-X	lc640_write_int(0x10+100+46,apvON);
-N	lc640_write_int(EE_APV_ON2_TIME,1);
-X	lc640_write_int(0x10+100+48,1);
-N	lc640_write_int(EE_IZMAX,160);
-X	lc640_write_int(0x10+100+30,160);
-N	lc640_write_int(EE_U0B,2200);
-X	lc640_write_int(0x10+100+32,2200);
-N	lc640_write_int(EE_TZAS,3);
-X	lc640_write_int(0x10+100+34,3);
-N	lc640_write_int(EE_TBATMAX,50);  
-X	lc640_write_int(0x10+100+88,50);  
-N	lc640_write_int(EE_TBATSIGN,40);
-X	lc640_write_int(0x10+100+90,40);
-N	lc640_write_int(EE_MNEMO_ON,mnON);
-X	lc640_write_int(0x10+100+72,mnON);
-N	lc640_write_int(EE_MNEMO_TIME,30);	
-X	lc640_write_int(0x10+100+74,30);	
-N	lc640_write_int(EE_AV_OFF_AVT,1);
-X	lc640_write_int(0x10+100+12,1);
-N//lc640_write_int(EE_APV_ON1,apvOFF);
-N
-N
-N
-N	lc640_write_int(EE_TBOXMAX,70);
-X	lc640_write_int(0x10+100+92,70);
-N	lc640_write_int(EE_TBOXVENTMAX,60);
-X	lc640_write_int(0x10+100+96,60);
-N	lc640_write_int(EE_TBOXREG,25);
-X	lc640_write_int(0x10+100+94,25);
-N	lc640_write_int(EE_TLOADDISABLE,80);
-X	lc640_write_int(0x10+100+98,80);
-N	lc640_write_int(EE_TLOADENABLE,70);
-X	lc640_write_int(0x10+100+100,70);
-N	lc640_write_int(EE_TBATDISABLE,91);
-X	lc640_write_int(0x10+100+102,91);
-N	lc640_write_int(EE_TBATENABLE,80);
-X	lc640_write_int(0x10+100+104,80);
-N
-N	lc640_write_int(ADR_SK_SIGN[0],0);
-N	lc640_write_int(ADR_SK_REL_EN[0],0);
-N	lc640_write_int(ADR_SK_LCD_EN[0],0xffff);
-N
-N	lc640_write_int(ADR_SK_SIGN[1],0);
-N	lc640_write_int(ADR_SK_REL_EN[1],0);
-N	lc640_write_int(ADR_SK_LCD_EN[1],0xffff);
-N
-N	lc640_write_int(ADR_SK_SIGN[2],0);
-N	lc640_write_int(ADR_SK_REL_EN[2],0);
-N	lc640_write_int(ADR_SK_LCD_EN[2],0xffff);
-N
-N	lc640_write_int(ADR_SK_SIGN[3],0);
-N	lc640_write_int(ADR_SK_REL_EN[3],0);
-N	lc640_write_int(ADR_SK_LCD_EN[3],0xffff);
-N
-N	lc640_write_int(EE_UBM_AV,10);
-X	lc640_write_int(0x10+500+96,10);
-N
-N	lc640_write_int(EE_POS_VENT,11);
-X	lc640_write_int(0x10+500+92,11);
-N
-N
-N	lc640_write_int(EE_DU,2315-1870);
-X	lc640_write_int(0x10+100+84,2315-1870);
-N	lc640_write_int(EE_U_AVT,2200);
-X	lc640_write_int(0x10+100+80,2200);
-N	lc640_write_int(EE_IZMAX,20);
-X	lc640_write_int(0x10+100+30,20);
-N	lc640_write_int(EE_AUSW_MAIN,22033);
-X	lc640_write_int(0x10+100+224,22033);
-N	lc640_write_int(EE_PAR,1);
-X	lc640_write_int(0x10+100+86,1);
-N	lc640_write_int(EE_MNEMO_ON,mnOFF);
-X	lc640_write_int(0x10+100+72,mnOFF);
-N	}
-N
-Nif(voltage==110)
-N	{
-N	def_set(1350,1270,1225,99,20,1220,2,1290);
-N
-N	lc640_write_int(EE_NUMIST,2);
-X	lc640_write_int(0x10+100+36,2);
-N	lc640_write_int(EE_NUMINV,0);
-X	lc640_write_int(0x10+100+38,0);
-N//lc640_write_int(EE_NUMDT,0);
-N//lc640_write_int(EE_NUMSK,0);
-N	lc640_write_int(EE_MAIN_IST,0);
-X	lc640_write_int(0x10+100+2,0);
-N	lc640_write_int(EE_PAR,1);
-X	lc640_write_int(0x10+100+86,1);
-N	lc640_write_int(EE_TBAT,60);
-X	lc640_write_int(0x10+100+78,60);
-N	lc640_write_int(EE_UMAX,1350);
-X	lc640_write_int(0x10+100+4,1350);
-N	lc640_write_int(EE_DU,1350/2);
-X	lc640_write_int(0x10+100+84,1350/2);
-N	//lc640_write_int(EE_UB0,1270);
-N	//lc640_write_int(EE_UB20,1225);
-N	lc640_write_int(EE_TSIGN,70);
-X	lc640_write_int(0x10+100+82,70);
-N	lc640_write_int(EE_TMAX,80);
-X	lc640_write_int(0x10+100+10,80);
-N//lc640_write_int(EE_C_BAT,180);
-N	lc640_write_int(EE_USIGN,99);
-X	lc640_write_int(0x10+100+14,99);
-N	lc640_write_int(EE_UMN,187);
-X	lc640_write_int(0x10+100+16,187);
-N	lc640_write_int(EE_ZV_ON,0);
-X	lc640_write_int(0x10+100+18,0);
-N	lc640_write_int(EE_IKB,20);
-X	lc640_write_int(0x10+100+20,20);
-N//lc640_write_int(EE_KVZ,1030);
-N	//lc640_write_int(EE_UVZ,1290);
-N	lc640_write_int(EE_IMAX,80);
-X	lc640_write_int(0x10+100+24,80);
-N	lc640_write_int(EE_IMIN,50);
-X	lc640_write_int(0x10+100+26,50);
-N//lc640_write_int(EE_APV_ON,apvON);
-N	lc640_write_int(EE_APV_ON1,apvON);
-X	lc640_write_int(0x10+100+44,apvON);
-N	lc640_write_int(EE_APV_ON2,apvON);
-X	lc640_write_int(0x10+100+46,apvON);
-N	lc640_write_int(EE_APV_ON2_TIME,1);
-X	lc640_write_int(0x10+100+48,1);
-N	lc640_write_int(EE_IZMAX,160);
-X	lc640_write_int(0x10+100+30,160);
-N	lc640_write_int(EE_U0B,1220);
-X	lc640_write_int(0x10+100+32,1220);
-N	lc640_write_int(EE_TZAS,3);
-X	lc640_write_int(0x10+100+34,3);
-N	lc640_write_int(EE_TBATMAX,50);  
-X	lc640_write_int(0x10+100+88,50);  
-N	lc640_write_int(EE_TBATSIGN,40);
-X	lc640_write_int(0x10+100+90,40);
-N	lc640_write_int(EE_MNEMO_ON,mnON);
-X	lc640_write_int(0x10+100+72,mnON);
-N	lc640_write_int(EE_MNEMO_TIME,30);	
-X	lc640_write_int(0x10+100+74,30);	
-N	lc640_write_int(EE_AV_OFF_AVT,1);
-X	lc640_write_int(0x10+100+12,1);
-N//lc640_write_int(EE_APV_ON1,apvOFF);
-N
-N
-N
-N	lc640_write_int(EE_TBOXMAX,70);
-X	lc640_write_int(0x10+100+92,70);
-N	lc640_write_int(EE_TBOXVENTMAX,60);
-X	lc640_write_int(0x10+100+96,60);
-N	lc640_write_int(EE_TBOXREG,25);
-X	lc640_write_int(0x10+100+94,25);
-N	lc640_write_int(EE_TLOADDISABLE,80);
-X	lc640_write_int(0x10+100+98,80);
-N	lc640_write_int(EE_TLOADENABLE,70);
-X	lc640_write_int(0x10+100+100,70);
-N	lc640_write_int(EE_TBATDISABLE,91);
-X	lc640_write_int(0x10+100+102,91);
-N	lc640_write_int(EE_TBATENABLE,80);
-X	lc640_write_int(0x10+100+104,80);
-N
-N	lc640_write_int(ADR_SK_SIGN[0],0);
-N	lc640_write_int(ADR_SK_REL_EN[0],0);
-N	lc640_write_int(ADR_SK_LCD_EN[0],0xffff);
-N
-N	lc640_write_int(ADR_SK_SIGN[1],0);
-N	lc640_write_int(ADR_SK_REL_EN[1],0);
-N	lc640_write_int(ADR_SK_LCD_EN[1],0xffff);
-N
-N	lc640_write_int(ADR_SK_SIGN[2],0);
-N	lc640_write_int(ADR_SK_REL_EN[2],0);
-N	lc640_write_int(ADR_SK_LCD_EN[2],0xffff);
-N
-N	lc640_write_int(ADR_SK_SIGN[3],0);
-N	lc640_write_int(ADR_SK_REL_EN[3],0);
-N	lc640_write_int(ADR_SK_LCD_EN[3],0xffff);
-N
-N	lc640_write_int(EE_UBM_AV,10);
-X	lc640_write_int(0x10+500+96,10);
-N
-N	lc640_write_int(EE_POS_VENT,11);
-X	lc640_write_int(0x10+500+92,11);
-N
-N
-N	lc640_write_int(EE_DU,1220-600);
-X	lc640_write_int(0x10+100+84,1220-600);
-N	lc640_write_int(EE_U_AVT,1220);
-X	lc640_write_int(0x10+100+80,1220);
-N	lc640_write_int(EE_IZMAX,20);
-X	lc640_write_int(0x10+100+30,20);
-N	lc640_write_int(EE_AUSW_MAIN,22033);
-X	lc640_write_int(0x10+100+224,22033);
-N	lc640_write_int(EE_PAR,1);
-X	lc640_write_int(0x10+100+86,1);
-N	lc640_write_int(EE_MNEMO_ON,mnOFF);
-X	lc640_write_int(0x10+100+72,mnOFF);
-N	}
-N
-Nlc640_write_int(ADR_EE_BAT_IS_ON[0],bisOFF);
-Nlc640_write_int(ADR_EE_BAT_DAY_OF_ON[0],LPC_RTC->DOM);
-Xlc640_write_int(ADR_EE_BAT_DAY_OF_ON[0],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM);
-Nlc640_write_int(ADR_EE_BAT_MONTH_OF_ON[0],LPC_RTC->MONTH);
-Xlc640_write_int(ADR_EE_BAT_MONTH_OF_ON[0],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH);
-Nlc640_write_int(ADR_EE_BAT_YEAR_OF_ON[0],LPC_RTC->YEAR);
-Xlc640_write_int(ADR_EE_BAT_YEAR_OF_ON[0],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR);
-Nlc640_write_int(ADR_EE_BAT_C_NOM[0],0);
-Nlc640_write_int(ADR_EE_BAT_RESURS[0],0);
-N
-Nlc640_write_int(ADR_EE_BAT_IS_ON[1],bisOFF);
-Nlc640_write_int(ADR_EE_BAT_DAY_OF_ON[1],LPC_RTC->DOM);
-Xlc640_write_int(ADR_EE_BAT_DAY_OF_ON[1],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM);
-Nlc640_write_int(ADR_EE_BAT_MONTH_OF_ON[1],LPC_RTC->MONTH);
-Xlc640_write_int(ADR_EE_BAT_MONTH_OF_ON[1],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH);
-Nlc640_write_int(ADR_EE_BAT_YEAR_OF_ON[1],LPC_RTC->YEAR);
-Xlc640_write_int(ADR_EE_BAT_YEAR_OF_ON[1],((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR);
-Nlc640_write_int(ADR_EE_BAT_C_NOM[1],0);
-Nlc640_write_int(ADR_EE_BAT_RESURS[1],0);
-N
-N
-Nlc640_write_int(EE_SPEED_CHRG_VOLT,2400);
-Xlc640_write_int(0x10+100+164,2400);
-Nlc640_write_int(EE_SPEED_CHRG_CURR,20);
-Xlc640_write_int(0x10+100+162,20);
-Nlc640_write_int(EE_SPEED_CHRG_TIME,1);
-Xlc640_write_int(0x10+100+166,1);
-Nlc640_write_int(EE_SPEED_CHRG_AVT_EN,0);
-Xlc640_write_int(0x10+100+168,0);
-Nlc640_write_int(EE_SPEED_CHRG_BLOCK_SRC,0);
-Xlc640_write_int(0x10+100+172,0);
-Nlc640_write_int(EE_SPEED_CHRG_BLOCK_LOG,0);
-Xlc640_write_int(0x10+100+174,0);
-Nlc640_write_int(EE_SPEED_CHRG_D_U,40);
-Xlc640_write_int(0x10+100+170,40);
-Nlc640_write_int(EE_U_OUT_KONTR_MAX,1310);
-Xlc640_write_int(0x10+100+182,1310);
-Nlc640_write_int(EE_U_OUT_KONTR_MIN,1100);
-Xlc640_write_int(0x10+100+184,1100);
 N
 N
 N}
@@ -9570,15 +9128,27 @@ N	//UOUT=2330;
 N	//cntrl_stat=2000;		   
 N	if((!bCAN_OFF)&&(main_1Hz_cnt>5))
 N		{
+N		char GETTM_tr=GETTM;
+X		char GETTM_tr=0xED;
 N		UOUT_tr=UOUT+30;
 N//		if(cntrl_stat==1000)	can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),0xe8,0x03);
 N//		else 					can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),*((char*)(&bps[cnt_net_drv]._x_)),*((char*)((&bps[cnt_net_drv]._x_))+1));
 N
-N		if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
-X		if(cntrl_stat==2000) mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8) );
+N		//if(cntrl_stat==2000) can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT_tr)),*((char*)((&UOUT_tr))+1),(char)(cntrl_stat),(char)((cntrl_stat)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
 N
-N		else can1_out(cnt_net_drv,cnt_net_drv,GETTM,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
-X		else mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
+N		//else 
+N		if(ind==iFWaboutBPS)
+X		if(a_ind . i==iFWaboutBPS)
+N			{
+N			static char gettm_cnt[32];
+N			if(++gettm_cnt[cnt_net_drv]>=3)gettm_cnt[cnt_net_drv]=0;
+N			if(gettm_cnt[cnt_net_drv]==1) GETTM_tr=GETTM1;
+X			if(gettm_cnt[cnt_net_drv]==1) GETTM_tr=0xEb;
+N			if(gettm_cnt[cnt_net_drv]==2) GETTM_tr=GETTM2; 
+X			if(gettm_cnt[cnt_net_drv]==2) GETTM_tr=0xEc; 
+N			}
+N		can1_out(cnt_net_drv,cnt_net_drv,GETTM_tr,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)(/*cntrl_stat+*/bps[cnt_net_drv]._x_),(char)((/*cntrl_stat+*/bps[cnt_net_drv]._x_)>>8)/*,*((char*)(&cntrl_stat)),*((char*)((&cntrl_stat))+1)*/);
+X		mcp2515_transmit(cnt_net_drv,cnt_net_drv,GETTM_tr,bps[cnt_net_drv]._flags_tu,*((char*)(&UOUT)),*((char*)((&UOUT))+1),(char)( bps[cnt_net_drv]._x_),(char)(( bps[cnt_net_drv]._x_)>>8) );
 N
 N     	}
 N	if(cnt_net_drv<=max_net_slot)
@@ -9607,22 +9177,20 @@ N     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF,*((char*)(&UMAX)),*((char*)((&UMAX)
 X     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x62,*((char*)(&UMAX)),*((char*)((&UMAX))+1),*((char*)(&DU)),*((char*)((&DU))+1),(MODBUS_ADRESS%2));
 N     } 
 N     
+N
 Nelse if(cnt_net_drv==-2)
-N	{
-N	//UAVT=4567;
-N	UAVT_tr=UAVT+30;
-N     if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
-X     if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT_tr)),*((char*)((&UAVT_tr))+1),(char)(TMAX),(char)(TSIGN),(char)TZAS);
-N     byps._cnt++;
-N	} 
+N	{                 
+N	if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&UAVT)),*((char*)((&UAVT))+1),*((char*)(&TMAX)),*((char*)(&TSIGN)),0);
+X	if(!bCAN_OFF)mcp2515_transmit(0xff,0xff,0x26,*((char*)(&UAVT)),*((char*)((&UAVT))+1),*((char*)(&TMAX)),*((char*)(&TSIGN)),0);
+N
+N	}
 Nelse if(cnt_net_drv==-3)
 N	{                 
 N	if(!bCAN_OFF) can1_out(GETTM_IBATMETER,GETTM_IBATMETER,0,0,0,0,0,0);
 X	if(!bCAN_OFF) mcp2515_transmit(0x1d,0x1d,0,0,0,0,0,0);
 N	if(ibat_metr_cnt<CNT_SRC_MAX)ibat_metr_cnt++;
 X	if(ibat_metr_cnt<60)ibat_metr_cnt++;
-N	}
-N	
+N	}	
 N	
 N//else if(cnt_net_drv==15)
 N	//{
@@ -9630,6 +9198,8 @@ N     //if(!bCAN_OFF)can1_out(0xff,0xff,MEM_KF1,*((char*)(&TMAX)),*((char*)((&TM
 N     //}
 N
 N
+W "main.c" 906 14 variable "UOUT_tr" was set but never used
+W "main.c" 907 14 variable "UAVT_tr" was declared but never referenced
 N}
 N
 N#ifdef MCP2515_CAN
@@ -9724,20 +9294,6 @@ N	}
 N*/	
 N	
 N
-Nelse if(cnt_net_drv==19)
-N	{
-N     if(!bCAN_OFF)
-N		{
-N		mcp2515_transmit(cnt_net_drv,cnt_net_drv,GETTM,BAT_TYPE,NUMBAT,0,0,0);
-X		mcp2515_transmit(cnt_net_drv,cnt_net_drv,0xED,BAT_TYPE,NUMBAT,0,0,0);
-N		lakb[0]._cnt++;
-N		if(lakb[0]._cnt>20)lakb[0]._cnt=20;
-N		lakb[1]._cnt++;
-N		if(lakb[1]._cnt>20)lakb[1]._cnt=20;
-N		}
-N     }
-N	
-N	
 N
 N}
 N#endif
@@ -9780,11 +9336,11 @@ N			lcd_bitmap[ptr_bitmap++]=caracter[((unsigned)lcd_buffer[x]*6)+5];
 N			} 
 N		}
 N	}	
-W "main.c" 1378 13 variable "ptr_cnt" was declared but never referenced
-W "main.c" 1378 21 variable "ptr_cnt1" was declared but never referenced
-W "main.c" 1378 30 variable "ptr_cnt2" was declared but never referenced
-W "main.c" 1378 39 variable "ptr_cnt3" was declared but never referenced
-W "main.c" 1378 48 variable "ptr_cnt4" was declared but never referenced
+W "main.c" 1103 13 variable "ptr_cnt" was declared but never referenced
+W "main.c" 1103 21 variable "ptr_cnt1" was declared but never referenced
+W "main.c" 1103 30 variable "ptr_cnt2" was declared but never referenced
+W "main.c" 1103 39 variable "ptr_cnt3" was declared but never referenced
+W "main.c" 1103 48 variable "ptr_cnt4" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -10045,19 +9601,16 @@ N	{
 N	sub_ptrs[i++]=	"   Авария БПС №29   ";
 N	sub_cnt_max++;	
 N	}
-W "main.c" 1661 4 subscript out of range
 Nif(bps[29]._av&0xef)//avar_stat1&(1<<(0)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №30   ";
 N	sub_cnt_max++;	
 N	}
-W "main.c" 1666 7 subscript out of range
 Nif(bps[30]._av&0xef)//avar_stat1&(1<<(1)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №31   ";
 N	sub_cnt_max++;	
 N	}
-W "main.c" 1671 7 subscript out of range
 Nif(bps[31]._av&0xef)//avar_stat1&(1<<(2)))
 N	{
 N	sub_ptrs[i++]=	"   Авария БПС №32   ";
@@ -10267,7 +9820,6 @@ N	sub_cnt_max++;
 N	sub_ptrs[i++]=	"     исчерпан       ";
 N	sub_cnt_max++;		
 N	}
-W "main.c" 1880 4 subscript out of range
 Nif(bps[29]._av&(1<<4))
 N	{
 N	sub_ptrs[i++]=	"Ресурс вент. БПС30  ";
@@ -10275,7 +9827,6 @@ N	sub_cnt_max++;
 N	sub_ptrs[i++]=	"     исчерпан       ";
 N	sub_cnt_max++;		
 N	}
-W "main.c" 1887 7 subscript out of range
 Nif(bps[30]._av&(1<<4))
 N	{
 N	sub_ptrs[i++]=	"Ресурс вент. БПС31   ";
@@ -10283,7 +9834,6 @@ N	sub_cnt_max++;
 N	sub_ptrs[i++]=	"     исчерпан       ";
 N	sub_cnt_max++;		
 N	}
-W "main.c" 1894 7 subscript out of range
 Nif(bps[31]._av&(1<<4))
 N	{
 N	sub_ptrs[i++]=	"Ресурс вент. БПС32   ";
@@ -10543,9 +10093,8 @@ N	//int2lcdyx(UOUT,0,3,0);
 N
 N	//int2lcdyx(cntrl_stat,0,8,0);
 N
-N	int2lcdyx(bps[0].debug_info_to_uku0,0,4,0);
-N	int2lcdyx(bps[0].debug_info_to_uku1,0,10,0);
-N	int2lcdyx(bps[0].debug_info_to_uku2,0,19,0);
+N
+N	//int2lcdyx(bps[0]._x_,0,19,0);
 N	//int2lcdyx((short)ibat_metr_buff_[0],0,4,0);
 N	//int2lcdyx((short)ibat_metr_buff_[1],0,9,0);
 N	//int2lcdyx((short)ibat_metr_buff_[2],0,19,0);
@@ -10555,88 +10104,6 @@ N//		int2lcdyx(UOUT_,0,9,0);
 N	}
 N
 N#ifndef _DEBUG_
-N
-Nelse if(ind==iMakb)
-Xelse if(a_ind . i==iMakb)
-N	{
-N	const char* ptr[12];
-N 
-N	simax=10;
-N
-N	ptr[0]=			" Uб1    =     @В    ";
-N	ptr[1]=			" Uб2    =     #В    ";
-N	ptr[2]=			" Uб3    =     $В    ";
-N	ptr[3]=			" Uб4    =     %В    ";
-N	ptr[4]=			" Uб5    =     ^В    ";
-N	ptr[5]=			" tб1    =     &°С   ";
-N	ptr[6]=			" tб2    =     *°С   ";
-N	ptr[7]=			" tб3    =     (°С   ";
-N	ptr[8]=			" tб4    =     )°С   ";
-N	ptr[9]=			" tб5    =     +°С   ";
-N	ptr[10]=			sm_exit;
-N
-N 	if(makb[sub_ind1]._cnt>=5)
-X 	if(makb[a_ind . s_i1]._cnt>=5)
-N	 	{
-N		bgnd_par(		"   МОНИТОР АКБ N<   ",
-N					"   НЕ ПОДКЛЮЧЕН!!!  ",
-N					"                    ",
-N					"                    ");
-N		}
-N
-N
-N	else 
-N		{
-N		bgnd_par(		"   МОНИТОР АКБ N<   ",
-N					ptr[index_set],
-X					ptr[a_ind . i_s],
-N					ptr[index_set+1],
-X					ptr[a_ind . i_s+1],
-N					ptr[index_set+2]);
-X					ptr[a_ind . i_s+2]);
-N
-N		if(sub_ind-index_set>2)index_set=sub_ind-2;
-X		if(a_ind . s_i-a_ind . i_s>2)a_ind . i_s=a_ind . s_i-2;
-N		else if (sub_ind<index_set)index_set=sub_ind;
-X		else if (a_ind . s_i<a_ind . i_s)a_ind . i_s=a_ind . s_i;
-N
-N		if(sub_ind>=simax)	pointer_set(1);
-X		if(a_ind . s_i>=simax)	pointer_set(1);
-N		
-N		int2lcd(makb[sub_ind1]._Ub[0],'@',1);
-X		int2lcd(makb[a_ind . s_i1]._Ub[0],'@',1);
-N		int2lcd(makb[sub_ind1]._Ub[1],'#',1);
-X		int2lcd(makb[a_ind . s_i1]._Ub[1],'#',1);
-N		int2lcd(makb[sub_ind1]._Ub[2],'$',1);
-X		int2lcd(makb[a_ind . s_i1]._Ub[2],'$',1);
-N		int2lcd(makb[sub_ind1]._Ub[3],'%',1);
-X		int2lcd(makb[a_ind . s_i1]._Ub[3],'%',1);
-N		int2lcd(makb[sub_ind1]._Ub[4],'^',1);
-X		int2lcd(makb[a_ind . s_i1]._Ub[4],'^',1);
-N		if(makb[sub_ind1]._T_nd[0])sub_bgnd("НЕПОДКЛЮЧЕН",'&',-5);
-X		if(makb[a_ind . s_i1]._T_nd[0])sub_bgnd("НЕПОДКЛЮЧЕН",'&',-5);
-N		else int2lcd_mmm(makb[sub_ind1]._T[0],'&',0); 
-X		else int2lcd_mmm(makb[a_ind . s_i1]._T[0],'&',0); 
-N 		if(makb[sub_ind1]._T_nd[1])sub_bgnd("НЕПОДКЛЮЧЕН",'*',-5);
-X 		if(makb[a_ind . s_i1]._T_nd[1])sub_bgnd("НЕПОДКЛЮЧЕН",'*',-5);
-N		else int2lcd_mmm(makb[sub_ind1]._T[1],'*',0); 
-X		else int2lcd_mmm(makb[a_ind . s_i1]._T[1],'*',0); 
-N		if(makb[sub_ind1]._T_nd[2])sub_bgnd("НЕПОДКЛЮЧЕН",'(',-5);
-X		if(makb[a_ind . s_i1]._T_nd[2])sub_bgnd("НЕПОДКЛЮЧЕН",'(',-5);
-N		else int2lcd_mmm(makb[sub_ind1]._T[2],'(',0); 
-X		else int2lcd_mmm(makb[a_ind . s_i1]._T[2],'(',0); 
-N		if(makb[sub_ind1]._T_nd[3])sub_bgnd("НЕПОДКЛЮЧЕН",')',-5);
-X		if(makb[a_ind . s_i1]._T_nd[3])sub_bgnd("НЕПОДКЛЮЧЕН",')',-5);
-N		else int2lcd_mmm(makb[sub_ind1]._T[3],')',0); 
-X		else int2lcd_mmm(makb[a_ind . s_i1]._T[3],')',0); 
-N		if(makb[sub_ind1]._T_nd[4])sub_bgnd("НЕПОДКЛЮЧЕН",'+',-5);
-X		if(makb[a_ind . s_i1]._T_nd[4])sub_bgnd("НЕПОДКЛЮЧЕН",'+',-5);
-N		else int2lcd_mmm(makb[sub_ind1]._T[4],'+',0); 
-X		else int2lcd_mmm(makb[a_ind . s_i1]._T[4],'+',0); 
-N		}
-N	int2lcd(sub_ind1+1,'<',0);
-X	int2lcd(a_ind . s_i1+1,'<',0);
-N    }
 N
 N else if(ind==iBps)
 X else if(a_ind . i==iBps)
@@ -10748,7 +10215,7 @@ X else if(a_ind . i==iBps_elteh)
 N	{
 N	const char* ptr[11];
 N 
-N	simax=9;
+N	simax=10;
 N
 N	ptr[1]=			" Uист.=        (В   ";
 N	ptr[2]=			" Uвых.=        )В   ";
@@ -10759,6 +10226,7 @@ N	ptr[6]=			" вентилятора      >ч";
 N	ptr[7]=			" Сброс аварий       ";
 N	ptr[8]=			sm_exit;
 N 	ptr[9]=			" Сброс наработки    ";
+N	ptr[10]=		" Версия ПО БПС      ";
 N
 N	if(bps[sub_ind1]._state==bsWRK)
 X	if(bps[a_ind . s_i1]._state==bsWRK)
@@ -10817,7 +10285,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 2353 16 unrecognized character escape sequence
+W "main.c" 2020 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -10860,8 +10328,9 @@ N
 N	//int2lcdyx(bps[sub_ind1]._flags_tm,0,19,0);
 N	//int2lcdyx(bps[sub_ind1]._flags_tu,1,19,0);	
 N	//int2lcdyx(bps[sub_ind1]._Uin,1,19,0);
-N	//int2lcdyx(bps[sub_ind1].debug_info_to_uku0,2,19,0);
-N	//int2lcdyx(bps[sub_ind1].debug_info_to_uku1,3,19,0);
+N	//int2lcdyx(bps[sub_ind1].debug_info_to_uku0,0,4,0);
+N	//int2lcdyx(bps[sub_ind1].debug_info_to_uku1,0,10,0);
+N	//int2lcdyx(bps[sub_ind1].debug_info_to_uku2,0,19,0);
 N    }  	   
 N	 	  
 Nelse if(ind==iNet)
@@ -12046,15 +11515,16 @@ N	}
 N	
 Nelse if((ind==iSet_prl)||(ind==iK_prl)
 Xelse if((a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
-N	||(ind==iAusw_prl)||(ind==iPrltst))
-X	||(a_ind . i==iAusw_prl)||(a_ind . i==iPrltst))
+N	||(ind==iAusw_prl)||(ind==iPrltst)||(ind==iSet_st_prl)||(ind==iSet_st_prl))
+X	||(a_ind . i==iAusw_prl)||(a_ind . i==iPrltst)||(a_ind . i==iSet_st_prl)||(a_ind . i==iSet_st_prl))
 N	{
 N	bgnd_par("  Введите  пароль   ",sm_,sm_,sm_);
 N	int2lcdyx(parol[0],1,8,0);
-N     int2lcdyx(parol[1],1,9,0);
-N     int2lcdyx(parol[2],1,10,0);
-N     lcd_buffer[48+sub_ind]='¤';
-X     lcd_buffer[48+a_ind . s_i]='¤';
+N    int2lcdyx(parol[1],1,9,0);
+N    int2lcdyx(parol[2],1,10,0);
+N    lcd_buffer[48+sub_ind]='¤';
+X    lcd_buffer[48+a_ind . s_i]='¤';
+N	//if(ind==iSet_st_prl)  lcd_buffer[52]='6';
 N	}	
 N		
 Nelse if(ind==iPrl_bat_in_out)
@@ -12648,7 +12118,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3951 7 variable "sss" was declared but never referenced
+W "main.c" 3620 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -13099,6 +12569,7 @@ N	ptrs[i++]=" БПС                ";
 N	ptrs[i++]=" Uв.д.         #В   ";
 N    ptrs[i++]=" Tсистемы  =   ^°C  ";;
 N    ptrs[i++]=" Выход              ";
+N	ptrs[i++]=" Кварц RS485   }МГЦ ";
 N    ptrs[i++]="                    ";
 N    ptrs[i++]="                    ";
 N
@@ -13120,6 +12591,7 @@ N	int2lcd(out_U,'!',1);
 N	int2lcd(out_I,'@',0);
 N	int2lcd(vd_U,'#',1);
 N	int2lcd(sys_T,'^',0);
+N	int2lcd(RS485_QWARZ_DIGIT,'}',0);
 N	
 N	//int2lcdyx(adc_buff_[0],0,4,0);
 N    //int2lcdyx(adc_buff_[1],0,9,0);	
@@ -13559,73 +13031,6 @@ N	pointer_set(1);
 N	
 N     }     
 N
-Nelse if(ind==iK_makb)
-Xelse if(a_ind . i==iK_makb)
-N	{
-N	ptrs[0]=						" U1  =    !В        ";
-N	ptrs[1]=						" U2  =    @В        ";
-N	ptrs[2]=						" U3  =    #В        ";
-N	ptrs[3]=						" U4  =    $В        ";
-N	ptrs[4]=						" U5  =    %В        ";
-N	ptrs[5]=						" t1  =    ^°C       ";
-N	ptrs[6]=						" t2  =    &°C       ";
-N	ptrs[7]=						" t3  =    *°C       ";
-N	ptrs[8]=						" t4  =    (°C       ";
-N	ptrs[9]=						" t5  =    )°C       ";
-N	ptrs[10]=						" Выход              ";
-N	ptrs[11]=						"                    ";
-N
-N	if((sub_ind-index_set)>1)index_set=sub_ind-1;
-X	if((a_ind . s_i-a_ind . i_s)>1)a_ind . i_s=a_ind . s_i-1;
-N	else if(sub_ind<index_set)index_set=sub_ind;
-X	else if(a_ind . s_i<a_ind . i_s)a_ind . i_s=a_ind . s_i;
-N	bgnd_par("     КАЛИБРОВКА     ","   МОНИТОР АКБ N<   ",ptrs[index_set],ptrs[index_set+1]);
-X	bgnd_par("     КАЛИБРОВКА     ","   МОНИТОР АКБ N<   ",ptrs[a_ind . i_s],ptrs[a_ind . i_s+1]);
-N	pointer_set(2);
-N	simax=10;
-N
-N	int2lcd(sub_ind1+1,'<',0);
-X	int2lcd(a_ind . s_i1+1,'<',0);
-N	int2lcd(makb[sub_ind1]._U[0],'!',1);
-X	int2lcd(makb[a_ind . s_i1]._U[0],'!',1);
-N	int2lcd(makb[sub_ind1]._U[1],'@',1);
-X	int2lcd(makb[a_ind . s_i1]._U[1],'@',1);
-N	int2lcd(makb[sub_ind1]._U[2],'#',1);
-X	int2lcd(makb[a_ind . s_i1]._U[2],'#',1);
-N	int2lcd(makb[sub_ind1]._U[3],'$',1);
-X	int2lcd(makb[a_ind . s_i1]._U[3],'$',1);
-N	int2lcd(makb[sub_ind1]._U[4],'%',1);
-X	int2lcd(makb[a_ind . s_i1]._U[4],'%',1);
-N
-N	if(makb[sub_ind1]._T_nd[0])sub_bgnd("НЕПОДКЛЮЧЕН",'^',-5);
-X	if(makb[a_ind . s_i1]._T_nd[0])sub_bgnd("НЕПОДКЛЮЧЕН",'^',-5);
-N	else int2lcd_mmm(makb[sub_ind1]._T[0],'^',0); 
-X	else int2lcd_mmm(makb[a_ind . s_i1]._T[0],'^',0); 
-N	if(makb[sub_ind1]._T_nd[1])sub_bgnd("НЕПОДКЛЮЧЕН",'&',-5);
-X	if(makb[a_ind . s_i1]._T_nd[1])sub_bgnd("НЕПОДКЛЮЧЕН",'&',-5);
-N	else int2lcd_mmm(makb[sub_ind1]._T[1],'&',0); 
-X	else int2lcd_mmm(makb[a_ind . s_i1]._T[1],'&',0); 
-N	if(makb[sub_ind1]._T_nd[2])sub_bgnd("НЕПОДКЛЮЧЕН",'*',-5);
-X	if(makb[a_ind . s_i1]._T_nd[2])sub_bgnd("НЕПОДКЛЮЧЕН",'*',-5);
-N	else int2lcd_mmm(makb[sub_ind1]._T[2],'*',0); 
-X	else int2lcd_mmm(makb[a_ind . s_i1]._T[2],'*',0); 
-N	if(makb[sub_ind1]._T_nd[3])sub_bgnd("НЕПОДКЛЮЧЕН",'(',-5);
-X	if(makb[a_ind . s_i1]._T_nd[3])sub_bgnd("НЕПОДКЛЮЧЕН",'(',-5);
-N	else int2lcd_mmm(makb[sub_ind1]._T[3],'(',0); 
-X	else int2lcd_mmm(makb[a_ind . s_i1]._T[3],'(',0); 
-N	if(makb[sub_ind1]._T_nd[4])sub_bgnd("НЕПОДКЛЮЧЕН",')',-5);
-X	if(makb[a_ind . s_i1]._T_nd[4])sub_bgnd("НЕПОДКЛЮЧЕН",')',-5);
-N	else int2lcd_mmm(makb[sub_ind1]._T[4],')',0); 
-X	else int2lcd_mmm(makb[a_ind . s_i1]._T[4],')',0); 
-N
-N
-N/*	int2lcd(makb[sub_ind1]._T[0],'^',0);
-N	int2lcd(makb[sub_ind1]._T[1],'&',0);
-N	int2lcd(makb[sub_ind1]._T[2],'*',0);
-N	int2lcd(makb[sub_ind1]._T[3],'(',0);
-N	int2lcd(makb[sub_ind1]._T[4],')',0);*/
-N	
-N     }   
 N
 Nelse if(ind==iK_bps_sel)
 Xelse if(a_ind . i==iK_bps_sel)
@@ -13651,10 +13056,21 @@ N    ptrs[17]=						" БПС N18            ";
 N    ptrs[18]=						" БПС N19            ";
 N	ptrs[19]=						" БПС N20            ";
 N    ptrs[20]=						" БПС N21            ";
-N    ptrs[21]=						" БПС N22            ";	               
+N    ptrs[21]=						" БПС N22            ";
+N    ptrs[22]=						" БПС N23            ";
+N	ptrs[23]=						" БПС N24            ";
+N    ptrs[24]=						" БПС N25            ";
+N    ptrs[25]=						" БПС N26            ";
+N	ptrs[26]=						" БПС N27            ";
+N    ptrs[27]=						" БПС N28            ";
+N    ptrs[28]=						" БПС N29            ";
+N	ptrs[29]=						" БПС N30            ";
+N    ptrs[30]=						" БПС N31            ";
+N    ptrs[31]=						" БПС N32            ";	               
+N		               
 N	ptrs[NUMIST]=					" Выход              ";
-N	ptrs[1+NUMIST]=				"                    ";
-N	ptrs[2+NUMIST]=				"                    ";
+N	ptrs[1+NUMIST]=					"                    ";
+N	ptrs[2+NUMIST]=					"                    ";
 N
 N	if((sub_ind-index_set)>2)index_set=sub_ind-2;
 X	if((a_ind . s_i-a_ind . i_s)>2)a_ind . i_s=a_ind . s_i-2;
@@ -14208,15 +13624,6 @@ N		int2lcdyx(Ibmax,1,7,0);
 N		int2lcdyx(cntrl_stat,1,11,0);
 N		int2lcdyx(load_U,1,19,0);
 N			
-N		int2lcdyx(lakb[0]._balanced_event_code/*_tot_bat_volt*/,2,2,0);
-N	   	int2lcdyx(lakb[1]._balanced_event_code/*_tot_bat_volt*/,3,2,0);
-N		
-N	 	int2lcd_mmm(lakb[0]._ch_curr/10,'!',0);
-N		int2lcd_mmm(lakb[1]._ch_curr/10,'@',0);		
-N		
-N	 	int2lcd_mmm(bat[0]._Ib/10,'#',0);
-N		int2lcd_mmm(bat[1]._Ib/10,'$',0);
-N
 N//		int2lcdyx(TELECORE2017_ULINECC,2,19,0);
 N//	   	int2lcdyx(TELECORE2017_ULINECC_,3,19,0);
 N
@@ -14225,8 +13632,6 @@ N	   	//int2lcdyx(lakb[1]._communicationFullErrorStat,3,19,0);
 N
 N		int2lcdyx(IMAX,0,13,0);
 N		
-N		int2lcdyx(lakb[0]._voltage_event_code,2,15,0); 
-N		int2lcdyx(lakb[1]._voltage_event_code,3,15,0);
 N
 N
 N
@@ -14439,41 +13844,7 @@ N     		    "                    ",
 N     		    "                    ",
 N     		    "                    ");
 N
-N     	int2lcdyx(sub_ind1+1,0,3,0);
-X     	int2lcdyx(a_ind . s_i1+1,0,3,0);
-N		int2lcdyx(lakb[sub_ind1]._cnt,0,6,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._cnt,0,6,0);
-N
-N		int2lcdyx(lakb[sub_ind1]._max_cell_temp,0,14,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._max_cell_temp,0,14,0);
-N		int2lcdyx(lakb[sub_ind1]._min_cell_temp,0,19,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._min_cell_temp,0,19,0);
-N
-N		int2lcdyx(lakb[sub_ind1]._max_cell_volt,1,4,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._max_cell_volt,1,4,0);
-N		int2lcdyx(lakb[sub_ind1]._min_cell_volt,1,9,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._min_cell_volt,1,9,0);
-N		int2lcdyx(lakb[sub_ind1]._tot_bat_volt,1,14,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._tot_bat_volt,1,14,0);
-N		int2lcdyx(lakb[sub_ind1]._s_o_h,1,19,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._s_o_h,1,19,0);
-N
-N		int2lcdyx(lakb[sub_ind1]._ch_curr,2,4,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._ch_curr,2,4,0);
-N		int2lcdyx(lakb[sub_ind1]._dsch_curr,2,9,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._dsch_curr,2,9,0);
-N		int2lcdyx(lakb[sub_ind1]._rat_cap,2,14,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._rat_cap,2,14,0);
-N		int2lcdyx(lakb[sub_ind1]._s_o_c,2,19,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._s_o_c,2,19,0);
-N
-N		int2lcdyx(lakb[sub_ind1]._c_c_l_v,3,4,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._c_c_l_v,3,4,0);
-N		int2lcdyx(lakb[sub_ind1]._r_b_t,3,9,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._r_b_t,3,9,0);
-N		int2lcdyx(lakb[sub_ind1]._b_p_ser_num,3,14,0);
-X		int2lcdyx(lakb[a_ind . s_i1]._b_p_ser_num,3,14,0);
-N		//int2lcdyx(lakb[sub_ind1]._bRS485ERR,3,16,0);
+N 		//int2lcdyx(lakb[sub_ind1]._bRS485ERR,3,16,0);
 N		//int2lcdyx(lakb[sub_ind1]._rs485_cnt,3,19,0); 
 N		
 N     	}	
@@ -14498,18 +13869,8 @@ N
 N		int2lcdyx(li_bat._Ub,1,3,0);
 N
 N
-N		int2lcdyx(lakb[0]._tot_bat_volt,1,8,0);   
-N
 N		int2lcdyx(cntrl_stat,1,19,0);
 N		
-N		int2lcdyx(lakb_error_cnt,3,19,0);
-N
-N
-N
-N		//int2lcdyx(ccc_plazma[2],3,12,0);
-N		//int2lcdyx(ccc_plazma[3],1,16,0);  
-N		//int2lcdyx(ccc_plazma[4],2,16,0);  
-N		//int2lcdyx(ccc_plazma[5],3,16,0); 
 N
 N		int2lcdyx(li_bat._canErrorCnt,2,5,0);
 N		int2lcdyx(li_bat._canError,2,8,0);
@@ -14830,7 +14191,27 @@ N    ptrs[15]=						" БПС N8             ";
 N    ptrs[16]=						" БПС N9             ";               
 N	ptrs[17]=						" БПС N10            ";
 N    ptrs[18]=						" БПС N11            ";
-N    ptrs[19]=						" БПС N12            ";               
+N    ptrs[19]=						" БПС N12            "; 
+N    ptrs[20]=						" БПС N13            ";
+N	ptrs[21]=						" БПС N14            ";
+N    ptrs[22]=						" БПС N15            ";
+N    ptrs[23]=						" БПС N16            ";
+N	ptrs[24]=						" БПС N17            ";
+N    ptrs[25]=						" БПС N18            ";
+N    ptrs[26]=						" БПС N19            ";               
+N	ptrs[27]=						" БПС N20            ";
+N    ptrs[28]=						" БПС N21            ";
+N	ptrs[29]=						" БПС N22            ";
+N    ptrs[30]=						" БПС N23            ";
+N	ptrs[31]=						" БПС N24            ";
+N    ptrs[32]=						" БПС N25            ";
+N    ptrs[33]=						" БПС N26            ";
+N	ptrs[34]=						" БПС N27            ";
+N    ptrs[35]=						" БПС N28            ";
+N    ptrs[36]=						" БПС N29            ";               
+N	ptrs[37]=						" БПС N30            ";
+N    ptrs[38]=						" БПС N31            ";
+N    ptrs[39]=						" БПС N32            ";	              
 N	ptrs[8+NUMIST]=					" Выход              ";
 N	ptrs[9+NUMIST]=					" Проверка WDT(внутр)";
 N	ptrs[10+NUMIST]=				" Проверка WDT(внешн)";
@@ -15375,12 +14756,12 @@ N	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2].debug_info_to_uku0,'&',0);
 X	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2].debug_info_to_uku0,'&',0);
 N	else sub_bgnd(" ",'&',0);
 N
-N	int2lcd(bps[sub_ind1]._x_+50,'(',0);
-X	int2lcd(bps[a_ind . s_i1]._x_+50,'(',0);
-N	int2lcd(bps[sub_ind1+1]._x_+50,'(',0);
-X	int2lcd(bps[a_ind . s_i1+1]._x_+50,'(',0);
-N	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._x_+50,'(',0);
-X	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._x_+50,'(',0);
+N	int2lcd(bps[sub_ind1]._x_avg+50,'(',0);
+X	int2lcd(bps[a_ind . s_i1]._x_avg+50,'(',0);
+N	int2lcd(bps[sub_ind1+1]._x_avg+50,'(',0);
+X	int2lcd(bps[a_ind . s_i1+1]._x_avg+50,'(',0);
+N	if(sub_ind1<NUMIST-2) int2lcd(bps[sub_ind1+2]._x_avg+50,'(',0);
+X	if(a_ind . s_i1<NUMIST-2) int2lcd(bps[a_ind . s_i1+2]._x_avg+50,'(',0);
 N	else sub_bgnd(" ",'(',0);
 N
 N	int2lcd(bps[sub_ind1]._avg,')',0);
@@ -15652,8 +15033,31 @@ N	int2lcdyx(BUILD_YEAR,1,12,0);
 N	int2lcdyx(BUILD_MONTH,1,15,0);
 N	int2lcdyx(BUILD_DAY,1,18,0);
 N	
-W "main.c" 6552 2 function "sprintf" declared implicitly
+W "main.c" 6167 2 function "sprintf" declared implicitly
 N	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
+N	}
+Nelse if(ind==iFWaboutBPS)
+Xelse if(a_ind . i==iFWaboutBPS)
+N	{
+N	bgnd_par(	" Версия             ",
+N				" Сборка  0000.00.00 ",
+N				"                    ",
+N				"                    ");
+N	int2lcdyx(bps[sub_ind1]._build_year,1,12,0);
+X	int2lcdyx(bps[a_ind . s_i1]._build_year,1,12,0);
+N	int2lcdyx(bps[sub_ind1]._build_month,1,15,0);
+X	int2lcdyx(bps[a_ind . s_i1]._build_month,1,15,0);
+N	int2lcdyx(bps[sub_ind1]._build_day,1,18,0);
+X	int2lcdyx(bps[a_ind . s_i1]._build_day,1,18,0);
+N	
+W "main.c" 6179 2 function "sprintf" declared implicitly
+N	sprintf(&lcd_buffer[9],"%d.%d.%d",bps[sub_ind1]._hardvare_version,bps[sub_ind1]._soft_version,bps[sub_ind1]._build);
+X	sprintf(&lcd_buffer[9],"%d.%d.%d",bps[a_ind . s_i1]._hardvare_version,bps[a_ind . s_i1]._soft_version,bps[a_ind . s_i1]._build);
+N
+N	//int2lcdyx(plazma_PUTTM31,3,4,0);
+N	//int2lcdyx(plazma_PUTTM32,3,10,0);
+N	int2lcdyx(sub_ind1,3,19,0);
+X	int2lcdyx(a_ind . s_i1,3,19,0);
 N	}
 Nelse if(ind==iLog_reset_prl)
 Xelse if(a_ind . i==iLog_reset_prl)
@@ -15722,8 +15126,8 @@ Nint2lcdyx(retcntsec,0,7,0);	*/
 N//int2lcdyx(bps[0]._vol_i,0,15,0);
 N//int2lcdyx(cntrl_stat,0,19,0); 
 N//int2lcdyx(bps[0]._Uin,0,4,0);
-W "main.c" 1411 6 variable "ii_" was declared but never referenced
-W "main.c" 1412 20 variable "cnt_ind_bat" was declared but never referenced
+W "main.c" 1136 6 variable "ii_" was declared but never referenced
+W "main.c" 1137 20 variable "cnt_ind_bat" was declared but never referenced
 N}							    
 N
 N
@@ -16198,7 +15602,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6999 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6630 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -16347,12 +15751,18 @@ N		{
 N	     tree_down(0,0);
 N	     ret(0);
 N		}	
-N	else if((but==butE)&&(sub_ind==9))
-X	else if((but==254)&&(a_ind . s_i==9))
+N	else if((but==butE_)&&(sub_ind==9))
+X	else if((but==126)&&(a_ind . s_i==9))
 N		{
 N		can1_out(sub_ind1,sub_ind1,CMND,VENT_RES,0,0,0,0);
 X		mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0x16,0x64,0,0,0,0);
-N		}			
+N		}
+N	else if((but==butE)&&(sub_ind==10))
+X	else if((but==254)&&(a_ind . s_i==10))
+N		{
+N		tree_up(iFWaboutBPS,0,0,sub_ind1);
+X		tree_up(iFWaboutBPS,0,0,a_ind . s_i1);
+N		}					
 N	}			
 Nelse if(ind==iNet)
 Xelse if(a_ind . i==iNet)
@@ -16608,8 +16018,8 @@ Nelse if((ind==iPrl_bat_in_out)||(ind==iSet_prl)||(ind==iK_prl)
 Xelse if((a_ind . i==iPrl_bat_in_out)||(a_ind . i==iSet_prl)||(a_ind . i==iK_prl)
 N	||(ind==iAusw_prl)
 X	||(a_ind . i==iAusw_prl)
-N	||(ind==iPrltst)||(ind==iLog_reset_prl))
-X	||(a_ind . i==iPrltst)||(a_ind . i==iLog_reset_prl))
+N	||(ind==iPrltst)||(ind==iLog_reset_prl)||(ind==iSet_st_prl))
+X	||(a_ind . i==iPrltst)||(a_ind . i==iLog_reset_prl)||(a_ind . i==iSet_st_prl))
 N	{
 N	ret(50);
 N	if(but==butR)
@@ -16793,7 +16203,7 @@ N				}
 N			else 
 N				{
 N		          tree_down(0,0);
-N	    	          show_mess("                    ",
+N	    	      show_mess("                    ",
 N	          			"       Пароль       ",
 N	          			"     неверный!!!    ",
 N	          			"                    ",1000);
@@ -16806,12 +16216,16 @@ N			{
 N	     	if(tempU==PAROL_DEFAULT) 
 X	     	if(tempU==295) 
 N				{
-N	//			ind=iDefault;
-N				sub_ind=1;
-X				a_ind . s_i=1;
-N				index_set=0;
-X				a_ind . i_s=0;
-N				default_temp=10;
+N				//lc640_write_int(EE_UMAX,750);
+N				//lc640_write_int(EE_UINMIN,1650);
+N				def_set();
+N		        tree_down(0,0);
+N	    	    show_mess(
+N						"     Установка      ",
+N	          			"    параметров      ",
+N	          			"    произведена     ",
+N	          			"                    ",1000);
+N
 N				}
 N			else 
 N				{
@@ -17944,22 +17358,14 @@ N
 N	else if(but==butLR_)
 X	else if(but==103)
 N		{
-N		lc640_write_int(EE_SPEED_CHRG_CURR,20);
-X		lc640_write_int(0x10+100+162,20);
+N		/*lc640_write_int(EE_SPEED_CHRG_CURR,20);
 N		lc640_write_int(EE_SPEED_CHRG_VOLT,2400);
-X		lc640_write_int(0x10+100+164,2400);
 N		lc640_write_int(EE_SPEED_CHRG_TIME,1);
-X		lc640_write_int(0x10+100+166,1);
 N		lc640_write_int(EE_SPEED_CHRG_D_U,50);
-X		lc640_write_int(0x10+100+170,50);
 N		lc640_write_int(EE_SPEED_CHRG_AVT_EN,0);
-X		lc640_write_int(0x10+100+168,0);
 N		lc640_write_int(EE_SPEED_CHRG_BLOCK_SRC,1);
-X		lc640_write_int(0x10+100+172,1);
 N		lc640_write_int(EE_SPEED_CHRG_BLOCK_LOG,1);
-X		lc640_write_int(0x10+100+174,1);
-N		lc640_write_int(EE_AUSW_MAIN_NUMBER,20000);
-X		lc640_write_int(0x10+100+226,20000);
+N		lc640_write_int(EE_AUSW_MAIN_NUMBER,20000);*/
 N		}
 N		
 N	else if(sub_ind==0)
@@ -17968,50 +17374,9 @@ N	     {
 N	     if(but==butE)
 X	     if(but==254)
 N	        {
-N	          //tree_up(iDef_220_IPS_TERMOKOMPENSAT,0,0,0);
-N	          //ret(1000);
-N	          //default_temp=10;
-N
-N			lc640_write_int(EE_ZV_ON,1);
-X			lc640_write_int(0x10+100+18,1);
-N			lc640_write_int(EE_AV_OFF_AVT,1);
-X			lc640_write_int(0x10+100+12,1);
-N			lc640_write_int(EE_APV_ON1,apvON);
-X			lc640_write_int(0x10+100+44,apvON);
-N			lc640_write_int(EE_APV_ON2,apvON);
-X			lc640_write_int(0x10+100+46,apvON);
-N			lc640_write_int(EE_APV_ON2_TIME,1);
-X			lc640_write_int(0x10+100+48,1);
-N			lc640_write_int(EE_UOUT,2300);
-X			lc640_write_int(0x10+100+6,2300);
-N			lc640_write_int(EE_UAVT,2300);
-X			lc640_write_int(0x10+100+8,2300);
-N			lc640_write_int(EE_TSIGN,70);
-X			lc640_write_int(0x10+100+82,70);
-N			lc640_write_int(EE_TMAX,80);
-X			lc640_write_int(0x10+100+10,80);
-N			lc640_write_int(EE_TSYSMAX,50);
-X			lc640_write_int(0x10+100+106,50);
-N			lc640_write_int(EE_DU,200);
-X			lc640_write_int(0x10+100+84,200);
-N			lc640_write_int(EE_UMAX,700);
-X			lc640_write_int(0x10+100+4,700);
-N			lc640_write_int(EE_UINMAX,2500);
-X			lc640_write_int(0x10+100+144,2500);
-N			lc640_write_int(EE_UINMIN,1700);
-X			lc640_write_int(0x10+100+146,1700);
-N			lc640_write_int(EE_UOUTMAX,2500);
-X			lc640_write_int(0x10+100+148,2500);
-N			lc640_write_int(EE_UOUTMIN,2200);
-X			lc640_write_int(0x10+100+150,2200);
-N			lc640_write_int(EE_TZAS,5);
-X			lc640_write_int(0x10+100+34,5);
-N			lc640_write_int(EE_TVENTMAX,6000);
-X			lc640_write_int(0x10+350+2,6000);
-N			lc640_write_int(ADR_EE_RELE_SET_MASK[0],0x01);
-N			lc640_write_int(ADR_EE_RELE_SET_MASK[1],0x78);
-N			lc640_write_int(ADR_EE_RELE_SET_MASK[2],0x02);
-N			lc640_write_int(ADR_EE_RELE_SET_MASK[3],0x84);
+N	        tree_up(iSet_st_prl,0,0,0);
+N			parol_init();	 
+N			ret(1000);
 N
 N	        }
 N		}	
@@ -21212,16 +20577,16 @@ X	if(but==251)
 N		{
 N		sub_ind++;
 X		a_ind . s_i++;
-N		gran_char(&sub_ind,0,4+(NUMIST!=0));
-X		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+N		gran_char(&sub_ind,0,5+(NUMIST!=0));
+X		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 N		}
 N	else if(but==butU)
 X	else if(but==253)
 N		{
 N		sub_ind--;
 X		a_ind . s_i--;
-N		gran_char(&sub_ind,0,4+(NUMIST!=0));
-X		gran_char(&a_ind . s_i,0,4+(NUMIST!=0));
+N		gran_char(&sub_ind,0,5+(NUMIST!=0));
+X		gran_char(&a_ind . s_i,0,5+(NUMIST!=0));
 N		}
 N	else if(but==butD_)
 X	else if(but==123)
@@ -21355,6 +20720,28 @@ N		{
 N	    tree_down(0,0);
 N	    ret(0);
 N        }
+N	else if(sub_ind==(5+(NUMIST!=0)))
+X	else if(a_ind . s_i==(5+(NUMIST!=0)))
+N		{
+N		if((but==butR)||(but==butR_))
+X		if((but==239)||(but==111))
+N			{
+N			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=30;
+N			else if(RS485_QWARZ_DIGIT==30)RS485_QWARZ_DIGIT=40;
+N			else RS485_QWARZ_DIGIT=10;
+N			}
+N		else if((but==butL)||(but==butL_))
+X		else if((but==247)||(but==119))
+N			{
+N			if(RS485_QWARZ_DIGIT==10)RS485_QWARZ_DIGIT=40;
+N			else if(RS485_QWARZ_DIGIT==40)RS485_QWARZ_DIGIT=30;
+N			else RS485_QWARZ_DIGIT=10;
+N			}
+N		gran(&RS485_QWARZ_DIGIT,10,40);
+N		lc640_write_int(EE_RS485_QWARZ_DIGIT,RS485_QWARZ_DIGIT);
+X		lc640_write_int(0x10+100+152,RS485_QWARZ_DIGIT);
+N		speed=0;
+N		}
 N	}
 N
 N
@@ -22923,118 +22310,6 @@ N			}
 N		}
 N	}
 N	
-Nelse if(ind==iK_makb_sel)
-Xelse if(a_ind . i==iK_makb_sel)
-N	{
-N	ret(1000);
-N	if(but==butD)
-X	if(but==251)
-N		{
-N		sub_ind++;
-X		a_ind . s_i++;
-N		gran_char(&sub_ind,0,NUMMAKB);
-X		gran_char(&a_ind . s_i,0,NUMMAKB);
-N		}
-N	else if(but==butU)
-X	else if(but==253)
-N		{
-N		sub_ind--;
-X		a_ind . s_i--;
-N		gran_char(&sub_ind,0,NUMMAKB);
-X		gran_char(&a_ind . s_i,0,NUMMAKB);
-N		}
-N	else if(but==butD_)
-X	else if(but==123)
-N		{
-N		sub_ind=NUMMAKB;
-X		a_ind . s_i=NUMMAKB;
-N		}	
-N	else if((but==butE)&&(NUMMAKB)&&(sub_ind<NUMMAKB))
-X	else if((but==254)&&(NUMMAKB)&&(a_ind . s_i<NUMMAKB))
-N		{
-N		if(makb[sub_ind]._cnt<5)
-X		if(makb[a_ind . s_i]._cnt<5)
-N			{
-N			tree_up(iK_makb,0,0,sub_ind);
-X			tree_up(iK_makb,0,0,a_ind . s_i);
-N			ret(1000);
-N			}
-N		else show_mess(
-N					"                    ",
-N	          		"   НЕ ПОДКЛЮЧЕН!!!  ",
-N	          		"                    ",
-N	          		"                    ",1000);	
-N		}	
-N	else if(sub_ind==(NUMMAKB))
-X	else if(a_ind . s_i==(NUMMAKB))
-N		{
-N		if(but==butE)
-X		if(but==254)
-N			{
-N			tree_down(0,0);
-N			ret(0);
-N			}
-N		}				
-N	}
-N
-Nelse if(ind==iK_makb)
-Xelse if(a_ind . i==iK_makb)
-N	{
-N	ret(1000);
-N	if (but==butU)
-X	if (but==253)
-N		{      
-N		sub_ind--;
-X		a_ind . s_i--;
-N		//if(sub_ind>7)sub_ind=7;
-N		//else if(sub_ind==1)sub_ind=0;
-N		gran_char(&sub_ind,0,simax);
-X		gran_char(&a_ind . s_i,0,simax);
-N		}
-N		
-N	else if (but==butD)
-X	else if (but==251)
-N		{
-N		sub_ind++;
-X		a_ind . s_i++;
-N		//if(sub_ind<3)sub_ind=3;
-N		gran_char(&sub_ind,0,simax);
-X		gran_char(&a_ind . s_i,0,simax);
-N		}
-N	else if(but==butD_)
-X	else if(but==123)
-N		{
-N		sub_ind=10;
-X		a_ind . s_i=10;
-N		}
-N	else if ((sub_ind >= 0) && (sub_ind <= 9))
-X	else if ((a_ind . s_i >= 0) && (a_ind . s_i <= 9))
-N		{
-N		if(but==butLR) can1_out(sub_ind1,sub_ind1,KLBR_MAKB,		(sub_ind*16)+1,(sub_ind*16)+1,0,0,0);
-X		if(but==231) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,		(a_ind . s_i*16)+1,(a_ind . s_i*16)+1,0,0,0);
-N	     else if(but==butR) can1_out(sub_ind1,sub_ind1,KLBR_MAKB,	(sub_ind*16)+2,(sub_ind*16)+2,0,0,0);
-X	     else if(but==239) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+2,(a_ind . s_i*16)+2,0,0,0);
-N		else if(but==butR_)	can1_out(sub_ind1,sub_ind1,KLBR_MAKB,	(sub_ind*16)+3,(sub_ind*16)+3,0,0,0);
-X		else if(but==111)	mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+3,(a_ind . s_i*16)+3,0,0,0);
-N    		else if(but==butL) can1_out(sub_ind1,sub_ind1,KLBR_MAKB,	(sub_ind*16)+4,(sub_ind*16)+4,0,0,0); 
-X    		else if(but==247) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+4,(a_ind . s_i*16)+4,0,0,0); 
-N		else if(but==butL_) can1_out(sub_ind1,sub_ind1,KLBR_MAKB,	(sub_ind*16)+5,(sub_ind*16)+5,0,0,0);
-X		else if(but==119) mcp2515_transmit(a_ind . s_i1,a_ind . s_i1,0xEF,	(a_ind . s_i*16)+5,(a_ind . s_i*16)+5,0,0,0);
-N		speed=1;
-N		}	
-N		
-N	else if(sub_ind==10)
-X	else if(a_ind . s_i==10)
-N		{
-N		if(but==butE)
-X		if(but==254)
-N			{
-N			tree_down(0,1);
-N			ret(0);
-N			}
-N		}			
-N	}
-N
 N
 N
 N
@@ -26083,8 +25358,8 @@ N		}
 N
 N
 N  	} 
-Nelse if(ind==iFWabout)
-Xelse if(a_ind . i==iFWabout)
+Nelse if((ind==iFWabout)||(ind==iFWaboutBPS))
+Xelse if((a_ind . i==iFWabout)||(a_ind . i==iFWaboutBPS))
 N	{
 N	ret(1000);
 N	if(but==butE)
@@ -26166,7 +25441,7 @@ N	}
 N			
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14594 1 label "but_an_end" was declared but never referenced
+W "main.c" 14149 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -26222,6 +25497,22 @@ X	bFF=(char)(( (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOPIN & ((0
 N	if(bFF!=bFF_) hz_out++;
 N	bFF_=bFF;
 N
+N//o_1_s
+Nif(modbus_timeout_cnt<modbusTimeoutInMills)
+N	{
+N	modbus_timeout_cnt++;
+N	if(modbus_timeout_cnt>=modbusTimeoutInMills)
+N		{
+N		bMODBUS_TIMEOUT=1;
+N		//modbus_plazma3++;
+N		}
+N	}
+Nelse if (modbus_timeout_cnt>modbusTimeoutInMills)
+N	{
+N	modbus_timeout_cnt=0;
+N	bMODBUS_TIMEOUT=0;
+N	}
+N//o_1_e
 N
 Nif(++t0cnt5>=60)
 N     {
@@ -26292,6 +25583,7 @@ N
 N	}
 N
 N
+N/*	//o_1
 Nif(modbus_timeout_cnt<6)
 N	{
 N	modbus_timeout_cnt++;
@@ -26305,7 +25597,7 @@ N	{
 N	modbus_timeout_cnt=0;
 N	bMODBUS_TIMEOUT=0;
 N	}
-N
+N*/ //o_1
 N//LPC_GPIO0->FIOCLR|=0x00000001;
 N  return;          
 N
@@ -26585,7 +25877,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14981 15 pointless comparison of unsigned integer with zero
+W "main.c" 14553 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -26646,7 +25938,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 15040 1 function "sc16is700_init" declared implicitly
+W "main.c" 14612 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -26675,7 +25967,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 15067 3 function "can_in_an1" declared implicitly
+W "main.c" 14639 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26683,15 +25975,15 @@ N	if(bMODBUS_TIMEOUT)
 N		{
 N		bMODBUS_TIMEOUT=0;
 N		//modbus_plazma++;;
-W "main.c" 15074 3 function "modbus_in" declared implicitly
-N		modbus_in();
+N		//modbus_in();	//o_1
+N		modbus_puts(); //o_1
 N		}
 N
 N	if(bRXIN0) 
 N		{
 N		bRXIN0=0;
 N	
-N		uart_in0();
+N		//uart_in0();  //o_1
 N		} 
 N
 N/*	if(bRXIN_SC16IS700) 
@@ -26734,8 +26026,7 @@ N		//mcp2515_read_status();
 N		#endif
 N
 N		#ifdef SC16IS740_UART
-W "main.c" 15124 3 function "sc16is700_uart_hndl" declared implicitly
-N		sc16is700_uart_hndl();
+N		sc16is700_uart_hndl_mb();//o_1
 N		#endif		
 N		}
 N	
@@ -26807,11 +26098,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 15195 3 function "u_avar_hndl" declared implicitly
+W "main.c" 14768 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 15196 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 14769 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 15197 3 function "overload_hndl" declared implicitly
+W "main.c" 14770 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26831,7 +26122,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 15215 3 function "rele_av_hndl" declared implicitly
+W "main.c" 14788 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26869,7 +26160,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 15252 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 14825 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26897,7 +26188,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 15279 3 function "npn_hndl" declared implicitly
+W "main.c" 14852 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26913,7 +26204,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 15294 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 14867 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26923,7 +26214,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 15303 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 14876 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26940,10 +26231,10 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 15319 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 14892 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N
 N	}
 N}
-W "main.c" 794 13 function "timer_poll" was declared but never referenced
+W "main.c" 763 13 function "timer_poll" was declared but never referenced

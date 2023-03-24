@@ -15,7 +15,7 @@
 
 
 void mess_hndl(void);
-void mess_send(char _mess, short par0, short par1, char _time);
+void mess_send(char _mess, int par0, int par1, char _time);
 char mess_find(char _mess);
 char mess_find_unvol(char _mess);
 

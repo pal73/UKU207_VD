@@ -3,6 +3,10 @@
 #include <LPC17xx.H>
 #include "main.h"
 #include "modbus.h"
+#include "MODBUS_RTU.h"	 //o_1
+#include "MODBUS_func3.h"  //o_1
+#include "MODBUS_func4.h"  //o_1
+#include "25lc640.h" //o_1
 
 char sc16is700ByteAvailable;
 char sc16is700TxFifoLevel;
@@ -11,7 +15,7 @@ char tx_wr_index_sc16is700;//указатель записи в программный буфер передачи
 char tx_rd_index_sc16is700;//указатель чтения из программного буфера передачи
 char sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 char sc16is700TxPossibleFlag;//Флаг возможности передачи
-char sc16is700RecieveDisableFlag;
+//char sc16is700RecieveDisableFlag;	//o_1
 
 //----------------------------------------------- 
 //настройка SPI1
@@ -94,6 +98,17 @@ unsigned char baud_h,baud_l;
 baud_h = (char)((10000000U/16U/baudrate)>>8);
 baud_l = (char)((10000000U/16U/baudrate)); 
 
+if(RS485_QWARZ_DIGIT==40)
+	{
+	baud_h = (char)((40000000U/16U/baudrate)>>8);
+	baud_l = (char)((40000000U/16U/baudrate));
+	} 
+if(RS485_QWARZ_DIGIT==30)
+	{
+	baud_h = (char)((30000000U/16U/baudrate)>>8);
+	baud_l = (char)((30000000U/16U/baudrate));
+	}
+
 sc16is700_wr_byte(CS16IS7xx_LCR, 0x80);
 sc16is700_wr_byte(CS16IS7xx_DLL, baud_l);
 sc16is700_wr_byte(CS16IS7xx_DLH, baud_h);
@@ -138,6 +153,7 @@ if (++tx_wr_index_sc16is700 == TX_BUFFER_SIZE_SC16IS700) tx_wr_index_sc16is700=0
 
 //----------------------------------------------- 
 //Обработчик sc16is700
+/*
 void sc16is700_uart_hndl(void)
 {
 
@@ -189,4 +205,4 @@ if((tx_wr_index_sc16is700)&&(tx_wr_index_sc16is700!=tx_rd_index_sc16is700)) //Ес
 if((sc16is700_rd_byte(CS16IS7xx_LSR))&0x40)	sc16is700RecieveDisableFlag=0;
 
 
-}
+}*/

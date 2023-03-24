@@ -172,7 +172,7 @@ signed short ibat_ips,ibat_ips_;
 char num_of_wrks_bps;
 char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 char bps_hndl_2sec_cnt;
-unsigned short bps_on_mask,bps_off_mask;
+unsigned int bps_on_mask,bps_off_mask;
 char num_necc_up,num_necc_down;
 unsigned char sh_cnt0,b1Hz_sh;
 
@@ -2265,7 +2265,7 @@ else
 	avg/=i_avg_min;
 
 	if(avg>160) bAVG=1;
-	if(avg<120) bAVG=0;
+	if((avg<120)||(vd_U<50)) bAVG=0;
 
 	if(bAVG==1)
 		{
@@ -2281,21 +2281,21 @@ else
 				tempSL/=(signed long)i_avg;
 				bps[i]._avg=(signed short)tempSL;
 
-				if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_--;
-				if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_++;
+				if((bps[i]._Ii>i_avg)&&(bps[i]._avg>120)&&(!bAVG_DIR))bps[i]._x_avg--;
+				if((bps[i]._Ii<i_avg)&&(bps[i]._avg<80)&&(bAVG_DIR))bps[i]._x_avg++;
 			
-				if(bps[i]._x_<-50)bps[i]._x_=-50;
-				if(bps[i]._x_>50)bps[i]._x_=50;	
+				if(bps[i]._x_avg<-50)bps[i]._x_avg=-50;
+				if(bps[i]._x_avg>50)bps[i]._x_avg=50;	
 				}
 			else bps[i]._avg=0;
 			}		
 		}			
 	}   	 
 
-if(((signed long)(UOUT_-in_U))<20L)
+/*if(((signed long)(UOUT_-in_U))<20L)
 	{
 	for(i=0;i<NUMIST;i++) bps[i]._x_=0;
-	}
+	}*/
 
 avg_hndl_end:
 __nop();  
@@ -2533,7 +2533,7 @@ if(mess_find_unvol(MESS2BPS_HNDL))
 
 	if(mess_data[0]==PARAM_BPS_ALL_ON)
 		{
-		bps_on_mask=0xffff;
+		bps_on_mask=0xffffffff;
 		}
 
 	if(mess_data[0]==PARAM_BPS_MASK_ON_OFF_AFTER_2SEC)
@@ -4570,6 +4570,8 @@ gran(&num_necc,1,NUMIST);
 //-----------------------------------------------
 void cntrl_hndl(void)
 {
+#define UBPSMAXPWM	2350
+#define UBPSMINPWM	2100
 
 IZMAX_=IZMAX;
 
@@ -4769,21 +4771,46 @@ else if((b1Hz_ch)&&((!bIBAT_SMKLBR)||(bps[8]._cnt>40)))
 iiii=0;
 for(i=0;i<NUMIST;i++)
      {
-     if(bps[i]._cnt<30)iiii=1;
 
-	 bps[i]._cntrl_stat=cntrl_stat+bps[i]._x_;
-	 if(bps[i]._flags_tu&0x01) bps[i]._cntrl_stat=0;
+	 //bps[i]._x_avg=0;
+
+     /*if(bps[i]._cnt<30)iiii=1;*/
+
+	 bps[i]._x_=_x_reg+bps[i]._x_avg;
+	 //if(bps[i]._flags_tu&0x01) bps[i]._cntrl_stat=0;
      }
 
-if(iiii==0)
+/*if(iiii==0)
      {
      cntrl_stat=1200;	
      cntrl_stat_old=1200;
      cntrl_stat_new=1200;
      }
-gran(&cntrl_stat,10,2010); 
+gran(&cntrl_stat,10,2010); */
 
 //if(main_1Hz_cnt<10)	cntrl_stat=2000;
+
+if(++_x_reg_cnt>=100)
+	{
+	_x_reg_cnt=0;
+
+	if((out_U<UOUT)&&(vd_U>20))
+		{
+		_x_reg++;
+		}
+	else if((out_U>UOUT)&&(vd_U>20))
+		{
+		_x_reg--;
+		}
+	}
+gran(&_x_reg,-50,50);
+gran(&_x_reg,UBPSMINPWM-UOUT,UBPSMAXPWM-UOUT);
+
+if(mess_data[0]==PARAM_CNTRL_STAT_SET)
+		{
+		if(cntrl_stat==1020)_x_reg=5000;
+		if(cntrl_stat==30)_x_reg=-5000;
+		}
 
 b1Hz_ch=0;
 }

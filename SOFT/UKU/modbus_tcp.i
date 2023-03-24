@@ -2711,7 +2711,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -2972,6 +2972,7 @@ extern signed short I_LOAD_MODE;
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -3059,99 +3060,9 @@ extern LI_BAT_STAT li_bat;
 
 
 
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
 
 
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
-
-
-
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	
-	signed short	_communication2lvlErrorCnt;  	
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	
-	signed short   _battIsOn;		
-	char 		_plazma[8];		
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		
-	signed short 	_s_o_c_percent; 
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	
-	signed char		_cell_temp_1;	
-	signed char		_cell_temp_2;	
-	signed char		_cell_temp_3;	
-	signed char		_cell_temp_4;	
-	signed char		_cell_temp_ambient;	
-	signed char		_cell_temp_power;	
-	
-	
-	
-	signed char		_charge_and_discharge_current_alarm_status;	 	
-	signed char 	_battery_total_voltage_alarm_status;			
-	signed char		_custom_alarm_quantity;							
-	signed char		_balanced_event_code;							
-	signed char 	_voltage_event_code;							
-	signed char 	_temperature_event_code;						
-	signed char		_current_event_code;							
-	signed char		_fet_status_code;								
-	signed short	_balanced_status_code;							
-	signed char 	_system_status_code;							
-
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	
-extern short lakbNotErrorNum;		
-extern short lakbKanErrorCnt;		
-extern short lakbKanErrorStat;		
 
 
 
@@ -3205,7 +3116,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		
+
+	 signed  short _x_avg; 	
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -3215,8 +3128,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
+
 
 
 
@@ -3273,6 +3193,8 @@ extern char first_inv_slot;
 
 
 
+
+
 extern signed short load_U;
 extern signed short load_I;
 
@@ -3296,6 +3218,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -3395,11 +3318,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1388 "main.h"
 
-#line 1476 "main.h"
+#line 1399 "main.h"
 
-#line 1492 "main.h"
+#line 1415 "main.h"
 
 extern char ext_can_cnt;
 
@@ -3443,7 +3366,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1469 "main.h"
 
 
 
@@ -3488,6 +3411,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		
+extern signed  short _x_reg_cnt;	
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;
@@ -3567,19 +3493,11 @@ U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
 
 
-#line 161 "eeprom_map.h"
+#line 114 "eeprom_map.h"
 
-#line 172 "eeprom_map.h"
+#line 154 "eeprom_map.h"
 
-
-
-
-
-
- 
-
-
-
+#line 165 "eeprom_map.h"
 
 
 
@@ -3588,25 +3506,6 @@ U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
  
 
-#line 206 "eeprom_map.h"
-
-
-
-#line 218 "eeprom_map.h"
-
-
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
-
-
-
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
 
 
 
@@ -3615,7 +3514,36 @@ U16 tcp_callback (U8 soc, U8 evt, U8 *ptr, U16 par);
 
 
 
-#line 361 "eeprom_map.h"
+ 
+
+#line 199 "eeprom_map.h"
+
+
+
+#line 211 "eeprom_map.h"
+
+
+#line 222 "eeprom_map.h"
+
+
+
+#line 233 "eeprom_map.h"
+
+
+
+#line 289 "eeprom_map.h"
+
+
+#line 332 "eeprom_map.h"
+
+
+
+
+
+
+
+
+#line 354 "eeprom_map.h"
 
 
 
@@ -3784,6 +3712,28 @@ char lc640_write_int(short ADR,short in);
 char lc640_write_long(int ADR,long in);
 char lc640_write_long_ptr(int ADR,char* in);
 #line 8 "MODBUS_TCP.c"
+#line 1 "MODBUS_func4.h"
+
+extern unsigned char *const reg_func4 [];
+
+
+
+
+#line 9 "MODBUS_TCP.c"
+#line 1 "MODBUS_func3.h"
+
+extern unsigned char *const reg_func3[];
+
+
+int lc640_read_int(int ADR);
+
+
+#line 10 "MODBUS_TCP.c"
+#line 1 "MODBUS_func6.h"
+
+extern void analiz_func6(unsigned short mbadr, unsigned short mbdat);
+
+#line 11 "MODBUS_TCP.c"
 
 char plazma_modbus_tcp[20];
 
@@ -3791,6 +3741,8 @@ char modbus_tcp_func;
 char modbus_tcp_unit;
 short modbus_tcp_rx_arg0;
 short modbus_tcp_rx_arg1;
+unsigned long start_adr_tcp_mb;
+unsigned char start_num_tcp_mb;
 
 
 
@@ -3839,66 +3791,108 @@ switch (evt)
 
 	if(modbus_tcp_unit==MODBUS_ADRESS)
 		{
-		char modbus_tcp_tx_buff[200];
+		
+		start_adr_tcp_mb=modbus_tcp_rx_arg0*2; 
+		start_num_tcp_mb=modbus_tcp_rx_arg1*2; 
 
 		if(modbus_tcp_func==3)		
 			{
 			U8 *sendbuf;
-			
 
-			modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,1);
-
-			sendbuf = tcp_get_buf((modbus_tcp_rx_arg1*2)+9);
+			unsigned char io;
+			sendbuf = tcp_get_buf(start_num_tcp_mb+9);
 			sendbuf[0]=ptr[0];
 			sendbuf[1]=ptr[1];
 			sendbuf[2]=ptr[2];
 			sendbuf[3]=ptr[3];
-			sendbuf[4]=((modbus_tcp_rx_arg1*2)+3)/256;
-			sendbuf[5]=((modbus_tcp_rx_arg1*2)+3)%256;;
+			sendbuf[4]=(start_num_tcp_mb+3)/256;
+			sendbuf[5]=(start_num_tcp_mb+3)%256;;
 			sendbuf[6]=modbus_tcp_unit;
 			sendbuf[7]=modbus_tcp_func;
-			sendbuf[8]=(U8)(modbus_tcp_rx_arg1*2);
-			mem_copy((char*)&sendbuf[9],modbus_tcp_out_ptr,(modbus_tcp_rx_arg1*2));
+			sendbuf[8]=(U8)start_num_tcp_mb;
 			
-			
-          	tcp_send (socket_tcp, sendbuf, ((modbus_tcp_rx_arg1*2)+9));
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			for(io=0;io<sendbuf[8];++io) {
+				unsigned long adrr_reg;
+				adrr_reg=start_adr_tcp_mb+io;
+				if(adrr_reg<160) sendbuf[9+io]=*reg_func3[adrr_reg];
+				else sendbuf[9+io]=0;
+			}	 
+	 		tcp_send (socket_tcp, sendbuf, (start_num_tcp_mb+9));
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 			}
 
 		if(modbus_tcp_func==4)		
 			{
 			U8 *sendbuf;
 
-			modbus_input_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,modbus_tcp_rx_arg1,1);
-
-			sendbuf = tcp_get_buf((modbus_tcp_rx_arg1*2)+9);
+			unsigned char io;
+			sendbuf = tcp_get_buf(start_num_tcp_mb+9);
 			sendbuf[0]=ptr[0];
 			sendbuf[1]=ptr[1];
 			sendbuf[2]=ptr[2];
 			sendbuf[3]=ptr[3];
-			sendbuf[4]=((modbus_tcp_rx_arg1*2)+3)/256;
-			sendbuf[5]=((modbus_tcp_rx_arg1*2)+3)%256;;
+			sendbuf[4]=(start_num_tcp_mb+3)/256;
+			sendbuf[5]=(start_num_tcp_mb+3)%256;;
 			sendbuf[6]=modbus_tcp_unit;
 			sendbuf[7]=modbus_tcp_func;
-			sendbuf[8]=(U8)(modbus_tcp_rx_arg1*2);
-			mem_copy((char*)&sendbuf[9],modbus_tcp_out_ptr,(modbus_tcp_rx_arg1*2));
+			sendbuf[8]=(U8)start_num_tcp_mb;
 			
-			
-          	tcp_send (socket_tcp, sendbuf, ((modbus_tcp_rx_arg1*2)+9));
-			
-			
+			for(io=0;io<sendbuf[8];++io) {
+				unsigned long adrr_reg;
+				adrr_reg=start_adr_tcp_mb+io;
+				if(adrr_reg<300) sendbuf[9+io]=*reg_func4[adrr_reg];
+				else sendbuf[9+io]=0;
+			}	 
+          	tcp_send (socket_tcp, sendbuf, (start_num_tcp_mb+9));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
 			
 			
 			
@@ -3912,208 +3906,10 @@ switch (evt)
 
 		else if(modbus_tcp_func==6) 	
 			{
-			U8 *sendbuf;
 
-			
-			if(modbus_tcp_rx_arg0==11)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->YEAR=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==12)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MONTH=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==13)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->DOM=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==14)		
-				{
-				plazma_modbus_tcp[0]++;
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->HOUR=(uint16_t)modbus_tcp_rx_arg1;
-				}
-			if(modbus_tcp_rx_arg0==15)		
-				{
-				((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->MIN=(uint16_t)modbus_tcp_rx_arg1;
-				}
-				if(modbus_tcp_rx_arg0==16)		
-					{
-					((LPC_RTC_TypeDef *) ((0x40000000UL) + 0x24000) )->SEC=(uint16_t)modbus_tcp_rx_arg1;
-					}
-				if(modbus_tcp_rx_arg0==20)		
-					{
-					if((modbus_tcp_rx_arg1>0)&&(modbus_tcp_rx_arg1<=18))
-					lc640_write_int(0x10+100+36,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==21)		
-					{
-					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-					lc640_write_int(0x10+100+86,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==22)		
-					{
-					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-					lc640_write_int(0x10+100+18,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==23)		
-					{
-					if((modbus_tcp_rx_arg1==0)||(modbus_tcp_rx_arg1==1))
-					lc640_write_int(0x10+100+126,modbus_tcp_rx_arg1);  
-					}
-				if(modbus_tcp_rx_arg0==24)		
-					{
-					if((modbus_tcp_rx_arg1>=0)||(modbus_tcp_rx_arg1<=20))
-					lc640_write_int(0x10+500+96,modbus_tcp_rx_arg1);  
-					}
-	
-	
-				if(modbus_tcp_rx_arg0==30)		
-					{
-					if(modbus_tcp_rx_arg1<0)TBAT=0;
-					else if((modbus_tcp_rx_arg1>0)&&(modbus_tcp_rx_arg1<=5))modbus_tcp_rx_arg1=0;
-					else if(modbus_tcp_rx_arg1>=60)TBAT=60;
-					else TBAT=modbus_tcp_rx_arg1;
-					lc640_write_int(0x10+100+78,TBAT);
-		     		}
-				if(modbus_tcp_rx_arg0==31)		
-					{
-					lc640_write_int(0x10+100+4,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==32)		
-					{
-				
-		     		}
-				if(modbus_tcp_rx_arg0==33)		
-					{
-			
-		     		}
-				if(modbus_tcp_rx_arg0==34)		
-					{
-			
-		     		}
-				if(modbus_tcp_rx_arg0==35)		
-					{
-					lc640_write_int(0x10+100+14,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==36)		
-					{
-					lc640_write_int(0x10+100+16,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==37)		
-					{
-					lc640_write_int(0x10+100+32,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==38)		
-					{
-					lc640_write_int(0x10+100+20,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==39)		
-					{
-					lc640_write_int(0x10+100+30,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==40)		
-					{
-					lc640_write_int(0x10+100+24,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==41)		
-					{
-					lc640_write_int(0x10+100+26,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==42)		
-					{
-					
-		     		}
-				if(modbus_tcp_rx_arg0==43)		
-					{
-					lc640_write_int(0x10+100+34,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==44)		
-					{
-					lc640_write_int(0x10+100+10,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==45)		
-					{
-					lc640_write_int(0x10+100+82,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==46)		
-					{
-					lc640_write_int(0x10+100+88,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==47)		
-					{
-					lc640_write_int(0x10+100+90,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==48)		
-					{
-					lc640_write_int(0x10+100+162,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==49)		
-					{
-					lc640_write_int(0x10+100+164,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==50)		
-					{
-					lc640_write_int(0x10+100+166,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==51)		
-					{
-					lc640_write_int(0x10+100+182,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==52)		
-					{
-					lc640_write_int(0x10+100+184,modbus_tcp_rx_arg1);
-		     		}
-				if(modbus_tcp_rx_arg0==53)		
-					{
-					lc640_write_int(0x10+100+186,modbus_tcp_rx_arg1);
-		     		}
-	
-				if(modbus_tcp_rx_arg0==19)		
-					{
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-					}
-				if(modbus_tcp_rx_arg0==20)		
-					{
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-					}
-				modbus_hold_registers_transmit(MODBUS_ADRESS,modbus_tcp_func,modbus_tcp_rx_arg0,1,1);
-	
-				sendbuf = tcp_get_buf(11);
+				U8 *sendbuf;
+				analiz_func6(modbus_tcp_rx_arg0, modbus_tcp_rx_arg1);
+				sendbuf = tcp_get_buf(12);
 				sendbuf[0]=ptr[0];
 				sendbuf[1]=ptr[1];
 				sendbuf[2]=ptr[2];
@@ -4124,28 +3920,11 @@ switch (evt)
 				sendbuf[7]=modbus_tcp_func;
 				sendbuf[8]=modbus_tcp_rx_arg0/256;
 				sendbuf[9]=modbus_tcp_rx_arg0%256;
-				mem_copy((char*)&sendbuf[10],modbus_tcp_out_ptr,2);
-				
-				
+				sendbuf[10]=modbus_tcp_rx_arg1/256;
+				sendbuf[11]=modbus_tcp_rx_arg1%256;
 	          	tcp_send (socket_tcp, sendbuf, 12);
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-
-
-
-
-
-
 				}
+			 
 
 
 			

@@ -392,15 +392,8 @@ N#define EE_UINMAX			SECTOR_SETS+144
 N#define EE_UINMIN			SECTOR_SETS+146
 N#define EE_UOUTMAX			SECTOR_SETS+148
 N#define EE_UOUTMIN			SECTOR_SETS+150
-N#define EE_TELECORE2015_KLIMAT_WARM_SIGNAL	SECTOR_SETS+144
-N#define EE_TELECORE2015_KLIMAT_WARM_ON		SECTOR_SETS+146
-N#define EE_TELECORE2015_KLIMAT_WARM_OFF		SECTOR_SETS+148
-N#define EE_TELECORE2015_KLIMAT_CAP			SECTOR_SETS+150
-N#define EE_TELECORE2015_KLIMAT_VENT_ON		SECTOR_SETS+152
-N#define EE_TELECORE2015_KLIMAT_VENT_OFF		SECTOR_SETS+154
-N#define EE_TELECORE2015_KLIMAT_VVENT_ON		SECTOR_SETS+156
-N#define EE_TELECORE2015_KLIMAT_VVENT_OFF	SECTOR_SETS+158
-N#define EE_TELECORE2015_KLIMAT_VENT_SIGNAL	SECTOR_SETS+160
+N#define EE_RS485_QWARZ_DIGIT		 		SECTOR_SETS+152
+N
 N#define EE_SPEED_CHRG_CURR		 			SECTOR_SETS+162
 N#define EE_SPEED_CHRG_VOLT		 			SECTOR_SETS+164
 N#define EE_SPEED_CHRG_TIME					SECTOR_SETS+166
@@ -2093,7 +2086,7 @@ N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
 N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-N	iFWabout,
+N	iFWabout,iFWaboutBPS,
 N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
@@ -2355,6 +2348,7 @@ Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту 
 N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
+Nextern signed short RS485_QWARZ_DIGIT;
 N
 N//***********************************************
 N//Состояние батарей
@@ -2440,101 +2434,11 @@ N	//signed short   _min_cell_volt;
 N	} LI_BAT_STAT; 
 Nextern LI_BAT_STAT li_bat;
 N//#endif
-N//***********************************************
-N//Состояние байпаса
-Ntypedef struct
-N     {
-N	signed short 	_Iout;
-N	signed short 	_Uout;
-N	signed short 	_Pout;
-N	signed short 	_Unet; 	
-N	signed short 	_Uin;
-N	char			_T;
-N	char 		_flags;
-N	char			_cnt;
-N	char 		_adress;
-N	} BYPS_STAT; 
-Nextern BYPS_STAT byps;
 N
-N//***********************************************
-N//Мониторы АКБ
-Ntypedef struct
-N     {
-N	signed short	_U[5];
-N	signed short	_Ub[5];
-N	signed short	_T[5];
-N	signed short	_T_nd[5];
-N	signed short 	_cnt; 	
-N	} MAKB_STAT; 
-Nextern MAKB_STAT makb[4];
 N
-N//***********************************************
-N//Литиевые АКБ
-Ntypedef struct
-N     {
-N	signed short	_max_cell_volt;
-N	signed short	_min_cell_volt;
-N	signed short	_max_cell_temp;
-N	signed short	_min_cell_temp;
-N	signed short	_tot_bat_volt;
-N	signed short	_ch_curr;
-N	signed short	_dsch_curr;
-N	signed short	_rat_cap;
-N	signed short	_s_o_h;
-N	signed short	_s_o_c;
-N	signed short	_c_c_l_v;
-N	signed short	_r_b_t;
-N	signed short	_b_p_ser_num;
-N	signed short   _flags1;
-N	signed short 	_flags2;
-N	signed short 	_communication2lvlErrorStat; 	//флаг аварийности низовой связи с батареей, вычисляется в плате расширения
-N	signed short	_communication2lvlErrorCnt;  	//счетчик аварийности низовой связи с батареей
-N	signed short 	_cnt;
-N	signed short 	_communicationFullErrorStat;	//флаг аварийности всего канала связи с батареей, 0 - норма, 1 - отсутствует связь с промежуточной платой, 2 - отсутствует связь промежуточной платы и батареи  	
-N	signed short   _battIsOn;		//0 - отсутствует, 1 - присутствует
-N	char 		_plazma[8];		//переменные для отладки
-N	signed short 	_isOnCnt;
-N	signed short	_s_o_c_abs;		//остаточный заряд в абсолютном выражении
-N	signed short 	_s_o_c_percent; //остаточный заряд в процентном выражении
-N	signed short	_plazma_ss;
-N	signed short	_zar_percent;	//заряд батареи в процетах
-N	signed char		_cell_temp_1;	//температура 1-го датчика батареи(ZTT)
-N	signed char		_cell_temp_2;	//температура 2-го датчика батареи(ZTT)
-N	signed char		_cell_temp_3;	//температура 3-го датчика батареи(ZTT)
-N	signed char		_cell_temp_4;	//температура 4-го датчика батареи(ZTT)
-N	signed char		_cell_temp_ambient;	//температура датчика окружающей среды батареи(ZTT)
-N	signed char		_cell_temp_power;	//температура датчика силовой части батареи(ZTT)
-N	//signed char 	_pack_volt_state;	//статус аварии по напряжениям батареи(ZTT)
-N	//signed char 	_pack_temper_state;	//статус аварии по температурам батареи(ZTT)
-N	//signed char 	_pack_alarm_state;	//статус аварий батареи(ZTT)
-N	signed char		_charge_and_discharge_current_alarm_status;	 	//(ZTT)
-N	signed char 	_battery_total_voltage_alarm_status;			//(ZTT)
-N	signed char		_custom_alarm_quantity;							//(ZTT)
-N	signed char		_balanced_event_code;							//(ZTT)
-N	signed char 	_voltage_event_code;							//(ZTT)
-N	signed char 	_temperature_event_code;						//(ZTT)
-N	signed char		_current_event_code;							//(ZTT)
-N	signed char		_fet_status_code;								//(ZTT)
-N	signed short	_balanced_status_code;							//(ZTT)
-N	signed char 	_system_status_code;							//(ZTT)
 N
-N	} LAKB_STAT; 
-Nextern LAKB_STAT lakb[3];
-Nextern char lakb_damp[1][42];
-Nextern char bLAKB_KONF_CH;
-Nextern char bLAKB_KONF_CH_old;
-Nextern char lakb_ison_mass[7];
-Nextern short lakb_mn_ind_cnt;
-Nextern char bLAKB_KONF_CH_EN;
-Nextern char bRS485ERR;
-Nextern short LBAT_STRUKT;
-Nextern char lakb_error_cnt;	//счетчик неправильного показания ннапряжения батареи
-Nextern short numOfPacks,numOfPacks_;
-Nextern short numOfCells, numOfTemperCells, baseOfData;
-Nextern short lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-Nextern short lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-Nextern short lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-Nextern short lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
+N
+N
 N
 N
 N
@@ -2588,7 +2492,9 @@ N     signed short _temp_av_cnt;
 N     signed short _umax_av_cnt;
 N     signed short _umin_av_cnt;
 N     signed _rotor;
-N     signed  short _x_; 
+N     signed  short _x_;		//передаваемые БПСам корректоры
+N
+N	 signed  short _x_avg; 	//выравнивание токов
 N     char _adr_ee;
 N	char _last_avar;
 N	char _vent_resurs_temp[4];
@@ -2598,8 +2504,15 @@ N	signed short debug_info_to_uku1;
 N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
+N	signed short _build_year;
+N	signed short _build_month;
+N	signed short _build_day;
+N	signed short _hardvare_version;
+N	signed short _soft_version;
+N	signed short _build;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];//o_1
+N
 N
 N//***********************************************
 N//Состояние инверторов
@@ -2654,6 +2567,8 @@ Nextern INV_STAT inv[20];
 N#endif
 Nextern char first_inv_slot;
 N
+N
+N
 N//***********************************************
 N//Состояние нагрузки
 Nextern signed short load_U;
@@ -2679,6 +2594,7 @@ Nextern char net_av;
 N
 N
 Nextern char plazma_plazma_plazma;
+Nextern char plazma_PUTTM31,plazma_PUTTM32;
 N
 Nvoid bitmap_hndl(void);
 Nvoid ind_hndl(void);
@@ -2911,6 +2827,9 @@ N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
 Nextern short plazma_numOfPacks;
+Nextern signed  short _x_reg;		//точная регулировка выходного напряжения системы
+Nextern signed  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
+N
 N
 Nextern char plazma_ztt[2];
 Nextern char plazma1809;
@@ -3413,7 +3332,7 @@ N//Работа с БПСами
 Nextern char num_of_wrks_bps;
 Nextern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 Nextern char bps_hndl_2sec_cnt;
-Nextern unsigned short bps_on_mask,bps_off_mask;
+Nextern unsigned int bps_on_mask,bps_off_mask;
 Nextern char num_necc_up,num_necc_down;
 Nextern unsigned char sh_cnt0,b1Hz_sh;
 N
@@ -8044,77 +7963,6 @@ Nif(sk_av_stat[3]==sasON)	snmp_sk_alarm[3]=1;
 Nelse                     snmp_sk_alarm[3]=0;
 N
 N
-Nif(makb[0]._cnt>8) snmp_makb_connect_status[0]=1;
-Nelse if(makb[0]._cnt<2) snmp_makb_connect_status[0]=0;
-Nif(makb[1]._cnt>8) snmp_makb_connect_status[1]=1;
-Nelse if(makb[1]._cnt<2) snmp_makb_connect_status[1]=0;
-Nif(makb[2]._cnt>8) snmp_makb_connect_status[2]=1;
-Nelse if(makb[2]._cnt<2) snmp_makb_connect_status[2]=0;
-Nif(makb[3]._cnt>8) snmp_makb_connect_status[3]=1;
-Nelse if(makb[3]._cnt<2) snmp_makb_connect_status[3]=0;
-N
-Nsnmp_makb_voltage0[0]=makb[0]._Ub[0];
-Nsnmp_makb_voltage1[0]=makb[0]._Ub[1];
-Nsnmp_makb_voltage2[0]=makb[0]._Ub[2];
-Nsnmp_makb_voltage3[0]=makb[0]._Ub[3];
-Nsnmp_makb_voltage4[0]=makb[0]._Ub[4];
-Nsnmp_makb_voltage0[1]=makb[1]._Ub[0];
-Nsnmp_makb_voltage1[1]=makb[1]._Ub[1];
-Nsnmp_makb_voltage2[1]=makb[1]._Ub[2];
-Nsnmp_makb_voltage3[1]=makb[1]._Ub[3];
-Nsnmp_makb_voltage4[1]=makb[1]._Ub[4];
-Nsnmp_makb_voltage0[2]=makb[2]._Ub[0];
-Nsnmp_makb_voltage1[2]=makb[2]._Ub[1];
-Nsnmp_makb_voltage2[2]=makb[2]._Ub[2];
-Nsnmp_makb_voltage3[2]=makb[2]._Ub[3];
-Nsnmp_makb_voltage4[2]=makb[2]._Ub[4];
-Nsnmp_makb_voltage0[3]=makb[3]._Ub[0];
-Nsnmp_makb_voltage1[3]=makb[3]._Ub[1];
-Nsnmp_makb_voltage2[3]=makb[3]._Ub[2];
-Nsnmp_makb_voltage3[3]=makb[3]._Ub[3];
-Nsnmp_makb_voltage4[3]=makb[3]._Ub[4];
-N
-Nsnmp_makb_temper0[0]=makb[0]._T[0];
-Nsnmp_makb_temper1[0]=makb[0]._T[1];
-Nsnmp_makb_temper2[0]=makb[0]._T[2];
-Nsnmp_makb_temper3[0]=makb[0]._T[3];
-Nsnmp_makb_temper4[0]=makb[0]._T[4];
-Nsnmp_makb_temper0[1]=makb[1]._T[0];
-Nsnmp_makb_temper1[1]=makb[1]._T[1];
-Nsnmp_makb_temper2[1]=makb[1]._T[2];
-Nsnmp_makb_temper3[1]=makb[1]._T[3];
-Nsnmp_makb_temper4[1]=makb[1]._T[4];
-Nsnmp_makb_temper0[2]=makb[2]._T[0];
-Nsnmp_makb_temper1[2]=makb[2]._T[1];
-Nsnmp_makb_temper2[2]=makb[2]._T[2];
-Nsnmp_makb_temper3[2]=makb[2]._T[3];
-Nsnmp_makb_temper4[2]=makb[2]._T[4];
-Nsnmp_makb_temper0[3]=makb[3]._T[0];
-Nsnmp_makb_temper1[3]=makb[3]._T[1];
-Nsnmp_makb_temper2[3]=makb[3]._T[2];
-Nsnmp_makb_temper3[3]=makb[3]._T[3];
-Nsnmp_makb_temper4[3]=makb[3]._T[4];
-N
-Nsnmp_makb_temper0_stat[0]=makb[0]._T_nd[0];
-Nsnmp_makb_temper1_stat[0]=makb[0]._T_nd[1];
-Nsnmp_makb_temper2_stat[0]=makb[0]._T_nd[2];
-Nsnmp_makb_temper3_stat[0]=makb[0]._T_nd[3];
-Nsnmp_makb_temper4_stat[0]=makb[0]._T_nd[4];
-Nsnmp_makb_temper0_stat[1]=makb[1]._T_nd[0];
-Nsnmp_makb_temper1_stat[1]=makb[1]._T_nd[1];
-Nsnmp_makb_temper2_stat[1]=makb[1]._T_nd[2];
-Nsnmp_makb_temper3_stat[1]=makb[1]._T_nd[3];
-Nsnmp_makb_temper4_stat[1]=makb[1]._T_nd[4];
-Nsnmp_makb_temper0_stat[2]=makb[2]._T_nd[0];
-Nsnmp_makb_temper1_stat[2]=makb[2]._T_nd[1];
-Nsnmp_makb_temper2_stat[2]=makb[2]._T_nd[2];
-Nsnmp_makb_temper3_stat[2]=makb[2]._T_nd[3];
-Nsnmp_makb_temper4_stat[2]=makb[2]._T_nd[4];
-Nsnmp_makb_temper0_stat[3]=makb[3]._T_nd[0];
-Nsnmp_makb_temper1_stat[3]=makb[3]._T_nd[1];
-Nsnmp_makb_temper2_stat[3]=makb[3]._T_nd[2];
-Nsnmp_makb_temper3_stat[3]=makb[3]._T_nd[3];
-Nsnmp_makb_temper4_stat[3]=makb[3]._T_nd[4];
 N
 N
 Nsnmp_klimat_box_temper=t_box;
@@ -8205,246 +8053,6 @@ Nsnmp_dt_error[2]=ND_EXT[2];
 Nif(NUMDT<3)snmp_dt_error[0]=0xff;
 N//snmp_dt_error[3]=ND_EXT[3];
 Nif(NUMDT<4)snmp_dt_error[0]=0xff;
-N
-N/*
-N//Литиевые батареи
-Nsnmp_lakb_number[0]=1;								//Номер ЛАКБ
-Nsnmp_lakb_number[1]=2;								//Номер ЛАКБ
-Nsnmp_lakb_voltage[0]=lakb[0]._tot_bat_volt;				//Напряжение ЛАКБ
-Nsnmp_lakb_voltage[1]=lakb[1]._tot_bat_volt;				//Напряжение ЛАКБ
-Nsnmp_lakb_max_cell_voltage[0]=lakb[0]._max_cell_volt;		//Максимальное напряжение ячейки ЛАКБ
-Nsnmp_lakb_max_cell_voltage[1]=lakb[1]._max_cell_volt;		//Максимальное напряжение ячейки ЛАКБ
-Nsnmp_lakb_min_cell_voltage[0]=lakb[0]._min_cell_volt;		//Минимальное напряжение ячейки ЛАКБ
-Nsnmp_lakb_min_cell_voltage[1]=lakb[1]._min_cell_volt;		//Минимальное напряжение ячейки ЛАКБ
-Nsnmp_lakb_max_cell_temperature[0]=lakb[0]._max_cell_temp;	//Максимальная температура ячейки ЛАКБ
-Nsnmp_lakb_max_cell_temperature[1]=lakb[1]._max_cell_temp;	//Максимальная температура ячейки ЛАКБ
-Nsnmp_lakb_min_cell_temperature[0]=lakb[0]._min_cell_temp;	//Минимальная температура ячейки ЛАКБ
-Nsnmp_lakb_min_cell_temperature[1]=lakb[1]._min_cell_temp;	//Минимальная температура ячейки ЛАКБ
-Nsnmp_lakb_ch_curr[0]=lakb[0]._ch_curr;					//Ток заряда ЛАКБ
-Nsnmp_lakb_ch_curr[1]=lakb[1]._ch_curr;					//Ток заряда ЛАКБ
-Nsnmp_lakb_dsch_curr[0]=lakb[0]._dsch_curr;				//Ток разряда ЛАКБ
-Nsnmp_lakb_dsch_curr[1]=lakb[1]._dsch_curr;				//Ток разряда ЛАКБ
-Nsnmp_lakb_rat_cap[0]=lakb[0]._rat_cap;					//Номинальная емкость ЛАКБ
-Nsnmp_lakb_rat_cap[1]=lakb[1]._rat_cap;					//Номинальная емкость ЛАКБ
-Nsnmp_lakb_soh[0]=lakb[0]._s_o_h;						//Остаточная емкость ЛАКБ
-Nsnmp_lakb_soh[1]=lakb[1]._s_o_h;						//Остаточная емкость ЛАКБ
-Nsnmp_lakb_soc[0]=lakb[0]._s_o_c;						//Заряд ЛАКБ
-Nsnmp_lakb_soc[1]=lakb[1]._s_o_c;						//Заряд ЛАКБ
-Nsnmp_lakb_cclv[0]=lakb[0]._c_c_l_v;  					//Максимальный ток заряда ЛАКБ
-Nsnmp_lakb_cclv[1]=lakb[1]._c_c_l_v;  					//Максимальный ток заряда ЛАКБ
-Nsnmp_lakb_rbt[0]=lakb[0]._r_b_t;						//Оцениваемое время работы ЛАКБ
-Nsnmp_lakb_rbt[1]=lakb[1]._r_b_t;						//Оцениваемое время работы ЛАКБ
-Nsnmp_lakb_flags1[0]=lakb[0]._flags1;					//Первый флаг состояния ЛАКБ
-Nsnmp_lakb_flags1[1]=lakb[1]._flags1;					//Первый флаг состояния ЛАКБ
-Nsnmp_lakb_flags2[0]=lakb[0]._flags2;					//Второй флаг состояния ЛАКБ
-Nsnmp_lakb_flags2[1]=lakb[1]._flags2;					//Второй флаг состояния ЛАКБ */
-N
-N//Литиевые батареи
-Nsnmp_lakb_number[0]=1;								//Номер ЛАКБ
-Nsnmp_lakb_number[1]=2;								//Номер ЛАКБ
-Nsnmp_lakb_number[2]=3;								//Номер ЛАКБ
-Nsnmp_lakb_number[3]=4;								//Номер ЛАКБ
-Nsnmp_lakb_number[4]=5;								//Номер ЛАКБ
-Nsnmp_lakb_number[5]=6;								//Номер ЛАКБ
-Nsnmp_lakb_number[6]=7;								//Номер ЛАКБ
-N
-Nfor (i=0;i<3;i++)
-N	{
-N	snmp_lakb_voltage[i]=lakb[i]._tot_bat_volt;				//Напряжение ЛАКБ
-N	snmp_lakb_max_cell_voltage[i]=lakb[i]._max_cell_volt;		//Максимальное напряжение ячейки ЛАКБ
-N	snmp_lakb_min_cell_voltage[i]=lakb[i]._min_cell_volt;		//Минимальное напряжение ячейки ЛАКБ
-N	snmp_lakb_max_cell_temperature[i]=lakb[i]._max_cell_temp;	//Максимальная температура ячейки ЛАКБ
-N	//snmp_lakb_max_cell_temperature[1]=lakb[1]._max_cell_temp;	//Максимальная температура ячейки ЛАКБ
-N	snmp_lakb_min_cell_temperature[i]=lakb[i]._min_cell_temp;	//Минимальная температура ячейки ЛАКБ
-N	//snmp_lakb_min_cell_temperature[1]=lakb[1]._min_cell_temp;	//Минимальная температура ячейки ЛАКБ
-N	snmp_lakb_ch_curr[i]=lakb[i]._ch_curr;					//Ток заряда ЛАКБ
-N	//snmp_lakb_ch_curr[1]=lakb[1]._ch_curr;					//Ток заряда ЛАКБ
-N	snmp_lakb_dsch_curr[i]=lakb[i]._dsch_curr;				//Ток разряда ЛАКБ
-N	//snmp_lakb_dsch_curr[1]=lakb[1]._dsch_curr;				//Ток разряда ЛАКБ
-N	snmp_lakb_rat_cap[i]=lakb[i]._rat_cap;					//Номинальная емкость ЛАКБ
-N	//snmp_lakb_rat_cap[1]=lakb[1]._rat_cap;					//Номинальная емкость ЛАКБ
-N	snmp_lakb_soh[i]=lakb[i]._s_o_h;						//Остаточная емкость ЛАКБ
-N	//snmp_lakb_soh[1]=lakb[1]._s_o_h;						//Остаточная емкость ЛАКБ
-N	snmp_lakb_soc[i]=lakb[i]._s_o_c;						//Заряд ЛАКБ
-N	//snmp_lakb_soc[1]=lakb[1]._s_o_c;						//Заряд ЛАКБ
-N	snmp_lakb_cclv[i]=lakb[i]._c_c_l_v;  					//Максимальный ток заряда ЛАКБ
-N	//snmp_lakb_cclv[1]=lakb[1]._c_c_l_v;  					//Максимальный ток заряда ЛАКБ
-N	snmp_lakb_rbt[i]=lakb[i]._r_b_t;						//Оцениваемое время работы ЛАКБ
-N	//snmp_lakb_rbt[1]=lakb[1]._r_b_t;						//Оцениваемое время работы ЛАКБ
-N	snmp_lakb_flags1[i]=lakb[i]._flags1;					//Первый флаг состояния ЛАКБ
-N	//snmp_lakb_flags1[1]=lakb[1]._flags1;					//Первый флаг состояния ЛАКБ
-N	snmp_lakb_flags2[i]=lakb[i]._flags2;					//Второй флаг состояния ЛАКБ
-N	//snmp_lakb_flags2[1]=lakb[1]._flags2;					//Второй флаг состояния ЛАКБ
-N
-N	snmp_lakb_cell_temperature_1[i]= lakb[i]._cell_temp_1;
-N	snmp_lakb_cell_temperature_2[i]= lakb[i]._cell_temp_2;
-N	snmp_lakb_cell_temperature_3[i]= lakb[i]._cell_temp_3;
-N	snmp_lakb_cell_temperature_4[i]= lakb[i]._cell_temp_4;
-N	snmp_lakb_cell_temperature_ambient[i]=lakb[i]._cell_temp_ambient;
-N	snmp_lakb_cell_temperature_power[i]=lakb[i]._cell_temp_power;
-N	}
-N
-Nfor (i=0;i<7;i++)
-N{
-N/*
-Nsnmp_lakb_damp1[i][0]=ABCDEF[(lakb_damp[i][0])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][1]=ABCDEF[(lakb_damp[i][0])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][2]=' ';
-Nsnmp_lakb_damp1[i][3]=ABCDEF[(lakb_damp[i][1])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][4]=ABCDEF[(lakb_damp[i][1])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][5]=' ';
-Nsnmp_lakb_damp1[i][6]=ABCDEF[(lakb_damp[i][2])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][7]=ABCDEF[(lakb_damp[i][2])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][8]=' ';
-Nsnmp_lakb_damp1[i][9]=ABCDEF[(lakb_damp[i][3])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][10]=ABCDEF[(lakb_damp[i][3])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][11]=' ';
-Nsnmp_lakb_damp1[i][12]=ABCDEF[(lakb_damp[i][4])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][13]=ABCDEF[(lakb_damp[i][4])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][14]=' '; 
-Nsnmp_lakb_damp1[i][15]=ABCDEF[(lakb_damp[i][5])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][16]=ABCDEF[(lakb_damp[i][5])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][17]=' ';
-Nsnmp_lakb_damp1[i][18]=ABCDEF[(lakb_damp[i][6])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][19]=ABCDEF[(lakb_damp[i][6])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][20]=' ';
-Nsnmp_lakb_damp1[i][21]=ABCDEF[(lakb_damp[i][7])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][22]=ABCDEF[(lakb_damp[i][7])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][23]=' ';
-Nsnmp_lakb_damp1[i][24]=ABCDEF[(lakb_damp[i][8])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][25]=ABCDEF[(lakb_damp[i][8])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][26]=' ';
-Nsnmp_lakb_damp1[i][27]=ABCDEF[(lakb_damp[i][9])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][28]=ABCDEF[(lakb_damp[i][9])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][29]=0; 
-N
-Nsnmp_lakb_damp1[i][30]=ABCDEF[(lakb_damp[i][10])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][31]=ABCDEF[(lakb_damp[i][10])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][32]=' ';
-Nsnmp_lakb_damp1[i][33]=ABCDEF[(lakb_damp[i][11])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][34]=ABCDEF[(lakb_damp[i][11])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][35]=' ';
-Nsnmp_lakb_damp1[i][36]=ABCDEF[(lakb_damp[i][12])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][37]=ABCDEF[(lakb_damp[i][12])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][38]=' ';
-Nsnmp_lakb_damp1[i][39]=ABCDEF[(lakb_damp[i][13])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][40]=ABCDEF[(lakb_damp[i][13])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][41]=' ';
-Nsnmp_lakb_damp1[i][42]=ABCDEF[(lakb_damp[i][14])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][43]=ABCDEF[(lakb_damp[i][14])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][44]=' '; 
-Nsnmp_lakb_damp1[i][45]=ABCDEF[(lakb_damp[i][15])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][46]=ABCDEF[(lakb_damp[i][15])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][47]=' ';
-Nsnmp_lakb_damp1[i][48]=ABCDEF[(lakb_damp[i][16])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][49]=ABCDEF[(lakb_damp[i][16])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][50]=' ';
-Nsnmp_lakb_damp1[i][51]=ABCDEF[(lakb_damp[i][17])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][52]=ABCDEF[(lakb_damp[i][17])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][53]=' ';
-Nsnmp_lakb_damp1[i][54]=ABCDEF[(lakb_damp[i][18])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][55]=ABCDEF[(lakb_damp[i][18])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][56]=' ';
-Nsnmp_lakb_damp1[i][57]=ABCDEF[(lakb_damp[i][19])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][58]=ABCDEF[(lakb_damp[i][19])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][59]=0; 
-N
-N
-Nsnmp_lakb_damp1[i][60]=ABCDEF[(lakb_damp[i][20])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][61]=ABCDEF[(lakb_damp[i][20])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][62]=' ';
-Nsnmp_lakb_damp1[i][63]=ABCDEF[(lakb_damp[i][21])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][64]=ABCDEF[(lakb_damp[i][21])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][65]=' ';
-Nsnmp_lakb_damp1[i][66]=ABCDEF[(lakb_damp[i][22])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][67]=ABCDEF[(lakb_damp[i][22])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][68]=' ';
-Nsnmp_lakb_damp1[i][69]=ABCDEF[(lakb_damp[i][23])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][70]=ABCDEF[(lakb_damp[i][23])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][71]=' ';
-Nsnmp_lakb_damp1[i][72]=ABCDEF[(lakb_damp[i][24])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][73]=ABCDEF[(lakb_damp[i][24])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][74]=' '; 
-Nsnmp_lakb_damp1[i][75]=ABCDEF[(lakb_damp[i][25])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][76]=ABCDEF[(lakb_damp[i][25])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][77]=' ';
-Nsnmp_lakb_damp1[i][78]=ABCDEF[(lakb_damp[i][26])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][79]=ABCDEF[(lakb_damp[i][26])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][80]=' ';
-Nsnmp_lakb_damp1[i][81]=ABCDEF[(lakb_damp[i][27])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][82]=ABCDEF[(lakb_damp[i][27])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][83]=' ';
-Nsnmp_lakb_damp1[i][84]=ABCDEF[(lakb_damp[i][28])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][85]=ABCDEF[(lakb_damp[i][28])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][86]=' ';
-Nsnmp_lakb_damp1[i][87]=ABCDEF[(lakb_damp[i][29])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][88]=ABCDEF[(lakb_damp[i][29])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][89]=0;
-N
-N
-Nsnmp_lakb_damp1[i][90]=ABCDEF[(lakb_damp[i][30])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][91]=ABCDEF[(lakb_damp[i][30])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][92]=' ';
-Nsnmp_lakb_damp1[i][93]=ABCDEF[(lakb_damp[i][31])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][94]=ABCDEF[(lakb_damp[i][31])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][95]=' ';
-Nsnmp_lakb_damp1[i][96]=ABCDEF[(lakb_damp[i][32])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][97]=ABCDEF[(lakb_damp[i][32])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][98]=' ';
-Nsnmp_lakb_damp1[i][99]=ABCDEF[(lakb_damp[i][33])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][100]=ABCDEF[(lakb_damp[i][33])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][101]=' ';
-Nsnmp_lakb_damp1[i][102]=ABCDEF[(lakb_damp[i][34])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][103]=ABCDEF[(lakb_damp[i][34])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][104]=' '; 
-Nsnmp_lakb_damp1[i][105]=ABCDEF[(lakb_damp[i][35])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][106]=ABCDEF[(lakb_damp[i][35])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][107]=' ';
-Nsnmp_lakb_damp1[i][108]=ABCDEF[(lakb_damp[i][36])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][109]=ABCDEF[(lakb_damp[i][36])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][110]=' ';
-Nsnmp_lakb_damp1[i][111]=ABCDEF[(lakb_damp[i][37])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][112]=ABCDEF[(lakb_damp[i][37])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][113]=' ';
-Nsnmp_lakb_damp1[i][114]=ABCDEF[(lakb_damp[i][38])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][115]=ABCDEF[(lakb_damp[i][38])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][116]=' ';
-Nsnmp_lakb_damp1[i][117]=ABCDEF[(lakb_damp[i][39])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][118]=ABCDEF[(lakb_damp[i][39])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][119]=0; 
-N 
-N
-Nsnmp_lakb_damp1[i][120]=ABCDEF[(lakb_damp[i][40])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][121]=ABCDEF[(lakb_damp[i][40])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][122]=' ';
-Nsnmp_lakb_damp1[i][123]=ABCDEF[(lakb_damp[i][41])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][124]=ABCDEF[(lakb_damp[i][41])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][125]=' ';
-Nsnmp_lakb_damp1[i][126]=ABCDEF[(lakb_damp[i][42])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][127]=ABCDEF[(lakb_damp[i][42])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][128]=' ';
-Nsnmp_lakb_damp1[i][129]=ABCDEF[(lakb_damp[i][43])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][130]=ABCDEF[(lakb_damp[i][43])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][131]=' ';
-Nsnmp_lakb_damp1[i][132]=ABCDEF[(lakb_damp[i][44])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][133]=ABCDEF[(lakb_damp[i][44])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][134]=' '; 
-Nsnmp_lakb_damp1[i][135]=ABCDEF[(lakb_damp[i][45])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][136]=ABCDEF[(lakb_damp[i][45])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][137]=' ';
-Nsnmp_lakb_damp1[i][138]=ABCDEF[(lakb_damp[i][46])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][139]=ABCDEF[(lakb_damp[i][46])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][140]=' ';
-Nsnmp_lakb_damp1[i][141]=ABCDEF[(lakb_damp[i][47])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][142]=ABCDEF[(lakb_damp[i][47])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][143]=' ';
-Nsnmp_lakb_damp1[i][144]=ABCDEF[(lakb_damp[i][48])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][145]=ABCDEF[(lakb_damp[i][48])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][146]=' ';
-Nsnmp_lakb_damp1[i][147]=ABCDEF[(lakb_damp[i][49])>>4];			//Дамп
-Nsnmp_lakb_damp1[i][148]=ABCDEF[(lakb_damp[i][49])&0x0f];			//Дамп
-Nsnmp_lakb_damp1[i][149]=0;  */
-N}
 N
 N#ifdef UKU_TELECORE2017
 Ssnmp_warm_sign=0;
@@ -9737,10 +9345,8 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N     if(snmp_warm_sign==1)lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_SIGNAL,1);
-X     if(snmp_warm_sign==1)lc640_write_int(0x10+100+144,1);
-N	 else lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_SIGNAL,0);
-X	 else lc640_write_int(0x10+100+144,0);
+N //    if(snmp_warm_sign==1)lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_SIGNAL,1);
+N//	 else lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_SIGNAL,0);
 N	}
 N}
 N
@@ -9750,10 +9356,8 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N    if(snmp_cool_sign==1)lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_SIGNAL,1);
-X    if(snmp_cool_sign==1)lc640_write_int(0x10+100+160,1);
-N	else lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_SIGNAL,0);
-X	else lc640_write_int(0x10+100+160,0);
+N//    if(snmp_cool_sign==1)lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_SIGNAL,1);
+N//	else lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_SIGNAL,0);
 N	}
 N}
 N
@@ -9763,8 +9367,7 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N     lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_ON,snmp_warm_on_temper);
-X     lc640_write_int(0x10+100+146,snmp_warm_on_temper);
+N//     lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_ON,snmp_warm_on_temper);
 N	}
 N}
 N
@@ -9774,8 +9377,7 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N     lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_OFF,snmp_warm_off_temper);
-X     lc640_write_int(0x10+100+148,snmp_warm_off_temper);
+N//     lc640_write_int(EE_TELECORE2017_KLIMAT_WARM_OFF,snmp_warm_off_temper);
 N	}
 N}
 N
@@ -9785,8 +9387,7 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N     lc640_write_int(EE_TELECORE2017_KLIMAT_CAP,snmp_warm_q);
-X     lc640_write_int(0x10+100+150,snmp_warm_q);
+N //    lc640_write_int(EE_TELECORE2017_KLIMAT_CAP,snmp_warm_q);
 N	}
 N}
 N
@@ -9796,8 +9397,7 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N     lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_ON100,snmp_cool_100_temper);
-X     lc640_write_int(0x10+100+210,snmp_cool_100_temper);
+N //    lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_ON100,snmp_cool_100_temper);
 N	}
 N}
 N
@@ -9807,8 +9407,7 @@ N{
 Nif(mode==MIB_WRITE)
 Xif(mode==1)
 N	{
-N     lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_ON80,snmp_cool_80_temper);
-X     lc640_write_int(0x10+100+208,snmp_cool_80_temper);
+N //    lc640_write_int(EE_TELECORE2017_KLIMAT_VENT_ON80,snmp_cool_80_temper);
 N	}
 N}
 N

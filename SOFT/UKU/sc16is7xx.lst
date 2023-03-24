@@ -310,7 +310,7 @@ Nextern char tx_rd_index_sc16is700;//указатель чтения из программного буфера пер
 Nextern char sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 Nextern char sc16is700TxPossibleFlag;//Флаг возможности передачи
 N
-N
+Nvoid sc16is700_spi_init(void);//o_1
 Nvoid sc16is700_init(uint32_t baudrate);
 Nvoid sc16is700_wr_byte(char reg_num,char data);
 Nchar sc16is700_rd_byte(char reg_num);
@@ -4750,7 +4750,7 @@ N	iBps_list,
 N	iRele_set,iRele_set_,
 N	iAvt_set_sel,iAvt_set,iSet_li_bat,
 N	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-N	iFWabout,
+N	iFWabout,iFWaboutBPS,
 N	iCurr_overload}i_enum;
 N
 Ntypedef struct  
@@ -5012,6 +5012,7 @@ Nextern signed short I_LOAD_MODE;		//способ измерения выходного тока - по шунту 
 N
 Nextern signed short OVERLOAD_CURR;
 Nextern signed short OVERLOAD_TIME;
+Nextern signed short RS485_QWARZ_DIGIT;
 N
 N//***********************************************
 N//Состояние батарей
@@ -5097,101 +5098,11 @@ N	//signed short   _min_cell_volt;
 N	} LI_BAT_STAT; 
 Nextern LI_BAT_STAT li_bat;
 N//#endif
-N//***********************************************
-N//Состояние байпаса
-Ntypedef struct
-N     {
-N	signed short 	_Iout;
-N	signed short 	_Uout;
-N	signed short 	_Pout;
-N	signed short 	_Unet; 	
-N	signed short 	_Uin;
-N	char			_T;
-N	char 		_flags;
-N	char			_cnt;
-N	char 		_adress;
-N	} BYPS_STAT; 
-Nextern BYPS_STAT byps;
 N
-N//***********************************************
-N//Мониторы АКБ
-Ntypedef struct
-N     {
-N	signed short	_U[5];
-N	signed short	_Ub[5];
-N	signed short	_T[5];
-N	signed short	_T_nd[5];
-N	signed short 	_cnt; 	
-N	} MAKB_STAT; 
-Nextern MAKB_STAT makb[4];
 N
-N//***********************************************
-N//Литиевые АКБ
-Ntypedef struct
-N     {
-N	signed short	_max_cell_volt;
-N	signed short	_min_cell_volt;
-N	signed short	_max_cell_temp;
-N	signed short	_min_cell_temp;
-N	signed short	_tot_bat_volt;
-N	signed short	_ch_curr;
-N	signed short	_dsch_curr;
-N	signed short	_rat_cap;
-N	signed short	_s_o_h;
-N	signed short	_s_o_c;
-N	signed short	_c_c_l_v;
-N	signed short	_r_b_t;
-N	signed short	_b_p_ser_num;
-N	signed short   _flags1;
-N	signed short 	_flags2;
-N	signed short 	_communication2lvlErrorStat; 	//флаг аварийности низовой связи с батареей, вычисляется в плате расширения
-N	signed short	_communication2lvlErrorCnt;  	//счетчик аварийности низовой связи с батареей
-N	signed short 	_cnt;
-N	signed short 	_communicationFullErrorStat;	//флаг аварийности всего канала связи с батареей, 0 - норма, 1 - отсутствует связь с промежуточной платой, 2 - отсутствует связь промежуточной платы и батареи  	
-N	signed short   _battIsOn;		//0 - отсутствует, 1 - присутствует
-N	char 		_plazma[8];		//переменные для отладки
-N	signed short 	_isOnCnt;
-N	signed short	_s_o_c_abs;		//остаточный заряд в абсолютном выражении
-N	signed short 	_s_o_c_percent; //остаточный заряд в процентном выражении
-N	signed short	_plazma_ss;
-N	signed short	_zar_percent;	//заряд батареи в процетах
-N	signed char		_cell_temp_1;	//температура 1-го датчика батареи(ZTT)
-N	signed char		_cell_temp_2;	//температура 2-го датчика батареи(ZTT)
-N	signed char		_cell_temp_3;	//температура 3-го датчика батареи(ZTT)
-N	signed char		_cell_temp_4;	//температура 4-го датчика батареи(ZTT)
-N	signed char		_cell_temp_ambient;	//температура датчика окружающей среды батареи(ZTT)
-N	signed char		_cell_temp_power;	//температура датчика силовой части батареи(ZTT)
-N	//signed char 	_pack_volt_state;	//статус аварии по напряжениям батареи(ZTT)
-N	//signed char 	_pack_temper_state;	//статус аварии по температурам батареи(ZTT)
-N	//signed char 	_pack_alarm_state;	//статус аварий батареи(ZTT)
-N	signed char		_charge_and_discharge_current_alarm_status;	 	//(ZTT)
-N	signed char 	_battery_total_voltage_alarm_status;			//(ZTT)
-N	signed char		_custom_alarm_quantity;							//(ZTT)
-N	signed char		_balanced_event_code;							//(ZTT)
-N	signed char 	_voltage_event_code;							//(ZTT)
-N	signed char 	_temperature_event_code;						//(ZTT)
-N	signed char		_current_event_code;							//(ZTT)
-N	signed char		_fet_status_code;								//(ZTT)
-N	signed short	_balanced_status_code;							//(ZTT)
-N	signed char 	_system_status_code;							//(ZTT)
 N
-N	} LAKB_STAT; 
-Nextern LAKB_STAT lakb[3];
-Nextern char lakb_damp[1][42];
-Nextern char bLAKB_KONF_CH;
-Nextern char bLAKB_KONF_CH_old;
-Nextern char lakb_ison_mass[7];
-Nextern short lakb_mn_ind_cnt;
-Nextern char bLAKB_KONF_CH_EN;
-Nextern char bRS485ERR;
-Nextern short LBAT_STRUKT;
-Nextern char lakb_error_cnt;	//счетчик неправильного показания ннапряжения батареи
-Nextern short numOfPacks,numOfPacks_;
-Nextern short numOfCells, numOfTemperCells, baseOfData;
-Nextern short lakb_stat_comm_error;	//аварийность канала связи с литиевыми батареями. 0 означает исправность платы расширения и наличие связи со всеми литиевыми батареями
-Nextern short lakbNotErrorNum;		//колличество литиевых батарей с исправной связью
-Nextern short lakbKanErrorCnt;		//Счетчик аварийности канала связи с платой расширения
-Nextern short lakbKanErrorStat;		//Состояние аварийности канала связи с платой расширения
+N
+N
 N
 N
 N
@@ -5245,7 +5156,9 @@ N     signed short _temp_av_cnt;
 N     signed short _umax_av_cnt;
 N     signed short _umin_av_cnt;
 N     signed _rotor;
-N     signed  short _x_; 
+N     signed  short _x_;		//передаваемые БПСам корректоры
+N
+N	 signed  short _x_avg; 	//выравнивание токов
 N     char _adr_ee;
 N	char _last_avar;
 N	char _vent_resurs_temp[4];
@@ -5255,8 +5168,15 @@ N	signed short debug_info_to_uku1;
 N	signed short debug_info_to_uku2;
 N	signed short _avg;
 N	signed short _cntrl_stat;
+N	signed short _build_year;
+N	signed short _build_month;
+N	signed short _build_day;
+N	signed short _hardvare_version;
+N	signed short _soft_version;
+N	signed short _build;
 N     } BPS_STAT; 
-Nextern BPS_STAT bps[29];
+Nextern BPS_STAT bps[32];//o_1
+N
 N
 N//***********************************************
 N//Состояние инверторов
@@ -5311,6 +5231,8 @@ Nextern INV_STAT inv[20];
 N#endif
 Nextern char first_inv_slot;
 N
+N
+N
 N//***********************************************
 N//Состояние нагрузки
 Nextern signed short load_U;
@@ -5336,6 +5258,7 @@ Nextern char net_av;
 N
 N
 Nextern char plazma_plazma_plazma;
+Nextern char plazma_PUTTM31,plazma_PUTTM32;
 N
 Nvoid bitmap_hndl(void);
 Nvoid ind_hndl(void);
@@ -5568,6 +5491,9 @@ N
 Nextern short plazma_numOfCells;
 Nextern short plazma_numOfTemperCells;
 Nextern short plazma_numOfPacks;
+Nextern signed  short _x_reg;		//точная регулировка выходного напряжения системы
+Nextern signed  short _x_reg_cnt;	//точная регулировка выходного напряжения системы
+N
 N
 Nextern char plazma_ztt[2];
 Nextern char plazma1809;
@@ -5623,7 +5549,7 @@ L 1 "modbus.h" 1
 N
 Nextern unsigned char modbus_buf[20];
 Nextern short modbus_crc16;
-Nextern char modbus_timeout_cnt;
+N//extern char modbus_timeout_cnt;//o_1
 Nextern char bMODBUS_TIMEOUT;
 Nextern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 Nextern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа
@@ -5659,6 +5585,78 @@ N
 N
 N
 L 6 "sc16is7xx.c" 2
+N#include "MODBUS_RTU.h"	 //o_1
+L 1 "MODBUS_RTU.h" 1
+Nextern unsigned char NULL_0;
+Nextern unsigned char mb_rtu_func;
+Nextern unsigned long mb_rtu_start_adr;
+Nextern unsigned char mb_rtu_num, mb_rtu_num_send;
+Nextern unsigned short mb_data_1, mb_data_2, crc_f;
+Nextern char modbus_timeout_cnt;
+N//extern char bMODBUS_TIMEOUT;
+N//extern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
+N//extern unsigned char modbus_rx_buffer_ptr;	//Указатель на текущую позицию принимающего буфера
+Nextern char sc16is700RecieveDisableFlag;
+Nextern signed short modbusTimeoutInMills;
+N
+Nvoid analiz_func6(unsigned short mbadr, unsigned short mbdat);
+Nchar lc640_write_int(short ADR,short in);
+Nvoid putchar_sc16is700(char out_byte);
+Nvoid crc_calc_f( unsigned short data);
+Nvoid modbus_puts (void);
+Nunsigned short CRC16_MB(char* buf, short len);
+Nvoid sc16is700_uart_hndl_mb(void);
+Nvoid sc16is700_wr_buff_ptr(char reg_num, unsigned char *buff, char num);
+L 7 "sc16is7xx.c" 2
+N#include "MODBUS_func3.h"  //o_1
+L 1 "MODBUS_func3.h" 1
+N
+Nextern unsigned char *const reg_func3[];
+N#define MODBUS_FUNC_3_LENGTH 160
+N
+Nint lc640_read_int(int ADR);
+N
+N
+L 8 "sc16is7xx.c" 2
+N#include "MODBUS_func4.h"  //o_1
+L 1 "MODBUS_func4.h" 1
+N
+Nextern unsigned char *const reg_func4 [];
+N
+N#define MODBUS_FUNC_4_LENGTH 300 
+N
+N
+L 9 "sc16is7xx.c" 2
+N#include "25lc640.h" //o_1
+L 1 "25lc640.h" 1
+N
+N#define LC640_CS 20
+N#define CS_ON       LPC_GPIO0->FIODIR|=(1UL<<LC640_CS);LPC_GPIO0->FIOCLR|=(1UL<<LC640_CS);
+N#define CS_OFF      LPC_GPIO0->FIODIR|=(1UL<<LC640_CS);LPC_GPIO0->FIOSET|=(1UL<<LC640_CS);
+N
+N
+N
+N
+N
+N
+N
+N
+Nchar spi1(char in);
+Nvoid spi1_config(void);
+Nvoid spi1_config_mcp2515(void);
+Nvoid spi1_unconfig(void);
+Nvoid lc640_wren(void);
+Nchar lc640_rdsr(void);
+Nint lc640_read(int ADR);
+Nint lc640_read_int(int ADR);
+Nlong lc640_read_long(int ADR);
+Nvoid lc640_read_long_ptr(int ADR,char* out_ptr);
+Nvoid lc640_read_str(int ADR, char* ram_ptr, char num);
+Nchar lc640_write(int ADR,char in);
+Nchar lc640_write_int(short ADR,short in);
+Nchar lc640_write_long(int ADR,long in);
+Nchar lc640_write_long_ptr(int ADR,char* in);
+L 10 "sc16is7xx.c" 2
 N
 Nchar sc16is700ByteAvailable;
 Nchar sc16is700TxFifoLevel;
@@ -5668,7 +5666,7 @@ Nchar tx_wr_index_sc16is700;//указатель записи в программный буфер передачи
 Nchar tx_rd_index_sc16is700;//указатель чтения из программного буфера передачи
 Nchar sc16is700TxFifoEmptyCnt; //Временной счетчик свободности ФИФО передачи
 Nchar sc16is700TxPossibleFlag;//Флаг возможности передачи
-Nchar sc16is700RecieveDisableFlag;
+N//char sc16is700RecieveDisableFlag;	//o_1
 N
 N//----------------------------------------------- 
 N//настройка SPI1
@@ -5676,8 +5674,8 @@ Nvoid sc16is700_spi_init(void)
 N{
 NSET_REG( LPC_PINCON->PINSEL0, 0, 0*2, 2);
 X((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 = ( (((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 & ~((0xffffffff>>(32-2))<<0*2)) | (0 << 0*2) );
-W "sc16is7xx.c" 21 1 integer operation result is out of range
-W "sc16is7xx.c" 21 1 integer conversion resulted in a change of sign
+W "sc16is7xx.c" 25 1 integer operation result is out of range
+W "sc16is7xx.c" 25 1 integer conversion resulted in a change of sign
 NSET_REG( LPC_PINCON->PINSEL0, 3, 15*2, 2);
 X((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 = ( (((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL0 & ~((0xffffffff>>(32-2))<<15*2)) | (3 << 15*2) );
 NSET_REG( LPC_PINCON->PINSEL1, 0, (16-16)*2, 2);
@@ -5706,7 +5704,6 @@ Ndelay_us(2);
 X{long xx; xx=(unsigned long)2 * 12UL; while(xx)xx--;};
 Nsc16is700_CS_ON 
 X((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR|=(1<<0);((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR|=(1<<0); 
-W "sc16is7xx.c" 41 1 function "spi1" declared implicitly
 Nspi1((reg_num&0x0f)<<3);
 Nfor (i=0;i<num;i++)spi1(tx_buffer_sc16is700[i]);
 Nsc16is700_CS_OFF
@@ -5720,7 +5717,6 @@ Ndelay_us(2);
 X{long xx; xx=(unsigned long)2 * 12UL; while(xx)xx--;};
 Nsc16is700_CS_ON
 X((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR|=(1<<0);((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR|=(1<<0);
-W "sc16is7xx.c" 51 1 function "spi1" declared implicitly
 Nspi1((reg_num&0x0f)<<3);
 Nspi1(data);
 Nsc16is700_CS_OFF
@@ -5736,7 +5732,6 @@ Ndelay_us(2);
 X{long xx; xx=(unsigned long)2 * 12UL; while(xx)xx--;};
 Nsc16is700_CS_ON
 X((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR|=(1<<0);((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIOCLR|=(1<<0);
-W "sc16is7xx.c" 63 1 function "spi1" declared implicitly
 Nspi1(((reg_num&0x0f)<<3)|0x80);
 Nout = spi1(0xff);
 Nsc16is700_CS_OFF
@@ -5780,6 +5775,17 @@ Nunsigned char baud_h,baud_l;
 N
 Nbaud_h = (char)((10000000U/16U/baudrate)>>8);
 Nbaud_l = (char)((10000000U/16U/baudrate)); 
+N
+Nif(RS485_QWARZ_DIGIT==40)
+N	{
+N	baud_h = (char)((40000000U/16U/baudrate)>>8);
+N	baud_l = (char)((40000000U/16U/baudrate));
+N	} 
+Nif(RS485_QWARZ_DIGIT==30)
+N	{
+N	baud_h = (char)((30000000U/16U/baudrate)>>8);
+N	baud_l = (char)((30000000U/16U/baudrate));
+N	}
 N
 Nsc16is700_wr_byte(CS16IS7xx_LCR, 0x80);
 Xsc16is700_wr_byte(0x03, 0x80);
@@ -5835,11 +5841,11 @@ N
 N
 N//----------------------------------------------- 
 N//Обработчик sc16is700
+N/*
 Nvoid sc16is700_uart_hndl(void)
 N{
 N
 Nsc16is700ByteAvailable=sc16is700_rd_byte(CS16IS7xx_RXLVL); //Читаем состояние ФИФО приема микросхемы
-Xsc16is700ByteAvailable=sc16is700_rd_byte(0x09); 
 N
 Nif(sc16is700ByteAvailable) //Если в приемном ФИФО	микросхемы есть данные
 N	{
@@ -5849,29 +5855,24 @@ N		{
 N		if(!sc16is700RecieveDisableFlag)
 N			{
 N			modbus_rx_buffer[modbus_rx_buffer_ptr]=sc16is700_rd_byte(CS16IS7xx_RHR);
-X			modbus_rx_buffer[modbus_rx_buffer_ptr]=sc16is700_rd_byte(0x00);
 N			modbus_rx_buffer_ptr++;
 N			modbus_timeout_cnt=0;   //Запускаем таймер опознавания конца посылки 
 N			//pvlk++;
 N			}
 N		else sc16is700_rd_byte(CS16IS7xx_RHR);
-X		else sc16is700_rd_byte(0x00);
 N		}
 N	}
 N
 N
 N
 Nsc16is700TxFifoLevel=sc16is700_rd_byte(CS16IS7xx_TXLVL);//Читаем состояние ФИФО передачи
-Xsc16is700TxFifoLevel=sc16is700_rd_byte(0x08);
 N
 Nif(sc16is700TxFifoLevel!=64) sc16is700TxFifoEmptyCnt=0;//Если ФИФО не пустой обнуляем счетчик свободности ФИФО передачи
 Nif(sc16is700TxFifoLevel==64) //если ФИФО пустой то плюсуем счетчик если он меньше константы
 N	{
 N	if(sc16is700TxFifoEmptyCnt<SC16IS700TXFIFOEMPTYCNTMAX)sc16is700TxFifoEmptyCnt++;
-X	if(sc16is700TxFifoEmptyCnt<5)sc16is700TxFifoEmptyCnt++;
 N	}
 Nif(sc16is700TxFifoEmptyCnt==SC16IS700TXFIFOEMPTYCNTMAX) sc16is700TxPossibleFlag=1;//Если счетчик сравнялся с константой поднимаем флаг возможности передачи
-Xif(sc16is700TxFifoEmptyCnt==5) sc16is700TxPossibleFlag=1;
 Nelse sc16is700TxPossibleFlag=0;//Если не сравнялся - флаг сбрасываем.
 N
 N
@@ -5884,14 +5885,12 @@ N		//for(;tx_rd_index_sc16is700++;tx_rd_index_sc16is700<=tx_wr_index_sc16is700)
 N			//{
 N		sc16is700RecieveDisableFlag=1;
 N		sc16is700_wr_buff(CS16IS7xx_THR, tx_wr_index_sc16is700);
-X		sc16is700_wr_buff(0x00, tx_wr_index_sc16is700);
 N			//}
 N		tx_wr_index_sc16is700=0;
 N		}
 N	}
 N
 Nif((sc16is700_rd_byte(CS16IS7xx_LSR))&0x40)	sc16is700RecieveDisableFlag=0;
-Xif((sc16is700_rd_byte(0x05))&0x40)	sc16is700RecieveDisableFlag=0;
 N
 N
-N}
+N}*/

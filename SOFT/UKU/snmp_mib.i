@@ -3115,7 +3115,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -3376,6 +3376,7 @@ extern signed short I_LOAD_MODE;
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -3463,99 +3464,9 @@ extern LI_BAT_STAT li_bat;
 
 
 
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
 
 
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
-
-
-
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	
-	signed short	_communication2lvlErrorCnt;  	
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	
-	signed short   _battIsOn;		
-	char 		_plazma[8];		
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		
-	signed short 	_s_o_c_percent; 
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	
-	signed char		_cell_temp_1;	
-	signed char		_cell_temp_2;	
-	signed char		_cell_temp_3;	
-	signed char		_cell_temp_4;	
-	signed char		_cell_temp_ambient;	
-	signed char		_cell_temp_power;	
-	
-	
-	
-	signed char		_charge_and_discharge_current_alarm_status;	 	
-	signed char 	_battery_total_voltage_alarm_status;			
-	signed char		_custom_alarm_quantity;							
-	signed char		_balanced_event_code;							
-	signed char 	_voltage_event_code;							
-	signed char 	_temperature_event_code;						
-	signed char		_current_event_code;							
-	signed char		_fet_status_code;								
-	signed short	_balanced_status_code;							
-	signed char 	_system_status_code;							
-
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	
-extern short lakbNotErrorNum;		
-extern short lakbKanErrorCnt;		
-extern short lakbKanErrorStat;		
 
 
 
@@ -3609,7 +3520,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		
+
+	 signed  short _x_avg; 	
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -3619,8 +3532,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
+
 
 
 
@@ -3677,6 +3597,8 @@ extern char first_inv_slot;
 
 
 
+
+
 extern signed short load_U;
 extern signed short load_I;
 
@@ -3700,6 +3622,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -3799,11 +3722,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.H"
+#line 1388 "main.H"
 
-#line 1476 "main.H"
+#line 1399 "main.H"
 
-#line 1492 "main.H"
+#line 1415 "main.H"
 
 extern char ext_can_cnt;
 
@@ -3847,7 +3770,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.H"
+#line 1469 "main.H"
 
 
 
@@ -3892,6 +3815,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		
+extern signed  short _x_reg_cnt;	
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;
@@ -3953,7 +3879,7 @@ extern short pvlk;
 extern char num_of_wrks_bps;
 extern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 extern char bps_hndl_2sec_cnt;
-extern unsigned short bps_on_mask,bps_off_mask;
+extern unsigned int bps_on_mask,bps_off_mask;
 extern char num_necc_up,num_necc_down;
 extern unsigned char sh_cnt0,b1Hz_sh;
 
@@ -5078,57 +5004,6 @@ char* aaa_="abc";
 	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,15, 7},  				sizeof(snmp_lakb_flags2[0]), (void *)&snmp_lakb_flags2[0],  		((void *) 0)},	
 
 
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,22, 1},  				sizeof(lakb[0]. _charge_and_discharge_current_alarm_status), (void *)&lakb[0]. _charge_and_discharge_current_alarm_status,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,22, 2},  				sizeof(lakb[1]. _charge_and_discharge_current_alarm_status), (void *)&lakb[1]. _charge_and_discharge_current_alarm_status,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,22, 3},  				sizeof(lakb[2]. _charge_and_discharge_current_alarm_status), (void *)&lakb[2]. _charge_and_discharge_current_alarm_status,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,23, 1},  						sizeof(lakb[0]. _battery_total_voltage_alarm_status), (void *)&lakb[0]. _battery_total_voltage_alarm_status,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,23, 2},  						sizeof(lakb[1]. _battery_total_voltage_alarm_status), (void *)&lakb[1]. _battery_total_voltage_alarm_status,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,23, 3},  						sizeof(lakb[2]. _battery_total_voltage_alarm_status), (void *)&lakb[2]. _battery_total_voltage_alarm_status,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,24, 1},  									sizeof(lakb[0]. _custom_alarm_quantity), (void *)&lakb[0]. _custom_alarm_quantity,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,24, 2},  									sizeof(lakb[1]. _custom_alarm_quantity), (void *)&lakb[1]. _custom_alarm_quantity,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,24, 3},  									sizeof(lakb[2]. _custom_alarm_quantity), (void *)&lakb[2]. _custom_alarm_quantity,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,25, 1},  										sizeof(lakb[0]. _balanced_event_code), (void *)&lakb[0]. _balanced_event_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,25, 2},  										sizeof(lakb[1]. _balanced_event_code), (void *)&lakb[1]. _balanced_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,25, 3},  										sizeof(lakb[2]. _balanced_event_code), (void *)&lakb[2]. _balanced_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,26, 1},  										sizeof(lakb[0]. _voltage_event_code), (void *)&lakb[0]. _voltage_event_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,26, 2},  										sizeof(lakb[1]. _voltage_event_code), (void *)&lakb[1]. _voltage_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,26, 3},  										sizeof(lakb[2]. _voltage_event_code), (void *)&lakb[2]. _voltage_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,27, 1},  									sizeof(lakb[0]. _temperature_event_code), (void *)&lakb[0]. _temperature_event_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,27, 2},  									sizeof(lakb[1]. _temperature_event_code), (void *)&lakb[1]. _temperature_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,27, 3},  									sizeof(lakb[2]. _temperature_event_code), (void *)&lakb[2]. _temperature_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,28, 1},  										sizeof(lakb[0]. _current_event_code), (void *)&lakb[0]. _current_event_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,28, 2},  										sizeof(lakb[1]. _current_event_code), (void *)&lakb[1]. _current_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,28, 3},  										sizeof(lakb[2]. _current_event_code), (void *)&lakb[2]. _current_event_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,29, 1},  											sizeof(lakb[0]. _fet_status_code), (void *)&lakb[0]. _fet_status_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,29, 2},  											sizeof(lakb[1]. _fet_status_code), (void *)&lakb[1]. _fet_status_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,29, 3},  											sizeof(lakb[2]. _fet_status_code), (void *)&lakb[2]. _fet_status_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,30, 1},  										sizeof(lakb[0]. _balanced_status_code), (void *)&lakb[0]. _balanced_status_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,30, 2},  										sizeof(lakb[1]. _balanced_status_code), (void *)&lakb[1]. _balanced_status_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,30, 3},  										sizeof(lakb[2]. _balanced_status_code), (void *)&lakb[2]. _balanced_status_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,31, 1},  										sizeof(lakb[0]. _system_status_code), (void *)&lakb[0]. _system_status_code,  		((void *) 0)},	
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,31, 2},  										sizeof(lakb[1]. _system_status_code), (void *)&lakb[1]. _system_status_code,  		((void *) 0)},	
-
-	{ 0x02 | 0x80,  	13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,31, 3},  										sizeof(lakb[2]. _system_status_code), (void *)&lakb[2]. _system_status_code,  		((void *) 0)},	
-
-
 
 	{ 0x04 | 0x80, 13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,32, 1},  				sizeof(snmp_lakb_damp1[0][0]), (void *)&snmp_lakb_damp1[0][0],  		((void *) 0)},	
 	{ 0x04 | 0x80, 13, {(1*40 + 3), 6, 1, 4, 1, 130, 131, 31, 14, 18, 1,32, 2},  				sizeof(snmp_lakb_damp1[1][0]), (void *)&snmp_lakb_damp1[1][0],  		((void *) 0)},	
@@ -5189,7 +5064,7 @@ char* aaa_="abc";
 	};
 
 																														  
-#line 1169 "SNMP_MIB.c"
+#line 1118 "SNMP_MIB.c"
 const int snmp_mib_size = (sizeof(snmp_mib) / sizeof(MIB_ENTRY));
 
 

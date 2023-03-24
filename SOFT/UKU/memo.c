@@ -5,6 +5,7 @@
 #include "snmp_data_file.h"
 #include "control.h"
 #include "gran.h"
+#include "MODBUS_RTU.h" //o_1
 
 //-----------------------------------------------
 void memo_read (void)
@@ -85,6 +86,7 @@ NUMDT=lc640_read_int(EE_NUMDT);
 NUMAVT=lc640_read_int(EE_NUMAVT);
 NUMMAKB=lc640_read_int(EE_NUMMAKB);
 NUMEXT=NUMSK+NUMDT;
+RS485_QWARZ_DIGIT=lc640_read_int(EE_RS485_QWARZ_DIGIT);
 AV_OFF_AVT=lc640_read_int(EE_AV_OFF_AVT);
 MNEMO_ON=(enum_mnemo_on)lc640_read_int(EE_MNEMO_ON);
 MNEMO_TIME=lc640_read_int(EE_MNEMO_TIME);
@@ -289,6 +291,11 @@ ETH_SNMP_PORT_READ=lc640_read_int(EE_ETH_SNMP_PORT_READ);
 ETH_SNMP_PORT_WRITE=lc640_read_int(EE_ETH_SNMP_PORT_WRITE);
 MODBUS_ADRESS=lc640_read_int(EE_MODBUS_ADRESS);
 MODBUS_BAUDRATE=lc640_read_int(EE_MODBUS_BAUDRATE);
+//o_1_s		//задержка ответа
+modbusTimeoutInMills=3000/MODBUS_BAUDRATE;
+if(modbusTimeoutInMills<2)modbusTimeoutInMills=2;
+modbusTimeoutInMills+=2;
+//o_1_e
 RELE_SET_MASK[0]=lc640_read_int(EE_RELE_SET_MASK0);
 RELE_SET_MASK[1]=lc640_read_int(EE_RELE_SET_MASK1);
 RELE_SET_MASK[2]=lc640_read_int(EE_RELE_SET_MASK2);

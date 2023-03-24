@@ -1,7 +1,7 @@
 
 extern unsigned char modbus_buf[20];
 extern short modbus_crc16;
-extern char modbus_timeout_cnt;
+//extern char modbus_timeout_cnt;//o_1
 extern char bMODBUS_TIMEOUT;
 extern unsigned char modbus_rx_buffer[30];	//Буфер, куда складывает принимаемые даннные обработчик прерывания по приему УАРТа
 extern unsigned char modbus_an_buffer[30];	//Буфер, куда они потом копируются для анализа

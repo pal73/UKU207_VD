@@ -288,19 +288,11 @@ void snmp_cool_20_dtemper_write(int mode);
 
 
 
-#line 161 "eeprom_map.h"
+#line 114 "eeprom_map.h"
 
-#line 172 "eeprom_map.h"
+#line 154 "eeprom_map.h"
 
-
-
-
-
-
- 
-
-
-
+#line 165 "eeprom_map.h"
 
 
 
@@ -309,25 +301,6 @@ void snmp_cool_20_dtemper_write(int mode);
 
  
 
-#line 206 "eeprom_map.h"
-
-
-
-#line 218 "eeprom_map.h"
-
-
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
-
-
-
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
 
 
 
@@ -336,7 +309,36 @@ void snmp_cool_20_dtemper_write(int mode);
 
 
 
-#line 361 "eeprom_map.h"
+ 
+
+#line 199 "eeprom_map.h"
+
+
+
+#line 211 "eeprom_map.h"
+
+
+#line 222 "eeprom_map.h"
+
+
+
+#line 233 "eeprom_map.h"
+
+
+
+#line 289 "eeprom_map.h"
+
+
+#line 332 "eeprom_map.h"
+
+
+
+
+
+
+
+
+#line 354 "eeprom_map.h"
 
 
 
@@ -1151,7 +1153,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -1412,6 +1414,7 @@ extern signed short I_LOAD_MODE;
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -1499,99 +1502,9 @@ extern LI_BAT_STAT li_bat;
 
 
 
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
 
 
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
-
-
-
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	
-	signed short	_communication2lvlErrorCnt;  	
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	
-	signed short   _battIsOn;		
-	char 		_plazma[8];		
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		
-	signed short 	_s_o_c_percent; 
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	
-	signed char		_cell_temp_1;	
-	signed char		_cell_temp_2;	
-	signed char		_cell_temp_3;	
-	signed char		_cell_temp_4;	
-	signed char		_cell_temp_ambient;	
-	signed char		_cell_temp_power;	
-	
-	
-	
-	signed char		_charge_and_discharge_current_alarm_status;	 	
-	signed char 	_battery_total_voltage_alarm_status;			
-	signed char		_custom_alarm_quantity;							
-	signed char		_balanced_event_code;							
-	signed char 	_voltage_event_code;							
-	signed char 	_temperature_event_code;						
-	signed char		_current_event_code;							
-	signed char		_fet_status_code;								
-	signed short	_balanced_status_code;							
-	signed char 	_system_status_code;							
-
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	
-extern short lakbNotErrorNum;		
-extern short lakbKanErrorCnt;		
-extern short lakbKanErrorStat;		
 
 
 
@@ -1645,7 +1558,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		
+
+	 signed  short _x_avg; 	
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -1655,8 +1570,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
+
 
 
 
@@ -1713,6 +1635,8 @@ extern char first_inv_slot;
 
 
 
+
+
 extern signed short load_U;
 extern signed short load_I;
 
@@ -1736,6 +1660,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -1835,11 +1760,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1388 "main.h"
 
-#line 1476 "main.h"
+#line 1399 "main.h"
 
-#line 1492 "main.h"
+#line 1415 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1883,7 +1808,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1469 "main.h"
 
 
 
@@ -1928,6 +1853,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		
+extern signed  short _x_reg_cnt;	
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;
@@ -2385,7 +2313,7 @@ extern void modem_run (void);
 extern char num_of_wrks_bps;
 extern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 extern char bps_hndl_2sec_cnt;
-extern unsigned short bps_on_mask,bps_off_mask;
+extern unsigned int bps_on_mask,bps_off_mask;
 extern char num_necc_up,num_necc_down;
 extern unsigned char sh_cnt0,b1Hz_sh;
 
@@ -5543,77 +5471,6 @@ if(sk_av_stat[3]==sasON)	snmp_sk_alarm[3]=1;
 else                     snmp_sk_alarm[3]=0;
 
 
-if(makb[0]._cnt>8) snmp_makb_connect_status[0]=1;
-else if(makb[0]._cnt<2) snmp_makb_connect_status[0]=0;
-if(makb[1]._cnt>8) snmp_makb_connect_status[1]=1;
-else if(makb[1]._cnt<2) snmp_makb_connect_status[1]=0;
-if(makb[2]._cnt>8) snmp_makb_connect_status[2]=1;
-else if(makb[2]._cnt<2) snmp_makb_connect_status[2]=0;
-if(makb[3]._cnt>8) snmp_makb_connect_status[3]=1;
-else if(makb[3]._cnt<2) snmp_makb_connect_status[3]=0;
-
-snmp_makb_voltage0[0]=makb[0]._Ub[0];
-snmp_makb_voltage1[0]=makb[0]._Ub[1];
-snmp_makb_voltage2[0]=makb[0]._Ub[2];
-snmp_makb_voltage3[0]=makb[0]._Ub[3];
-snmp_makb_voltage4[0]=makb[0]._Ub[4];
-snmp_makb_voltage0[1]=makb[1]._Ub[0];
-snmp_makb_voltage1[1]=makb[1]._Ub[1];
-snmp_makb_voltage2[1]=makb[1]._Ub[2];
-snmp_makb_voltage3[1]=makb[1]._Ub[3];
-snmp_makb_voltage4[1]=makb[1]._Ub[4];
-snmp_makb_voltage0[2]=makb[2]._Ub[0];
-snmp_makb_voltage1[2]=makb[2]._Ub[1];
-snmp_makb_voltage2[2]=makb[2]._Ub[2];
-snmp_makb_voltage3[2]=makb[2]._Ub[3];
-snmp_makb_voltage4[2]=makb[2]._Ub[4];
-snmp_makb_voltage0[3]=makb[3]._Ub[0];
-snmp_makb_voltage1[3]=makb[3]._Ub[1];
-snmp_makb_voltage2[3]=makb[3]._Ub[2];
-snmp_makb_voltage3[3]=makb[3]._Ub[3];
-snmp_makb_voltage4[3]=makb[3]._Ub[4];
-
-snmp_makb_temper0[0]=makb[0]._T[0];
-snmp_makb_temper1[0]=makb[0]._T[1];
-snmp_makb_temper2[0]=makb[0]._T[2];
-snmp_makb_temper3[0]=makb[0]._T[3];
-snmp_makb_temper4[0]=makb[0]._T[4];
-snmp_makb_temper0[1]=makb[1]._T[0];
-snmp_makb_temper1[1]=makb[1]._T[1];
-snmp_makb_temper2[1]=makb[1]._T[2];
-snmp_makb_temper3[1]=makb[1]._T[3];
-snmp_makb_temper4[1]=makb[1]._T[4];
-snmp_makb_temper0[2]=makb[2]._T[0];
-snmp_makb_temper1[2]=makb[2]._T[1];
-snmp_makb_temper2[2]=makb[2]._T[2];
-snmp_makb_temper3[2]=makb[2]._T[3];
-snmp_makb_temper4[2]=makb[2]._T[4];
-snmp_makb_temper0[3]=makb[3]._T[0];
-snmp_makb_temper1[3]=makb[3]._T[1];
-snmp_makb_temper2[3]=makb[3]._T[2];
-snmp_makb_temper3[3]=makb[3]._T[3];
-snmp_makb_temper4[3]=makb[3]._T[4];
-
-snmp_makb_temper0_stat[0]=makb[0]._T_nd[0];
-snmp_makb_temper1_stat[0]=makb[0]._T_nd[1];
-snmp_makb_temper2_stat[0]=makb[0]._T_nd[2];
-snmp_makb_temper3_stat[0]=makb[0]._T_nd[3];
-snmp_makb_temper4_stat[0]=makb[0]._T_nd[4];
-snmp_makb_temper0_stat[1]=makb[1]._T_nd[0];
-snmp_makb_temper1_stat[1]=makb[1]._T_nd[1];
-snmp_makb_temper2_stat[1]=makb[1]._T_nd[2];
-snmp_makb_temper3_stat[1]=makb[1]._T_nd[3];
-snmp_makb_temper4_stat[1]=makb[1]._T_nd[4];
-snmp_makb_temper0_stat[2]=makb[2]._T_nd[0];
-snmp_makb_temper1_stat[2]=makb[2]._T_nd[1];
-snmp_makb_temper2_stat[2]=makb[2]._T_nd[2];
-snmp_makb_temper3_stat[2]=makb[2]._T_nd[3];
-snmp_makb_temper4_stat[2]=makb[2]._T_nd[4];
-snmp_makb_temper0_stat[3]=makb[3]._T_nd[0];
-snmp_makb_temper1_stat[3]=makb[3]._T_nd[1];
-snmp_makb_temper2_stat[3]=makb[3]._T_nd[2];
-snmp_makb_temper3_stat[3]=makb[3]._T_nd[3];
-snmp_makb_temper4_stat[3]=makb[3]._T_nd[4];
 
 
 snmp_klimat_box_temper=t_box;
@@ -5705,247 +5562,7 @@ if(NUMDT<3)snmp_dt_error[0]=0xff;
 
 if(NUMDT<4)snmp_dt_error[0]=0xff;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-snmp_lakb_number[0]=1;								
-snmp_lakb_number[1]=2;								
-snmp_lakb_number[2]=3;								
-snmp_lakb_number[3]=4;								
-snmp_lakb_number[4]=5;								
-snmp_lakb_number[5]=6;								
-snmp_lakb_number[6]=7;								
-
-for (i=0;i<3;i++)
-	{
-	snmp_lakb_voltage[i]=lakb[i]._tot_bat_volt;				
-	snmp_lakb_max_cell_voltage[i]=lakb[i]._max_cell_volt;		
-	snmp_lakb_min_cell_voltage[i]=lakb[i]._min_cell_volt;		
-	snmp_lakb_max_cell_temperature[i]=lakb[i]._max_cell_temp;	
-	
-	snmp_lakb_min_cell_temperature[i]=lakb[i]._min_cell_temp;	
-	
-	snmp_lakb_ch_curr[i]=lakb[i]._ch_curr;					
-	
-	snmp_lakb_dsch_curr[i]=lakb[i]._dsch_curr;				
-	
-	snmp_lakb_rat_cap[i]=lakb[i]._rat_cap;					
-	
-	snmp_lakb_soh[i]=lakb[i]._s_o_h;						
-	
-	snmp_lakb_soc[i]=lakb[i]._s_o_c;						
-	
-	snmp_lakb_cclv[i]=lakb[i]._c_c_l_v;  					
-	
-	snmp_lakb_rbt[i]=lakb[i]._r_b_t;						
-	
-	snmp_lakb_flags1[i]=lakb[i]._flags1;					
-	
-	snmp_lakb_flags2[i]=lakb[i]._flags2;					
-	
-
-	snmp_lakb_cell_temperature_1[i]= lakb[i]._cell_temp_1;
-	snmp_lakb_cell_temperature_2[i]= lakb[i]._cell_temp_2;
-	snmp_lakb_cell_temperature_3[i]= lakb[i]._cell_temp_3;
-	snmp_lakb_cell_temperature_4[i]= lakb[i]._cell_temp_4;
-	snmp_lakb_cell_temperature_ambient[i]=lakb[i]._cell_temp_ambient;
-	snmp_lakb_cell_temperature_power[i]=lakb[i]._cell_temp_power;
-	}
-
-for (i=0;i<7;i++)
-{
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-}
-
-#line 917 "snmp_data_file.c"
+#line 606 "snmp_data_file.c"
 }
 
 void snmp_sernum_write (int mode) 
@@ -7124,8 +6741,8 @@ void snmp_warm_sign_write(int mode)
 {
 if(mode==1)
 	{
-     if(snmp_warm_sign==1)lc640_write_int(0x10+100+144,1);
-	 else lc640_write_int(0x10+100+144,0);
+ 
+
 	}
 }
 
@@ -7134,8 +6751,8 @@ void snmp_cool_sign_write(int mode)
 {
 if(mode==1)
 	{
-    if(snmp_cool_sign==1)lc640_write_int(0x10+100+160,1);
-	else lc640_write_int(0x10+100+160,0);
+
+
 	}
 }
 
@@ -7144,7 +6761,7 @@ void snmp_warm_on_temper_write(int mode)
 {
 if(mode==1)
 	{
-     lc640_write_int(0x10+100+146,snmp_warm_on_temper);
+
 	}
 }
 
@@ -7153,7 +6770,7 @@ void snmp_warm_off_temper_write(int mode)
 {
 if(mode==1)
 	{
-     lc640_write_int(0x10+100+148,snmp_warm_off_temper);
+
 	}
 }
 
@@ -7162,7 +6779,7 @@ void snmp_warm_q_write(int mode)
 {
 if(mode==1)
 	{
-     lc640_write_int(0x10+100+150,snmp_warm_q);
+ 
 	}
 }
 
@@ -7171,7 +6788,7 @@ void snmp_cool_100_temper_write(int mode)
 {
 if(mode==1)
 	{
-     lc640_write_int(0x10+100+210,snmp_cool_100_temper);
+ 
 	}
 }
 
@@ -7180,7 +6797,7 @@ void snmp_cool_80_temper_write(int mode)
 {
 if(mode==1)
 	{
-     lc640_write_int(0x10+100+208,snmp_cool_80_temper);
+ 
 	}
 }
 

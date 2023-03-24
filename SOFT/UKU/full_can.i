@@ -674,7 +674,7 @@ typedef enum {
 	iRele_set,iRele_set_,
 	iAvt_set_sel,iAvt_set,iSet_li_bat,
 	iOut_volt_contr,iDop_rele_set,iBlok_ips_set,iIps_Curr_Avg_Set,
-	iFWabout,
+	iFWabout,iFWaboutBPS,
 	iCurr_overload}i_enum;
 
 typedef struct  
@@ -935,6 +935,7 @@ extern signed short I_LOAD_MODE;
 
 extern signed short OVERLOAD_CURR;
 extern signed short OVERLOAD_TIME;
+extern signed short RS485_QWARZ_DIGIT;
 
 
 
@@ -1022,99 +1023,9 @@ extern LI_BAT_STAT li_bat;
 
 
 
-typedef struct
-     {
-	signed short 	_Iout;
-	signed short 	_Uout;
-	signed short 	_Pout;
-	signed short 	_Unet; 	
-	signed short 	_Uin;
-	char			_T;
-	char 		_flags;
-	char			_cnt;
-	char 		_adress;
-	} BYPS_STAT; 
-extern BYPS_STAT byps;
 
 
 
-typedef struct
-     {
-	signed short	_U[5];
-	signed short	_Ub[5];
-	signed short	_T[5];
-	signed short	_T_nd[5];
-	signed short 	_cnt; 	
-	} MAKB_STAT; 
-extern MAKB_STAT makb[4];
-
-
-
-typedef struct
-     {
-	signed short	_max_cell_volt;
-	signed short	_min_cell_volt;
-	signed short	_max_cell_temp;
-	signed short	_min_cell_temp;
-	signed short	_tot_bat_volt;
-	signed short	_ch_curr;
-	signed short	_dsch_curr;
-	signed short	_rat_cap;
-	signed short	_s_o_h;
-	signed short	_s_o_c;
-	signed short	_c_c_l_v;
-	signed short	_r_b_t;
-	signed short	_b_p_ser_num;
-	signed short   _flags1;
-	signed short 	_flags2;
-	signed short 	_communication2lvlErrorStat; 	
-	signed short	_communication2lvlErrorCnt;  	
-	signed short 	_cnt;
-	signed short 	_communicationFullErrorStat;	
-	signed short   _battIsOn;		
-	char 		_plazma[8];		
-	signed short 	_isOnCnt;
-	signed short	_s_o_c_abs;		
-	signed short 	_s_o_c_percent; 
-	signed short	_plazma_ss;
-	signed short	_zar_percent;	
-	signed char		_cell_temp_1;	
-	signed char		_cell_temp_2;	
-	signed char		_cell_temp_3;	
-	signed char		_cell_temp_4;	
-	signed char		_cell_temp_ambient;	
-	signed char		_cell_temp_power;	
-	
-	
-	
-	signed char		_charge_and_discharge_current_alarm_status;	 	
-	signed char 	_battery_total_voltage_alarm_status;			
-	signed char		_custom_alarm_quantity;							
-	signed char		_balanced_event_code;							
-	signed char 	_voltage_event_code;							
-	signed char 	_temperature_event_code;						
-	signed char		_current_event_code;							
-	signed char		_fet_status_code;								
-	signed short	_balanced_status_code;							
-	signed char 	_system_status_code;							
-
-	} LAKB_STAT; 
-extern LAKB_STAT lakb[3];
-extern char lakb_damp[1][42];
-extern char bLAKB_KONF_CH;
-extern char bLAKB_KONF_CH_old;
-extern char lakb_ison_mass[7];
-extern short lakb_mn_ind_cnt;
-extern char bLAKB_KONF_CH_EN;
-extern char bRS485ERR;
-extern short LBAT_STRUKT;
-extern char lakb_error_cnt;	
-extern short numOfPacks,numOfPacks_;
-extern short numOfCells, numOfTemperCells, baseOfData;
-extern short lakb_stat_comm_error;	
-extern short lakbNotErrorNum;		
-extern short lakbKanErrorCnt;		
-extern short lakbKanErrorStat;		
 
 
 
@@ -1168,7 +1079,9 @@ typedef struct
      signed short _umax_av_cnt;
      signed short _umin_av_cnt;
      signed _rotor;
-     signed  short _x_; 
+     signed  short _x_;		
+
+	 signed  short _x_avg; 	
      char _adr_ee;
 	char _last_avar;
 	char _vent_resurs_temp[4];
@@ -1178,8 +1091,15 @@ typedef struct
 	signed short debug_info_to_uku2;
 	signed short _avg;
 	signed short _cntrl_stat;
+	signed short _build_year;
+	signed short _build_month;
+	signed short _build_day;
+	signed short _hardvare_version;
+	signed short _soft_version;
+	signed short _build;
      } BPS_STAT; 
-extern BPS_STAT bps[29];
+extern BPS_STAT bps[32];
+
 
 
 
@@ -1236,6 +1156,8 @@ extern char first_inv_slot;
 
 
 
+
+
 extern signed short load_U;
 extern signed short load_I;
 
@@ -1259,6 +1181,7 @@ extern char net_av;
 
 
 extern char plazma_plazma_plazma;
+extern char plazma_PUTTM31,plazma_PUTTM32;
 
 void bitmap_hndl(void);
 void ind_hndl(void);
@@ -1358,11 +1281,11 @@ extern enum_av_tbox_stat av_tbox_stat;
 extern signed short av_tbox_cnt;
 extern char tbatdisable_cmnd,tloaddisable_cmnd;
 extern short tbatdisable_cnt,tloaddisable_cnt;
-#line 1465 "main.h"
+#line 1388 "main.h"
 
-#line 1476 "main.h"
+#line 1399 "main.h"
 
-#line 1492 "main.h"
+#line 1415 "main.h"
 
 extern char ext_can_cnt;
 
@@ -1406,7 +1329,7 @@ extern short can_plazma;
 
 
 
-#line 1546 "main.h"
+#line 1469 "main.h"
 
 
 
@@ -1451,6 +1374,9 @@ extern char vd_is_work_cnt;
 extern short plazma_numOfCells;
 extern short plazma_numOfTemperCells;
 extern short plazma_numOfPacks;
+extern signed  short _x_reg;		
+extern signed  short _x_reg_cnt;	
+
 
 extern char plazma_ztt[2];
 extern char plazma1809;
@@ -3675,7 +3601,7 @@ extern char ccc_plazma[20];
 
 
 void mess_hndl(void);
-void mess_send(char _mess, short par0, short par1, char _time);
+void mess_send(char _mess, int par0, int par1, char _time);
 char mess_find(char _mess);
 char mess_find_unvol(char _mess);
 
@@ -3732,19 +3658,11 @@ void avar_bat_ips_hndl(char in);
 
 
 
-#line 161 "eeprom_map.h"
+#line 114 "eeprom_map.h"
 
-#line 172 "eeprom_map.h"
+#line 154 "eeprom_map.h"
 
-
-
-
-
-
- 
-
-
-
+#line 165 "eeprom_map.h"
 
 
 
@@ -3753,25 +3671,6 @@ void avar_bat_ips_hndl(char in);
 
  
 
-#line 206 "eeprom_map.h"
-
-
-
-#line 218 "eeprom_map.h"
-
-
-#line 229 "eeprom_map.h"
-
-
-
-#line 240 "eeprom_map.h"
-
-
-
-#line 296 "eeprom_map.h"
-
-
-#line 339 "eeprom_map.h"
 
 
 
@@ -3780,7 +3679,36 @@ void avar_bat_ips_hndl(char in);
 
 
 
-#line 361 "eeprom_map.h"
+ 
+
+#line 199 "eeprom_map.h"
+
+
+
+#line 211 "eeprom_map.h"
+
+
+#line 222 "eeprom_map.h"
+
+
+
+#line 233 "eeprom_map.h"
+
+
+
+#line 289 "eeprom_map.h"
+
+
+#line 332 "eeprom_map.h"
+
+
+
+
+
+
+
+
+#line 354 "eeprom_map.h"
 
 
 
@@ -3931,7 +3859,7 @@ extern const unsigned short ADR_EE_RELE_SET_MASK[4];
 extern char num_of_wrks_bps;
 extern char bps_all_off_cnt,bps_mask_off_cnt,bps_mask_on_off_cnt;
 extern char bps_hndl_2sec_cnt;
-extern unsigned short bps_on_mask,bps_off_mask;
+extern unsigned int bps_on_mask,bps_off_mask;
 extern char num_necc_up,num_necc_down;
 extern unsigned char sh_cnt0,b1Hz_sh;
 
@@ -5734,68 +5662,19 @@ if((RXBUFF[1]==0xDC)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
    	
 	can_reset_cnt=0;
    	}
-
-if((RXBUFF[1]==0xDD)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
-     {
-	
-     slave_num=RXBUFF[0]&0x1f;
-
-	plazma_can_inv[0]++;
-     
-    if((RXBUFF[0]&0xe0)==0)bps[slave_num]._device=dSRC;
-    else if((RXBUFF[0]&0xe0)==0x40)bps[slave_num]._device=dINV;
-     	
-	bps[slave_num]._buff[0]=RXBUFF[2]; 
-	bps[slave_num]._buff[1]=RXBUFF[3];
-	bps[slave_num]._buff[2]=RXBUFF[4];
-	bps[slave_num]._buff[3]=RXBUFF[5];
-	bps[slave_num]._buff[4]=RXBUFF[6];
-	bps[slave_num]._buff[5]=RXBUFF[7];
-
-
-
-
-
-
-
-
-
- 
-	
-	bps[slave_num]._cnt=0;
-	bps[slave_num]._is_on_cnt=10;
-	
- 	if((bps[slave_num]._cnt==0)&&(bps[slave_num]._av&(1<<3))) avar_bps_hndl(slave_num,3,0);
-
-	can_reset_cnt=0;
-     }
-
-if((RXBUFF[1]==0xDE)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
+if((RXBUFF[1]==0xDD)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
  	{
-     slave_num=RXBUFF[0]&0x1f;
-	
-	plazma_can_inv[1]++;  
+     slave_num=RXBUFF[0]&0x1f;  
+
+	plazma_PUTTM31++;
 
     if((RXBUFF[0]&0xe0)==0)bps[slave_num]._device=dSRC;
     else if((RXBUFF[0]&0xe0)==0x40)bps[slave_num]._device=dINV;
      
-	bps[slave_num]._buff[6]=RXBUFF[2]; 
-	bps[slave_num]._buff[7]=RXBUFF[3];
-	bps[slave_num]._buff[8]=RXBUFF[4];
-	bps[slave_num]._buff[9]=RXBUFF[5];
-	bps[slave_num]._buff[10]=RXBUFF[6];
-	bps[slave_num]._buff[11]=RXBUFF[7];	
+	bps[slave_num]._hardvare_version=RXBUFF[2]+(RXBUFF[3]*256); 
+	bps[slave_num]._soft_version=RXBUFF[4]+(RXBUFF[5]*256); 
+	bps[slave_num]._build=RXBUFF[6]+(RXBUFF[7]*256); 
 
-
-
-
-
-
-
-
-
- 
-	
 	bps[slave_num]._cnt=0;
 	bps[slave_num]._is_on_cnt=10; 
 
@@ -5803,60 +5682,24 @@ if((RXBUFF[1]==0xDE)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
 	can_reset_cnt=0;
    	}
 
-if((RXBUFF[1]==0xDf)&&((RXBUFF[0]&0x1f)>=20)&&((RXBUFF[0]&0x1f)<20+NUMINV))
+if((RXBUFF[1]==0xD5)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<32))
  	{
-     slave_num=RXBUFF[0]&0x1f; 
-
-	plazma_can_inv[2]++; 
+     slave_num=RXBUFF[0]&0x1f;
+	 
+	 plazma_PUTTM32++;  
 
     if((RXBUFF[0]&0xe0)==0)bps[slave_num]._device=dSRC;
     else if((RXBUFF[0]&0xe0)==0x40)bps[slave_num]._device=dINV;
      
-	bps[slave_num]._buff[12]=RXBUFF[2]; 
-	bps[slave_num]._buff[13]=RXBUFF[3];
-	bps[slave_num]._buff[14]=RXBUFF[4];
-	bps[slave_num]._buff[15]=RXBUFF[5];
-	bps[slave_num]._buff[16]=RXBUFF[6];
-	bps[slave_num]._buff[17]=RXBUFF[7];	
+	bps[slave_num]._build_year=RXBUFF[2]+(RXBUFF[3]*256); 
+	bps[slave_num]._build_month=RXBUFF[4]+(RXBUFF[5]*256); 
+	bps[slave_num]._build_day=RXBUFF[6]+(RXBUFF[7]*256); 
 
-
-
-
-
-
-
-
-
- 
-	
 	bps[slave_num]._cnt=0;
 	bps[slave_num]._is_on_cnt=10; 
 
    	
 	can_reset_cnt=0;
-   	}
-
-if((RXBUFF[1]==0xD8))
-     {
-	
-     byps._adress=RXBUFF[0]&0x1f;
-     
-     	
-	byps._Iout=(signed short)RXBUFF[2]+(((signed short)RXBUFF[3])*256);
-	byps._Pout=(signed short)RXBUFF[4]+(((signed short)RXBUFF[5])*256);
-	byps._Uout=(signed short)RXBUFF[6]+(((signed short)RXBUFF[7])*256);
-	
-	byps._cnt=0;
-     }
-
-if((RXBUFF[1]==0xD9))
- 	{
-	byps._T=(char)RXBUFF[2];
-	byps._flags=(char)RXBUFF[3];
-	byps._Unet=(signed short)RXBUFF[4]+(((signed short)RXBUFF[5])*256);
-	byps._Uin=(signed short)RXBUFF[6]+(((signed short)RXBUFF[7])*256);
-
-	byps._cnt=0;
    	}
 
 if((RXBUFF[0]==0xD1)&&(RXBUFF[1]==0xD1))
@@ -5869,474 +5712,6 @@ plazma1809++;
 
 	ibat_metr_cnt=0;
    	}
-
-if((RXBUFF[1]==0xEA)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
- 	{
-    slave_num=RXBUFF[0]&0x1f;  
-
-    bps[slave_num]._device=dNET_METR;
-         
-	bps[slave_num]._buff[0]=RXBUFF[2]; 
-	bps[slave_num]._buff[1]=RXBUFF[3];
-	bps[slave_num]._buff[2]=RXBUFF[4];
-	bps[slave_num]._buff[3]=RXBUFF[5];
-	bps[slave_num]._buff[4]=RXBUFF[6];
-	bps[slave_num]._buff[5]=RXBUFF[7];	
-
-
-
-
-
-
-
-
-
- 
-	
-	bps[slave_num]._cnt=0;
-	bps[slave_num]._is_on_cnt=10; 
-
-   	
-	can_reset_cnt=0;
-   	}
-
-
-if((RXBUFF[1]==0xEB)&&((RXBUFF[0]&0x1f)>=0)&&((RXBUFF[0]&0x1f)<12))
- 	{
-    slave_num=RXBUFF[0]&0x1f;  
-
-    bps[slave_num]._device=dNET_METR;
-         
-	bps[slave_num]._buff[6]=RXBUFF[2]; 
-	bps[slave_num]._buff[7]=RXBUFF[3];
-	
-	
-
-	bps[slave_num]._cnt=0;
-	bps[slave_num]._is_on_cnt=10; 
-
-   	
-	can_reset_cnt=0;
-   	}
-
-if( (RXBUFF[0]==0x62)&&(RXBUFF[1]==1)&&(RXBUFF[2]==1))
-     {
-     power_summary_tempo=*((signed short*)&RXBUFF[3]);
-     power_current_tempo=*((signed short*)&RXBUFF[5]);
-	
-	can_reset_cnt=0;
-     }
-
-
-if( ((RXBUFF[0]&0x1f)==8)&&((RXBUFF[1])==0xDE) )
-     {
-     adc_buff_ext_[0]=*((short*)&RXBUFF[2]);
-     adc_buff_ext_[1]=*((short*)&RXBUFF[4]);
-     adc_buff_ext_[2]=*((short*)&RXBUFF[6]);
-	if((adc_buff_ext_[2]>=-50) && (adc_buff_ext_[2]<=100))
-		{
-		t_ext_can=adc_buff_ext_[2];
-		t_ext_can_nd=0;
-		}
-		t_ext_can=adc_buff_ext_[2];
-	
-	can_reset_cnt=0;
-     }
-
-if( ((RXBUFF[0]&0x1f)==9)&&((RXBUFF[1])==0xDE) )
-     {
-     vvod_pos=RXBUFF[2];
-	ext_can_cnt=RXBUFF[3];
-	if(ext_can_cnt<10)bRESET_EXT=0;
-	can_reset_cnt=0;
-     }
-
-if( ((RXBUFF[0]&0x1f)==10)&&((RXBUFF[1])==0xDE) )
-     {
-     power_current=*((signed short*)&RXBUFF[2]);
-     power_summary=*((signed long*)&RXBUFF[4]);
-	
-	can_reset_cnt=0;
-     }
-
-
-if( ((RXBUFF[0]&0x1f)==20)&&((RXBUFF[1])==0xDE) )
-     {
-     eb2_data[0]=RXBUFF[2];
-	eb2_data[1]=RXBUFF[3];
-     eb2_data[2]=RXBUFF[4];
-	eb2_data[3]=RXBUFF[5];
-	eb2_data[4]=RXBUFF[6];
-	eb2_data[5]=RXBUFF[7];
-     power_current=*((signed short*)&RXBUFF[2]);
-     power_summary=*((signed long*)&RXBUFF[4]);
-
-	 can_reset_cnt=0;
-     }
-
-if( ((RXBUFF[0]&0x1f)==21)&&((RXBUFF[1])==0xDE) )
-     {
-     eb2_data[6]=RXBUFF[2];
-	eb2_data[7]=RXBUFF[3];
-     eb2_data[8]=RXBUFF[4];
-	eb2_data[9]=RXBUFF[5];
-	eb2_data[10]=RXBUFF[6];
-	eb2_data[11]=RXBUFF[7];
-	eb2_data_short[6]=*((short*)&eb2_data[6]);
-
-	can_reset_cnt=0;
-     }
-
-if( ((RXBUFF[0]&0x1f)==22)&&((RXBUFF[1])==0xDE) )
-     {
-     eb2_data[12]=RXBUFF[2];
-	eb2_data[13]=RXBUFF[3];
-     eb2_data[14]=RXBUFF[4];
-	eb2_data[15]=RXBUFF[5];
-	eb2_data[16]=RXBUFF[6];
-	eb2_data[17]=RXBUFF[7];
-	eb2_data_short[0]=*((short*)&eb2_data[12]);
-	eb2_data_short[1]=*((short*)&eb2_data[14]);
-	eb2_data_short[2]=*((short*)&eb2_data[16]);
-
-	can_reset_cnt=0;
-     }
-
-if( ((RXBUFF[0]&0x1f)==23)&&((RXBUFF[1])==0xDE) )
-     {
-     eb2_data[18]=RXBUFF[2];
-	eb2_data[19]=RXBUFF[3];
-     eb2_data[20]=RXBUFF[4];
-	eb2_data[21]=RXBUFF[5];
-	eb2_data[22]=RXBUFF[6];
-	eb2_data[23]=RXBUFF[7];
-	eb2_data_short[3]=*((short*)&eb2_data[18]);
-	eb2_data_short[4]=*((short*)&eb2_data[20]);
-	eb2_data_short[5]=*((short*)&eb2_data[22]);
-
-	can_reset_cnt=0;
-     }
-
-if( (RXBUFF[1]==0xE2)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-     {
-	makb[RXBUFF[0]]._U[0]=*((short*)&RXBUFF[2]);
-	makb[RXBUFF[0]]._U[1]=*((short*)&RXBUFF[4]);
-	makb[RXBUFF[0]]._U[2]=*((short*)&RXBUFF[6]);
-
-	makb[RXBUFF[0]]._Ub[0]=makb[RXBUFF[0]]._U[0];
-	if(makb[RXBUFF[0]]._Ub[0]<0)makb[RXBUFF[0]]._Ub[0]=0;
-	makb[RXBUFF[0]]._Ub[1]=makb[RXBUFF[0]]._U[1]-makb[RXBUFF[0]]._U[0];
-	if(makb[RXBUFF[0]]._Ub[1]<0)makb[RXBUFF[0]]._Ub[1]=0;
-	makb[RXBUFF[0]]._Ub[2]=makb[RXBUFF[0]]._U[2]-makb[RXBUFF[0]]._U[1];
-	if(makb[RXBUFF[0]]._Ub[2]<0)makb[RXBUFF[0]]._Ub[2]=0;
-
-	makb[RXBUFF[0]]._cnt=0;
-     }
-
-if( (RXBUFF[1]==0xE3)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-     {
-	makb[RXBUFF[0]]._U[3]=*((short*)&RXBUFF[2]);
-	makb[RXBUFF[0]]._U[4]=*((short*)&RXBUFF[4]);
-	makb[RXBUFF[0]]._T[0]=(signed short)(*((signed char*)&RXBUFF[6]));
-	makb[RXBUFF[0]]._T[1]=(signed short)(*((signed char*)&RXBUFF[7]));
-
-	makb[RXBUFF[0]]._Ub[3]=makb[RXBUFF[0]]._U[3]-makb[RXBUFF[0]]._U[2];
-	if(makb[RXBUFF[0]]._Ub[3]<0)makb[RXBUFF[0]]._Ub[3]=0;
-	makb[RXBUFF[0]]._Ub[4]=makb[RXBUFF[0]]._U[4]-makb[RXBUFF[0]]._U[3];
-	if(makb[RXBUFF[0]]._Ub[4]<0)makb[RXBUFF[0]]._Ub[4]=0;
-
-	makb[RXBUFF[0]]._cnt=0;
-     }
-
-if( (RXBUFF[1]==0xE4)&&(RXBUFF[0]>=0)&&(RXBUFF[0]<=3))
-     {
-	makb[RXBUFF[0]]._T[2]=(signed short)(*((signed char*)&RXBUFF[2]));
-	makb[RXBUFF[0]]._T[3]=(signed short)(*((signed char*)&RXBUFF[3]));
-	makb[RXBUFF[0]]._T[4]=(signed short)(*((signed char*)&RXBUFF[4]));
-
-	if(RXBUFF[5]&0x01)makb[RXBUFF[0]]._T_nd[0]=1;
-	else makb[RXBUFF[0]]._T_nd[0]=0;
-	if(RXBUFF[5]&0x02)makb[RXBUFF[0]]._T_nd[1]=1;
-	else makb[RXBUFF[0]]._T_nd[1]=0;
-	if(RXBUFF[5]&0x04)makb[RXBUFF[0]]._T_nd[2]=1;
-	else makb[RXBUFF[0]]._T_nd[2]=0;
-	if(RXBUFF[5]&0x08)makb[RXBUFF[0]]._T_nd[3]=1;
-	else makb[RXBUFF[0]]._T_nd[3]=0;
-	if(RXBUFF[5]&0x10)makb[RXBUFF[0]]._T_nd[4]=1;
-	else makb[RXBUFF[0]]._T_nd[4]=0;
-
-	makb[RXBUFF[0]]._cnt=0;
-     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-	
-if((RXBUFF[1]&0xf8)==0x18)
-     {
-	char temp;
-	temp=RXBUFF[1]&0x07;
-	
-	if(temp==0) 
-		{	
-		lakb_damp[temp][0]=RXBUFF[0];
-		mem_copy(&lakb_damp[temp][1],&RXBUFF[2],6);
-	
-		ccc_plazma[0]++;
-		ccc_plazma[7]=temp;
-		li_bat._canErrorCnt=0;
-		li_bat._canError=0;
-		}
-	}	
-
-if((RXBUFF[1]&0xf8)==0x78)
-     {
-	char temp;
-	temp=RXBUFF[1]&0x07;
-	
-	if(temp==0) 
-		{		
-		lakb_damp[temp][7]=RXBUFF[0];
-		mem_copy(&lakb_damp[temp][8],&RXBUFF[2],6);
-		
-		ccc_plazma[1]++;
-		ccc_plazma[8]=temp;
-		li_bat._canErrorCnt=0;
-		li_bat._canError=0;
-		}
-	}
-
-if((RXBUFF[1]&0xf8)==0x38)
-     {
-	char temp;
-	temp=RXBUFF[1]&0x07;
-
-	if(temp==0) 
-		{
-		lakb_damp[temp][14]=RXBUFF[0];
-		mem_copy(&lakb_damp[temp][15],&RXBUFF[2],6);
-		
-		ccc_plazma[2]++;
-		ccc_plazma[9]=temp;
-		li_bat._canErrorCnt=0;
-		li_bat._canError=0;
-		}
-	}	
-
-if((RXBUFF[1]&0xf8)==0x48)
-     {
-	char temp;
-	temp=RXBUFF[1]&0x07;
-	
-	if(temp==0) 
-		{
-		lakb_damp[temp][21]=RXBUFF[0];
-		mem_copy(&lakb_damp[temp][22],&RXBUFF[2],6);
-		
-		ccc_plazma[3]++;
-		ccc_plazma[10]=temp;
-		li_bat._canErrorCnt=0;
-		li_bat._canError=0;
-		}
-	}
-
-if((RXBUFF[1]&0xf8)==0x58)
-     {
-	char temp;
-	temp=RXBUFF[1]&0x07;
-
-	if(temp==0) 
-		{		
-		lakb_damp[temp][28]=RXBUFF[0];
-		mem_copy(&lakb_damp[temp][29],&RXBUFF[2],6);
-
-		ccc_plazma[4]++;
-		ccc_plazma[11]=temp;
-		li_bat._canErrorCnt=0;
-		li_bat._canError=0;
-		}
-	}
-
-if((RXBUFF[1]&0xf8)==0x68)
-     {
-	char temp;
-	temp=RXBUFF[1]&0x07;
-		
-	if(temp==0) 
-		{
-		lakb_damp[temp][35]=RXBUFF[0];
-		mem_copy(&lakb_damp[temp][36],&RXBUFF[2],6);
-		
-		ccc_plazma[5]++;
-		ccc_plazma[12]=temp;
-		li_bat._canErrorCnt=0;
-		li_bat._canError=0;	
-		}
-	}
-
-
-if(RXBUFF[1]==0xC1)
-    {
-	lakb[0]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-	lakb[0]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-	lakb[0]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-	lakb[0]._cell_temp_1=(signed char)(RXBUFF[6]);
-	lakb[0]._cell_temp_2=(signed char)(RXBUFF[7]);
-	
-	
-	
-	plazma_ztt[0]++;
-
-	}
-
-if(RXBUFF[1]==0xC2)
-    {
-	lakb[0]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-	lakb[0]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-	lakb[0]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-	lakb[0]._cell_temp_3=(signed char)(RXBUFF[6]);
-	lakb[0]._cell_temp_4=(signed char)(RXBUFF[7]);
-	
-	
-	
-	plazma_ztt[1]++;
-	}		
-
-if(RXBUFF[1]==0xC3)
-    {
-	lakb[1]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-	lakb[1]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-	lakb[1]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-	lakb[1]._cell_temp_1=(signed char)(RXBUFF[6]);
-	lakb[1]._cell_temp_2=(signed char)(RXBUFF[7]);
-	
-	}
-
-if(RXBUFF[1]==0xC4)
-    {
-	lakb[1]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-	lakb[1]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-	lakb[1]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-	lakb[1]._cell_temp_3=(signed char)(RXBUFF[6]);
-	lakb[1]._cell_temp_4=(signed char)(RXBUFF[7]);
-	
-	}	
-
-if(RXBUFF[1]==0xC5)
-    {
-	lakb[2]._communication2lvlErrorCnt=(signed short)(*((signed char*)&RXBUFF[0]));
-	lakb[2]._ch_curr=(signed short)(*((signed short*)&RXBUFF[2]));
-	lakb[2]._tot_bat_volt=(signed short)(*((signed short*)&RXBUFF[4]));
-	lakb[2]._cell_temp_1=(signed char)(RXBUFF[6]);
-	lakb[2]._cell_temp_2=(signed char)(RXBUFF[7]);
-	
-	}
-
-if(RXBUFF[1]==0xC6)
-    {
-	lakb[2]._communication2lvlErrorStat=(signed short)(*((signed char*)&RXBUFF[0]));
-	lakb[2]._s_o_c=(signed short)(*((signed short*)&RXBUFF[2]));
-	lakb[2]._s_o_h=(signed short)(*((signed short*)&RXBUFF[4]));
-	lakb[2]._cell_temp_3=(signed char)(RXBUFF[6]);
-	lakb[2]._cell_temp_3=(signed char)(RXBUFF[7]);	
-	}	
-
-if(RXBUFF[1]==0xC7)
-    {
-	lakb[0]._cell_temp_ambient=(signed char)(RXBUFF[0]);
-	lakb[0]._cell_temp_power=(signed char)(RXBUFF[2]);
-	lakb[1]._cell_temp_ambient=(signed char)(RXBUFF[3]);
-	lakb[1]._cell_temp_power=(signed char)(RXBUFF[4]);
-	lakb[2]._cell_temp_ambient=(signed char)(RXBUFF[5]);
-	lakb[2]._cell_temp_power=(signed char)(RXBUFF[6]);	
-	
-	
-	}	
-
-if(RXBUFF[1]==0xC8)
-    {
-	if(RXBUFF[0]==0)
-		{
-		lakb[0]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[2]);
-		lakb[0]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[3]);
-		lakb[1]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[4]);
-		lakb[1]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[5]);
-		lakb[2]._charge_and_discharge_current_alarm_status=(signed char)(RXBUFF[6]);
-		lakb[2]._battery_total_voltage_alarm_status=(signed char)(RXBUFF[7]);
-		}
-	if(RXBUFF[0]==1)
-		{
-		lakb[0]._custom_alarm_quantity=(signed char)(RXBUFF[2]);
-		lakb[0]._balanced_event_code=(signed char)(RXBUFF[3]);
-		lakb[1]._custom_alarm_quantity=(signed char)(RXBUFF[4]);
-		lakb[1]._balanced_event_code=(signed char)(RXBUFF[5]);
-		lakb[2]._custom_alarm_quantity=(signed char)(RXBUFF[6]);
-		lakb[2]._balanced_event_code=(signed char)(RXBUFF[7]);
-		}
-	if(RXBUFF[0]==2)
-		{
-		lakb[0]._voltage_event_code=(signed char)(RXBUFF[2]);
-		lakb[0]._temperature_event_code=(signed char)(RXBUFF[3]);
-		lakb[1]._voltage_event_code=(signed char)(RXBUFF[4]);
-		lakb[1]._temperature_event_code=(signed char)(RXBUFF[5]);
-		lakb[2]._voltage_event_code=(signed char)(RXBUFF[6]);
-		lakb[2]._temperature_event_code=(signed char)(RXBUFF[7]);
-		}
-	if(RXBUFF[0]==3)
-		{
-		lakb[0]._current_event_code=(signed char)(RXBUFF[2]);
-		lakb[0]._fet_status_code=(signed char)(RXBUFF[3]);
-		lakb[1]._current_event_code=(signed char)(RXBUFF[4]);
-		lakb[1]._fet_status_code=(signed char)(RXBUFF[5]);
-		lakb[2]._current_event_code=(signed char)(RXBUFF[6]);
-		lakb[2]._fet_status_code=(signed char)(RXBUFF[7]);
-		}
-	if(RXBUFF[0]==4)
-		{
-		lakb[0]._balanced_status_code=(signed short)(RXBUFF[2])+(((signed char)(RXBUFF[3]))<<8);
-		lakb[1]._balanced_status_code=(signed short)(RXBUFF[4])+(((signed char)(RXBUFF[5]))<<8);
-		lakb[2]._balanced_status_code=(signed short)(RXBUFF[6])+(((signed char)(RXBUFF[7]))<<8);
-		}
-	if(RXBUFF[0]==5)
-		{
-		lakb[0]._system_status_code=(signed char)(RXBUFF[2]);
-		lakb[1]._system_status_code=(signed char)(RXBUFF[4]);
-		lakb[2]._system_status_code=(signed char)(RXBUFF[6]);
-		}
-	}	
 	
 CAN_IN_AN1_end:
 bIN2=0;
