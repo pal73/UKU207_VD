@@ -7166,7 +7166,7 @@ if(uInAvar==2)
 	sub_cnt_max++;	
 	}
 
-if(ibat_metr_cnt>30)
+if((ibat_metr_cnt>30)&&(I_LOAD_MODE==1))	
 	{
 	sub_ptrs[i++]=	"Øףםע םו ןמהךכ‏קום!!!";
 	sub_cnt_max++;	
@@ -7199,6 +7199,8 @@ if(sub_cnt1>=20)
 
 else if(a_ind . i==iMn_VD)
 	{
+	gran(&NUMDT,0,1);
+	gran(&NUMIST,0,32);
 	ptrs[0]	=	"                    ";
 
 	ptrs[0]	=	"  Â נאבמעו    rטסע. ";
@@ -7207,50 +7209,50 @@ else if(a_ind . i==iMn_VD)
 	 
     i=0;
  	
-	ptrs[1]=			"Uגץ.    ]Â Uג.ה.  @Â";	
-	ptrs[2]=			"Uגûץ.   #Â Iגûץ.  $À";
-    ptrs[3]=			" 0%:0^:0& 0</>  /0{ ";
-	ptrs[4]=			"   Tסטסעולû    ?°C  ";
+	ptrs[1]=					"Uגץ.    ]Â Uג.ה.  @Â";	
+	ptrs[2]=					"Uגûץ.   #Â Iגûץ.  $À";
+    ptrs[3]=					" 0%:0^:0& 0</>  /0{ ";
+	ptrs[4]=					"   Tסטסעולû    ?°C  ";
 								
-	ptrs[5]=  			" ÁÏÑ N1             ";
-    ptrs[6]=  			" ÁÏÑ N2             ";
-    ptrs[7]=  			" ÁÏÑ N3             ";
-    ptrs[8]=  			" ÁÏÑ N4             ";
-    ptrs[9]= 			" ÁÏÑ N5             ";
-    ptrs[10]= 			" ÁÏÑ N6             ";
-    ptrs[11]= 			" ÁÏÑ N7             ";
-    ptrs[12]= 			" ÁÏÑ N8             ";
-    ptrs[13]= 			" ÁÏÑ N9             ";
-    ptrs[14]= 			" ÁÏÑ N10            ";
-	ptrs[15]=  			" ÁÏÑ N11            ";
-    ptrs[16]=  			" ÁÏÑ N12            ";
-    ptrs[17]=  			" ÁÏÑ N13            ";
-    ptrs[18]=  			" ÁÏÑ N14            ";
-    ptrs[19]= 			" ÁÏÑ N15            ";
-    ptrs[20]= 			" ÁÏÑ N16            ";
-    ptrs[21]= 			" ÁÏÑ N17            ";
-    ptrs[22]= 			" ÁÏÑ N18            ";
-    ptrs[23]= 			" ÁÏÑ N19            ";
-    ptrs[24]= 			" ÁÏÑ N20            ";
- 	ptrs[25]=  			" ÁÏÑ N21            ";
-    ptrs[26]=  			" ÁÏÑ N22            ";
-    ptrs[27]=  			" ÁÏÑ N23            ";
-    ptrs[28]=  			" ÁÏÑ N24            ";
-    ptrs[29]= 			" ÁÏÑ N25            ";
-    ptrs[30]= 			" ÁÏÑ N26            ";
-    ptrs[31]= 			" ÁÏÑ N27            ";
-    ptrs[32]= 			" ÁÏÑ N28            ";
-    ptrs[33]= 			" ÁÏÑ N29            ";
-    ptrs[34]= 			" ÁÏÑ N30            ";
-    ptrs[35]= 			" ÁÏÑ N31            ";
-    ptrs[36]= 			" ÁÏÑ N32            ";
+	ptrs[4+NUMDT]=  			" ÁÏÑ N1             ";
+    ptrs[5+NUMDT]=  			" ÁÏÑ N2             ";
+    ptrs[6+NUMDT]=  			" ÁÏÑ N3             ";
+    ptrs[7+NUMDT]=  			" ÁÏÑ N4             ";
+    ptrs[8+NUMDT]= 				" ÁÏÑ N5             ";
+    ptrs[9+NUMDT]= 				" ÁÏÑ N6             ";
+    ptrs[10+NUMDT]= 			" ÁÏÑ N7             ";
+    ptrs[11+NUMDT]= 			" ÁÏÑ N8             ";
+    ptrs[12+NUMDT]= 			" ÁÏÑ N9             ";
+    ptrs[13+NUMDT]= 			" ÁÏÑ N10            ";
+	ptrs[14+NUMDT]=  			" ÁÏÑ N11            ";
+    ptrs[15+NUMDT]=  			" ÁÏÑ N12            ";
+    ptrs[16+NUMDT]=  			" ÁÏÑ N13            ";
+    ptrs[17+NUMDT]=  			" ÁÏÑ N14            ";
+    ptrs[18+NUMDT]= 			" ÁÏÑ N15            ";
+    ptrs[19+NUMDT]= 			" ÁÏÑ N16            ";
+    ptrs[20+NUMDT]= 			" ÁÏÑ N17            ";
+    ptrs[21+NUMDT]= 			" ÁÏÑ N18            ";
+    ptrs[22+NUMDT]= 			" ÁÏÑ N19            ";
+    ptrs[23+NUMDT]= 			" ÁÏÑ N20            ";
+ 	ptrs[24+NUMDT]=  			" ÁÏÑ N21            ";
+    ptrs[25+NUMDT]=  			" ÁÏÑ N22            ";
+    ptrs[26+NUMDT]=  			" ÁÏÑ N23            ";
+    ptrs[27+NUMDT]=  			" ÁÏÑ N24            ";
+    ptrs[28+NUMDT]= 			" ÁÏÑ N25            ";
+    ptrs[29+NUMDT]= 			" ÁÏÑ N26            ";
+    ptrs[30+NUMDT]= 			" ÁÏÑ N27            ";
+    ptrs[31+NUMDT]= 			" ÁÏÑ N28            ";
+    ptrs[32+NUMDT]= 			" ÁÏÑ N29            ";
+    ptrs[33+NUMDT]= 			" ÁÏÑ N30            ";
+    ptrs[34+NUMDT]= 			" ÁÏÑ N31            ";
+    ptrs[35+NUMDT]= 			" ÁÏÑ N32            ";
 	
-	ptrs[5+NUMIST]=		" Òאבכטצא טסעמקםטךמג ";
-	ptrs[6+NUMIST]= 	" Óסעאםמגךט          "; 
-    ptrs[7+NUMIST]= 	" Æףנםאכ סמבûעטי     ";
-	ptrs[8+NUMIST]=		" Âונסטÿ ÏÎ          ";
-	ptrs[9+NUMIST]= 	" Âûץמה              ";
-	ptrs[10+NUMIST]=	" Òוסע               ";
+	ptrs[4+NUMIST+NUMDT]=		" Òאבכטצא טסעמקםטךמג ";
+	ptrs[5+NUMIST+NUMDT]= 		" Óסעאםמגךט          "; 
+    ptrs[6+NUMIST+NUMDT]= 		" Æףנםאכ סמבûעטי     ";
+	ptrs[7+NUMIST+NUMDT]=		" Âונסטÿ ÏÎ          ";
+	ptrs[8+NUMIST+NUMDT]= 		" Âûץמה              ";
+	ptrs[9+NUMIST+NUMDT]=		" Òוסע               ";
 	
 
     if(a_ind . s_i==0)a_ind . i_s=0;
@@ -7302,7 +7304,7 @@ else if(a_ind . i==iMn_VD)
  	     lcd_buffer[find(':')]=' ';
  	     }
 
-	if((a_ind . i_s)&&(a_ind . s_i>1))
+	if((a_ind . i_s)&&(a_ind . s_i>NUMDT))
 	     {
 	     if(a_ind . i_s==a_ind . s_i)lcd_buffer[60]=1;
 	     else if((a_ind . i_s-a_ind . s_i)==1)lcd_buffer[40]=1;
@@ -10516,7 +10518,7 @@ if(a_ind . i==iDeb)
      		    	"    !     $         ",
      		    	"    @     %         ",
      		    	"            ^       ");
-#line 5071 "main.c"
+#line 5073 "main.c"
     	}
 
 
@@ -11114,7 +11116,7 @@ else if(a_ind . i==iKlimat_kontur)
 	
 	int2lcdyx(t_box,0,19,0);	 
 	}
-#line 5801 "main.c"
+#line 5803 "main.c"
 
 else if(a_ind . i==iNpn_set)
 	{
@@ -11563,12 +11565,12 @@ else if(a_ind . i==iCurr_overload)
 }							    
 
 
-#line 6255 "main.c"
+#line 6257 "main.c"
 
 
 
 
-#line 6278 "main.c"
+#line 6280 "main.c"
 
 
 
@@ -11822,13 +11824,13 @@ else if(a_ind . i==iMn_VD)
 	if(but==251)
 		{
 		a_ind . s_i++;
-		gran_char(&a_ind . s_i,0,7+NUMIST);
+		gran_char(&a_ind . s_i,0,6+NUMDT+NUMIST);
 		}
 		
 	else if(but==253)
 		{
 		a_ind . s_i--;
-		gran_char(&a_ind . s_i,0,7+NUMIST);
+		gran_char(&a_ind . s_i,0,6+NUMDT+NUMIST);
 		}	
 
 	else if(but==239)
@@ -11879,40 +11881,40 @@ else if(a_ind . i==iMn_VD)
 			avar_ind_stat1=0;																											
 			}
 
-		else if((a_ind . s_i>1)&&(a_ind . s_i<=(1+NUMIST)))
+		else if((a_ind . s_i>NUMDT)&&(a_ind . s_i<=(NUMDT+NUMIST)))
 		    	{
-		    	tree_up(iBps_elteh,0,0,a_ind . s_i-2);
+		    	tree_up(iBps_elteh,0,0,a_ind . s_i-NUMDT-1);
 		    	} 
 
 
-		else if(a_ind . s_i==(2+NUMIST))
+		else if(a_ind . s_i==(1+NUMDT+NUMIST))
 			{
 	     	tree_up(iBps_list,0,0,0);
 		    }		
-		else if(a_ind . s_i==(3+NUMIST))
+		else if(a_ind . s_i==(2+NUMDT+NUMIST))
 			{
 			tree_up(iSet_prl,0,0,0);
 		    ret(50);
 		    parol_init();
 			}
-		else if(a_ind . s_i==(4+NUMIST))
+		else if(a_ind . s_i==(3+NUMDT+NUMIST))
 			{
 			if(but==126)avar_uout_hndl(1);
 			tree_up(iLog,0,0,0);
 		    ret(1000);
 			}
-		else if(a_ind . s_i==(5+NUMIST))
+		else if(a_ind . s_i==(4+NUMDT+NUMIST))
 			{
 			if(but==254)
 		     	{
 		     	tree_up(iFWabout,0,0,0);
 		     	}
 			}
-		else if(a_ind . s_i==(6+NUMIST))
+		else if(a_ind . s_i==(5+NUMDT+NUMIST))
 			{
 			a_ind . s_i=0;
 			}
-		else if(a_ind . s_i==(7+NUMIST))
+		else if(a_ind . s_i==(6+NUMDT+NUMIST))
 			{
 	     	tree_up(iPrltst,0,0,0);
 		    parol_init();
@@ -12761,7 +12763,7 @@ else if(a_ind . i==iSet)
 	     {
 	     if(but==254)
 	          {
-#line 7482 "main.c"
+#line 7484 "main.c"
 	          ret(1000);
 	          default_temp=10;
 	          }
@@ -12783,7 +12785,7 @@ else if(a_ind . i==iSet)
 		{
 		if(but==254)
 		     {
-#line 7528 "main.c"
+#line 7530 "main.c"
 
 
 
@@ -15659,7 +15661,7 @@ else if(a_ind . i==iK_VD)
 	     	{
 	     	temp_SS-=2;
 	     	}
-	    gran(&temp_SS,1900,3000);
+	    gran(&temp_SS,1500,3000);
 		lc640_write_int(0x10+100+50,temp_SS);					
 		speed=1;	
 		}			
@@ -17639,9 +17641,9 @@ else if(a_ind . i==iTst_VD)
 			}
 		}					
 	}
-#line 12629 "main.c"
+#line 12631 "main.c"
 
-#line 12839 "main.c"
+#line 12841 "main.c"
 
 
 else if(a_ind . i==iTst_bps)
@@ -17967,7 +17969,7 @@ else if(a_ind . i==iKlimat_kontur)
 			}
 		}
 	}
-#line 13544 "main.c"
+#line 13546 "main.c"
 else if(a_ind . i==iNpn_set)
 	{
 	ret(1000);
@@ -18907,7 +18909,7 @@ adc_init();
 
 lc640_write_int(100,134);
 
-#line 14489 "main.c"
+#line 14491 "main.c"
 
 
 
@@ -18998,7 +19000,7 @@ if((AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000)||(BAT_TYPE==1))
 
 
 
-#line 14597 "main.c"
+#line 14599 "main.c"
 
 
 

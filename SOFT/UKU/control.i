@@ -4749,7 +4749,6 @@ char  i;
 
 
 
- 
 
 
 
@@ -4759,7 +4758,6 @@ char  i;
 
 
 
- 
 
 
 
@@ -4768,7 +4766,6 @@ char  i;
 
 
 
- 
 
 
 
@@ -4801,87 +4798,6 @@ char  i;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
 
 
 
@@ -4922,116 +4838,6 @@ char  i;
 
  
 
-
-
-
-	if(bps[11]._device==dNET_METR)
-		{
-		net_metr_buff_[0]=((signed short)bps[11]._buff[0])+(((signed short)bps[11]._buff[1])<<8);
-		net_metr_buff_[1]=((signed short)bps[11]._buff[2])+(((signed short)bps[11]._buff[3])<<8);
-		net_metr_buff_[2]=((signed short)bps[11]._buff[4])+(((signed short)bps[11]._buff[5])<<8);
-
-		temp_SL=(signed long)net_metr_buff_[2];
-		temp_SL*=KunetA;
-		temp_SL/=6000L;
-		net_Ua=(signed short)temp_SL;
-	
-		temp_SL=(signed long)net_metr_buff_[1];
-		temp_SL*=KunetB;
-		temp_SL/=6000L;
-		net_Ub=(signed short)temp_SL;
-	
-		temp_SL=(signed long)net_metr_buff_[0];
-		temp_SL*=KunetC;
-		temp_SL/=6000L;
-		net_Uc=(signed short)temp_SL;
-
-		net_F3=((signed short)bps[11]._buff[6])+(((signed short)bps[11]._buff[7])<<8);
-
-		net_U=net_Ua;
-		if(net_Ub<net_U)net_U=net_Ub;
-		if(net_Uc<net_U)net_U=net_Uc;
-		}
-	  else if(AUSW_MAIN==22033)
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=KunetA;
-	temp_SL/=4000L;
-	net_Ua=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[3];
-	temp_SL*=KunetB;
-	temp_SL/=6000L;
-	net_Ub=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[10];
-	temp_SL*=KunetC;
-	temp_SL/=6000L;
-	net_Uc=(signed short)temp_SL;
-
-	net_U=net_Ua;
-	if(net_Ub<net_U)net_U=net_Ub;
-	if(net_Uc<net_U)net_U=net_Uc;
-	}
-else if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043)||(AUSW_MAIN==22018))
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=KunetA;
-	temp_SL/=40000L;
-	net_Ua=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[3];
-	temp_SL*=KunetB;
-	temp_SL/=6000L;
-	net_Ub=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[10];
-	temp_SL*=KunetC;
-	temp_SL/=6000L;
-	net_Uc=(signed short)temp_SL;
-
-	net_U=net_Ua;
-	if(net_Ub<net_U)net_U=net_Ub;
-	if(net_Uc<net_U)net_U=net_Uc;
-	}
-else	if((AUSW_MAIN==22010)||(AUSW_MAIN==22011) )
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=Kunet;
-	temp_SL/=35000L;
-	net_U=(signed short)temp_SL;
-	
-	}
-else
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=Kunet;
-
-	temp_SL/=500L;
-
-
-
-	net_U=(signed short)temp_SL;
-	
-	}
-if(bps[11]._device!=dNET_METR) net_F3=net_F;
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
- 
 
 
 temp_SL=(signed long)adc_buff_[0];
@@ -5090,9 +4896,9 @@ temp_SL=(signed long)adc_buff_[1];
 temp_SL*=Kubatm[1];
 temp_SL/=700L;
 bat[1]._Ubm=(signed short)temp_SL;
-#line 757 "control.c"
+#line 563 "control.c"
 
-#line 764 "control.c"
+#line 570 "control.c"
 
 
 
@@ -5149,27 +4955,114 @@ if(!mess_find_unvol(220))
 
 
 
-#line 829 "control.c"
-if((adc_buff_[6]>800)&&(adc_buff_[6]<3800))bat[0]._nd=0;
-else bat[0]._nd=1;
-temp_SL=(signed long)adc_buff_[6];
-temp_SL*=Ktbat[0];
-temp_SL/=20000L;
-temp_SL-=273L;
-bat[0]._Tb=(signed short)temp_SL;
 
 
-#line 847 "control.c"
-if((adc_buff_[7]>800)&&(adc_buff_[7]<3800))bat[1]._nd=0;
-else bat[1]._nd=1;
-temp_SL=(signed long)adc_buff_[7];
-temp_SL*=Ktbat[1];
-temp_SL/=20000L;
-temp_SL-=273L;
-bat[1]._Tb=(signed short)temp_SL;
 
 
-#line 928 "control.c"
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 
@@ -5354,7 +5247,11 @@ if(I_LOAD_MODE==0)
 		temp_SL+=(signed long)bps[i]._Ii;
 		}
 	Ib_ips_termokompensat=(signed short)temp_SL/10;
+	
+	if(vd_U==0) Ib_ips_termokompensat=0;	
 	out_I=Ib_ips_termokompensat;
+
+	
 	}
 
 
@@ -5491,7 +5388,7 @@ if((BAT_IS_ON[0]==bisON)&&(bat[0]._Ub>200)) Ibmax=bat[0]._Ib;
 if((BAT_IS_ON[1]==bisON)&&(bat[1]._Ub>200)&&(bat[1]._Ib>bat[0]._Ib)) Ibmax=bat[1]._Ib;
 
 
-#line 1261 "control.c"
+#line 1071 "control.c"
 
 
 
@@ -5537,7 +5434,7 @@ for(i=0;i<NUMIST;i++)
      }
 
 load_I=0;
-#line 1316 "control.c"
+#line 1126 "control.c"
 load_I=-(bat[0]._Ib/10)-(bat[1]._Ib/10);
 
 Isumm=0;
@@ -5567,7 +5464,7 @@ if(load_I<0)load_I=0;
 
 
 
-#line 1374 "control.c"
+#line 1184 "control.c"
 
 
 if (NUMINV)
@@ -5612,7 +5509,7 @@ if (NUMINV)
    	}
 
 
-#line 1437 "control.c"
+#line 1247 "control.c"
 
 
 
@@ -5631,9 +5528,9 @@ if (NUMINV)
 
  
 
-#line 1670 "control.c"
+#line 1480 "control.c"
 
-#line 1725 "control.c"
+#line 1535 "control.c"
 
 
 
@@ -5756,7 +5653,7 @@ if(adc_ch_net)
 		}
 	if((adc_net_buff_cnt&0x03ff)==0)
 		{
-#line 1853 "control.c"
+#line 1663 "control.c"
 		net_buff_=(short)((main_power_buffer[adc_net_buff_cnt>>10])>>8);
 
 
@@ -7170,7 +7067,7 @@ else
  
 }
 
-#line 3386 "control.c"
+#line 3196 "control.c"
 
 
 
@@ -7473,7 +7370,7 @@ if(main_vent_pos<=1)mixer_vent_stat=mvsON;
 else mixer_vent_stat=mvsOFF;
 
 
-#line 3705 "control.c"
+#line 3515 "control.c"
 
 if((TBATDISABLE>=50) && (TBATDISABLE<=90))
 	{
@@ -7530,7 +7427,7 @@ else
 }
 
 
-#line 3894 "control.c"
+#line 3704 "control.c"
 
 
 
@@ -8464,9 +8361,9 @@ char i;
 
 for(i=0;i<NUMSK;i++)
 	{
-#line 4852 "control.c"
+#line 4662 "control.c"
 	if(adc_buff_[sk_buff_220[i]]<2000)
-#line 4860 "control.c"
+#line 4670 "control.c"
 		{
 		if(sk_cnt[i]<10)
 			{
@@ -8569,7 +8466,7 @@ for(i=0;i<NUMSK;i++)
 	 	}
 
 
-#line 4982 "control.c"
+#line 4792 "control.c"
 	sk_av_stat_old[i]=sk_av_stat[i];
 	}
 }

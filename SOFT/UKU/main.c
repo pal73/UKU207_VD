@@ -1675,7 +1675,7 @@ if(uInAvar==2)
 	sub_cnt_max++;	
 	}
 
-if(ibat_metr_cnt>30)
+if((ibat_metr_cnt>30)&&(I_LOAD_MODE==1))	//Выдаем сообщение об отвале шунта только если выбрано измерение тока шунтом
 	{
 	sub_ptrs[i++]=	"Шунт не подключен!!!";
 	sub_cnt_max++;	
@@ -1708,6 +1708,8 @@ if(sub_cnt1>=20)
 
 else if(ind==iMn_VD)
 	{
+	gran(&NUMDT,0,1);
+	gran(&NUMIST,0,32);
 	ptrs[0]	=	"                    ";
 
 	ptrs[0]	=	"  В работе    rист. ";
@@ -1716,50 +1718,50 @@ else if(ind==iMn_VD)
 	 
     i=0;
  	
-	ptrs[1]=			"Uвх.    ]В Uв.д.  @В";	
-	ptrs[2]=			"Uвых.   #В Iвых.  $А";
-    ptrs[3]=			" 0%:0^:0& 0</>  /0{ ";
-	ptrs[4]=			"   Tсистемы    ?°C  ";
+	ptrs[1]=					"Uвх.    ]В Uв.д.  @В";	
+	ptrs[2]=					"Uвых.   #В Iвых.  $А";
+    ptrs[3]=					" 0%:0^:0& 0</>  /0{ ";
+	ptrs[4]=					"   Tсистемы    ?°C  ";
 								
-	ptrs[5]=  			" БПС N1             ";
-    ptrs[6]=  			" БПС N2             ";
-    ptrs[7]=  			" БПС N3             ";
-    ptrs[8]=  			" БПС N4             ";
-    ptrs[9]= 			" БПС N5             ";
-    ptrs[10]= 			" БПС N6             ";
-    ptrs[11]= 			" БПС N7             ";
-    ptrs[12]= 			" БПС N8             ";
-    ptrs[13]= 			" БПС N9             ";
-    ptrs[14]= 			" БПС N10            ";
-	ptrs[15]=  			" БПС N11            ";
-    ptrs[16]=  			" БПС N12            ";
-    ptrs[17]=  			" БПС N13            ";
-    ptrs[18]=  			" БПС N14            ";
-    ptrs[19]= 			" БПС N15            ";
-    ptrs[20]= 			" БПС N16            ";
-    ptrs[21]= 			" БПС N17            ";
-    ptrs[22]= 			" БПС N18            ";
-    ptrs[23]= 			" БПС N19            ";
-    ptrs[24]= 			" БПС N20            ";
- 	ptrs[25]=  			" БПС N21            ";
-    ptrs[26]=  			" БПС N22            ";
-    ptrs[27]=  			" БПС N23            ";
-    ptrs[28]=  			" БПС N24            ";
-    ptrs[29]= 			" БПС N25            ";
-    ptrs[30]= 			" БПС N26            ";
-    ptrs[31]= 			" БПС N27            ";
-    ptrs[32]= 			" БПС N28            ";
-    ptrs[33]= 			" БПС N29            ";
-    ptrs[34]= 			" БПС N30            ";
-    ptrs[35]= 			" БПС N31            ";
-    ptrs[36]= 			" БПС N32            ";
+	ptrs[4+NUMDT]=  			" БПС N1             ";
+    ptrs[5+NUMDT]=  			" БПС N2             ";
+    ptrs[6+NUMDT]=  			" БПС N3             ";
+    ptrs[7+NUMDT]=  			" БПС N4             ";
+    ptrs[8+NUMDT]= 				" БПС N5             ";
+    ptrs[9+NUMDT]= 				" БПС N6             ";
+    ptrs[10+NUMDT]= 			" БПС N7             ";
+    ptrs[11+NUMDT]= 			" БПС N8             ";
+    ptrs[12+NUMDT]= 			" БПС N9             ";
+    ptrs[13+NUMDT]= 			" БПС N10            ";
+	ptrs[14+NUMDT]=  			" БПС N11            ";
+    ptrs[15+NUMDT]=  			" БПС N12            ";
+    ptrs[16+NUMDT]=  			" БПС N13            ";
+    ptrs[17+NUMDT]=  			" БПС N14            ";
+    ptrs[18+NUMDT]= 			" БПС N15            ";
+    ptrs[19+NUMDT]= 			" БПС N16            ";
+    ptrs[20+NUMDT]= 			" БПС N17            ";
+    ptrs[21+NUMDT]= 			" БПС N18            ";
+    ptrs[22+NUMDT]= 			" БПС N19            ";
+    ptrs[23+NUMDT]= 			" БПС N20            ";
+ 	ptrs[24+NUMDT]=  			" БПС N21            ";
+    ptrs[25+NUMDT]=  			" БПС N22            ";
+    ptrs[26+NUMDT]=  			" БПС N23            ";
+    ptrs[27+NUMDT]=  			" БПС N24            ";
+    ptrs[28+NUMDT]= 			" БПС N25            ";
+    ptrs[29+NUMDT]= 			" БПС N26            ";
+    ptrs[30+NUMDT]= 			" БПС N27            ";
+    ptrs[31+NUMDT]= 			" БПС N28            ";
+    ptrs[32+NUMDT]= 			" БПС N29            ";
+    ptrs[33+NUMDT]= 			" БПС N30            ";
+    ptrs[34+NUMDT]= 			" БПС N31            ";
+    ptrs[35+NUMDT]= 			" БПС N32            ";
 	
-	ptrs[5+NUMIST]=		" Таблица источников ";
-	ptrs[6+NUMIST]= 	" Установки          "; 
-    ptrs[7+NUMIST]= 	" Журнал событий     ";
-	ptrs[8+NUMIST]=		" Версия ПО          ";
-	ptrs[9+NUMIST]= 	" Выход              ";
-	ptrs[10+NUMIST]=	" Тест               ";
+	ptrs[4+NUMIST+NUMDT]=		" Таблица источников ";
+	ptrs[5+NUMIST+NUMDT]= 		" Установки          "; 
+    ptrs[6+NUMIST+NUMDT]= 		" Журнал событий     ";
+	ptrs[7+NUMIST+NUMDT]=		" Версия ПО          ";
+	ptrs[8+NUMIST+NUMDT]= 		" Выход              ";
+	ptrs[9+NUMIST+NUMDT]=		" Тест               ";
 	
 
     if(sub_ind==0)index_set=0;
@@ -1811,7 +1813,7 @@ else if(ind==iMn_VD)
  	     lcd_buffer[find(':')]=' ';
  	     }
 
-	if((index_set)&&(sub_ind>1))
+	if((index_set)&&(sub_ind>NUMDT))
 	     {
 	     if(index_set==sub_ind)lcd_buffer[60]=1;
 	     else if((index_set-sub_ind)==1)lcd_buffer[40]=1;
@@ -6528,13 +6530,13 @@ else if(ind==iMn_VD)
 	if(but==butD)
 		{
 		sub_ind++;
-		gran_char(&sub_ind,0,7+NUMIST);
+		gran_char(&sub_ind,0,6+NUMDT+NUMIST);
 		}
 		
 	else if(but==butU)
 		{
 		sub_ind--;
-		gran_char(&sub_ind,0,7+NUMIST);
+		gran_char(&sub_ind,0,6+NUMDT+NUMIST);
 		}	
 
 	else if(but==butR)
@@ -6585,40 +6587,40 @@ else if(ind==iMn_VD)
 			avar_ind_stat1=0;																											
 			}
 
-		else if((sub_ind>1)&&(sub_ind<=(1+NUMIST)))
+		else if((sub_ind>NUMDT)&&(sub_ind<=(NUMDT+NUMIST)))
 		    	{
-		    	tree_up(iBps_elteh,0,0,sub_ind-2);
+		    	tree_up(iBps_elteh,0,0,sub_ind-NUMDT-1);
 		    	} 
 
 
-		else if(sub_ind==(2+NUMIST))
+		else if(sub_ind==(1+NUMDT+NUMIST))
 			{
 	     	tree_up(iBps_list,0,0,0);
 		    }		
-		else if(sub_ind==(3+NUMIST))
+		else if(sub_ind==(2+NUMDT+NUMIST))
 			{
 			tree_up(iSet_prl,0,0,0);
 		    ret(50);
 		    parol_init();
 			}
-		else if(sub_ind==(4+NUMIST))
+		else if(sub_ind==(3+NUMDT+NUMIST))
 			{
 			if(but==butE_)avar_uout_hndl(1);
 			tree_up(iLog,0,0,0);
 		    ret(1000);
 			}
-		else if(sub_ind==(5+NUMIST))
+		else if(sub_ind==(4+NUMDT+NUMIST))
 			{
 			if(but==butE)
 		     	{
 		     	tree_up(iFWabout,0,0,0);
 		     	}
 			}
-		else if(sub_ind==(6+NUMIST))
+		else if(sub_ind==(5+NUMDT+NUMIST))
 			{
 			sub_ind=0;
 			}
-		else if(sub_ind==(7+NUMIST))
+		else if(sub_ind==(6+NUMDT+NUMIST))
 			{
 	     	tree_up(iPrltst,0,0,0);
 		    parol_init();
@@ -10400,7 +10402,7 @@ else if(ind==iK_VD)
 	     	{
 	     	temp_SS-=2;
 	     	}
-	    gran(&temp_SS,1900,3000);
+	    gran(&temp_SS,1500,3000);
 		lc640_write_int(KT_EXT0,temp_SS);					
 		speed=1;	
 		}			

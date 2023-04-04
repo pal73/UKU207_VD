@@ -400,185 +400,6 @@ signed long temp_SL/*,temp_SL_*/;
 char /*temp,*/i;
 //signed short temp_SS;
 /*
-#ifdef UKU_MGTS
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=110000L;
-net_U=(signed short)temp_SL;
-#endif
-*/
-
-/*
-#ifdef UKU_RSTKM
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=110000L;
-net_U=(signed short)temp_SL;
-#endif
-*/
-/*
-#ifdef UKU_3U
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=36000L;
-net_U=(signed short)temp_SL;
-#endif
-*/
-/*
-#ifdef UKU_6U
-//напр€жение сети
-
-if((AUSW_MAIN%10)||(AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000))
-	{
-
-	if(bps[11]._device==dNET_METR)
-		{
-		net_metr_buff_[0]=((signed short)bps[11]._buff[0])+(((signed short)bps[11]._buff[1])<<8);
-		net_metr_buff_[1]=((signed short)bps[11]._buff[2])+(((signed short)bps[11]._buff[3])<<8);
-		net_metr_buff_[2]=((signed short)bps[11]._buff[4])+(((signed short)bps[11]._buff[5])<<8);
-
-		temp_SL=(signed long)net_metr_buff_[0];
-		temp_SL*=KunetA;
-		temp_SL/=6000L;
-		net_Ua=(signed short)temp_SL;
-	
-		temp_SL=(signed long)net_metr_buff_[1];
-		temp_SL*=KunetB;
-		temp_SL/=6000L;
-		net_Ub=(signed short)temp_SL;
-	
-		temp_SL=(signed long)net_metr_buff_[2];
-		temp_SL*=KunetC;
-		temp_SL/=6000L;
-		net_Uc=(signed short)temp_SL;
-		}
-	else
-		{
-		temp_SL=(signed long)net_buff_;
-		temp_SL*=KunetA;
-		temp_SL/=110000L;
-		net_Ua=(signed short)temp_SL;
-	
-		temp_SL=(signed long)adc_buff_[3];
-		temp_SL*=KunetB;
-		temp_SL/=6000L;
-		net_Ub=(signed short)temp_SL;
-	
-		temp_SL=(signed long)adc_buff_[10];
-		temp_SL*=KunetC;
-		temp_SL/=6000L;
-		net_Uc=(signed short)temp_SL;
-		}
-
-	net_U=net_Ua;
-	if(net_Ub<net_U)net_U=net_Ub;
-	if(net_Uc<net_U)net_U=net_Uc;
-	}
-else 
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=Kunet;
-	temp_SL/=110000L;
-	net_U=(signed short)temp_SL;
-	}
-
-
-
-
-#endif */
-/*
-#ifdef UKU_GLONASS
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=110000L;
-net_U=(signed short)temp_SL;
-#endif
-*/
-/*#ifdef UKU_KONTUR
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=110000L;
-net_U=(signed short)temp_SL;
-#endif */
-
-/*
-#ifdef UKU_220_V2
-//напр€жение сети
-
-if(AUSW_MAIN==22033)
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=KunetA;
-	temp_SL/=6000L;
-	net_Ua=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[3];
-	temp_SL*=KunetB;
-	temp_SL/=6000L;
-	net_Ub=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[10];
-	temp_SL*=KunetC;
-	temp_SL/=6000L;
-	net_Uc=(signed short)temp_SL;
-
-	net_U=net_Ua;
-	if(net_Ub<net_U)net_U=net_Ub;
-	if(net_Uc<net_U)net_U=net_Uc;
-	}
-else
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=Kunet;
-	temp_SL/=5000L;
-	net_U=(signed short)temp_SL;
-	}
-#endif
-*/
-/*
-#ifdef UKU_220
-//напр€жение сети
-
-if(AUSW_MAIN==22035)
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=KunetA;
-	temp_SL/=6000L;
-	net_Ua=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[3];
-	temp_SL*=KunetB;
-	temp_SL/=6000L;
-	net_Ub=(signed short)temp_SL;
-
-	temp_SL=(signed long)adc_buff_[10];
-	temp_SL*=KunetC;
-	temp_SL/=6000L;
-	net_Uc=(signed short)temp_SL;
-
-	net_U=net_Ua;
-	if(net_Ub<net_U)net_U=net_Ub;
-	if(net_Uc<net_U)net_U=net_Uc;
-	}
-else
-	{
-	temp_SL=(signed long)net_buff_;
-	temp_SL*=Kunet;
-	#ifdef _ACDC_
-	temp_SL/=500L;
-	#else
-	temp_SL/=5000L;
-	#endif
-	net_U=(signed short)temp_SL;
-	
-	}
-#endif
-*/
 #ifdef UKU_220_IPS_TERMOKOMPENSAT
 //напр€жение сети
 
@@ -673,23 +494,8 @@ else
 	
 	}
 if(bps[11]._device!=dNET_METR) net_F3=net_F;
-#endif
-/*
-#ifdef UKU_TELECORE2015
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=110000L;
-net_U=(signed short)temp_SL;
-#endif
-*//*
-#ifdef UKU_TELECORE2017
-//напр€жение сети
-temp_SL=(signed long)net_buff_;
-temp_SL*=Kunet;
-temp_SL/=110000L;
-net_U=(signed short)temp_SL;
-#endif*/
+#endif */
+
 
 //Ќапр€жени€ батарей
 temp_SL=(signed long)adc_buff_[0];
@@ -816,7 +622,7 @@ if(!mess_find_unvol(MESS2MATEMAT))
 
 
 //“емпературы батарей
-
+/*
 #ifdef UKU_KONTUR
 if((adc_buff_[6]>800)&&(adc_buff_[6]<3800))bat[0]._nd=0;
 else bat[0]._nd=1;
@@ -833,8 +639,8 @@ temp_SL*=Ktbat[0];
 temp_SL/=20000L;
 temp_SL-=273L;
 bat[0]._Tb=(signed short)temp_SL;
-#endif
-
+#endif	*/
+/*
 #ifdef UKU_KONTUR
 if((adc_buff_[7]>800)&&(adc_buff_[7]<3800))bat[1]._nd=0;
 else bat[1]._nd=1;
@@ -851,8 +657,8 @@ temp_SL*=Ktbat[1];
 temp_SL/=20000L;
 temp_SL-=273L;
 bat[1]._Tb=(signed short)temp_SL;
-#endif
-
+#endif */
+/*
 #ifdef UKU_6U
 
 if(NUMMAKB==2)
@@ -924,7 +730,7 @@ else if(NUMMAKB==4)
 	if(temp_t!=-20)bat[1]._Tb = temp_t;
 	}
 
-#endif
+#endif	*/
 
 
 //Ќапр€жение нагрузки
@@ -1109,7 +915,11 @@ if(I_LOAD_MODE==0)
 		temp_SL+=(signed long)bps[i]._Ii;
 		}
 	Ib_ips_termokompensat=(signed short)temp_SL/10;
+	
+	if(vd_U==0) Ib_ips_termokompensat=0;	// по указанию ¬.√ерасимова от 04.04.23
 	out_I=Ib_ips_termokompensat;
+
+	
 	}
 
 

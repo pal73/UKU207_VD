@@ -9893,7 +9893,7 @@ N	sub_ptrs[i++]=	"   Занижено Uвх.!   ";
 N	sub_cnt_max++;	
 N	}
 N
-Nif(ibat_metr_cnt>30)
+Nif((ibat_metr_cnt>30)&&(I_LOAD_MODE==1))	//Выдаем сообщение об отвале шунта только если выбрано измерение тока шунтом
 N	{
 N	sub_ptrs[i++]=	"Шунт не подключен!!!";
 N	sub_cnt_max++;	
@@ -9927,6 +9927,8 @@ N
 Nelse if(ind==iMn_VD)
 Xelse if(a_ind . i==iMn_VD)
 N	{
+N	gran(&NUMDT,0,1);
+N	gran(&NUMIST,0,32);
 N	ptrs[0]	=	"                    ";
 N
 N	ptrs[0]	=	"  В работе    rист. ";
@@ -9935,50 +9937,50 @@ N
 N	 
 N    i=0;
 N 	
-N	ptrs[1]=			"Uвх.    ]В Uв.д.  @В";	
-N	ptrs[2]=			"Uвых.   #В Iвых.  $А";
-N    ptrs[3]=			" 0%:0^:0& 0</>  /0{ ";
-N	ptrs[4]=			"   Tсистемы    ?°C  ";
+N	ptrs[1]=					"Uвх.    ]В Uв.д.  @В";	
+N	ptrs[2]=					"Uвых.   #В Iвых.  $А";
+N    ptrs[3]=					" 0%:0^:0& 0</>  /0{ ";
+N	ptrs[4]=					"   Tсистемы    ?°C  ";
 N								
-N	ptrs[5]=  			" БПС N1             ";
-N    ptrs[6]=  			" БПС N2             ";
-N    ptrs[7]=  			" БПС N3             ";
-N    ptrs[8]=  			" БПС N4             ";
-N    ptrs[9]= 			" БПС N5             ";
-N    ptrs[10]= 			" БПС N6             ";
-N    ptrs[11]= 			" БПС N7             ";
-N    ptrs[12]= 			" БПС N8             ";
-N    ptrs[13]= 			" БПС N9             ";
-N    ptrs[14]= 			" БПС N10            ";
-N	ptrs[15]=  			" БПС N11            ";
-N    ptrs[16]=  			" БПС N12            ";
-N    ptrs[17]=  			" БПС N13            ";
-N    ptrs[18]=  			" БПС N14            ";
-N    ptrs[19]= 			" БПС N15            ";
-N    ptrs[20]= 			" БПС N16            ";
-N    ptrs[21]= 			" БПС N17            ";
-N    ptrs[22]= 			" БПС N18            ";
-N    ptrs[23]= 			" БПС N19            ";
-N    ptrs[24]= 			" БПС N20            ";
-N 	ptrs[25]=  			" БПС N21            ";
-N    ptrs[26]=  			" БПС N22            ";
-N    ptrs[27]=  			" БПС N23            ";
-N    ptrs[28]=  			" БПС N24            ";
-N    ptrs[29]= 			" БПС N25            ";
-N    ptrs[30]= 			" БПС N26            ";
-N    ptrs[31]= 			" БПС N27            ";
-N    ptrs[32]= 			" БПС N28            ";
-N    ptrs[33]= 			" БПС N29            ";
-N    ptrs[34]= 			" БПС N30            ";
-N    ptrs[35]= 			" БПС N31            ";
-N    ptrs[36]= 			" БПС N32            ";
+N	ptrs[4+NUMDT]=  			" БПС N1             ";
+N    ptrs[5+NUMDT]=  			" БПС N2             ";
+N    ptrs[6+NUMDT]=  			" БПС N3             ";
+N    ptrs[7+NUMDT]=  			" БПС N4             ";
+N    ptrs[8+NUMDT]= 				" БПС N5             ";
+N    ptrs[9+NUMDT]= 				" БПС N6             ";
+N    ptrs[10+NUMDT]= 			" БПС N7             ";
+N    ptrs[11+NUMDT]= 			" БПС N8             ";
+N    ptrs[12+NUMDT]= 			" БПС N9             ";
+N    ptrs[13+NUMDT]= 			" БПС N10            ";
+N	ptrs[14+NUMDT]=  			" БПС N11            ";
+N    ptrs[15+NUMDT]=  			" БПС N12            ";
+N    ptrs[16+NUMDT]=  			" БПС N13            ";
+N    ptrs[17+NUMDT]=  			" БПС N14            ";
+N    ptrs[18+NUMDT]= 			" БПС N15            ";
+N    ptrs[19+NUMDT]= 			" БПС N16            ";
+N    ptrs[20+NUMDT]= 			" БПС N17            ";
+N    ptrs[21+NUMDT]= 			" БПС N18            ";
+N    ptrs[22+NUMDT]= 			" БПС N19            ";
+N    ptrs[23+NUMDT]= 			" БПС N20            ";
+N 	ptrs[24+NUMDT]=  			" БПС N21            ";
+N    ptrs[25+NUMDT]=  			" БПС N22            ";
+N    ptrs[26+NUMDT]=  			" БПС N23            ";
+N    ptrs[27+NUMDT]=  			" БПС N24            ";
+N    ptrs[28+NUMDT]= 			" БПС N25            ";
+N    ptrs[29+NUMDT]= 			" БПС N26            ";
+N    ptrs[30+NUMDT]= 			" БПС N27            ";
+N    ptrs[31+NUMDT]= 			" БПС N28            ";
+N    ptrs[32+NUMDT]= 			" БПС N29            ";
+N    ptrs[33+NUMDT]= 			" БПС N30            ";
+N    ptrs[34+NUMDT]= 			" БПС N31            ";
+N    ptrs[35+NUMDT]= 			" БПС N32            ";
 N	
-N	ptrs[5+NUMIST]=		" Таблица источников ";
-N	ptrs[6+NUMIST]= 	" Установки          "; 
-N    ptrs[7+NUMIST]= 	" Журнал событий     ";
-N	ptrs[8+NUMIST]=		" Версия ПО          ";
-N	ptrs[9+NUMIST]= 	" Выход              ";
-N	ptrs[10+NUMIST]=	" Тест               ";
+N	ptrs[4+NUMIST+NUMDT]=		" Таблица источников ";
+N	ptrs[5+NUMIST+NUMDT]= 		" Установки          "; 
+N    ptrs[6+NUMIST+NUMDT]= 		" Журнал событий     ";
+N	ptrs[7+NUMIST+NUMDT]=		" Версия ПО          ";
+N	ptrs[8+NUMIST+NUMDT]= 		" Выход              ";
+N	ptrs[9+NUMIST+NUMDT]=		" Тест               ";
 N	
 N
 N    if(sub_ind==0)index_set=0;
@@ -10041,8 +10043,8 @@ N 	     lcd_buffer[find(':')]=' ';
 N 	     lcd_buffer[find(':')]=' ';
 N 	     }
 N
-N	if((index_set)&&(sub_ind>1))
-X	if((a_ind . i_s)&&(a_ind . s_i>1))
+N	if((index_set)&&(sub_ind>NUMDT))
+X	if((a_ind . i_s)&&(a_ind . s_i>NUMDT))
 N	     {
 N	     if(index_set==sub_ind)lcd_buffer[60]=1;
 X	     if(a_ind . i_s==a_ind . s_i)lcd_buffer[60]=1;
@@ -10285,7 +10287,7 @@ N		ptr[2]=		" первичное питание! ";
 N		simax=0;
 N		}
 N
-W "main.c" 2020 16 unrecognized character escape sequence
+W "main.c" 2022 16 unrecognized character escape sequence
 N	bgnd_par(			" \       БПС N&       ",
 N					ptr[index_set],
 X					ptr[a_ind . i_s],
@@ -12118,7 +12120,7 @@ N	else if(ipsBlckLog==1) sub_bgnd("ЗАМКН.",'&',-5);
 N    else sub_bgnd("НЕКОРР.",'&',-6); 	  
 N
 N	
-W "main.c" 3620 7 variable "sss" was declared but never referenced
+W "main.c" 3622 7 variable "sss" was declared but never referenced
 N	}
 N
 N
@@ -15033,7 +15035,7 @@ N	int2lcdyx(BUILD_YEAR,1,12,0);
 N	int2lcdyx(BUILD_MONTH,1,15,0);
 N	int2lcdyx(BUILD_DAY,1,18,0);
 N	
-W "main.c" 6167 2 function "sprintf" declared implicitly
+W "main.c" 6169 2 function "sprintf" declared implicitly
 N	sprintf(&lcd_buffer[9],"%d.%d.%d",HARDVARE_VERSION,SOFT_VERSION,BUILD);
 N	}
 Nelse if(ind==iFWaboutBPS)
@@ -15050,7 +15052,7 @@ X	int2lcdyx(bps[a_ind . s_i1]._build_month,1,15,0);
 N	int2lcdyx(bps[sub_ind1]._build_day,1,18,0);
 X	int2lcdyx(bps[a_ind . s_i1]._build_day,1,18,0);
 N	
-W "main.c" 6179 2 function "sprintf" declared implicitly
+W "main.c" 6181 2 function "sprintf" declared implicitly
 N	sprintf(&lcd_buffer[9],"%d.%d.%d",bps[sub_ind1]._hardvare_version,bps[sub_ind1]._soft_version,bps[sub_ind1]._build);
 X	sprintf(&lcd_buffer[9],"%d.%d.%d",bps[a_ind . s_i1]._hardvare_version,bps[a_ind . s_i1]._soft_version,bps[a_ind . s_i1]._build);
 N
@@ -15478,8 +15480,8 @@ X	if(but==251)
 N		{
 N		sub_ind++;
 X		a_ind . s_i++;
-N		gran_char(&sub_ind,0,7+NUMIST);
-X		gran_char(&a_ind . s_i,0,7+NUMIST);
+N		gran_char(&sub_ind,0,6+NUMDT+NUMIST);
+X		gran_char(&a_ind . s_i,0,6+NUMDT+NUMIST);
 N		}
 N		
 N	else if(but==butU)
@@ -15487,8 +15489,8 @@ X	else if(but==253)
 N		{
 N		sub_ind--;
 X		a_ind . s_i--;
-N		gran_char(&sub_ind,0,7+NUMIST);
-X		gran_char(&a_ind . s_i,0,7+NUMIST);
+N		gran_char(&sub_ind,0,6+NUMDT+NUMIST);
+X		gran_char(&a_ind . s_i,0,6+NUMDT+NUMIST);
 N		}	
 N
 N	else if(but==butR)
@@ -15548,36 +15550,36 @@ N			avar_ind_stat=0;
 N			avar_ind_stat1=0;																											
 N			}
 N
-N		else if((sub_ind>1)&&(sub_ind<=(1+NUMIST)))
-X		else if((a_ind . s_i>1)&&(a_ind . s_i<=(1+NUMIST)))
+N		else if((sub_ind>NUMDT)&&(sub_ind<=(NUMDT+NUMIST)))
+X		else if((a_ind . s_i>NUMDT)&&(a_ind . s_i<=(NUMDT+NUMIST)))
 N		    	{
-N		    	tree_up(iBps_elteh,0,0,sub_ind-2);
-X		    	tree_up(iBps_elteh,0,0,a_ind . s_i-2);
+N		    	tree_up(iBps_elteh,0,0,sub_ind-NUMDT-1);
+X		    	tree_up(iBps_elteh,0,0,a_ind . s_i-NUMDT-1);
 N		    	} 
 N
 N
-N		else if(sub_ind==(2+NUMIST))
-X		else if(a_ind . s_i==(2+NUMIST))
+N		else if(sub_ind==(1+NUMDT+NUMIST))
+X		else if(a_ind . s_i==(1+NUMDT+NUMIST))
 N			{
 N	     	tree_up(iBps_list,0,0,0);
 N		    }		
-N		else if(sub_ind==(3+NUMIST))
-X		else if(a_ind . s_i==(3+NUMIST))
+N		else if(sub_ind==(2+NUMDT+NUMIST))
+X		else if(a_ind . s_i==(2+NUMDT+NUMIST))
 N			{
 N			tree_up(iSet_prl,0,0,0);
 N		    ret(50);
 N		    parol_init();
 N			}
-N		else if(sub_ind==(4+NUMIST))
-X		else if(a_ind . s_i==(4+NUMIST))
+N		else if(sub_ind==(3+NUMDT+NUMIST))
+X		else if(a_ind . s_i==(3+NUMDT+NUMIST))
 N			{
 N			if(but==butE_)avar_uout_hndl(1);
 X			if(but==126)avar_uout_hndl(1);
 N			tree_up(iLog,0,0,0);
 N		    ret(1000);
 N			}
-N		else if(sub_ind==(5+NUMIST))
-X		else if(a_ind . s_i==(5+NUMIST))
+N		else if(sub_ind==(4+NUMDT+NUMIST))
+X		else if(a_ind . s_i==(4+NUMDT+NUMIST))
 N			{
 N			if(but==butE)
 X			if(but==254)
@@ -15585,14 +15587,14 @@ N		     	{
 N		     	tree_up(iFWabout,0,0,0);
 N		     	}
 N			}
-N		else if(sub_ind==(6+NUMIST))
-X		else if(a_ind . s_i==(6+NUMIST))
+N		else if(sub_ind==(5+NUMDT+NUMIST))
+X		else if(a_ind . s_i==(5+NUMDT+NUMIST))
 N			{
 N			sub_ind=0;
 X			a_ind . s_i=0;
 N			}
-N		else if(sub_ind==(7+NUMIST))
-X		else if(a_ind . s_i==(7+NUMIST))
+N		else if(sub_ind==(6+NUMDT+NUMIST))
+X		else if(a_ind . s_i==(6+NUMDT+NUMIST))
 N			{
 N	     	tree_up(iPrltst,0,0,0);
 N		    parol_init();
@@ -15602,7 +15604,7 @@ N 		}
 N	else if(but==butU_)
 X	else if(but==125)
 N		{
-W "main.c" 6630 18 function "avar_sys_t_hndl" declared implicitly
+W "main.c" 6632 18 function "avar_sys_t_hndl" declared implicitly
 N		if(sysTAvar==0)avar_sys_t_hndl(1,456);
 N		else avar_sys_t_hndl(0,789);
 N		}
@@ -20709,7 +20711,7 @@ X	    else if(but==119)
 N	     	{
 N	     	temp_SS-=2;
 N	     	}
-N	    gran(&temp_SS,1900,3000);
+N	    gran(&temp_SS,1500,3000);
 N		lc640_write_int(KT_EXT0,temp_SS);					
 X		lc640_write_int(0x10+100+50,temp_SS);					
 N		speed=1;	
@@ -25441,7 +25443,7 @@ N	}
 N			
 Nbut_an_end:
 Nn_but=0;
-W "main.c" 14149 1 label "but_an_end" was declared but never referenced
+W "main.c" 14151 1 label "but_an_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -25877,7 +25879,7 @@ N		spc_stat=spcVZ;
 N		vz_cnt_h=__ee_vz_cnt/60;
 N		vz_cnt_h_=(lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)/60;
 X		vz_cnt_h_=(lc640_read_int(0x10+480+14)-__ee_vz_cnt)/60;
-W "main.c" 14553 15 pointless comparison of unsigned integer with zero
+W "main.c" 14555 15 pointless comparison of unsigned integer with zero
 N		if(vz_cnt_h_<0)vz_cnt_h_=0;
 N		vz_cnt_s_=(short)(((lc640_read_int(EE_SPC_VZ_LENGT)-__ee_vz_cnt)*60)%3600UL);
 X		vz_cnt_s_=(short)(((lc640_read_int(0x10+480+14)-__ee_vz_cnt)*60)%3600UL);
@@ -25938,7 +25940,7 @@ Ncan_mcp2515_init();
 N#endif
 N
 N#ifdef SC16IS740_UART
-W "main.c" 14612 1 function "sc16is700_init" declared implicitly
+W "main.c" 14614 1 function "sc16is700_init" declared implicitly
 Nsc16is700_init((uint32_t)(MODBUS_BAUDRATE*10UL));
 N#endif
 N//sc16is700_init();
@@ -25967,7 +25969,7 @@ N#ifdef MCP2515_CAN
 N	if(bMCP2515_IN)
 N		{
 N		bMCP2515_IN=0;
-W "main.c" 14639 3 function "can_in_an1" declared implicitly
+W "main.c" 14641 3 function "can_in_an1" declared implicitly
 N		can_in_an1();
 N		}
 N#endif
@@ -26098,11 +26100,11 @@ N		//ret_hndl();
 N		ext_drv();
 N		avt_hndl();
 N		
-W "main.c" 14768 3 function "u_avar_hndl" declared implicitly
+W "main.c" 14770 3 function "u_avar_hndl" declared implicitly
 N		u_avar_hndl();
-W "main.c" 14769 3 function "t_sys_avar_hndl" declared implicitly
+W "main.c" 14771 3 function "t_sys_avar_hndl" declared implicitly
 N		t_sys_avar_hndl();
-W "main.c" 14770 3 function "overload_hndl" declared implicitly
+W "main.c" 14772 3 function "overload_hndl" declared implicitly
 N		overload_hndl();
 N		}
 N
@@ -26122,7 +26124,7 @@ N		LPC_GPIO1->FIODIR|=(1UL<<26);
 X		((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIODIR|=(1UL<<26);
 N		matemat();
 N		
-W "main.c" 14788 3 function "rele_av_hndl" declared implicitly
+W "main.c" 14790 3 function "rele_av_hndl" declared implicitly
 N		rele_av_hndl();
 N		rele_hndl();
 N		if(!bRESET_EXT_WDT)avar_hndl();
@@ -26160,7 +26162,7 @@ N		//zar_drv();
 N		ubat_old_drv();
 N		beep_hndl();
 N		avg_hndl();
-W "main.c" 14825 3 function "u_out_reg_hndl" declared implicitly
+W "main.c" 14827 3 function "u_out_reg_hndl" declared implicitly
 N		u_out_reg_hndl();
 N		//vz_drv();	 
 N		//avz_drv();
@@ -26188,7 +26190,7 @@ N		//if(main_1Hz_cnt<200)main_1Hz_cnt++;
 N
 N
 N		can_reset_hndl();
-W "main.c" 14852 3 function "npn_hndl" declared implicitly
+W "main.c" 14854 3 function "npn_hndl" declared implicitly
 N		npn_hndl();
 N/*		#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N		if((AUSW_MAIN==22063)||(AUSW_MAIN==22023)||(AUSW_MAIN==22043))rs232_data_out_tki();
@@ -26204,7 +26206,7 @@ N		putchar2(0x58);
 N		putchar2(0x59);
 N		putchar2(0x5a);*/
 N
-W "main.c" 14867 3 function "powerAntiAliasingHndl" declared implicitly
+W "main.c" 14869 3 function "powerAntiAliasingHndl" declared implicitly
 N		powerAntiAliasingHndl();
 N
 N		//outVoltContrHndl();
@@ -26214,7 +26216,7 @@ N		vent_resurs_hndl();
 N		
 N
 N		ips_current_average_hndl();
-W "main.c" 14876 3 function "vd_is_work_hndl" declared implicitly
+W "main.c" 14878 3 function "vd_is_work_hndl" declared implicitly
 N		vd_is_work_hndl();
 N		}
 N	if(b1min)
@@ -26231,7 +26233,7 @@ N			{
 N			if(!tbatdisable_cmnd)tbatdisable_cmnd=20;
 N			}
 N		
-W "main.c" 14892 3 function "numOfForvardBps_hndl" declared implicitly
+W "main.c" 14894 3 function "numOfForvardBps_hndl" declared implicitly
 N		numOfForvardBps_hndl();			//Программа смены первого источника для равномерного износа БПСов
 N		}
 N

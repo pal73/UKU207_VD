@@ -7105,185 +7105,6 @@ Nsigned long temp_SL/*,temp_SL_*/;
 Nchar /*temp,*/i;
 N//signed short temp_SS;
 N/*
-N#ifdef UKU_MGTS
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=110000L;
-Nnet_U=(signed short)temp_SL;
-N#endif
-N*/
-N
-N/*
-N#ifdef UKU_RSTKM
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=110000L;
-Nnet_U=(signed short)temp_SL;
-N#endif
-N*/
-N/*
-N#ifdef UKU_3U
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=36000L;
-Nnet_U=(signed short)temp_SL;
-N#endif
-N*/
-N/*
-N#ifdef UKU_6U
-N//напр€жение сети
-N
-Nif((AUSW_MAIN%10)||(AUSW_MAIN==2400)||(AUSW_MAIN==4800)||(AUSW_MAIN==6000))
-N	{
-N
-N	if(bps[11]._device==dNET_METR)
-N		{
-N		net_metr_buff_[0]=((signed short)bps[11]._buff[0])+(((signed short)bps[11]._buff[1])<<8);
-N		net_metr_buff_[1]=((signed short)bps[11]._buff[2])+(((signed short)bps[11]._buff[3])<<8);
-N		net_metr_buff_[2]=((signed short)bps[11]._buff[4])+(((signed short)bps[11]._buff[5])<<8);
-N
-N		temp_SL=(signed long)net_metr_buff_[0];
-N		temp_SL*=KunetA;
-N		temp_SL/=6000L;
-N		net_Ua=(signed short)temp_SL;
-N	
-N		temp_SL=(signed long)net_metr_buff_[1];
-N		temp_SL*=KunetB;
-N		temp_SL/=6000L;
-N		net_Ub=(signed short)temp_SL;
-N	
-N		temp_SL=(signed long)net_metr_buff_[2];
-N		temp_SL*=KunetC;
-N		temp_SL/=6000L;
-N		net_Uc=(signed short)temp_SL;
-N		}
-N	else
-N		{
-N		temp_SL=(signed long)net_buff_;
-N		temp_SL*=KunetA;
-N		temp_SL/=110000L;
-N		net_Ua=(signed short)temp_SL;
-N	
-N		temp_SL=(signed long)adc_buff_[3];
-N		temp_SL*=KunetB;
-N		temp_SL/=6000L;
-N		net_Ub=(signed short)temp_SL;
-N	
-N		temp_SL=(signed long)adc_buff_[10];
-N		temp_SL*=KunetC;
-N		temp_SL/=6000L;
-N		net_Uc=(signed short)temp_SL;
-N		}
-N
-N	net_U=net_Ua;
-N	if(net_Ub<net_U)net_U=net_Ub;
-N	if(net_Uc<net_U)net_U=net_Uc;
-N	}
-Nelse 
-N	{
-N	temp_SL=(signed long)net_buff_;
-N	temp_SL*=Kunet;
-N	temp_SL/=110000L;
-N	net_U=(signed short)temp_SL;
-N	}
-N
-N
-N
-N
-N#endif */
-N/*
-N#ifdef UKU_GLONASS
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=110000L;
-Nnet_U=(signed short)temp_SL;
-N#endif
-N*/
-N/*#ifdef UKU_KONTUR
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=110000L;
-Nnet_U=(signed short)temp_SL;
-N#endif */
-N
-N/*
-N#ifdef UKU_220_V2
-N//напр€жение сети
-N
-Nif(AUSW_MAIN==22033)
-N	{
-N	temp_SL=(signed long)net_buff_;
-N	temp_SL*=KunetA;
-N	temp_SL/=6000L;
-N	net_Ua=(signed short)temp_SL;
-N
-N	temp_SL=(signed long)adc_buff_[3];
-N	temp_SL*=KunetB;
-N	temp_SL/=6000L;
-N	net_Ub=(signed short)temp_SL;
-N
-N	temp_SL=(signed long)adc_buff_[10];
-N	temp_SL*=KunetC;
-N	temp_SL/=6000L;
-N	net_Uc=(signed short)temp_SL;
-N
-N	net_U=net_Ua;
-N	if(net_Ub<net_U)net_U=net_Ub;
-N	if(net_Uc<net_U)net_U=net_Uc;
-N	}
-Nelse
-N	{
-N	temp_SL=(signed long)net_buff_;
-N	temp_SL*=Kunet;
-N	temp_SL/=5000L;
-N	net_U=(signed short)temp_SL;
-N	}
-N#endif
-N*/
-N/*
-N#ifdef UKU_220
-N//напр€жение сети
-N
-Nif(AUSW_MAIN==22035)
-N	{
-N	temp_SL=(signed long)net_buff_;
-N	temp_SL*=KunetA;
-N	temp_SL/=6000L;
-N	net_Ua=(signed short)temp_SL;
-N
-N	temp_SL=(signed long)adc_buff_[3];
-N	temp_SL*=KunetB;
-N	temp_SL/=6000L;
-N	net_Ub=(signed short)temp_SL;
-N
-N	temp_SL=(signed long)adc_buff_[10];
-N	temp_SL*=KunetC;
-N	temp_SL/=6000L;
-N	net_Uc=(signed short)temp_SL;
-N
-N	net_U=net_Ua;
-N	if(net_Ub<net_U)net_U=net_Ub;
-N	if(net_Uc<net_U)net_U=net_Uc;
-N	}
-Nelse
-N	{
-N	temp_SL=(signed long)net_buff_;
-N	temp_SL*=Kunet;
-N	#ifdef _ACDC_
-N	temp_SL/=500L;
-N	#else
-N	temp_SL/=5000L;
-N	#endif
-N	net_U=(signed short)temp_SL;
-N	
-N	}
-N#endif
-N*/
 N#ifdef UKU_220_IPS_TERMOKOMPENSAT
 N//напр€жение сети
 N
@@ -7372,29 +7193,14 @@ N	temp_SL*=Kunet;
 N	#ifdef _ACDC_
 N	temp_SL/=500L;
 N	#else
-S	temp_SL/=5000L;
+N	temp_SL/=5000L;
 N	#endif
 N	net_U=(signed short)temp_SL;
 N	
 N	}
 Nif(bps[11]._device!=dNET_METR) net_F3=net_F;
-N#endif
-N/*
-N#ifdef UKU_TELECORE2015
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=110000L;
-Nnet_U=(signed short)temp_SL;
-N#endif
-N*//*
-N#ifdef UKU_TELECORE2017
-N//напр€жение сети
-Ntemp_SL=(signed long)net_buff_;
-Ntemp_SL*=Kunet;
-Ntemp_SL/=110000L;
-Nnet_U=(signed short)temp_SL;
-N#endif*/
+N#endif */
+N
 N
 N//Ќапр€жени€ батарей
 Ntemp_SL=(signed long)adc_buff_[0];
@@ -7522,15 +7328,15 @@ N
 N
 N
 N//“емпературы батарей
-N
+N/*
 N#ifdef UKU_KONTUR
-Sif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))bat[0]._nd=0;
-Selse bat[0]._nd=1;
-Stemp_SL=(signed long)adc_buff_[6];
-Stemp_SL*=Ktbat[0];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-Sbat[0]._Tb=(signed short)temp_SL;
+Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))bat[0]._nd=0;
+Nelse bat[0]._nd=1;
+Ntemp_SL=(signed long)adc_buff_[6];
+Ntemp_SL*=Ktbat[0];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nbat[0]._Tb=(signed short)temp_SL;
 N#else
 Nif((adc_buff_[6]>800)&&(adc_buff_[6]<3800))bat[0]._nd=0;
 Nelse bat[0]._nd=1;
@@ -7539,16 +7345,16 @@ Ntemp_SL*=Ktbat[0];
 Ntemp_SL/=20000L;
 Ntemp_SL-=273L;
 Nbat[0]._Tb=(signed short)temp_SL;
-N#endif
-N
+N#endif	*/
+N/*
 N#ifdef UKU_KONTUR
-Sif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))bat[1]._nd=0;
-Selse bat[1]._nd=1;
-Stemp_SL=(signed long)adc_buff_[7];
-Stemp_SL*=Ktbat[1];
-Stemp_SL/=20000L;
-Stemp_SL-=273L;
-Sbat[1]._Tb=(signed short)temp_SL;
+Nif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))bat[1]._nd=0;
+Nelse bat[1]._nd=1;
+Ntemp_SL=(signed long)adc_buff_[7];
+Ntemp_SL*=Ktbat[1];
+Ntemp_SL/=20000L;
+Ntemp_SL-=273L;
+Nbat[1]._Tb=(signed short)temp_SL;
 N#else
 Nif((adc_buff_[7]>800)&&(adc_buff_[7]<3800))bat[1]._nd=0;
 Nelse bat[1]._nd=1;
@@ -7557,80 +7363,80 @@ Ntemp_SL*=Ktbat[1];
 Ntemp_SL/=20000L;
 Ntemp_SL-=273L;
 Nbat[1]._Tb=(signed short)temp_SL;
-N#endif
-N
+N#endif */
+N/*
 N#ifdef UKU_6U
-S
-Sif(NUMMAKB==2)
-S	{
-S	if(makb[0]._cnt<5)
-S		{
-S		if(makb[0]._T_nd[0]==0)
-S			{
-S			bat[0]._Tb=makb[0]._T[0];
-S			bat[0]._nd=0;
-S			}
-S		}
-S
-S	if(makb[1]._cnt<5)
-S		{
-S		if(makb[1]._T_nd[0]==0)
-S			{
-S			bat[1]._Tb=makb[1]._T[0];
-S			bat[1]._nd=0;
-S			}
-S		}
-S
-S	}
-Selse if(NUMMAKB==4)
-S	{
-S	signed short temp_t;
-S	temp_t=-20;
-S	if(makb[0]._cnt<5)
-S		{
-S		if(makb[0]._T_nd[0]==0)
-S			{
-S			temp_t=makb[0]._T[0];
-S			bat[0]._nd=0;
-S			}
-S		}
-S	if(makb[1]._cnt<5)
-S		{
-S		if(makb[1]._T_nd[0]==0)
-S			{
-S			if(temp_t<makb[1]._T[0])
-S				{
-S				bat[0]._nd=0;
-S				temp_t=makb[1]._T[0];
-S				}
-S			}
-S		}
-S	if(temp_t!=-20)bat[0]._Tb = temp_t;
-S
-S 	temp_t=-20;
-S	if(makb[2]._cnt<5)
-S		{
-S		if(makb[2]._T_nd[0]==0)
-S			{
-S			temp_t=makb[2]._T[0];
-S			bat[1]._nd=0;
-S			}
-S		}
-S	if(makb[3]._cnt<5)
-S		{
-S		if(makb[3]._T_nd[0]==0)
-S			{
-S			if(temp_t<makb[3]._T[0])
-S				{
-S				bat[1]._nd=0;
-S				temp_t=makb[3]._T[0];
-S				}
-S			}
-S		}
-S	if(temp_t!=-20)bat[1]._Tb = temp_t;
-S	}
-S
-N#endif
+N
+Nif(NUMMAKB==2)
+N	{
+N	if(makb[0]._cnt<5)
+N		{
+N		if(makb[0]._T_nd[0]==0)
+N			{
+N			bat[0]._Tb=makb[0]._T[0];
+N			bat[0]._nd=0;
+N			}
+N		}
+N
+N	if(makb[1]._cnt<5)
+N		{
+N		if(makb[1]._T_nd[0]==0)
+N			{
+N			bat[1]._Tb=makb[1]._T[0];
+N			bat[1]._nd=0;
+N			}
+N		}
+N
+N	}
+Nelse if(NUMMAKB==4)
+N	{
+N	signed short temp_t;
+N	temp_t=-20;
+N	if(makb[0]._cnt<5)
+N		{
+N		if(makb[0]._T_nd[0]==0)
+N			{
+N			temp_t=makb[0]._T[0];
+N			bat[0]._nd=0;
+N			}
+N		}
+N	if(makb[1]._cnt<5)
+N		{
+N		if(makb[1]._T_nd[0]==0)
+N			{
+N			if(temp_t<makb[1]._T[0])
+N				{
+N				bat[0]._nd=0;
+N				temp_t=makb[1]._T[0];
+N				}
+N			}
+N		}
+N	if(temp_t!=-20)bat[0]._Tb = temp_t;
+N
+N 	temp_t=-20;
+N	if(makb[2]._cnt<5)
+N		{
+N		if(makb[2]._T_nd[0]==0)
+N			{
+N			temp_t=makb[2]._T[0];
+N			bat[1]._nd=0;
+N			}
+N		}
+N	if(makb[3]._cnt<5)
+N		{
+N		if(makb[3]._T_nd[0]==0)
+N			{
+N			if(temp_t<makb[3]._T[0])
+N				{
+N				bat[1]._nd=0;
+N				temp_t=makb[3]._T[0];
+N				}
+N			}
+N		}
+N	if(temp_t!=-20)bat[1]._Tb = temp_t;
+N	}
+N
+N#endif	*/
 N
 N
 N//Ќапр€жение нагрузки
@@ -7815,7 +7621,11 @@ N		{
 N		temp_SL+=(signed long)bps[i]._Ii;
 N		}
 N	Ib_ips_termokompensat=(signed short)temp_SL/10;
+N	
+N	if(vd_U==0) Ib_ips_termokompensat=0;	// по указанию ¬.√ерасимова от 04.04.23
 N	out_I=Ib_ips_termokompensat;
+N
+N	
 N	}
 N
 N
@@ -9042,7 +8852,7 @@ N	}*/
 N
 Navg_hndl_end:
 N__nop();  
-W "control.c" 2300 1 label "avg_hndl_end" was declared but never referenced
+W "control.c" 2110 1 label "avg_hndl_end" was declared but never referenced
 N}
 N
 N//-----------------------------------------------
@@ -9070,7 +8880,7 @@ N	UOUT_--;
 N	if(UOUT_<(UOUT-50))UOUT_=UOUT-50;
 N	}
 NUOUT_=UOUT;
-W "control.c" 2307 6 variable "i" was declared but never referenced
+W "control.c" 2117 6 variable "i" was declared but never referenced
 N}
 N
 N/*//-----------------------------------------------
@@ -10705,7 +10515,7 @@ N		{
 N		overloadHndlCnt++;
 N		if(overloadHndlCnt==(OVERLOAD_TIME*10/*TZAS*10*/))
 N			{
-W "control.c" 3910 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 3720 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(1);
 N			}
 N		}
@@ -10717,7 +10527,7 @@ N		{
 N		overloadHndlCnt--;
 N		if(overloadHndlCnt==0)
 N			{
-W "control.c" 3921 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 3731 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(0);
 N			}
 N		}
@@ -10730,7 +10540,7 @@ N		{
 N		overloadHndlCnt1++;
 N		if(overloadHndlCnt1==(OVERLOAD_TIME*10))
 N			{
-W "control.c" 3933 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 3743 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(1);
 N			}
 N		}
@@ -10742,7 +10552,7 @@ N		{
 N		overloadHndlCnt1--;
 N		if(overloadHndlCnt1==0)
 N			{
-W "control.c" 3944 4 function "avar_overload_hndl" declared implicitly
+W "control.c" 3754 4 function "avar_overload_hndl" declared implicitly
 N			avar_overload_hndl(0);
 N			}
 N		}
@@ -10764,7 +10574,7 @@ N		{
 N		uAvarHndlOutUMaxCnt++;
 N		if(uAvarHndlOutUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 3965 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3775 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(1,out_U);
 N			}
 N		}
@@ -10777,7 +10587,7 @@ N		{
 N		uAvarHndlOutUMaxCnt--;
 N		if(uAvarHndlOutUMaxCnt==0)
 N			{
-W "control.c" 3977 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3787 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10791,7 +10601,7 @@ N		{
 N		uAvarHndlOutUMinCnt++;
 N		if(uAvarHndlOutUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 3990 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3800 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(2,out_U);
 N			}
 N		}
@@ -10804,7 +10614,7 @@ N		{
 N		uAvarHndlOutUMinCnt--;
 N		if(uAvarHndlOutUMinCnt==0)
 N			{
-W "control.c" 4002 4 function "avar_u_out_hndl" declared implicitly
+W "control.c" 3812 4 function "avar_u_out_hndl" declared implicitly
 N			avar_u_out_hndl(0,out_U);
 N			}
 N		}
@@ -10818,7 +10628,7 @@ N		{
 N		uAvarHndlInUMaxCnt++;
 N		if(uAvarHndlInUMaxCnt>=(10*TZAS))
 N			{
-W "control.c" 4015 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 3825 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(1,in_U);
 N			}
 N		}
@@ -10831,7 +10641,7 @@ N		{
 N		uAvarHndlInUMaxCnt--;
 N		if(uAvarHndlInUMaxCnt==0)
 N			{
-W "control.c" 4027 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 3837 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -10845,7 +10655,7 @@ N		{
 N		uAvarHndlInUMinCnt++;
 N		if(uAvarHndlInUMinCnt>=(10*TZAS))
 N			{
-W "control.c" 4040 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 3850 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(2,in_U);
 N			}
 N		}
@@ -10858,7 +10668,7 @@ N		{
 N		uAvarHndlInUMinCnt--;
 N		if(uAvarHndlInUMinCnt==0)
 N			{
-W "control.c" 4052 4 function "avar_u_in_hndl" declared implicitly
+W "control.c" 3862 4 function "avar_u_in_hndl" declared implicitly
 N			avar_u_in_hndl(0,in_U);
 N			}
 N		}
@@ -10879,7 +10689,7 @@ N		{
 N		sysTAvarHndlCnt++;
 N		if(sysTAvarHndlCnt>=(10*TZAS))
 N			{
-W "control.c" 4072 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 3882 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(1,sys_T);
 N			}
 N		}
@@ -10892,7 +10702,7 @@ N		{
 N		sysTAvarHndlCnt--;
 N		if(sysTAvarHndlCnt==0)
 N			{
-W "control.c" 4084 4 function "avar_sys_t_hndl" declared implicitly
+W "control.c" 3894 4 function "avar_sys_t_hndl" declared implicitly
 N			avar_sys_t_hndl(0,sys_T);
 N			}
 N		}

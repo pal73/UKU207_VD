@@ -7,7 +7,7 @@
                   sc16is700_spi_init PROC
 ;;;21     //настройка SPI1
 ;;;22     void sc16is700_spi_init(void)
-000000  4873              LDR      r0,|L1.464|
+000000  485a              LDR      r0,|L1.364|
 ;;;23     {
 ;;;24     SET_REG( LPC_PINCON->PINSEL0, 0, 0*2, 2);
 000002  6801              LDR      r1,[r0,#0]
@@ -34,7 +34,7 @@
 ;;;31     S1SPCR=0x3f; */
 ;;;32     
 ;;;33     LPC_SPI->SPCCR=20;
-00002a  486a              LDR      r0,|L1.468|
+00002a  4851              LDR      r0,|L1.368|
 00002c  f04f0114          MOV      r1,#0x14
 000030  60c1              STR      r1,[r0,#0xc]
 ;;;34     LPC_SPI->SPCR=0x20;
@@ -45,222 +45,172 @@
 ;;;36     
                           ENDP
 
-                  sc16is700_wr_buff PROC
+                  sc16is700_wr_byte PROC
 ;;;38     //Отправка num байт из программного буфера передачи в sc16is700
 ;;;39     void sc16is700_wr_buff(char reg_num,char num)
-00003a  e92d41f0          PUSH     {r4-r8,lr}
 ;;;40     {
-00003e  4603              MOV      r3,r0
-000040  460e              MOV      r6,r1
 ;;;41     short i;
 ;;;42     sc16is700_spi_init();
-000042  f7fffffe          BL       sc16is700_spi_init
 ;;;43     delay_us(2);
-000046  f04f0218          MOV      r2,#0x18
-                  |L1.74|
-00004a  f1a20201          SUB      r2,r2,#1
-00004e  2a00              CMP      r2,#0
-000050  d1fb              BNE      |L1.74|
 ;;;44     sc16is700_CS_ON 
-000052  4f61              LDR      r7,|L1.472|
-000054  6838              LDR      r0,[r7,#0]
-000056  f0400001          ORR      r0,r0,#1
-00005a  6038              STR      r0,[r7,#0]
-00005c  69f8              LDR      r0,[r7,#0x1c]
-00005e  f0400001          ORR      r0,r0,#1
-000062  61f8              STR      r0,[r7,#0x1c]
 ;;;45     spi1((reg_num&0x0f)<<3);
-000064  ea4f7003          LSL      r0,r3,#28
-000068  ea4f6050          LSR      r0,r0,#25
-00006c  f7fffffe          BL       spi1
 ;;;46     for (i=0;i<num;i++)spi1(tx_buffer_sc16is700[i]);
-000070  f04f0400          MOV      r4,#0
-000074  4d59              LDR      r5,|L1.476|
-000076  e005              B        |L1.132|
-                  |L1.120|
-000078  5d28              LDRB     r0,[r5,r4]
-00007a  f7fffffe          BL       spi1
-00007e  f1040401          ADD      r4,r4,#1
-000082  b224              SXTH     r4,r4
-                  |L1.132|
-000084  42b4              CMP      r4,r6
-000086  dbf7              BLT      |L1.120|
+00003a  b570              PUSH     {r4-r6,lr}
+00003c  4602              MOV      r2,r0
+00003e  460d              MOV      r5,r1
+000040  f7fffffe          BL       sc16is700_spi_init
+000044  f04f0018          MOV      r0,#0x18
+                  |L1.72|
+000048  f1a00001          SUB      r0,r0,#1
+00004c  2800              CMP      r0,#0
 ;;;47     sc16is700_CS_OFF
-000088  6838              LDR      r0,[r7,#0]
-00008a  f0400001          ORR      r0,r0,#1
-00008e  6038              STR      r0,[r7,#0]
-000090  69b8              LDR      r0,[r7,#0x18]
-000092  f0400001          ORR      r0,r0,#1
-000096  61b8              STR      r0,[r7,#0x18]
+00004e  d1fb              BNE      |L1.72|
+000050  4c48              LDR      r4,|L1.372|
+000052  6820              LDR      r0,[r4,#0]
+000054  f0400001          ORR      r0,r0,#1
+000058  6020              STR      r0,[r4,#0]
+00005a  69e0              LDR      r0,[r4,#0x1c]
+00005c  f0400001          ORR      r0,r0,#1
 ;;;48     }
-000098  e8bd81f0          POP      {r4-r8,pc}
+000060  61e0              STR      r0,[r4,#0x1c]
+000062  ea4f7002          LSL      r0,r2,#28
+000066  ea4f6050          LSR      r0,r0,#25
+00006a  f7fffffe          BL       spi1
+00006e  4628              MOV      r0,r5
+000070  f7fffffe          BL       spi1
+000074  6820              LDR      r0,[r4,#0]
+000076  f0400001          ORR      r0,r0,#1
+00007a  6020              STR      r0,[r4,#0]
+00007c  69a0              LDR      r0,[r4,#0x18]
+00007e  f0400001          ORR      r0,r0,#1
+000082  61a0              STR      r0,[r4,#0x18]
+000084  bd70              POP      {r4-r6,pc}
 ;;;49     
-                          ENDP
-
-                  sc16is700_wr_byte PROC
-;;;50     void sc16is700_wr_byte(char reg_num,char data)
-00009c  b570              PUSH     {r4-r6,lr}
-;;;51     {
-00009e  4602              MOV      r2,r0
-0000a0  460d              MOV      r5,r1
-;;;52     sc16is700_spi_init();
-0000a2  f7fffffe          BL       sc16is700_spi_init
-;;;53     delay_us(2);
-0000a6  f04f0018          MOV      r0,#0x18
-                  |L1.170|
-0000aa  f1a00001          SUB      r0,r0,#1
-0000ae  2800              CMP      r0,#0
-0000b0  d1fb              BNE      |L1.170|
-;;;54     sc16is700_CS_ON
-0000b2  4c49              LDR      r4,|L1.472|
-0000b4  6820              LDR      r0,[r4,#0]
-0000b6  f0400001          ORR      r0,r0,#1
-0000ba  6020              STR      r0,[r4,#0]
-0000bc  69e0              LDR      r0,[r4,#0x1c]
-0000be  f0400001          ORR      r0,r0,#1
-0000c2  61e0              STR      r0,[r4,#0x1c]
-;;;55     spi1((reg_num&0x0f)<<3);
-0000c4  ea4f7002          LSL      r0,r2,#28
-0000c8  ea4f6050          LSR      r0,r0,#25
-0000cc  f7fffffe          BL       spi1
-;;;56     spi1(data);
-0000d0  4628              MOV      r0,r5
-0000d2  f7fffffe          BL       spi1
-;;;57     sc16is700_CS_OFF
-0000d6  6820              LDR      r0,[r4,#0]
-0000d8  f0400001          ORR      r0,r0,#1
-0000dc  6020              STR      r0,[r4,#0]
-0000de  69a0              LDR      r0,[r4,#0x18]
-0000e0  f0400001          ORR      r0,r0,#1
-0000e4  61a0              STR      r0,[r4,#0x18]
-;;;58     }
-0000e6  bd70              POP      {r4-r6,pc}
-;;;59     
                           ENDP
 
                   sc16is700_rd_byte PROC
 ;;;60     
 ;;;61     char sc16is700_rd_byte(char reg_num)
-0000e8  b510              PUSH     {r4,lr}
+000086  b510              PUSH     {r4,lr}
 ;;;62     {
-0000ea  4602              MOV      r2,r0
+000088  4602              MOV      r2,r0
 ;;;63     char out;
 ;;;64     sc16is700_spi_init();
-0000ec  f7fffffe          BL       sc16is700_spi_init
+00008a  f7fffffe          BL       sc16is700_spi_init
 ;;;65     delay_us(2);
-0000f0  f04f0118          MOV      r1,#0x18
-                  |L1.244|
-0000f4  f1a10101          SUB      r1,r1,#1
-0000f8  2900              CMP      r1,#0
-0000fa  d1fb              BNE      |L1.244|
+00008e  f04f0118          MOV      r1,#0x18
+                  |L1.146|
+000092  f1a10101          SUB      r1,r1,#1
+000096  2900              CMP      r1,#0
+000098  d1fb              BNE      |L1.146|
 ;;;66     sc16is700_CS_ON
-0000fc  4c36              LDR      r4,|L1.472|
-0000fe  6820              LDR      r0,[r4,#0]
-000100  f0400001          ORR      r0,r0,#1
-000104  6020              STR      r0,[r4,#0]
-000106  69e0              LDR      r0,[r4,#0x1c]
-000108  f0400001          ORR      r0,r0,#1
-00010c  61e0              STR      r0,[r4,#0x1c]
+00009a  4c36              LDR      r4,|L1.372|
+00009c  6820              LDR      r0,[r4,#0]
+00009e  f0400001          ORR      r0,r0,#1
+0000a2  6020              STR      r0,[r4,#0]
+0000a4  69e0              LDR      r0,[r4,#0x1c]
+0000a6  f0400001          ORR      r0,r0,#1
+0000aa  61e0              STR      r0,[r4,#0x1c]
 ;;;67     spi1(((reg_num&0x0f)<<3)|0x80);
-00010e  f002000f          AND      r0,r2,#0xf
-000112  f04f0180          MOV      r1,#0x80
-000116  ea4100c0          ORR      r0,r1,r0,LSL #3
-00011a  f7fffffe          BL       spi1
+0000ac  f002000f          AND      r0,r2,#0xf
+0000b0  f04f0180          MOV      r1,#0x80
+0000b4  ea4100c0          ORR      r0,r1,r0,LSL #3
+0000b8  f7fffffe          BL       spi1
 ;;;68     out = spi1(0xff);
-00011e  20ff              MOVS     r0,#0xff
-000120  f7fffffe          BL       spi1
+0000bc  20ff              MOVS     r0,#0xff
+0000be  f7fffffe          BL       spi1
 ;;;69     sc16is700_CS_OFF
-000124  6821              LDR      r1,[r4,#0]
-000126  f0410101          ORR      r1,r1,#1
-00012a  6021              STR      r1,[r4,#0]
-00012c  69a1              LDR      r1,[r4,#0x18]
-00012e  f0410101          ORR      r1,r1,#1
-000132  61a1              STR      r1,[r4,#0x18]
+0000c2  6821              LDR      r1,[r4,#0]
+0000c4  f0410101          ORR      r1,r1,#1
+0000c8  6021              STR      r1,[r4,#0]
+0000ca  69a1              LDR      r1,[r4,#0x18]
+0000cc  f0410101          ORR      r1,r1,#1
+0000d0  61a1              STR      r1,[r4,#0x18]
 ;;;70     return out;
 ;;;71     }
-000134  bd10              POP      {r4,pc}
+0000d2  bd10              POP      {r4,pc}
 ;;;72     
                           ENDP
 
                   sc16is700_init PROC
 ;;;92     
 ;;;93     void sc16is700_init(uint32_t baudrate)
-000136  b570              PUSH     {r4-r6,lr}
+0000d4  b570              PUSH     {r4-r6,lr}
 ;;;94     {
 ;;;95     
 ;;;96     unsigned char baud_h,baud_l;
 ;;;97     
 ;;;98     baud_h = (char)((10000000U/16U/baudrate)>>8);
-000138  4929              LDR      r1,|L1.480|
-00013a  fbb1f1f0          UDIV     r1,r1,r0
-00013e  f3c12407          UBFX     r4,r1,#8,#8
+0000d6  4928              LDR      r1,|L1.376|
+0000d8  fbb1f1f0          UDIV     r1,r1,r0
+0000dc  f3c12407          UBFX     r4,r1,#8,#8
 ;;;99     baud_l = (char)((10000000U/16U/baudrate)); 
-000142  b2cd              UXTB     r5,r1
+0000e0  b2cd              UXTB     r5,r1
 ;;;100    
 ;;;101    if(RS485_QWARZ_DIGIT==40)
-000144  4927              LDR      r1,|L1.484|
-000146  f9b12000          LDRSH    r2,[r1,#0]  ; RS485_QWARZ_DIGIT
-00014a  2a28              CMP      r2,#0x28
-00014c  d105              BNE      |L1.346|
+0000e2  4926              LDR      r1,|L1.380|
+0000e4  f9b12000          LDRSH    r2,[r1,#0]  ; RS485_QWARZ_DIGIT
+0000e8  2a28              CMP      r2,#0x28
+0000ea  d105              BNE      |L1.248|
 ;;;102    	{
 ;;;103    	baud_h = (char)((40000000U/16U/baudrate)>>8);
-00014e  4926              LDR      r1,|L1.488|
-000150  fbb1f1f0          UDIV     r1,r1,r0
-000154  f3c12407          UBFX     r4,r1,#8,#8
+0000ec  4924              LDR      r1,|L1.384|
+0000ee  fbb1f1f0          UDIV     r1,r1,r0
+0000f2  f3c12407          UBFX     r4,r1,#8,#8
 ;;;104    	baud_l = (char)((40000000U/16U/baudrate));
-000158  b2cd              UXTB     r5,r1
-                  |L1.346|
+0000f6  b2cd              UXTB     r5,r1
+                  |L1.248|
 ;;;105    	} 
 ;;;106    if(RS485_QWARZ_DIGIT==30)
-00015a  2a1e              CMP      r2,#0x1e
-00015c  d105              BNE      |L1.362|
+0000f8  2a1e              CMP      r2,#0x1e
+0000fa  d105              BNE      |L1.264|
 ;;;107    	{
 ;;;108    	baud_h = (char)((30000000U/16U/baudrate)>>8);
-00015e  4923              LDR      r1,|L1.492|
-000160  fbb1f0f0          UDIV     r0,r1,r0
-000164  f3c02407          UBFX     r4,r0,#8,#8
+0000fc  4921              LDR      r1,|L1.388|
+0000fe  fbb1f0f0          UDIV     r0,r1,r0
+000102  f3c02407          UBFX     r4,r0,#8,#8
 ;;;109    	baud_l = (char)((30000000U/16U/baudrate));
-000168  b2c5              UXTB     r5,r0
-                  |L1.362|
+000106  b2c5              UXTB     r5,r0
+                  |L1.264|
 ;;;110    	}
 ;;;111    
 ;;;112    sc16is700_wr_byte(CS16IS7xx_LCR, 0x80);
-00016a  2180              MOVS     r1,#0x80
-00016c  2003              MOVS     r0,#3
-00016e  f7fffffe          BL       sc16is700_wr_byte
+000108  2180              MOVS     r1,#0x80
+00010a  2003              MOVS     r0,#3
+00010c  f7fffffe          BL       sc16is700_wr_byte
 ;;;113    sc16is700_wr_byte(CS16IS7xx_DLL, baud_l);
-000172  4629              MOV      r1,r5
-000174  2000              MOVS     r0,#0
-000176  f7fffffe          BL       sc16is700_wr_byte
+000110  4629              MOV      r1,r5
+000112  2000              MOVS     r0,#0
+000114  f7fffffe          BL       sc16is700_wr_byte
 ;;;114    sc16is700_wr_byte(CS16IS7xx_DLH, baud_h);
-00017a  4621              MOV      r1,r4
-00017c  2001              MOVS     r0,#1
-00017e  f7fffffe          BL       sc16is700_wr_byte
+000118  4621              MOV      r1,r4
+00011a  2001              MOVS     r0,#1
+00011c  f7fffffe          BL       sc16is700_wr_byte
 ;;;115    sc16is700_wr_byte(CS16IS7xx_LCR, 0xBF);
-000182  21bf              MOVS     r1,#0xbf
-000184  2003              MOVS     r0,#3
-000186  f7fffffe          BL       sc16is700_wr_byte
+000120  21bf              MOVS     r1,#0xbf
+000122  2003              MOVS     r0,#3
+000124  f7fffffe          BL       sc16is700_wr_byte
 ;;;116    sc16is700_wr_byte(CS16IS7xx_EFR, 0X10);
-00018a  2110              MOVS     r1,#0x10
-00018c  2002              MOVS     r0,#2
-00018e  f7fffffe          BL       sc16is700_wr_byte
+000128  2110              MOVS     r1,#0x10
+00012a  2002              MOVS     r0,#2
+00012c  f7fffffe          BL       sc16is700_wr_byte
 ;;;117    sc16is700_wr_byte(CS16IS7xx_LCR, 0x03);
-000192  2103              MOVS     r1,#3
-000194  4608              MOV      r0,r1
-000196  f7fffffe          BL       sc16is700_wr_byte
+000130  2103              MOVS     r1,#3
+000132  4608              MOV      r0,r1
+000134  f7fffffe          BL       sc16is700_wr_byte
 ;;;118    sc16is700_wr_byte(CS16IS7xx_FCR, 0x06);
-00019a  2106              MOVS     r1,#6
-00019c  2002              MOVS     r0,#2
-00019e  f7fffffe          BL       sc16is700_wr_byte
+000138  2106              MOVS     r1,#6
+00013a  2002              MOVS     r0,#2
+00013c  f7fffffe          BL       sc16is700_wr_byte
 ;;;119    sc16is700_wr_byte(CS16IS7xx_FCR, 0x01);
-0001a2  2101              MOVS     r1,#1
-0001a4  2002              MOVS     r0,#2
-0001a6  f7fffffe          BL       sc16is700_wr_byte
+000140  2101              MOVS     r1,#1
+000142  2002              MOVS     r0,#2
+000144  f7fffffe          BL       sc16is700_wr_byte
 ;;;120    sc16is700_wr_byte(CS16IS7xx_EFCR, 0X30);
-0001aa  e8bd4070          POP      {r4-r6,lr}
-0001ae  2130              MOVS     r1,#0x30
-0001b0  200f              MOVS     r0,#0xf
-0001b2  e7fe              B        sc16is700_wr_byte
+000148  e8bd4070          POP      {r4-r6,lr}
+00014c  2130              MOVS     r1,#0x30
+00014e  200f              MOVS     r0,#0xf
+000150  e7fe              B        sc16is700_wr_byte
 ;;;121    //sc16is700_wr_byte(CS16IS7xx_DLH, 0x04);
 ;;;122    //sc16is700_wr_byte(CS16IS7xx_DLH, 0x04);
 ;;;123    //sc16is700_wr_byte(CS16IS7xx_DLH, 0x04);
@@ -273,49 +223,113 @@
                   putchar_sc16is700 PROC
 ;;;146    //Посылка байта через sc16is700
 ;;;147    void putchar_sc16is700(char out_byte)
-0001b4  4a0e              LDR      r2,|L1.496|
+000152  4a0e              LDR      r2,|L1.396|
 ;;;148    {
 ;;;149    tx_buffer_sc16is700[tx_wr_index_sc16is700]=out_byte;
-0001b6  4b09              LDR      r3,|L1.476|
-0001b8  7811              LDRB     r1,[r2,#0]  ; tx_wr_index_sc16is700
-0001ba  5458              STRB     r0,[r3,r1]
+000154  4b0c              LDR      r3,|L1.392|
+000156  7811              LDRB     r1,[r2,#0]  ; tx_wr_index_sc16is700
+000158  5458              STRB     r0,[r3,r1]
 ;;;150    if (++tx_wr_index_sc16is700 == TX_BUFFER_SIZE_SC16IS700) tx_wr_index_sc16is700=0;
-0001bc  1c49              ADDS     r1,r1,#1
-0001be  b2c8              UXTB     r0,r1
-0001c0  7010              STRB     r0,[r2,#0]
-0001c2  2820              CMP      r0,#0x20
-0001c4  d102              BNE      |L1.460|
-0001c6  f04f0000          MOV      r0,#0
-0001ca  7010              STRB     r0,[r2,#0]
-                  |L1.460|
+00015a  1c49              ADDS     r1,r1,#1
+00015c  b2c8              UXTB     r0,r1
+00015e  7010              STRB     r0,[r2,#0]
+000160  2820              CMP      r0,#0x20
+000162  d102              BNE      |L1.362|
+000164  f04f0000          MOV      r0,#0
+000168  7010              STRB     r0,[r2,#0]
+                  |L1.362|
 ;;;151    }
-0001cc  4770              BX       lr
+00016a  4770              BX       lr
 ;;;152    
                           ENDP
 
-0001ce  0000              DCW      0x0000
-                  |L1.464|
+                  |L1.364|
                           DCD      0x4002c000
-                  |L1.468|
+                  |L1.368|
                           DCD      0x40020000
-                  |L1.472|
+                  |L1.372|
                           DCD      0x2009c000
-                  |L1.476|
-                          DCD      ||.bss||
-                  |L1.480|
+                  |L1.376|
                           DCD      0x00098968
-                  |L1.484|
+                  |L1.380|
                           DCD      RS485_QWARZ_DIGIT
-                  |L1.488|
+                  |L1.384|
                           DCD      0x002625a0
-                  |L1.492|
+                  |L1.388|
                           DCD      0x001c9c38
-                  |L1.496|
-                          DCD      ||area_number.8||
+                  |L1.392|
+                          DCD      ||.bss||
+                  |L1.396|
+                          DCD      ||area_number.9||
 
-                          AREA ||area_number.2||, CODE, READONLY, ALIGN=1
+                          AREA ||area_number.2||, CODE, READONLY, ALIGN=2
 
                           EXPORTAS ||area_number.2||, ||.text||
+                  sc16is700_wr_buff PROC
+;;;21     //настройка SPI1
+;;;22     void sc16is700_spi_init(void)
+000000  e92d41f0          PUSH     {r4-r8,lr}
+;;;23     {
+;;;24     SET_REG( LPC_PINCON->PINSEL0, 0, 0*2, 2);
+000004  4603              MOV      r3,r0
+000006  460e              MOV      r6,r1
+000008  f7fffffe          BL       sc16is700_spi_init
+;;;25     SET_REG( LPC_PINCON->PINSEL0, 3, 15*2, 2);
+00000c  f04f0218          MOV      r2,#0x18
+                  |L2.16|
+000010  f1a20201          SUB      r2,r2,#1
+;;;26     SET_REG( LPC_PINCON->PINSEL1, 0, (16-16)*2, 2);
+000014  2a00              CMP      r2,#0
+000016  d1fb              BNE      |L2.16|
+000018  4f12              LDR      r7,|L2.100|
+;;;27     SET_REG( LPC_PINCON->PINSEL1, 3, (17-16)*2, 2);
+00001a  6838              LDR      r0,[r7,#0]
+00001c  f0400001          ORR      r0,r0,#1
+000020  6038              STR      r0,[r7,#0]
+;;;28     SET_REG( LPC_PINCON->PINSEL1, 3, (18-16)*2, 2); 
+000022  69f8              LDR      r0,[r7,#0x1c]
+000024  f0400001          ORR      r0,r0,#1
+000028  61f8              STR      r0,[r7,#0x1c]
+;;;29     /*
+;;;30     S1SPCCR=100;
+;;;31     S1SPCR=0x3f; */
+;;;32     
+;;;33     LPC_SPI->SPCCR=20;
+00002a  ea4f7003          LSL      r0,r3,#28
+00002e  ea4f6050          LSR      r0,r0,#25
+;;;34     LPC_SPI->SPCR=0x20;
+000032  f7fffffe          BL       spi1
+000036  f04f0400          MOV      r4,#0
+;;;35     }
+00003a  4d0b              LDR      r5,|L2.104|
+00003c  e005              B        |L2.74|
+                  |L2.62|
+00003e  5d28              LDRB     r0,[r5,r4]
+000040  f7fffffe          BL       spi1
+000044  f1040401          ADD      r4,r4,#1
+000048  b224              SXTH     r4,r4
+                  |L2.74|
+00004a  42b4              CMP      r4,r6
+00004c  dbf7              BLT      |L2.62|
+00004e  6838              LDR      r0,[r7,#0]
+000050  f0400001          ORR      r0,r0,#1
+000054  6038              STR      r0,[r7,#0]
+000056  69b8              LDR      r0,[r7,#0x18]
+000058  f0400001          ORR      r0,r0,#1
+00005c  61b8              STR      r0,[r7,#0x18]
+00005e  e8bd81f0          POP      {r4-r8,pc}
+;;;36     
+                          ENDP
+
+000062  0000              DCW      0x0000
+                  |L2.100|
+                          DCD      0x2009c000
+                  |L2.104|
+                          DCD      ||.bss||
+
+                          AREA ||area_number.3||, CODE, READONLY, ALIGN=1
+
+                          EXPORTAS ||area_number.3||, ||.text||
                   sc16is700_init_ PROC
 ;;;21     //настройка SPI1
 ;;;22     void sc16is700_spi_init(void)
@@ -375,32 +389,32 @@
                   sc16is700ByteAvailable
 000000  00                DCB      0x00
 
-                          AREA ||area_number.7||, DATA, ALIGN=0
-
-                          EXPORTAS ||area_number.7||, ||.data||
-                  sc16is700TxFifoLevel
-000000  00                DCB      0x00
-
                           AREA ||area_number.8||, DATA, ALIGN=0
 
                           EXPORTAS ||area_number.8||, ||.data||
-                  tx_wr_index_sc16is700
+                  sc16is700TxFifoLevel
 000000  00                DCB      0x00
 
                           AREA ||area_number.9||, DATA, ALIGN=0
 
                           EXPORTAS ||area_number.9||, ||.data||
-                  tx_rd_index_sc16is700
+                  tx_wr_index_sc16is700
 000000  00                DCB      0x00
 
                           AREA ||area_number.10||, DATA, ALIGN=0
 
                           EXPORTAS ||area_number.10||, ||.data||
-                  sc16is700TxFifoEmptyCnt
+                  tx_rd_index_sc16is700
 000000  00                DCB      0x00
 
                           AREA ||area_number.11||, DATA, ALIGN=0
 
                           EXPORTAS ||area_number.11||, ||.data||
+                  sc16is700TxFifoEmptyCnt
+000000  00                DCB      0x00
+
+                          AREA ||area_number.12||, DATA, ALIGN=0
+
+                          EXPORTAS ||area_number.12||, ||.data||
                   sc16is700TxPossibleFlag
 000000  00                DCB      0x00
